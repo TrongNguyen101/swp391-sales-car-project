@@ -14,12 +14,12 @@
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
-    "ajv": "^8.17.1",
+    "axios": "^1.7.9",
     "classnames": "^2.5.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-router-dom": "^7.1.1",
     "react-scripts": "5.0.1",
-    "sass": "^1.83.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -45,5 +45,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "ajv": "^8.17.1",
+    "sass": "^1.83.1"
   }
 }
