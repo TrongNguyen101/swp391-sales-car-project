@@ -1,5 +1,4 @@
 import { Button, Typography } from "@mui/material";
-import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import classnames from "classnames/bind";
 import styles from "./Header.module.scss";
@@ -7,14 +6,7 @@ import styles from "./Header.module.scss";
 const cx = classnames.bind(styles);
 
 function HeaderComponent() {
-  const [tabIndex, setTabindex] = useState(0);
-  const [disable, setDisable] = useState(true);
   const navigate = useNavigate();
-
-  const activeTab = (index) => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    return setTabindex(index);
-  };
 
   const handleToLoginPage = () => {
     navigate("/login");
@@ -22,14 +14,7 @@ function HeaderComponent() {
 
   const handleToHomePage = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-    setDisable(true);
-    setTabindex(1);
     navigate("/");
-  };
-
-  const handleToProfilePage = () => {
-    setDisable(false);
-    navigate("/profile");
   };
 
   return (
@@ -116,42 +101,22 @@ function HeaderComponent() {
           </svg>
         </div>
         <div className={cx("header-nav")}>
-          <div
-            className={
-              tabIndex === 1 ? cx("nav-item", "active") : cx("nav-item")
-            }
-            onClick={() => activeTab(1)}
-          >
+          <div className={cx("nav-item")}>
             <Link to="/profile">
               <Typography variant="body1">Cars</Typography>
             </Link>
           </div>
-          <div
-            className={
-              tabIndex === 2 ? cx("nav-item", "active") : cx("nav-item")
-            }
-            onClick={() => activeTab(2)}
-          >
+          <div className={cx("nav-item")}>
             <Link to="/">
               <Typography variant="body1">Accessories</Typography>
             </Link>
           </div>
-          <div
-            className={
-              tabIndex === 3 ? cx("nav-item", "active") : cx("nav-item")
-            }
-            onClick={() => activeTab(3)}
-          >
+          <div className={cx("nav-item")}>
             <Link to="/">
               <Typography variant="body1">About</Typography>
             </Link>
           </div>
-          <div
-            className={
-              tabIndex === 4 ? cx("nav-item", "active") : cx("nav-item")
-            }
-            onClick={() => activeTab(4)}
-          >
+          <div className={cx("nav-item")}>
             <Link to="/">
               <Typography variant="body1">Contact</Typography>
             </Link>

@@ -16,6 +16,13 @@ function HomePage() {
 
   return (
     <div>
+      <div>
+        <img
+          src="bannerVinFast.jpg"
+          alt="banner"
+          style={{ width: "100%", height: "100%" }}
+        />
+      </div>
       <Typography>Home page</Typography>
       <Button variant="contained" onClick={handleRequest}>
         request
@@ -31,6 +38,13 @@ function HomePage() {
             </li>
           ))}
         </ul>
+        <div>
+          <img
+            src="vinfastauto.com_vn_vi.png"
+            alt=""
+            style={{ width: "100%", height: "369px" }}
+          />
+        </div>
       </div>
     </div>
   );
