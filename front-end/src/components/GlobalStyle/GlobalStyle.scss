@@ -1,5 +1,9 @@
 @import "normalize.css";
 
+:root{
+  --default-width: 1570px;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
