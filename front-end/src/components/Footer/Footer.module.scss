@@ -1,22 +1,26 @@
 .footer-contaiter {
-
+  width: 100%;
+  height: 100%;
 }
 
 .footer-content {
-  
+  display: flex;
+  flex-direction: row;
 }
 
 .footer-logo-information {
+}
+
+.footer-nav {
+}
+
+.footer-contact {
+}
+
+.footer-logo {
+  width: 202px;
+  height: 45px;
   &:hover {
     cursor: pointer;
   }
 }
-
-.footer-nav {
-
-}
-
-.footer-contact {
-
-}
-

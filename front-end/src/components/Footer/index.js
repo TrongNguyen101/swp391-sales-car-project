@@ -19,7 +19,7 @@ function FooterComponent() {
     <div className={cx("footer-container")}>
       <div className={cx("footer-content")}>
         <div className={cx("footer-logo-infomation")}>
-          <div className={cx("footerlogo")} onClick={handleToHomePage}>
+          <div className={cx("footer-logo")} onClick={handleToHomePage}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               xmlnsXlink="http://www.w3.org/1999/xlink"
