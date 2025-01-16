@@ -116,7 +116,7 @@ function HeaderComponent() {
             </Link>
           </div>
           <div className={cx("nav-item")}>
-            <Link to="/" onClick={handleScrollToTop}>
+            <Link to="/accessories" onClick={handleScrollToTop}>
               <Typography variant="body1">Accessories</Typography>
             </Link>
           </div>

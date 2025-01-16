@@ -1,7 +1,9 @@
+import { Typography } from "@mui/material";
+
 function CarsPage() {
   return (
     <div>
-      <p>Cars page</p>
+      <Typography>Cars page</Typography>
     </div>
   );
 }
