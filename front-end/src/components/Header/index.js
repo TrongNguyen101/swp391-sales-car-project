@@ -27,8 +27,8 @@ function HeaderComponent() {
 
   // Render component header
   return (
-    <div className={cx("container")}>
-      <div className={cx("content")}>
+    <div className={cx("header-container")}>
+      <div className={cx("header-content")}>
         <div className={cx("header-logo")} onClick={handleToHomePage}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
