@@ -107,7 +107,9 @@ function FooterComponent() {
         <div className={cx("footer-nav")}>
           <Typography>Footer navigation</Typography>
         </div>
-        <div className={cx("footer-contact")}></div>
+        <div className={cx("footer-contact")}>
+          <Typography>Footer contact</Typography>
+        </div>
       </div>
     </div>
   );
