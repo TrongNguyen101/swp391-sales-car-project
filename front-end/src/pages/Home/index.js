@@ -38,11 +38,11 @@ function HomePage() {
             </li>
           ))}
         </ul>
-        <div>
+        <div style={{width: "100%", height: "369px"}}>
           <img
             src="vinfastauto.com_vn_vi.png"
             alt=""
-            style={{ width: "100%", height: "369px" }}
+            style={{ width: "100%", height: "100%" }}
           />
         </div>
       </div>
