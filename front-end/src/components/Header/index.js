@@ -98,6 +98,7 @@ function HeaderComponent() {
                 <use
                   xlinkHref="#image0_1944_870"
                   transform="scale(0.000558347 0.000583771)"
+                  preserveAspectRatio="xMidYMid slice"
                 />
               </pattern>
               <image
