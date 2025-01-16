@@ -127,7 +127,7 @@ function HeaderComponent() {
             <Typography variant="body1">Account</Typography>
           </div>
           <Button variant="contained" onClick={handleToHomePage}>
-            text drive registration
+            test drive registration
           </Button>
         </div>
       </div>
