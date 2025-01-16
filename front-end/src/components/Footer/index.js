@@ -16,8 +16,8 @@ function FooterComponent() {
 
   // Render component footer
   return (
-    <div>
-      <Typography>Footer component</Typography>
+    <div className={cx("footer")}>
+      <Typography variant="h6">Footer component</Typography>
       <div className={cx("footer-logo")} onClick={handleToHomePage}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
