@@ -16,8 +16,13 @@ function HeaderComponent() {
 
   // Function handle event redicrect to home page
   const handleToHomePage = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" }); // Handle event scroll to top of page with behavior smooth
-    navigate("/");  // Using hook naviagte to redicrect to home page
+    window.scrollTo({ top: 0, behavior: "smooth" }); // Handle event scroll to top of screen with behavior smooth
+    navigate("/"); // Using hook naviagte to redicrect to home page
+  };
+
+  // Function handle event scroll to top page
+  const handleScrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" }); // Handle event scroll to top of screen with behavior smooth
   };
 
   // Render component header
@@ -106,22 +111,22 @@ function HeaderComponent() {
         </div>
         <div className={cx("header-nav")}>
           <div className={cx("nav-item")}>
-            <Link to="/profile">
+            <Link to="/cars" onClick={handleScrollToTop}>
               <Typography variant="body1">Cars</Typography>
             </Link>
           </div>
           <div className={cx("nav-item")}>
-            <Link to="/">
+            <Link to="/" onClick={handleScrollToTop}>
               <Typography variant="body1">Accessories</Typography>
             </Link>
           </div>
           <div className={cx("nav-item")}>
-            <Link to="/">
+            <Link to="/" onClick={handleScrollToTop}>
               <Typography variant="body1">About</Typography>
             </Link>
           </div>
           <div className={cx("nav-item")}>
-            <Link to="/">
+            <Link to="/" onClick={handleScrollToTop}>
               <Typography variant="body1">Contact</Typography>
             </Link>
           </div>
