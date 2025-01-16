@@ -3,20 +3,24 @@ import classnames from "classnames/bind";
 import { Button, Typography } from "@mui/material";
 import styles from "./Header.module.scss";
 
+// Bind styles to classname of html
 const cx = classnames.bind(styles);
 
 function HeaderComponent() {
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Navigate page using useNavigate hook from library react-router-dom
 
+  // Function handle event redicrect to login page
   const handleToLoginPage = () => {
-    navigate("/login");
+    navigate("/login"); // Using hook navigate to redicrect to login page
   };
 
+  // Function handle event redicrect to home page
   const handleToHomePage = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    navigate("/");
+    window.scrollTo({ top: 0, behavior: "smooth" }); // Handle event scroll to top of page with behavior smooth
+    navigate("/");  // Using hook naviagte to redicrect to home page
   };
 
+  // Render component header
   return (
     <div className={cx("container")}>
       <div className={cx("content")}>

@@ -6,13 +6,15 @@ import styles from "./Footer.module.scss";
 const cx = classnames.bind(styles);
 
 function FooterComponent() {
-  const navigate = useNavigate();
+  const navigate = useNavigate();  // Using hook useNavigate in library react-router-dom
 
+  // Function handle event redicrect to Home page
   const handleToHomePage = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    navigate("/");
+    window.scrollTo({ top: 0, behavior: "smooth" }); // Handle event scroll to top of screen with behavior smooth
+    navigate("/");  // Using hook navigate to redicrect to home page
   };
 
+  // Render component footer
   return (
     <div>
       <Typography>Footer component</Typography>
