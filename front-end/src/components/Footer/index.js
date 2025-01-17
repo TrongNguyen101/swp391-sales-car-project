@@ -101,7 +101,109 @@ function FooterComponent() {
             </svg>
           </div>
           <div className={cx("footer-information")}>
-            <Typography>Footer information</Typography>
+            <Typography
+              sx={{
+                fontWeight: "500",
+                fontSize: "1rem",
+                lineHeight: "1.5rem",
+                letterSpacing: "-0.02rem",
+                color: "#3C3C3C",
+                marginBottom: "1rem",
+              }}
+            >
+              VinFast Commercial and Services Trading Limited Liability Company
+            </Typography>
+            <Typography
+              sx={{
+                fontWeight: "300",
+                fontSize: "0.875rem",
+                lineHeight: "1.5rem",
+                letterSpacing: "-0.02rem",
+                color: "#3C3C3C",
+                marginBottom: "1rem",
+              }}
+            >
+              <Typography variant="span" sx={{ fontWeight: "bolder" }}>
+                Enterprise Registration Certificate:
+              </Typography>{" "}
+              No. 0108926276, first issued by Hanoi Authority for Planning and
+              Investment (HAPI) on October 1st 2019 and subsequent changes.
+            </Typography>
+            <Typography
+              sx={{
+                fontWeight: "300",
+                fontSize: "0.875rem",
+                lineHeight: "1.5rem",
+                letterSpacing: "-0.02rem",
+                color: "#3C3C3C",
+                marginBottom: "1rem",
+              }}
+            >
+              <Typography variant="span" sx={{ fontWeight: "bolder" }}>
+                Address:
+              </Typography>{" "}
+              No 7, Bang Lang 1 Street, Viet Hung Ward, Long Bien District, Ha
+              Noi
+            </Typography>
+            <div className={cx("ecosystem")}>
+              <Typography
+                sx={{
+                  fontWeight: "500",
+                  fontSize: "1rem",
+                  lineHeight: "1.5rem",
+                  letterSpacing: "-0.02rem",
+                  color: "#3c3c3c",
+                  margin: "0 1.875rem 0 0",
+                  alignContent: "center"
+                }}
+              >
+                Ecosystem
+              </Typography>
+              <ul className={cx("menu")}>
+                <li className={cx("menu-item")}>
+                  <Typography
+                    sx={{
+                      fontStyle: "normal",
+                      fontWeight: "500",
+                      fontSize: "12px",
+                      lineHeight: "150%",
+                      letterSpacing: "-0.02em",
+                      color: "#8A8A8A",
+                    }}
+                  >
+                    Vinhomes
+                  </Typography>
+                </li>
+                <li className={cx("menu-item")}>
+                  <Typography
+                    sx={{
+                      fontStyle: "normal",
+                      fontWeight: "500",
+                      fontSize: "12px",
+                      lineHeight: "150%",
+                      letterSpacing: "-0.02em",
+                      color: "#8A8A8A",
+                    }}
+                  >
+                    Vinmec
+                  </Typography>
+                </li>
+                <li className={cx("menu-item")}>
+                  <Typography
+                    sx={{
+                      fontStyle: "normal",
+                      fontWeight: "500",
+                      fontSize: "12px",
+                      lineHeight: "150%",
+                      letterSpacing: "-0.02em",
+                      color: "#8A8A8A",
+                    }}
+                  >
+                    Vinpearl
+                  </Typography>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
         <div className={cx("footer-nav")}>

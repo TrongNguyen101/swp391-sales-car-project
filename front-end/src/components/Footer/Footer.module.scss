@@ -3,13 +3,14 @@
   height: 100%;
   display: flex;
   justify-content: center;
+  padding: 30px 0;
 }
 
 .footer-content {
   width: var(--default-width);
   display: flex;
   flex-direction: row;
-  justify-content:  space-between;
+  justify-content: space-between;
 }
 
 .footer-logo-information {
@@ -27,4 +28,32 @@
   &:hover {
     cursor: pointer;
   }
+}
+
+.footer-information {
+  margin-top: 36px;
+  max-width: 500px;
+}
+
+.ecosystem {
+  height: 24px;
+  display: flex;
+  align-items: center;
+}
+
+.menu,
+.menu-item {
+  height: 100%;
+  display: flex;
+  list-style: none;
+  align-items: center;
+  p:hover {
+    cursor: pointer;
+    color: var(--primary-color);
+    transition: 0.7s;
+  }
+}
+
+.menu{
+  gap: 50px;
 }
