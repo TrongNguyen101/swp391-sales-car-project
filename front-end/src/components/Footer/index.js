@@ -154,7 +154,6 @@ function FooterComponent() {
                   letterSpacing: "-0.02rem",
                   color: "#3c3c3c",
                   margin: "0 1.875rem 0 0",
-                  alignContent: "center"
                 }}
               >
                 Ecosystem
