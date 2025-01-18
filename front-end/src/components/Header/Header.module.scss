@@ -1,3 +1,12 @@
+// .header-container
+// This class styles the header container with the following properties:
+// - `position: fixed;`: Fixes the header at the top of the viewport.
+// - `width: 100%;`: Sets the width of the header to span the entire width of the viewport.
+// - `height: 80px;`: Sets the height of the header to 80 pixels.
+// - `display: flex;`: Uses flexbox layout for the header's children.
+// - `justify-content: center;`: Centers the header's children horizontally.
+// - `background-color: #ffff;`: Sets the background color of the header to white.
+// - `z-index: 1;`: Ensures the header is above other elements with a lower z-index.
 .header-container {
   position: fixed;
   width: 100%;
@@ -8,6 +17,39 @@
   z-index: 1;
 }
 
+// .header-content: Container for the header content with flexbox layout.
+//   width: Uses a CSS variable for width.
+//   height: Full height of the parent container.
+//   display: Flexbox layout.
+//   justify-content: Space between items.
+//   align-items: Center alignment.
+//   flex-direction: Row direction.
+//   gap: 10px spacing between items.
+
+// .header-logo: Styles for the header logo.
+//   &:hover: Changes cursor to pointer on hover.
+
+// .header-nav: Container for the navigation items.
+//   width: Fixed width of 400px.
+//   display: Flexbox layout.
+//   justify-content: Space between items.
+//   align-items: Center alignment.
+//   .nav-item: Styles for individual navigation items.
+//     height: Fixed height of 40px.
+//     text-align: Center text alignment.
+//     align-content: Center alignment.
+//     a: Styles for anchor tags within nav items.
+//       text-decoration: No underline.
+//       color: Dark gray color (#333).
+//       &:hover: Changes cursor to pointer, color to primary color, and adds transition on hover.
+
+// .header-action: Container for header action items (e.g., login).
+//   display: Flexbox layout.
+//   align-items: Center alignment.
+//   gap: 30px spacing between items.
+//   .login-text: Styles for login text.
+//     color: Black color (#000).
+//     &:hover: Changes cursor to pointer, color to primary color, and adds transition on hover.
 .header-content {
   width: var(--default-width);
   height: 100%;
@@ -59,6 +101,8 @@
   }
 }
 
+// This media query applies styles to screens with a maximum width of 75em (1200px).
+// It sets the width of elements with the class 'content' to 1120px.
 @media only screen and (max-width: 75em) {
   .content {
     width: 1120px;
