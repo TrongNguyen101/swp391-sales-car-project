@@ -6,6 +6,28 @@ import styles from "./Header.module.scss";
 // Bind styles to classname of html
 const cx = classnames.bind(styles);
 
+/**
+ * HeaderComponent is a functional React component that renders the header section of the application.
+ * It includes navigation links, a logo, and action buttons for login and test drive registration.
+ * 
+ * @component
+ * 
+ * @example
+ * return (
+ *   <HeaderComponent />
+ * )
+ * 
+ * @returns {JSX.Element} The rendered header component.
+ * 
+ * @function
+ * @name HeaderComponent
+ * 
+ * @description
+ * - Uses the `useNavigate` hook from `react-router-dom` to handle navigation.
+ * - Provides functions to handle navigation to the login page, home page, and scroll to top.
+ * - Renders a logo, navigation links, and action buttons.
+ */
+
 function HeaderComponent() {
   const navigate = useNavigate(); // Navigate page using useNavigate hook from library react-router-dom
 

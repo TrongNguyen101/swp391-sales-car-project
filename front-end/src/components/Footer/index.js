@@ -5,10 +5,27 @@ import styles from "./Footer.module.scss";
 
 const cx = classnames.bind(styles);
 
+/**
+ * FooterComponent is a functional React component that renders the footer section of the application.
+ * It includes a logo that navigates to the home page when clicked, company information, an ecosystem section,
+ * navigation links, and a contact hotline.
+ *
+ * @component
+ *
+ * @example
+ * return (
+ *   <FooterComponent />
+ * )
+ *
+ * @returns {JSX.Element} The rendered footer component.
+ */
 function FooterComponent() {
   const navigate = useNavigate(); // Using hook useNavigate in library react-router-dom
 
-  // Function handle event redicrect to Home page
+  /**
+   * Handles the event to scroll to the top of the screen with a smooth behavior
+   * and navigates to the home page.
+   */
   const handleToHomePage = () => {
     window.scrollTo({ top: 0, behavior: "smooth" }); // Handle event scroll to top of screen with behavior smooth
     navigate("/"); // Using hook navigate to redicrect to home page
@@ -123,7 +140,7 @@ function FooterComponent() {
                 marginBottom: "1rem",
               }}
             >
-              <Typography variant="span" sx={{ fontWeight: "bolder" }}>
+              <Typography sx={{ fontWeight: "bolder" }} component="span">
                 Enterprise Registration Certificate:
               </Typography>{" "}
               No. 0108926276, first issued by Hanoi Authority for Planning and
@@ -139,7 +156,7 @@ function FooterComponent() {
                 marginBottom: "1rem",
               }}
             >
-              <Typography variant="span" sx={{ fontWeight: "bolder" }}>
+              <Typography sx={{ fontWeight: "bolder" }} component="span">
                 Address:
               </Typography>{" "}
               No 7, Bang Lang 1 Street, Viet Hung Ward, Long Bien District, Ha
@@ -298,7 +315,7 @@ function FooterComponent() {
           </div>
         </div>
         <div className={cx("footer-contact")}>
-          <Typography>Footer contact</Typography>
+          <Typography sx={{ textTransform: "uppercase" }}>hotline</Typography>
         </div>
       </div>
     </div>
