@@ -206,7 +206,96 @@ function FooterComponent() {
           </div>
         </div>
         <div className={cx("footer-nav")}>
-          <Typography>Footer navigation</Typography>
+          <div className={cx("nav-item")}>
+            <Typography
+              sx={{
+                textTransform: "uppercase",
+                fontWeight: "500",
+                fontSize: "13px",
+                lineHeight: "150%",
+                color: "#3C3C3C",
+                marginBottom: "0",
+                cursor: "pointer",
+              }}
+            >
+              about vinfast
+            </Typography>
+          </div>
+          <div className={cx("nav-item")}>
+            <Typography
+              sx={{
+                textTransform: "uppercase",
+                fontWeight: "500",
+                fontSize: "13px",
+                lineHeight: "150%",
+                color: "#3C3C3C",
+                marginBottom: "0",
+                cursor: "pointer",
+              }}
+            >
+              about vingroup
+            </Typography>
+          </div>
+          <div className={cx("nav-item")}>
+            <Typography
+              sx={{
+                textTransform: "uppercase",
+                fontWeight: "500",
+                fontSize: "13px",
+                lineHeight: "150%",
+                color: "#3C3C3C",
+                marginBottom: "0",
+                cursor: "pointer",
+              }}
+            >
+              featured news
+            </Typography>
+          </div>
+          <div className={cx("nav-item")}>
+            <Typography
+              sx={{
+                textTransform: "uppercase",
+                fontWeight: "500",
+                fontSize: "13px",
+                lineHeight: "150%",
+                color: "#3C3C3C",
+                marginBottom: "0",
+                cursor: "pointer",
+              }}
+            >
+              special offers
+            </Typography>
+          </div>
+          <div className={cx("nav-item")}>
+            <Typography
+              sx={{
+                textTransform: "uppercase",
+                fontWeight: "500",
+                fontSize: "13px",
+                lineHeight: "150%",
+                color: "#3C3C3C",
+                marginBottom: "0",
+                cursor: "pointer",
+              }}
+            >
+              find us
+            </Typography>
+          </div>
+          <div className={cx("nav-item")}>
+            <Typography
+              sx={{
+                textTransform: "uppercase",
+                fontWeight: "500",
+                fontSize: "13px",
+                lineHeight: "150%",
+                color: "#3C3C3C",
+                marginBottom: "0",
+                cursor: "pointer",
+              }}
+            >
+              privacy & term
+            </Typography>
+          </div>
         </div>
         <div className={cx("footer-contact")}>
           <Typography>Footer contact</Typography>
