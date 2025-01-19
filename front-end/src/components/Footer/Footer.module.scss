@@ -1,3 +1,11 @@
+//
+// .footer-container
+// This class styles the footer container with the following properties:
+// - width: 100% - The container takes up the full width of its parent.
+// - height: 100% - The container takes up the full height of its parent.
+// - display: flex - The container uses flexbox layout.
+// - justify-content: center - The content inside the container is centered horizontally.
+// - padding: 30px 0 - The container has 30px padding on the top and bottom, and no padding on the sides.
 .footer-container {
   width: 100%;
   height: 100%;
@@ -6,6 +14,12 @@
   padding: 30px 0;
 }
 
+// Styles for the footer content section
+// .footer-content:
+//   - width: Sets the width of the footer content to a default value defined by a CSS variable (--default-width).
+//   - display: Uses flexbox layout to arrange child elements.
+//   - flex-direction: Arranges child elements in a row.
+//   - justify-content: Distributes space between and around child elements, aligning them with space between.
 .footer-content {
   width: var(--default-width);
   display: flex;
@@ -13,12 +27,23 @@
   justify-content: space-between;
 }
 
+// Styles for the footer navigation section
+// .footer-nav:
+// - display: flex; -> Uses flexbox layout for the footer navigation
+// - flex-direction: column; -> Arranges the flex items in a column
+// - gap: 25px; -> Sets a 25px gap between each flex item
 .footer-nav {
   display: flex;
   flex-direction: column;
   gap: 25px;
 }
 
+// Styles for the footer contact section
+// .footer-contact:
+//   - width: 397px: Sets the width of the footer contact section to 397 pixels.
+//   - display: flex: Uses flexbox layout for the footer contact section.
+//   - flex-direction: column: Arranges the flex items in a column direction.
+//   - gap: 25px: Sets a gap of 25 pixels between the flex items.
 .footer-contact {
   width: 397px;
   display: flex;
@@ -26,6 +51,11 @@
   gap: 25px;
 }
 
+// Styles for the footer logo
+// .footer-logo
+// - width: Sets the width of the footer logo to 202px
+// - height: Sets the height of the footer logo to 45px
+// - &:hover: Adds a hover effect to change the cursor to a pointer
 .footer-logo {
   width: 202px;
   height: 45px;
@@ -34,17 +64,38 @@
   }
 }
 
+// Styles for the footer information section
+// .footer-information {
+//   margin-top: 36px; // Adds a top margin of 36px to create space above the footer information
+//   max-width: 500px; // Sets the maximum width of the footer information to 500px
+// }
 .footer-information {
   margin-top: 36px;
   max-width: 500px;
 }
 
+// Styles for the ecosystem class
+// .ecosystem {
+//   height: 24px;          // Sets the height of the element to 24 pixels
+//   display: flex;         // Applies flexbox layout to the element
+//   align-items: center;   // Vertically centers the flex items within the element
+// }
 .ecosystem {
   height: 24px;
   display: flex;
   align-items: center;
 }
 
+
+// .menu and .menu-item styles
+// - Sets height to 100%
+// - Uses flexbox for layout
+// - Removes default list styling
+// - Centers items vertically
+// - Adds hover effect to <p> elements within .menu and .menu-item
+//   - Changes cursor to pointer
+//   - Changes text color to primary color
+//   - Adds a transition effect with a duration of 0.7s
 .menu,
 .menu-item {
   height: 100%;
@@ -58,29 +109,45 @@
   }
 }
 
+// .menu class styles the menu container in the footer component
+// - gap: Defines the space between child elements within the menu container
 .menu {
   gap: 50px;
 }
 
+// Styles for the paragraph element inside .nav-item on hover
+// Changes the text color to the primary color defined in CSS variables
+// Adds a transition effect with a duration of 0.7 seconds
 .nav-item p:hover {
   color: var(--primary-color);
   transition: 0.7s;
 }
 
+// Styles for the contact information section in the footer
+// .contact-info class:
+// - Uses flexbox layout to arrange child elements in a row
+// - Adds a gap of 20px between child elements
+// - Aligns child elements vertically at the center
 .contact-info {
   display: flex;
   gap: 20px;
   align-items: center;
 }
 
+// Extends the styles from the .contact-info class to the .hotline class
 .hotline {
   @extend .contact-info;
 }
 
+// Extends the styles from the .contact-info class to the .email class
 .email {
   @extend .contact-info;
 }
 
+
+// .hotline-content: A container for hotline content, displayed as a flexbox with column direction.
+// .email: A nested class within .hotline-content, representing an email element with a pointer cursor.
+// .hotline: A nested class within .hotline-content, representing a hotline element with a pointer cursor.
 .hotline-content {
   display: flex;
   flex-direction: column;
@@ -92,34 +159,60 @@
   }
 }
 
+// Styles for the contact-us section in the Footer component
+// .contact-us:
+//   - display: flex: Uses flexbox layout for the container.
+//   - flex-direction: column: Arranges flex items in a column.
 .contact-us {
   display: flex;
   flex-direction: column;
 }
 
+// Styles for the contact us content section
+// .contact-us-content:
+// - display: flex; -> Uses flexbox layout
+// - flex-direction: row; -> Aligns children in a horizontal row
+// - gap: 20px; -> Sets a 20px gap between children
 .contact-us-content {
   display: flex;
   flex-direction: row;
   gap: 20px;
 }
 
+
+// .icon class styles the icon elements in the footer component
+// - cursor: pointer; changes the cursor to a pointer when hovering over the icon
+// - color: #8A8A8A; sets the icon color to a shade of gray
 .icon {
   cursor: pointer;
   color: #8A8A8A;
 }
 
+// Styles for the hotline-email section
+// - display: flex; -> Uses flexbox layout
+// - flex-direction: column; -> Arranges children in a column
+// - gap: 15px; -> Sets a 15px gap between children
 .hotline-email {
   display: flex;
   flex-direction: column;
   gap: 15px;
 }
 
+
+/*
+  .bct class styles:
+  - display: flex; : Sets the element to use flexbox layout.
+  - gap: 40px; : Defines the space between flex items.
+  - align-items: center; : Aligns flex items vertically to the center.
+*/
 .bct {
   display: flex;
   gap: 40px;
   align-items: center;
 }
 
+// Styles for the BCT certificate element
+// .bct-certificate: Applies a pointer cursor to indicate that the element is clickable.
 .bct-certificate {
   cursor: pointer;
 }
