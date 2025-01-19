@@ -2,6 +2,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers;
 
+/// <summary>
+/// Controller for handling weather forecast related requests.
+/// </summary>
 [ApiController]
 [Route("[controller]")]
 public class WeatherForecastController : ControllerBase
@@ -13,11 +16,19 @@ public class WeatherForecastController : ControllerBase
 
     private readonly ILogger<WeatherForecastController> _logger;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="WeatherForecastController"/> class.
+    /// </summary>
+    /// <param name="logger">The logger instance to use for logging.</param>
     public WeatherForecastController(ILogger<WeatherForecastController> logger)
     {
         _logger = logger;
     }
 
+    /// <summary>
+    /// Gets the weather forecast for the next 5 days.
+    /// </summary>
+    /// <returns>An enumerable collection of <see cref="WeatherForecast"/> objects.</returns>
     [HttpGet(Name = "GetWeatherForecast")]
     public IEnumerable<WeatherForecast> Get()
     {

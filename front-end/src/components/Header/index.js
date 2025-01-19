@@ -6,21 +6,51 @@ import styles from "./Header.module.scss";
 // Bind styles to classname of html
 const cx = classnames.bind(styles);
 
+/**
+ * HeaderComponent is a functional React component that renders the header section of the application.
+ * It includes navigation links, a logo, and action buttons for login and test drive registration.
+ * 
+ * @component
+ * 
+ * @example
+ * return (
+ *   <HeaderComponent />
+ * )
+ * 
+ * @returns {JSX.Element} The rendered header component.
+ * 
+ * @function
+ * @name HeaderComponent
+ * 
+ * @description
+ * - Uses the `useNavigate` hook from `react-router-dom` to handle navigation.
+ * - Provides functions to handle navigation to the login page, home page, and scroll to top.
+ * - Renders a logo, navigation links, and action buttons.
+ */
+
 function HeaderComponent() {
   const navigate = useNavigate(); // Navigate page using useNavigate hook from library react-router-dom
 
-  // Function handle event redicrect to login page
+  /**
+   * Redirects the user to the login page.
+   * Utilizes the navigate hook to change the route to "/login".
+   */
   const handleToLoginPage = () => {
     navigate("/login"); // Using hook navigate to redicrect to login page
   };
 
-  // Function handle event redicrect to home page
+  /**
+   * Navigates to the home page and scrolls to the top of the screen with a smooth behavior.
+   */
   const handleToHomePage = () => {
     window.scrollTo({ top: 0, behavior: "smooth" }); // Handle event scroll to top of screen with behavior smooth
     navigate("/"); // Using hook naviagte to redicrect to home page
   };
 
-  // Function handle event scroll to top page
+  
+  /**
+   * Scrolls the window to the top of the page with a smooth scrolling behavior.
+   */
   const handleScrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" }); // Handle event scroll to top of screen with behavior smooth
   };
