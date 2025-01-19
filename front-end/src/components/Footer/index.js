@@ -1,3 +1,6 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEnvelope, faPhone } from "@fortawesome/free-solid-svg-icons";
+import { faFacebook, faYoutube } from "@fortawesome/free-brands-svg-icons";
 import { useNavigate } from "react-router-dom";
 import classnames from "classnames/bind";
 import { Typography } from "@mui/material";
@@ -227,7 +230,7 @@ function FooterComponent() {
             <Typography
               sx={{
                 textTransform: "uppercase",
-                fontWeight: "500",
+                fontWeight: "600",
                 fontSize: "13px",
                 lineHeight: "150%",
                 color: "#3C3C3C",
@@ -242,7 +245,7 @@ function FooterComponent() {
             <Typography
               sx={{
                 textTransform: "uppercase",
-                fontWeight: "500",
+                fontWeight: "600",
                 fontSize: "13px",
                 lineHeight: "150%",
                 color: "#3C3C3C",
@@ -257,7 +260,7 @@ function FooterComponent() {
             <Typography
               sx={{
                 textTransform: "uppercase",
-                fontWeight: "500",
+                fontWeight: "600",
                 fontSize: "13px",
                 lineHeight: "150%",
                 color: "#3C3C3C",
@@ -272,7 +275,7 @@ function FooterComponent() {
             <Typography
               sx={{
                 textTransform: "uppercase",
-                fontWeight: "500",
+                fontWeight: "600",
                 fontSize: "13px",
                 lineHeight: "150%",
                 color: "#3C3C3C",
@@ -287,7 +290,7 @@ function FooterComponent() {
             <Typography
               sx={{
                 textTransform: "uppercase",
-                fontWeight: "500",
+                fontWeight: "600",
                 fontSize: "13px",
                 lineHeight: "150%",
                 color: "#3C3C3C",
@@ -302,7 +305,7 @@ function FooterComponent() {
             <Typography
               sx={{
                 textTransform: "uppercase",
-                fontWeight: "500",
+                fontWeight: "600",
                 fontSize: "13px",
                 lineHeight: "150%",
                 color: "#3C3C3C",
@@ -315,7 +318,129 @@ function FooterComponent() {
           </div>
         </div>
         <div className={cx("footer-contact")}>
-          <Typography sx={{ textTransform: "uppercase" }}>hotline</Typography>
+          <div className={cx("hotline-content")}>
+            <div className={cx("hotline-title")}>
+              <Typography
+                sx={{
+                  textTransform: "uppercase",
+                  fontWeight: "500",
+                  fontSize: "14px",
+                  lineHeight: "150%",
+                  color: "#3C3C3C",
+                  letterSpacing: "-0.02rem",
+                  marginBottom: "1.5rem",
+                }}
+              >
+                hotline
+              </Typography>
+            </div>
+            <div className={cx("hotline-email")}>
+              <div className={cx("hotline")}>
+                <div className={cx("icon")}>
+                  <FontAwesomeIcon icon={faPhone} />
+                </div>
+                <Typography
+                  sx={{
+                    color: "var(--primary-color)",
+                    fontSize: "16px",
+                    fontWeight: "500",
+                    lineHeight: "1.5rem",
+                    letterSpacing: "-0.02rem",
+                  }}
+                >
+                  1900 23 23 89
+                </Typography>
+              </div>
+              <div className={cx("email")}>
+                <div className={cx("icon")}>
+                  <FontAwesomeIcon icon={faEnvelope} />
+                </div>
+                <Typography
+                  sx={{
+                    color: "var(--primary-color)",
+                    fontSize: "16px",
+                    fontWeight: "500",
+                    lineHeight: "1.5rem",
+                    letterSpacing: "-0.02rem",
+                  }}
+                >
+                  support.vn@vinfastauto.com
+                </Typography>
+              </div>
+            </div>
+          </div>
+          <div className={cx("contact-us")}>
+            <div className={cx("contact-us-title")}>
+              <Typography
+                sx={{
+                  letterSpacing: "-0.02rem",
+                  color: "#3C3C3C",
+                  marginBottom: "1rem",
+                  fontWeight: "500",
+                  fontSize: "1rem",
+                  lineHeight: "1.5rem",
+                }}
+              >
+                Contact us
+              </Typography>
+            </div>
+            <div className={cx("contact-us-content")}>
+              <div className={cx("icon")}>
+                <FontAwesomeIcon icon={faFacebook} />
+              </div>
+              <div className={cx("icon")}>
+                <FontAwesomeIcon icon={faYoutube} />
+              </div>
+            </div>
+          </div>
+          <div className={cx("bct")}>
+            <div className={cx("bct-certificate")}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                xmlnsXlink="http://www.w3.org/1999/xlink"
+                width="153"
+                height="58"
+                viewBox="0 0 153 58"
+                fill="none"
+              >
+                <rect width="153" height="58" fill="url(#pattern1)" />
+                <defs>
+                  <pattern
+                    id="pattern1"
+                    patternContentUnits="objectBoundingBox"
+                    width="1"
+                    height="1"
+                  >
+                    <use
+                      xlinkHref="#image0_1281_8705"
+                      transform="translate(-0.00544662) scale(0.0019744 0.00520833)"
+                    />
+                  </pattern>
+                  <image
+                    id="image0_1281_8705"
+                    width="512"
+                    height="192"
+                    xlinkHref="bct.png"
+                  />
+                </defs>
+              </svg>
+            </div>
+            <div className={cx("copyright")}>
+              <Typography
+                component="span"
+                sx={{
+                  fontStyle: "normal",
+                  fontWeight: "400",
+                  fontSize: "0.75rem",
+                  lineHeight: "1.5rem",
+                  letterSpacing: "-0.02rem",
+                  color: "#3C3C3C",
+                }}
+              >
+                VinFast. All rights reserved. <br></br> © Copyright 2024
+              </Typography>
+            </div>
+          </div>
         </div>
       </div>
     </div>

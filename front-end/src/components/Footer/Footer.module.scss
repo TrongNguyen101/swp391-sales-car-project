@@ -13,9 +13,6 @@
   justify-content: space-between;
 }
 
-.footer-logo-information {
-}
-
 .footer-nav {
   display: flex;
   flex-direction: column;
@@ -23,6 +20,10 @@
 }
 
 .footer-contact {
+  width: 397px;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
 }
 
 .footer-logo {
@@ -64,4 +65,61 @@
 .nav-item p:hover {
   color: var(--primary-color);
   transition: 0.7s;
+}
+
+.contact-info {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.hotline {
+  @extend .contact-info;
+}
+
+.email {
+  @extend .contact-info;
+}
+
+.hotline-content {
+  display: flex;
+  flex-direction: column;
+  .email {
+    cursor: pointer;
+  }
+  .hotline {
+    cursor: pointer;
+  }
+}
+
+.contact-us {
+  display: flex;
+  flex-direction: column;
+}
+
+.contact-us-content {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+.icon {
+  cursor: pointer;
+  color: #8A8A8A;
+}
+
+.hotline-email {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.bct {
+  display: flex;
+  gap: 40px;
+  align-items: center;
+}
+
+.bct-certificate {
+  cursor: pointer;
 }
