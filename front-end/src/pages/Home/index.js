@@ -5,6 +5,20 @@ import { Link } from "react-router-dom";
 
 const cx = classNames.bind(styles);
 
+/**
+ * HomePage component renders the main content of the home page, including various sections such as:
+ * - Banner
+ * - Battery content with cards for car and e-scooter charging stations
+ * - Portable charging devices
+ * - Warranty & Services
+ * - VinFast's green future initiative
+ * - Community information
+ * - Newsletter subscription
+ *
+ * Each section contains relevant information and actions for the user to interact with.
+ *
+ * @returns {JSX.Element} The rendered home page component.
+ */
 function HomePage() {
   return (
     <div className={cx("container")}>
@@ -134,13 +148,13 @@ function HomePage() {
                 variant="contained"
                 sx={{ height: "70%", width: "220px" }}
               >
-                Warranty Policy
+                Make An Appointment
               </Button>
               <Button
                 variant="outlined"
                 sx={{ backgroundColor: "#ffff", height: "74%", width: "180px" }}
               >
-                see more
+                Warranty Policy
               </Button>
             </div>
           </div>
@@ -259,11 +273,12 @@ function HomePage() {
               </Typography>
             </div>
             <div className={cx("block-subcribe-input")}>
-              <input type="text" placeholder="Enter your email address" spellCheck={false} />
-              <Button
-                variant="contained"
-                sx={{ height: "100%", width: "30%" }}
-              >
+              <input
+                type="text"
+                placeholder="Enter your email address"
+                spellCheck={false}
+              />
+              <Button variant="contained" sx={{ height: "100%", width: "30%" }}>
                 Subscribe
               </Button>
             </div>
