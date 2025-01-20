@@ -5,12 +5,22 @@
   justify-content: center;
 }
 
+.banner-container {
+  width: 100%;
+  height: 970px;
+  img {
+    width: 100%;
+    height: 100%;
+  }
+}
+
 .batery-content {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
   gap: 30px;
+  padding-top: 6rem;
 }
 
 .card-content {
@@ -103,5 +113,187 @@
   span {
     color: var(--primary-color);
     cursor: pointer;
+  }
+}
+
+.block-service {
+  background: url("../../../public/vinfast-service.png") no-repeat scroll right
+    center transparent;
+  background-size: cover;
+  margin-top: 6rem;
+  width: 100%;
+  height: 700px;
+  padding: 240px;
+  .block-service-container {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+  .block-service-content {
+    width: 412px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .block-service-btn {
+    width: 100%;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.block-green-tree {
+  padding-top: 6rem;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  .block-green-tree-container {
+    width: 1440px;
+    height: 514px;
+    background: url(../../../public/vinfast-green-tree.png) no-repeat scroll
+      center center transparent;
+    background-size: cover;
+    padding: 119px;
+    display: flex;
+    justify-content: flex-end;
+  }
+  .block-green-tree-content {
+    width: 390px;
+    height: 276px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .block-green-tree-btn {
+    width: 100%;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.block-community {
+  padding-top: 6rem;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  .block-community-container {
+    width: 1440px;
+    height: 354px;
+    padding-left: 15px;
+    padding-right: 15px;
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+  }
+}
+
+.community-card-1 {
+  width: 690px;
+  height: 354px;
+  position: relative;
+  background-image: url("../../../public/vinfast-community-1.png");
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  background-position: center center;
+  background-color: transparent;
+  background-size: cover;
+  overflow: hidden;
+}
+
+.community-card-2 {
+  width: 690px;
+  height: 354px;
+  position: relative;
+  background-image: url("../../../public/vinfast-community-2.png");
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  background-position: center center;
+  background-color: transparent;
+  background-size: cover;
+  overflow: hidden;
+}
+
+.community-card-content {
+  width: 100%;
+  height: 115px;
+  background: linear-gradient(359deg, #000 0.54%, rgba(0, 0, 0, 0) 98.5%);
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  transform: translateY(40%);
+  transition: ease-in-out 0.5s;
+  color: #fff;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  &:hover {
+    cursor: pointer;
+    transform: none;
+  }
+}
+
+.block-subcribe {
+  margin-top: 6rem;
+  width: 100%;
+  height: 369px;
+  background: url(../../../public/vinfastauto.com_vn_vi.png) no-repeat scroll
+    center center transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-size: cover;
+  .block-subcribe-container {
+    width: 1440px;
+    height: 177px;
+    display: flex;
+    justify-content: center;
+  }
+  .block-subcribe-content {
+    width: 690px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+  }
+}
+
+.block-subcribe-input {
+  width: 100%;
+  input {
+    width: 70%;
+    height: 48px;
+    font-weight: 300;
+    font-size: 0.8rem;
+    line-height: 1.5rem;
+    box-shadow: none;
+    background: #ffffff;
+    border: none;
+    padding: 1rem;
+    border-radius: 0;
+    outline: none;
+  }
+}
+
+.block-subcribe-des-2 {
+  a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 500;
+    &:hover {
+      color: var(--primary-color);
+      text-decoration: underline;
+      text-decoration-color: #fff;
+    }
   }
 }
