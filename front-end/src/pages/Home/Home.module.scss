@@ -1,0 +1,107 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.batery-content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+}
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+}
+
+.batery-card-1 {
+  width: 690px;
+  height: 404px;
+  position: relative;
+  background-image: url("../../../public/batery-card-1.png");
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  background-position: center center;
+  background-color: transparent;
+  background-size: cover;
+  overflow: hidden;
+}
+
+.batery-card-2 {
+  width: 690px;
+  height: 404px;
+  position: relative;
+  background-image: url("../../../public/batery-card-2.png");
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  background-position: center center;
+  background-color: transparent;
+  background-size: cover;
+  overflow: hidden;
+}
+
+.batery-card-content {
+  width: 100%;
+  height: 179px;
+  background: linear-gradient(359deg, #000 0.54%, rgba(0, 0, 0, 0) 98.5%);
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  transform: translateY(65%);
+  transition: ease-in-out 0.5s;
+  color: #fff;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  &:hover {
+    cursor: pointer;
+    transform: none;
+  }
+}
+
+.image-batery-2 {
+  width: 690px;
+  height: 404px;
+  position: relative;
+  img {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.batery-device {
+  padding: 30px;
+  background: #f7f9f9;
+}
+
+.device-image {
+  width: 630px;
+  height: 612px;
+  img {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.device-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 47px;
+}
+
+.view-more:hover {
+  span {
+    color: var(--primary-color);
+    cursor: pointer;
+  }
+}
