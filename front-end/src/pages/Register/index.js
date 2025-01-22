@@ -1,34 +1,40 @@
-import classNames from "classnames/bind";
-import styles from "./Login.module.scss";
 import { Button, Typography } from "@mui/material";
+import classNames from "classnames/bind";
+import styles from "./Register.module.scss";
 import { Link, useNavigate } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const cx = classNames.bind(styles);
 
 /**
- * LoginPage component renders a login form with email and password fields.
- * It includes functionality to show/hide the password, navigate to the home page,
- * and navigate to the forgot password page.
+ * RegisterPage component renders a registration form with fields for fullname, email, password, and password confirmation.
+ * It includes functionality to show/hide passwords and navigate back to the home page.
  *
  * @component
- * @returns {JSX.Element} The rendered login page component.
+ * @example
+ * return (
+ *   <RegisterPage />
+ * )
+ *
+ * @returns {JSX.Element} The rendered registration page component.
  */
-function LoginPage() {
+function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
+  const [showRePassword, setShowRePassword] = useState(false);
   const navigate = useNavigate();
 
   const handleShowPassword = () => {
     setShowPassword(!showPassword);
   };
-  const handleBackToHome = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    navigate("/");
+
+  const handleShowRePassword = () => {
+    setShowRePassword(!showRePassword);
   };
 
-  const handleToFogotPassword = () => {
+  const handleBackToHome = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
     navigate("/");
   };
 
@@ -40,6 +46,16 @@ function LoginPage() {
             <div className={cx("logo-image")} onClick={handleBackToHome}>
               <img src="./logoJPG-removebg-preview.png" alt="vinfast-logo" />
             </div>
+          </div>
+          <div className={cx("form-group")}>
+            <input
+              type="text"
+              id="fullname"
+              className={cx("input")}
+              placeholder="Fullname"
+              spellCheck="false"
+              required
+            />
           </div>
           <div className={cx("form-group")}>
             <input
@@ -68,12 +84,21 @@ function LoginPage() {
               ></FontAwesomeIcon>
             </div>
           </div>
-          <div className={cx("forgot-password")}>
-            <div
-              className={cx("block-forgot-password")}
-              onClick={handleToFogotPassword}
-            >
-              <Typography>Forgot password</Typography>
+          <div className={cx("field-password")}>
+            <input
+              type={showRePassword ? "text" : "password"}
+              id="re-password"
+              className={cx("input")}
+              placeholder="Confirm password"
+              spellCheck="false"
+              required
+            />
+            <div className={cx("icon")}>
+              <FontAwesomeIcon
+                onClick={handleShowRePassword}
+                icon={showRePassword ? faEyeSlash : faEye}
+                style={{ cursor: "pointer", color: "#8a8a8a" }}
+              ></FontAwesomeIcon>
             </div>
           </div>
           <Button
@@ -82,17 +107,17 @@ function LoginPage() {
             className={cx("button")}
             sx={{ width: "100%", height: "46px" }}
           >
-            Login
+            register
           </Button>
-          <div className={cx("register")}>
+          <div className={cx("login")}>
             <Typography>
-              If you don't have an account{" "}
-              <Link to="/register">
+              If you have an account{" "}
+              <Link to="/login">
                 <Typography
                   variant="span"
                   sx={{ color: "var(--primary-color)", cursor: "pointer" }}
                 >
-                  register here
+                  login here
                 </Typography>
               </Link>
             </Typography>
@@ -103,4 +128,4 @@ function LoginPage() {
   );
 }
 
-export default LoginPage;
+export default RegisterPage;
