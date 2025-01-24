@@ -6,6 +6,5 @@ namespace WebAPI.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        
     }
 }
