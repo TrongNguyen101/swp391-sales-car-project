@@ -7,7 +7,6 @@ namespace WebAPI.Models
     public class Users
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("User ID")]
         public Guid Id { get; set; }
         [Column("User Name")]

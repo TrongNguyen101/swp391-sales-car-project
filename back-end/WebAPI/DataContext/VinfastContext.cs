@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using WebAPI.Models;
 using System.IO;
+using WebAPI.Utils.EncyptHelper;
 
 namespace WebAPI.DataContext
 {
@@ -48,17 +49,17 @@ namespace WebAPI.DataContext
             // Check if the optionsBuilder is already configured
             if (!optionsBuilder.IsConfigured)
             {
-            // Build the configuration from the appsettings.json file
-            IConfigurationRoot configuration = new ConfigurationBuilder()
-               .SetBasePath(Directory.GetCurrentDirectory())
-               .AddJsonFile("appsettings.json")
-               .Build();
-            
-            // Get the connection string from the configuration
-            var connectionString = configuration.GetConnectionString("MacConnection");
-            
-            // Configure the context to use SQL Server with the connection string
-            optionsBuilder.UseSqlServer(connectionString);
+                // Build the configuration from the appsettings.json file
+                IConfigurationRoot configuration = new ConfigurationBuilder()
+                   .SetBasePath(Directory.GetCurrentDirectory())
+                   .AddJsonFile("appsettings.json")
+                   .Build();
+
+                // Get the connection string from the configuration
+                var connectionString = configuration.GetConnectionString("MacConnection");
+
+                // Configure the context to use SQL Server with the connection string
+                optionsBuilder.UseSqlServer(connectionString);
             }
         }
 
@@ -68,6 +69,50 @@ namespace WebAPI.DataContext
         /// <param name="modelBuilder">The builder being used to construct the model for this context.</param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // Seed the database with initial data
+            modelBuilder.Entity<Roles>().HasData(
+                new Roles
+                {
+                    RoleId = 1,
+                    RoleName = "Admin"
+                },
+                new Roles
+                {
+                    RoleId = 2,
+                    RoleName = "User"
+                }
+            );
+
+            // Seed the database with initial data
+            modelBuilder.Entity<Users>().HasData(
+                new Users
+                {
+                    Id = new Guid("d3b8a1e1-4d3b-4c3b-8a1e-1d3b4c3b8a1e"),
+                    UserName = "admin",
+                    Address = "123 Admin St",
+                    Phone = "1234567890",
+                    Email = "admin@example.com",
+                    Password = EncyptHelper.Sha256Encrypt("addminpassword"), // Note: In a real application, store hashed passwords
+                    CreatedAt = new DateTime(2023, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                    IsDeleted = false,
+                    LastChange = new DateTime(2023, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                    RoleId = 1
+                },
+                new Users
+                {
+                    Id = new Guid("e4b8a1e1-5d4b-5c4b-9a1e-2d4b5c4b9a1e"),
+                    UserName = "user",
+                    Address = "456 User St",
+                    Phone = "0987654321",
+                    Email = "user@example.com",
+                    Password = EncyptHelper.Sha256Encrypt("userpassword"), // Note: In a real application, store hashed passwords
+                    CreatedAt = new DateTime(2023, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                    IsDeleted = false,
+                    LastChange = new DateTime(2023, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                    RoleId = 2
+                }
+            );
+
             // Configure the relationship between Users and Roles
             modelBuilder.Entity<Users>(entity =>
             {

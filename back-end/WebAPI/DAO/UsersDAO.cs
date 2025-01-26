@@ -1,5 +1,6 @@
 using WebAPI.DataContext;
 using WebAPI.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace WebAPI.DAO
 {
@@ -35,6 +36,14 @@ namespace WebAPI.DAO
                 }
             }
             return Instance;
+        }
+
+        public async Task<Users?> findUserByEmail(string email)
+        {
+            using (var context = new VinfastContext())
+            {
+                return await context.Users.Where(u => u.Email == email).FirstOrDefaultAsync();
+            }
         }
 
         /// <summary>
