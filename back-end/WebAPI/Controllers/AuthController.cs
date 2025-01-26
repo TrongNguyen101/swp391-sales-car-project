@@ -11,69 +11,82 @@ namespace WebAPI.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private DataResponse DataResponse;
-
-        public AuthController()
-        {
-            this.DataResponse = new DataResponse();
-        }
-
         [HttpPost("Login")]
         [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] LoginRequestDTO UserLogin)
         {
-            var userDAO = await UsersDAO.GetInstance().findUserByEmail(UserLogin.Email);
-            if (userDAO == null)
+            try
             {
-                return NotFound(DataResponse = new DataResponse
+                var userDAO = await UsersDAO.GetInstance().findUserByEmail(UserLogin.Email);
+                if (userDAO == null)
                 {
-                    StatusCode = 404,
-                    Success = false,
-                    Message = "Email not found",
-                    Data = null
+                    return NotFound(new DataResponse
+                    {
+                        StatusCode = 404,
+                        Success = false,
+                        Message = "Email not found",
+                    });
+                }
+                if (userDAO.Password != EncyptHelper.Sha256Encrypt(UserLogin.Password))
+                {
+                    return Unauthorized(new DataResponse
+                    {
+                        StatusCode = 401,
+                        Success = false,
+                        Message = "Password is incorrect",
+                    });
+                }
+                return Ok(new DataResponse
+                {
+                    StatusCode = 200,
+                    Success = true,
+                    Message = "Login successfully",
+                    Data = AutoMapper.ToUserDTO(userDAO)
                 });
             }
-            if (userDAO.Password != EncyptHelper.Sha256Encrypt(UserLogin.Password))
+            catch (Exception e)
             {
-                return Unauthorized(DataResponse = new DataResponse
+                return BadRequest(new DataResponse
                 {
-                    StatusCode = 401,
+                    StatusCode = 400,
                     Success = false,
-                    Message = "Password is incorrect",
-                    Data = null
+                    Message = e.Message,
                 });
             }
-            return Ok(DataResponse = new DataResponse
-            {
-                StatusCode = 200,
-                Success = true,
-                Message = "Login successfully",
-                Data = AutoMapper.ToUserDTO(userDAO)
-            });
         }
 
         [HttpPost("Register")]
         [AllowAnonymous]
         public async Task<IActionResult> Register(string email)
         {
-            var userDAO = await UsersDAO.GetInstance().findUserByEmail(email);
-            if (userDAO != null)
+            try
             {
-                return Conflict(DataResponse = new DataResponse
+                var userDAO = await UsersDAO.GetInstance().findUserByEmail(email);
+                if (userDAO != null)
                 {
-                    StatusCode = 409,
-                    Success = false,
-                    Message = "Email already exists",
-                    Data = null
+                    return Conflict(new DataResponse
+                    {
+                        StatusCode = 409,
+                        Success = false,
+                        Message = "Email already exists",
+                    });
+                }
+                return Ok(new DataResponse
+                {
+                    StatusCode = 200,
+                    Success = true,
+                    Message = "Register successfully",
                 });
             }
-            return Ok(DataResponse = new DataResponse
+            catch (Exception e)
             {
-                StatusCode = 200,
-                Success = true,
-                Message = "Register successfully",
-                Data = null
-            });
+                return BadRequest(new DataResponse
+                {
+                    StatusCode = 400,
+                    Success = false,
+                    Message = e.Message,
+                });
+            }
         }
     }
 }
