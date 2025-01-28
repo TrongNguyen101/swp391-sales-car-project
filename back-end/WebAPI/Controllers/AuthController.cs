@@ -4,6 +4,7 @@ using WebAPI.Utils.EncyptHelper;
 using WebAPI.Utils.AutoMapper;
 using WebAPI.DTO;
 using Microsoft.AspNetCore.Authorization;
+using WebAPI.Utils.JwtTokenHelper;
 
 namespace WebAPI.Controllers
 {
@@ -11,6 +12,19 @@ namespace WebAPI.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
+        /// <summary>
+        /// Authenticates a user based on the provided login credentials.
+        /// </summary>
+        /// <param name="UserLogin">The login request data transfer object containing the user's email and password.</param>
+        /// <returns>
+        /// An <see cref="IActionResult"/> indicating the result of the login attempt:
+        /// <list type="bullet">
+        /// <item><description>200 OK: If the login is successful, returns a token.</description></item>
+        /// <item><description>404 Not Found: If the email is not found.</description></item>
+        /// <item><description>401 Unauthorized: If the password is incorrect.</description></item>
+        /// <item><description>400 Bad Request: If an exception occurs during the process.</description></item>
+        /// </list>
+        /// </returns>
         [HttpPost("Login")]
         [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] LoginRequestDTO UserLogin)
@@ -36,12 +50,14 @@ namespace WebAPI.Controllers
                         Message = "Password is incorrect",
                     });
                 }
+                var user = AutoMapper.ToUserDTO(userDAO);
+                var token = JwtTokenHelper.GenerateJwtToken(user);
                 return Ok(new DataResponse
                 {
                     StatusCode = 200,
                     Success = true,
                     Message = "Login successfully",
-                    Data = AutoMapper.ToUserDTO(userDAO)
+                    Data = new { token }
                 });
             }
             catch (Exception e)

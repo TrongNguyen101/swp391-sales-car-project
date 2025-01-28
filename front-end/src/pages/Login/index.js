@@ -31,7 +31,7 @@ function LoginPage() {
   const handleToFogotPassword = () => {
     navigate("/");
   };
-
+  
   return (
     <div className={cx("container")}>
       <div className={cx("content")}>

@@ -6,6 +6,11 @@ namespace WebAPI.Utils.AutoMapper
 {
     public static class AutoMapper
     {
+        /// <summary>
+        /// Convert User to UserDTO
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns>Mapp to UserDTO</returns>
         public static UserDTO ToUserDTO(Users user)
         {
             return new UserDTO
@@ -22,6 +27,11 @@ namespace WebAPI.Utils.AutoMapper
             };
         }
 
+        /// <summary>
+        /// Convert UserDTO to User
+        /// </summary>
+        /// <param name="userDTO"></param>
+        /// <returns>Mapping to User</returns>
         public static Users ToUser(UserDTO userDTO)
         {
             return new Users
@@ -38,6 +48,11 @@ namespace WebAPI.Utils.AutoMapper
             };
         }
 
+        /// <summary>
+        /// Convert Role to RoleDTO
+        /// </summary>
+        /// <param name="role"></param>
+        /// <returns>Mapping to RoleDTO</returns>
         public static RoleDTO ToRoleDTO(Roles role)
         {
             return new RoleDTO
@@ -47,6 +62,11 @@ namespace WebAPI.Utils.AutoMapper
             };
         }
 
+        /// <summary>
+        /// Convert RoleDTO to Role
+        /// </summary>
+        /// <param name="roleDTO"></param>
+        /// <returns>Mapping to Role</returns>
         public static Roles ToRole(RoleDTO roleDTO)
         {
             return new Roles
