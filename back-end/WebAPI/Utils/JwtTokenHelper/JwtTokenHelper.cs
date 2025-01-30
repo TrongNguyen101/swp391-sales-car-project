@@ -96,5 +96,26 @@ namespace WebAPI.Utils.JwtTokenHelper
 
             return signature == signatureToCompare;
         }
+
+        /// <summary>
+        /// Decodes the payload of the specified JWT.
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns>Payload JWT token</returns>
+        public static object GetUserRole(dynamic token)
+        {
+            string[] parts = token.Split('.');
+            string payload = parts[1];
+            string payloadJson = Base64Url.Decode(payload);
+            var payloadData = JsonSerializer.Deserialize<Dictionary<string, object>>(payloadJson);
+
+            if (payloadData != null && payloadData.TryGetValue("role", out var roleId))
+            {
+                return roleId;
+            }
+
+            return null;
+        }
+
     }
 }
