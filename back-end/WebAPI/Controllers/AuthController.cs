@@ -28,11 +28,11 @@ namespace WebAPI.Controllers
         /// </returns>
         [HttpPost("Login")]
         [AllowAnonymous]
-        public async Task<IActionResult> Login([FromBody] LoginRequestDTO UserLogin)
+        public async Task<IActionResult> Login([FromBody] LoginRequestDTO LoginRequest)
         {
             try
             {
-                var userDAO = await UsersDAO.GetInstance().findUserByEmail(UserLogin.Email);
+                var userDAO = await UsersDAO.GetInstance().findUserByEmail(LoginRequest.Email);
                 if (userDAO == null)
                 {
                     return NotFound(new DataResponse
@@ -42,7 +42,7 @@ namespace WebAPI.Controllers
                         Message = "Email not found",
                     });
                 }
-                if (userDAO.Password != EncyptHelper.Sha256Encrypt(UserLogin.Password))
+                if (userDAO.Password != EncyptHelper.Sha256Encrypt(LoginRequest.Password))
                 {
                     return Unauthorized(new DataResponse
                     {
@@ -87,11 +87,11 @@ namespace WebAPI.Controllers
         /// </returns>
         [HttpPost("Register")]
         [AllowAnonymous]
-        public async Task<IActionResult> Register(RegisterRequest registerRequest)
+        public async Task<IActionResult> Register(RegisterRequest RegisterRequest)
         {
             try
             {
-                var userDAO = await UsersDAO.GetInstance().findUserByEmail(registerRequest.Email);
+                var userDAO = await UsersDAO.GetInstance().findUserByEmail(RegisterRequest.Email);
                 if (userDAO != null)
                 {
                     return Conflict(new DataResponse
@@ -103,11 +103,11 @@ namespace WebAPI.Controllers
                 }
                 userDAO = new Users
                 {
-                    UserName = registerRequest.UserName.ToLower(),
-                    Address = registerRequest.Address.ToLower(),
-                    Phone = registerRequest.Phone,
-                    Email = registerRequest.Email,
-                    Password = EncyptHelper.Sha256Encrypt(registerRequest.Password),
+                    UserName = RegisterRequest.UserName.ToLower(),
+                    Address = RegisterRequest.Address.ToLower(),
+                    Phone = RegisterRequest.Phone,
+                    Email = RegisterRequest.Email,
+                    Password = EncyptHelper.Sha256Encrypt(RegisterRequest.Password),
                     CreatedAt = DateTime.UtcNow,
                     IsDeleted = false,
                     LastChange = DateTime.UtcNow,
@@ -146,11 +146,11 @@ namespace WebAPI.Controllers
         /// </list>
         /// </returns>
         [HttpPost("ChangePassword")]
-        public async Task<IActionResult> ChangePassword(RequestChangePassword requestChangePassword)
+        public async Task<IActionResult> ChangePassword(RequestChangePassword RequestChangePassword)
         {
             try
             {
-                var user = await UsersDAO.GetInstance().findUserByEmail(requestChangePassword.Email);
+                var user = await UsersDAO.GetInstance().findUserByEmail(RequestChangePassword.Email);
                 if (user == null)
                 {
                     return NotFound(new DataResponse
@@ -160,7 +160,7 @@ namespace WebAPI.Controllers
                         Message = "Email not found",
                     });
                 }
-                if (user.Password != EncyptHelper.Sha256Encrypt(requestChangePassword.OldPassword))
+                if (user.Password != EncyptHelper.Sha256Encrypt(RequestChangePassword.OldPassword))
                 {
                     return Unauthorized(new DataResponse
                     {
@@ -169,7 +169,7 @@ namespace WebAPI.Controllers
                         Message = "Old password is incorrect",
                     });
                 }
-                user.Password = EncyptHelper.Sha256Encrypt(requestChangePassword.NewPassword);
+                user.Password = EncyptHelper.Sha256Encrypt(RequestChangePassword.NewPassword);
                 UsersDAO.GetInstance().UpdateUser(user);
                 return Ok(new DataResponse
                 {
