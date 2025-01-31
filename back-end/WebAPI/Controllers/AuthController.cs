@@ -88,7 +88,7 @@ namespace WebAPI.Controllers
         /// </returns>
         [HttpPost("Register")]
         [AllowAnonymous]
-        public async Task<IActionResult> Register(RegisterRequest RegisterRequest)
+        public async Task<IActionResult> Register([FromBody] RegisterRequest RegisterRequest)
         {
             try
             {
@@ -104,9 +104,10 @@ namespace WebAPI.Controllers
                 }
                 userDAO = new Users
                 {
-                    UserName = RegisterRequest.UserName.ToLower(),
-                    Address = RegisterRequest.Address.ToLower(),
-                    Phone = RegisterRequest.Phone,
+                    Id = Guid.NewGuid(),
+                    UserName = RegisterRequest.Fullname.ToLower(),
+                    Address = null,
+                    Phone = null,
                     Email = RegisterRequest.Email,
                     Password = EncyptHelper.Sha256Encrypt(RegisterRequest.Password),
                     CreatedAt = DateTime.UtcNow,

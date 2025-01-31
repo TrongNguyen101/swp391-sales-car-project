@@ -5,7 +5,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
-import * as loginService from "../../services/AuthService";
+import * as authService from "../../services/AuthService";
+import * as AuthValidator from "../../validation/AuthValidation";
 
 const cx = classNames.bind(styles);
 
@@ -37,10 +38,16 @@ function LoginPage() {
     navigate("/");
   };
 
-  const fetchLogin = async (event) => {
-    event.preventDefault();
+  /**
+   * Handles the login process by sending a POST request with the provided email and password.
+   * Stores the received token in local storage and navigates to the home page upon successful login.
+   * Displays appropriate error messages based on the response status.
+   *
+   * @returns {Promise<void>} - A promise that resolves when the login process is complete.
+   */
+  const fetchLogin = async () => {
     try {
-      const response = await loginService.postLogin(email, password);
+      const response = await authService.postLogin(email, password);
       if (response.status === 200) {
         localStorage.setItem("Bearer", response.data.data.token);
         navigate("/");
@@ -62,10 +69,26 @@ function LoginPage() {
     }
   };
 
+  const handleOnSubmit = (event) => {
+    event.preventDefault();
+    const emailError = AuthValidator.validateEmail(email);
+    const passwordError = AuthValidator.validatePassword(password);
+
+    if (emailError) {
+      setErrorEmail(emailError);
+    }
+
+    if (passwordError) {
+      setErrorPassword(passwordError);
+    }
+    if (!emailError && !passwordError)
+    fetchLogin();
+  };
+
   return (
     <div className={cx("container")}>
       <div className={cx("content")}>
-        <form className={cx("form")} onSubmit={fetchLogin}>
+        <form className={cx("form")} onSubmit={handleOnSubmit}>
           <div className={cx("vinfast-logo")}>
             <div className={cx("logo-image")} onClick={handleBackToHome}>
               <img src="./logoJPG-removebg-preview.png" alt="vinfast-logo" />
@@ -83,7 +106,6 @@ function LoginPage() {
                 setEmail(e.target.value);
                 setErrorEmail("");
               }}
-              required
             />
             {errorEmail && (
               <Typography sx={{ color: "red" }}>{errorEmail}</Typography>
@@ -101,7 +123,6 @@ function LoginPage() {
                 setPassword(e.target.value);
                 setErrorPassword("");
               }}
-              required
             />
             {errorPassword && (
               <Typography sx={{ color: "red" }}>{errorPassword}</Typography>
