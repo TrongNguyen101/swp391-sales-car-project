@@ -1,4 +1,4 @@
-import * as request from "../..//utils/TestRequest";
+import * as request from "../../utils/TestRequest";
 
 export const getWeather = async () => {
   try {
