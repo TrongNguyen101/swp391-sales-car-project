@@ -1,8 +1,8 @@
-import { Button, Typography } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Slide, Typography } from "@mui/material";
 import classNames from "classnames/bind";
 import styles from "./Register.module.scss";
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { forwardRef, useState } from "react";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import * as authService from "../../services/AuthService";
@@ -27,6 +27,7 @@ const cx = classNames.bind(styles);
 function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showRePassword, setShowRePassword] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
   const [fullname, setFullname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -35,6 +36,7 @@ function RegisterPage() {
   const [errorPassword, setErrorPassword] = useState("");
   const [errorRePassword, setErrorRePassword] = useState("");
   const [errorFullname, setErrorFullname] = useState("");
+  const [message, setMessage] = useState("");
 
   const navigate = useNavigate();
 
@@ -53,9 +55,9 @@ function RegisterPage() {
 
   /**
    * Handles the registration process by sending user details to the server.
-   * 
+   *
    * @returns {Promise<void>} - A promise that resolves when the registration process is complete.
-   * 
+   *
    * @throws {Error} - Throws an error if the registration process fails.
    */
   const fetchRegister = async () => {
@@ -66,9 +68,8 @@ function RegisterPage() {
         password
       );
       if (response.status === 200) {
-        console.log(response.data);
-        alert(response.data.message);
-        navigate("/login");
+        setMessage(response.data.message);
+        setOpenDialog(true);
       }
       if (response.status === 409) {
         setErrorEmail(response.data.message);
@@ -118,6 +119,16 @@ function RegisterPage() {
       fetchRegister();
     }
   };
+
+    const handleCloseDialog = () => {
+      setOpenDialog(false);
+      navigate("/login");
+    };
+  
+    const Transition = forwardRef(function Transition(props, ref) {
+      return <Slide direction="down" ref={ref} {...props} />;
+    });
+  
 
   return (
     <div className={cx("container")}>
@@ -173,6 +184,7 @@ function RegisterPage() {
               onChange={(e) => {
                 setPassword(e.target.value);
                 setErrorPassword("");
+                setRePassword("");
               }}
             />
             {errorPassword && (
@@ -196,6 +208,7 @@ function RegisterPage() {
               value={rePassword}
               onChange={(e) => {
                 setRePassword(e.target.value);
+                setPassword("");
                 setErrorRePassword("");
               }}
             />
@@ -233,6 +246,43 @@ function RegisterPage() {
           </div>
         </form>
       </div>
+      <Dialog
+        open={openDialog}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={handleCloseDialog}
+        aria-labelledby="alert-dialog-slide-title"
+        aria-describedby="alert-dialog-slide-description"
+        sx={{ "& .MuiDialog-paper": { width: "440px", height: "180px" } }}
+      >
+        <DialogTitle id="alert-dialog-slide-title" sx={{ textAlign: "center" }}>
+          <Typography
+            variant="h5"
+            sx={{ fontSize: "1.6rem", fontWeight: "500", lineHeight: "1.5" }}
+          >
+            {message}
+          </Typography>
+        </DialogTitle>
+        <DialogContent sx={{ textAlign: "center" }}>
+          <DialogContentText id="alert-dialog-slide-description">
+            <Typography
+              variant="h6"
+              sx={{ fontSize: "1.2rem", fontWeight: "300", lineHeight: "1.5" }}
+            >
+              You have successfully register an account.
+            </Typography>
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions sx={{ justifyContent: "center" }}>
+          <Button
+            variant="contained"
+            onClick={handleCloseDialog}
+            color="primary"
+          >
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }
