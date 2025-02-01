@@ -204,6 +204,10 @@ a {
 // The 'user-select: none;' property ensures that the text within the element cannot be selected by the user.
 .register {
   user-select: none;
+  a{
+    text-decoration-color: var(--primary-color);
+    color: var(--primary-color);
+  }
 }
 
 .error-input {

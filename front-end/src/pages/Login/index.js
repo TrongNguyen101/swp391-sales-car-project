@@ -173,7 +173,7 @@ function LoginPage() {
           <div className={cx("register")}>
             <Typography>
               If you don't have an account{" "}
-              <Link to="/register">
+              <Link to="/register">  
                 <Typography
                   variant="span"
                   sx={{ color: "var(--primary-color)", cursor: "pointer" }}

@@ -191,6 +191,10 @@ a {
 // .login: Disables text selection for the element
 .login {
   user-select: none;
+  a{
+    text-decoration-color: var(--primary-color);
+    color: var(--primary-color);
+  }
 }
 
 .error-input {

@@ -90,15 +90,20 @@
     display: flex;
     align-items: center;
     gap: 30px;
-    .login-text {
-      color: #000;
-      &:hover {
-        cursor: pointer;
-        color: var(--primary-color);
-        transition: 0.3s;
-      }
+  }
+
+  .login-text {
+    color: #000;
+    &:hover {
+      cursor: pointer;
+      color: var(--primary-color);
+      transition: 0.3s;
     }
   }
+}
+
+.disabled {
+  display: none;
 }
 
 // This media query applies styles to screens with a maximum width of 75em (1200px).
