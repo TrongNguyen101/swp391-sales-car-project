@@ -1,10 +1,19 @@
 import classNames from "classnames/bind";
 import styles from "./Login.module.scss";
-import { Button, Typography } from "@mui/material";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Slide,
+  Typography,
+} from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
+import { forwardRef, useState } from "react";
 import * as authService from "../../services/AuthService";
 import * as AuthValidator from "../../validation/AuthValidation";
 
@@ -24,6 +33,8 @@ function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [errorEmail, setErrorEmail] = useState("");
   const [errorPassword, setErrorPassword] = useState("");
+  const [message, setMessage] = useState("");
+  const [openDialog, setOpenDialog] = useState(false);
   const navigate = useNavigate();
 
   const handleShowPassword = () => {
@@ -50,8 +61,8 @@ function LoginPage() {
       const response = await authService.postLogin(email, password);
       if (response.status === 200) {
         localStorage.setItem("Bearer", response.data.data.token);
-        navigate("/");
-        console.log(response.data);
+        setMessage(response.data.message);
+        setOpenDialog(true);
       }
       if (response.status === 404) {
         setErrorEmail(response.data.message);
@@ -81,9 +92,17 @@ function LoginPage() {
     if (passwordError) {
       setErrorPassword(passwordError);
     }
-    if (!emailError && !passwordError)
-    fetchLogin();
+    if (!emailError && !passwordError) fetchLogin();
   };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+    navigate("/"); // Navigate to home page after closing the dialog
+  };
+
+  const Transition = forwardRef(function Transition(props, ref) {
+    return <Slide direction="down" ref={ref} {...props} />;
+  });
 
   return (
     <div className={cx("container")}>
@@ -154,7 +173,7 @@ function LoginPage() {
           <div className={cx("register")}>
             <Typography>
               If you don't have an account{" "}
-              <Link to="/register">
+              <Link to="/register">  
                 <Typography
                   variant="span"
                   sx={{ color: "var(--primary-color)", cursor: "pointer" }}
@@ -166,6 +185,38 @@ function LoginPage() {
           </div>
         </form>
       </div>
+      <Dialog
+        open={openDialog}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={handleCloseDialog}
+        aria-labelledby="alert-dialog-slide-title"
+        aria-describedby="alert-dialog-slide-description"
+        sx={{ "& .MuiDialog-paper": { width: "440px", height: "180px" } }}
+      >
+        <DialogTitle id="alert-dialog-slide-title" sx={{ textAlign: "center" }}>
+          <Typography
+            variant="h5"
+            sx={{ fontSize: "1.6rem", fontWeight: "500", lineHeight: "1.5" }}
+          >
+            {message}
+          </Typography>
+        </DialogTitle>
+        <DialogContent sx={{ textAlign: "center" }}>
+          <DialogContentText id="alert-dialog-slide-description">
+            <Typography variant="h6" sx={{ fontSize: "1.2rem", fontWeight: "300", lineHeight: "1.5" }}>You have successfully logged in.</Typography>
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions sx={{ justifyContent: "center" }}>
+          <Button
+            variant="contained"
+            onClick={handleCloseDialog}
+            color="primary"
+          >
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }

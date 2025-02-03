@@ -75,5 +75,22 @@ namespace WebAPI.Utils.AutoMapper
                 RoleName = roleDTO.RoleName ?? string.Empty
             };
         }
+
+        public static CarDTO ToCarDTO(Cars car)
+        {
+            return new CarDTO
+            {
+                Id = car.Id,
+                Name = car.Name,
+                Price = car.Price,
+                Seat = car.Seat,
+                Image = car.Image
+            };
+        }
+
+        public static List<CarDTO> ToCarDTOList(List<Cars> cars)
+        {
+            return cars.Select(car => ToCarDTO(car)).ToList();
+        }
     }
 }
