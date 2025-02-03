@@ -19,6 +19,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseStaticFiles();
+
 app.UseCors(cors => cors
 .WithOrigins("http://localhost:3000")
 .AllowAnyHeader()

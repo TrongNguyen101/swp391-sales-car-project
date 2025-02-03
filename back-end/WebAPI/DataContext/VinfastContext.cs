@@ -1,7 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using WebAPI.Models;
-using System.IO;
 using WebAPI.Utils.EncyptHelper;
 
 namespace WebAPI.DataContext
@@ -36,6 +34,8 @@ namespace WebAPI.DataContext
         /// </summary>
         public DbSet<Roles> Roles { get; set; }
 
+        public DbSet<Cars> Cars { get; set; }
+
         /// <summary>
         /// Configures the database context options.
         /// </summary>
@@ -69,6 +69,56 @@ namespace WebAPI.DataContext
         /// <param name="modelBuilder">The builder being used to construct the model for this context.</param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+             modelBuilder.Entity<Cars>().HasData(
+                new Cars
+                {
+                    Id = 1,
+                    Name = "VF 3",
+                    Price = "240,000,000",
+                    Seat = 4,
+                    Image = "vinfast-vf3.png"
+                },
+                new Cars
+                {
+                    Id = 2,
+                    Name = "VF 5",
+                    Price = "460,000,000",
+                    Seat = 5,
+                    Image = "vinfast-vf5.png"
+                },
+                new Cars
+                {
+                    Id = 3,
+                    Name = "VF 6",
+                    Price = "675,000,000",
+                    Seat = 5,
+                    Image = "vinfast-vf6.png"
+                },
+                new Cars
+                {
+                    Id = 4,
+                    Name = "VF 7",
+                    Price = "850,000,000",
+                    Seat = 5,
+                    Image = "vinfast-vf7.png"
+                },
+                new Cars
+                {
+                    Id = 5,
+                    Name = "VF 8",
+                    Price = "1,170,000,000",
+                    Seat = 5,
+                    Image = "vinfast-vf8.png"
+                },
+                new Cars
+                {
+                    Id = 6,
+                    Name = "VF 9",
+                    Price = "1,604,000,000",
+                    Seat = 7,
+                    Image = "vinfast-vf9.png"
+                }
+             );
             // Seed the database with initial data
             modelBuilder.Entity<Roles>().HasData(
                 new Roles
@@ -92,7 +142,7 @@ namespace WebAPI.DataContext
                     Address = "123 Admin St",
                     Phone = "1234567890",
                     Email = "admin@example.com",
-                    Password = EncyptHelper.Sha256Encrypt("addminpassword"), // Note: In a real application, store hashed passwords
+                    Password = EncyptHelper.Sha256Encrypt("admin@123345"), // Note: In a real application, store hashed passwords
                     CreatedAt = new DateTime(2023, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                     IsDeleted = false,
                     LastChange = new DateTime(2023, 1, 1, 0, 0, 0, DateTimeKind.Utc),
@@ -105,7 +155,7 @@ namespace WebAPI.DataContext
                     Address = "456 User St",
                     Phone = "0987654321",
                     Email = "user@example.com",
-                    Password = EncyptHelper.Sha256Encrypt("userpassword"), // Note: In a real application, store hashed passwords
+                    Password = EncyptHelper.Sha256Encrypt("user@12345"), // Note: In a real application, store hashed passwords
                     CreatedAt = new DateTime(2023, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                     IsDeleted = false,
                     LastChange = new DateTime(2023, 1, 1, 0, 0, 0, DateTimeKind.Utc),

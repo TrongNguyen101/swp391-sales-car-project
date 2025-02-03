@@ -22,6 +22,86 @@ namespace WebAPI.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("WebAPI.Models.Cars", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("Car ID");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Image")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Car Image");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Car Name");
+
+                    b.Property<string>("Price")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Car Price");
+
+                    b.Property<int>("Seat")
+                        .HasColumnType("int")
+                        .HasColumnName("Car Seat");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Cars");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Image = "vinfast-vf3.png",
+                            Name = "VF 3",
+                            Price = "240,000,000",
+                            Seat = 4
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Image = "vinfast-vf5.png",
+                            Name = "VF 5",
+                            Price = "460,000,000",
+                            Seat = 5
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Image = "vinfast-vf6.png",
+                            Name = "VF 6",
+                            Price = "675,000,000",
+                            Seat = 5
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Image = "vinfast-vf7.png",
+                            Name = "VF 7",
+                            Price = "850,000,000",
+                            Seat = 5
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Image = "vinfast-vf8.png",
+                            Name = "VF 8",
+                            Price = "1,170,000,000",
+                            Seat = 5
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Image = "vinfast-vf9.png",
+                            Name = "VF 9",
+                            Price = "1,604,000,000",
+                            Seat = 7
+                        });
+                });
+
             modelBuilder.Entity("WebAPI.Models.Roles", b =>
                 {
                     b.Property<int>("RoleId")
@@ -111,7 +191,7 @@ namespace WebAPI.Migrations
                             Email = "admin@example.com",
                             IsDeleted = false,
                             LastChange = new DateTime(2023, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Password = "a314c216b44f59e8098f0bebb12ea204b3952294b06f14be75a898179b80b6a8",
+                            Password = "393a5cc22f47320f9d3108feb381652d79974a58e58ec0a68a0de3b289d8a5ef",
                             Phone = "1234567890",
                             RoleId = 1,
                             UserName = "admin"
@@ -124,7 +204,7 @@ namespace WebAPI.Migrations
                             Email = "user@example.com",
                             IsDeleted = false,
                             LastChange = new DateTime(2023, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Password = "616104ebd93e67ae20bac90c86483da3cae1ee5b1c1483f739372a88ff1e79f9",
+                            Password = "24e13074bec3f7bb03bc30280399bede77eb49cef89d44581a90ec24463c2ba6",
                             Phone = "0987654321",
                             RoleId = 2,
                             UserName = "user"
