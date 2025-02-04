@@ -1,15 +1,13 @@
 using WebAPI.DataContext;
 using WebAPI.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace WebAPI.DAO
 {
     public class CarsDAO
     {
         private static CarsDAO instance;
-        private static readonly object padlock = new object();
+        private static readonly object lockIntance = new object();
 
         private CarsDAO() { }
 
@@ -17,7 +15,7 @@ namespace WebAPI.DAO
         {
             if (instance == null)
             {
-                lock (padlock)
+                lock (lockIntance)
                 {
                     if (instance == null)
                     {
@@ -33,6 +31,14 @@ namespace WebAPI.DAO
             using (var context = new VinfastContext())
             {
                 return await context.Cars.ToListAsync();
+            }
+        }
+
+        public async Task<Cars> GetCarById(int id)
+        {
+            using (var context = new VinfastContext())
+            {
+                return await context.Cars.FindAsync(id);
             }
         }
     }

@@ -1,5 +1,7 @@
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.DAO;
+using WebAPI.DTO;
 using WebAPI.Models;
 using WebAPI.Utils.AutoMapper;
 
@@ -12,9 +14,71 @@ namespace WebAPI.Controllers
         [HttpGet]
         public async Task<ActionResult> GetAllCars()
         {
-            var cars = await CarsDAO.GetInstance().GetAllCars();
-            var carDTOs = AutoMapper.ToCarDTOList(cars);
-            return Ok(carDTOs);
+            try
+            {
+                var cars = await CarsDAO.GetInstance().GetAllCars();
+                if (cars == null || cars.Count == 0)
+                {
+                    return NotFound(new DataResponse
+                    {
+                        StatusCode = 404,
+                        Message = "No car found",
+                        Success = false
+                    });
+                }
+                var carDTOs = AutoMapper.ToCarDTOList(cars);
+                return Ok(new DataResponse
+                {
+                    StatusCode = 200,
+                    Message = "Get all cars successfully",
+                    Success = true,
+                    Data = JsonSerializer.Serialize(carDTOs)
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new DataResponse
+                {
+                    StatusCode = 400,
+                    Message = ex.Message,
+                    Success = false
+                });
+            }
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult> GetCarById(int id)
+        {
+            try
+            {
+                var car = await CarsDAO.GetInstance().GetCarById(id);
+                if (car == null)
+                {
+                    return NotFound(new DataResponse
+                    {
+                        StatusCode = 404,
+                        Message = "Car not found",
+                        Success = false
+                    });
+                }
+                var carDTO = AutoMapper.ToCarDTO(car);
+                return Ok(new DataResponse
+                {
+                    StatusCode = 200,
+                    Message = "Get car by id successfully",
+                    Success = true,
+                    Data = JsonSerializer.Serialize(carDTO)
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new DataResponse
+                {
+                    StatusCode = 400,
+                    Message = ex.Message,
+                    Success = false
+                });
+            }
         }
     }
 }
