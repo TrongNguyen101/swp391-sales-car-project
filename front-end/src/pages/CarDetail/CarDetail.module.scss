@@ -6,20 +6,31 @@
 }
 
 .content {
+  margin-top: 20px;
   width: var(--default-width);
-  height: 1000px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 20px;
 }
 
 .car-color-block {
-  width: 1400px;
+  width: 100%; 
+  max-width: 600px;
+  padding-top: 120px;
+}
+
+.car-color-item {
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  gap: 20px;
+  align-items: center;
+  height: 300px;
+}
+
+.car-color-item img {
+  width: 100%; 
+  height: 1350px; 
+  max-height: 100%;
 }
 
 .car-color {
@@ -33,14 +44,81 @@
 
 .car-color-item {
   width: 120px;
+  img {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.car-color {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 25px;
+}
+
+.car-color-button {
+  width: 120px;
   height: 68px;
   cursor: pointer;
   transition: all 0.3s;
+  &:hover {
+    transform: scale(1.1);
+  }
+  &.active {
+    border: none;
+  }
+  img {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.car-info{
+  padding-top: 120px;
+  width: 1200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.car-banner {
+  width: 100%;
+  height: 799px;
   img{
     width: 100%;
     height: 100%;
   }
-  &:hover {
-    transform: scale(1.1);
-  }
+}
+.price-info {
+  width: 1200px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 25px;
+}
+
+.battery-price {
+  width: 538px;
+  height: 149px;
+  padding: 30px;
+  border: 1px solid #84a3b6;
+}
+
+.battery-price {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.deposit-btn{
+  width: 1200px;
+  height: 48px;
+  display: flex;
+  justify-content: center;
 }

@@ -1,4 +1,5 @@
 // filepath: /Users/nguyentrong/swp391-sales-car-project/back-end/WebAPI/Services/MappingService.cs
+using System.Globalization;
 using WebAPI.DTO;
 using WebAPI.Models;
 
@@ -78,19 +79,47 @@ namespace WebAPI.Utils.AutoMapper
 
         public static CarDTO ToCarDTO(Cars car)
         {
+            var carPrice = FormatPrice(car.PriceBatteryRental);
+
             return new CarDTO
             {
                 Id = car.Id,
                 Name = car.Name,
-                Price = car.Price,
-                Seat = car.Seat,
+                Price = carPrice,
+                Seat = car.Seats,
                 Image = car.Image
+            };
+        }
+
+        public static CarDetailDTO ToCarDetailDTO(Cars car)
+        {
+            var carPrice = FormatPrice(car.PriceBatteryRental);
+            var carPriceOwn = FormatPrice(car.PriceBatteryOwn);
+            var carDeposite = FormatPrice(car.PriceDeposite);
+
+            return new CarDetailDTO
+            {
+                Id = car.Id,
+                Name = car.Name,
+                PriceBatteryRental = carPrice,
+                PriceBatteryOwn = carPriceOwn,
+                PriceDeposite = carDeposite,
+                SpecImage = car.SpecImage,
+                ColorImage1 = car.ColorImage1,
+                ColorImage2 = car.ColorImage2,
+                ColorImage3 = car.ColorImage3,
+                ImageBanner = car.ImageBanner
             };
         }
 
         public static List<CarDTO> ToCarDTOList(List<Cars> cars)
         {
             return cars.Select(car => ToCarDTO(car)).ToList();
+        }
+
+        private static string FormatPrice(double price)
+        {
+            return price.ToString("N0", new CultureInfo("en-US")).Replace(",", ".");
         }
     }
 }

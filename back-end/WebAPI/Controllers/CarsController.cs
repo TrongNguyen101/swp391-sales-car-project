@@ -61,7 +61,7 @@ namespace WebAPI.Controllers
                         Success = false
                     });
                 }
-                var carDTO = AutoMapper.ToCarDTO(car);
+                var carDTO = AutoMapper.ToCarDetailDTO(car);
                 return Ok(new DataResponse
                 {
                     StatusCode = 200,

@@ -1,15 +1,35 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { Typography } from "@mui/material";
 import classNames from "classnames/bind";
 import styles from "./CarDetail.module.scss";
 import * as carService from "../../services/CarService";
+import Slider from "react-slick";
+import { Button, Typography } from "@mui/material";
 
 const cx = classNames.bind(styles);
 
 function CarDetailPage() {
   const { carId } = useParams();
   const [car, setCar] = useState({});
+  const [selectedColor, setSelectedColor] = useState(0);
+
+  const colors = [
+    {
+      id: 1,
+      name: car.ColorImage1,
+      image: car.ColorImage1,
+    },
+    {
+      id: 2,
+      name: car.ColorImage2,
+      image: car.ColorImage2,
+    },
+    {
+      id: 3,
+      name: car.ColorImage3,
+      image: car.ColorImage3,
+    },
+  ];
 
   const toTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -33,40 +53,162 @@ function CarDetailPage() {
     fetchCarDetails(carId);
   }, [carId]);
 
+  const settings = {
+    dots: false,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    initialSlide: selectedColor,
+  };
+
+  const handleColorChange = (index) => {
+    setSelectedColor(index);
+  };
+
+  console.log(car);
   return (
     <div className={cx("container")}>
+      <div className={cx("car-banner")}>
+        <img
+          src={`https://localhost:7005/api/Images/Banner/${car.ImageBanner}`}
+          alt={car.Name}
+        />
+      </div>
       <div className={cx("content")}>
-        <div className={cx("car-color-block")}>
-          <div className={cx("color-image-result")}>
-            <img
-              src={`https://localhost:7005/api/Images/Car/${car.Image}`}
-              alt={car.Name}
-            />
+        <div className={cx("car-info")}>
+          <div className={cx("price-title")}>
+            <Typography
+              variant="h3"
+              sx={{
+                color: "#3c3c3c",
+                fontSize: "48px",
+                fontWeight: "600",
+                letterSpacing: "-.96px",
+                lineHeight: "60px",
+              }}
+            >
+              Price options of {car.Name}
+            </Typography>
           </div>
-          <div className={cx("car-color")}>
-            <div className={cx("car-color-item")}>
-              <img src="../vinfast-vf3-white.png" alt="demo" />
+          <div className={cx("price-info")}>
+            <div className={cx("battery-price")}>
+              <div className={cx("price-title")}>
+                <Typography
+                  variant="h5"
+                  sx={{
+                    fontStyle: "italic",
+                    fontWeight: "1000",
+                    color: "#3c3c3c",
+                    fontSize: "24px",
+                    lineHeight: "30px",
+                  }}
+                >
+                  Price battery rental
+                </Typography>
+              </div>
+              <Typography
+                variant="h6"
+                sx={{
+                  fontSize: "28px",
+                  fontWeight: "400",
+                  lineHeight: "normal",
+                  color: "#3c3c3c",
+                }}
+              >
+                {car.PriceBatteryRental}{" "}
+                <Typography
+                  variant="span"
+                  sx={{
+                    fontSize: "18px",
+                    fontWeight: "400",
+                    lineHeight: "normal",
+                    color: "#3c3c3c",
+                  }}
+                >
+                  VND
+                </Typography>
+              </Typography>
             </div>
-            <div className={cx("car-color-item")}>
-              <img src="../vinfast-vf3-red.png" alt="demo" />
+            <div className={cx("battery-price")}>
+              <div className={cx("price-title")}>
+                <Typography
+                  variant="h5"
+                  sx={{
+                    fontStyle: "italic",
+                    fontWeight: "1000",
+                    color: "#3c3c3c",
+                    fontSize: "24px",
+                    lineHeight: "30px",
+                  }}
+                >
+                  Price battery own
+                </Typography>
+              </div>
+              <Typography
+                variant="h6"
+                sx={{
+                  fontSize: "28px",
+                  fontWeight: "400",
+                  lineHeight: "normal",
+                  color: "#3c3c3c",
+                }}
+              >
+                {car.PriceBatteryOwn}{" "}
+                <Typography
+                  variant="span"
+                  sx={{
+                    fontSize: "18px",
+                    fontWeight: "400",
+                    lineHeight: "normal",
+                    color: "#3c3c3c",
+                  }}
+                >
+                  VND
+                </Typography>
+              </Typography>
             </div>
-            <div className={cx("car-color-item")}>
-              <img src="../vinfast-vf3-grey.png" alt="demo" />
-            </div>
+          </div>
+          <div className={cx("deposit-btn")}>
+            <Button variant="contained">
+              <Typography sx={{ textTransform: "none" }}>
+                Deposit {car.PriceDeposite} VND
+              </Typography>
+            </Button>
           </div>
         </div>
-        <div className={cx("car-detail")}>
-          <div className={cx("car-image")}>
-            <img
-              src={`https://localhost:7005/api/Images/Car/${car.Image}`}
-              alt={car.Name}
-            />
+        <div className={cx("color-block")}>
+          <div className={cx("car-color-block")}>
+            <Slider {...settings} key={selectedColor}>
+              {colors.map((color, index) => (
+                <div className={cx("car-color-item")} key={index}>
+                  <img
+                    src={`https://localhost:7005/api/Images/ColorDetail/${color.image}`}
+                    alt={color.name}
+                  />
+                </div>
+              ))}
+            </Slider>
           </div>
-          <div className={cx("car-info")}>
-            <Typography variant="h4">{car.Name}</Typography>
-            <Typography variant="body1">{car.Seat}</Typography>
-            <Typography variant="h6">Price: {car.Price}</Typography>
+          <div className={cx("car-color")}>
+            {colors.map((color, index) => (
+              <div
+                key={index}
+                className={cx("car-color-button", {
+                  active: selectedColor === index,
+                })}
+                onClick={() => handleColorChange(index)}
+              >
+                <img
+                  src={`https://localhost:7005/api/Images/Color/${color.image}`}
+                  alt={color.name}
+                />
+              </div>
+            ))}
           </div>
+        </div>
+        <div className={cx("car-spec")}>
+            <img src="" alt="" />
         </div>
       </div>
     </div>

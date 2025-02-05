@@ -17,5 +17,41 @@ namespace WebAPI.Controllers
             var image = System.IO.File.OpenRead(imagePath);
             return File(image, "image/jpeg");
         }
+
+        [HttpGet("Color/{imageName}")]
+        public IActionResult GetColorImage(string imageName)
+        {
+            var imagePath = Path.Combine(Directory.GetCurrentDirectory(), "Images/CarColor", imageName);
+            if (!System.IO.File.Exists(imagePath))
+            {
+                return NotFound();
+            }
+            var image = System.IO.File.OpenRead(imagePath);
+            return File(image, "image/jpeg");
+        }
+
+        [HttpGet("ColorDetail/{imageName}")]
+        public IActionResult GetColorImageDetail(string imageName)
+        {
+            var imagePath = Path.Combine(Directory.GetCurrentDirectory(), "Images/CarColorDetail", imageName);
+            if (!System.IO.File.Exists(imagePath))
+            {
+                return NotFound();
+            }
+            var image = System.IO.File.OpenRead(imagePath);
+            return File(image, "image/jpeg");
+        }
+
+        [HttpGet("Banner/{imageName}")]
+        public IActionResult GetBannerImage(string imageName)
+        {
+            var imagePath = Path.Combine(Directory.GetCurrentDirectory(), "Images/CarBanner", imageName);
+            if (!System.IO.File.Exists(imagePath))
+            {
+                return NotFound();
+            }
+            var image = System.IO.File.OpenRead(imagePath);
+            return File(image, "image/jpeg");
+        }
     }
 }
