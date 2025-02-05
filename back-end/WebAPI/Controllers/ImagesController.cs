@@ -53,5 +53,17 @@ namespace WebAPI.Controllers
             var image = System.IO.File.OpenRead(imagePath);
             return File(image, "image/jpeg");
         }
+
+        [HttpGet("Spec/{imageName}")]
+        public IActionResult GetSpecImage(string imageName)
+        {
+            var imagePath = Path.Combine(Directory.GetCurrentDirectory(), "Images/CarSpec", imageName);
+            if (!System.IO.File.Exists(imagePath))
+            {
+                return NotFound();
+            }
+            var image = System.IO.File.OpenRead(imagePath);
+            return File(image, "image/jpeg");
+        }
     }
 }

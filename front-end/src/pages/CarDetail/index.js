@@ -207,8 +207,8 @@ function CarDetailPage() {
             ))}
           </div>
         </div>
-        <div className={cx("car-spec")}>
-            <img src="" alt="" />
+        <div className={cx("car-specs")}>
+            <img src={`https://localhost:7005/api/Images/Spec/${car.SpecImage}`} alt={car.SpecImage} />
         </div>
       </div>
     </div>
