@@ -69,56 +69,110 @@ namespace WebAPI.DataContext
         /// <param name="modelBuilder">The builder being used to construct the model for this context.</param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-             modelBuilder.Entity<Cars>().HasData(
-                new Cars
-                {
-                    Id = 1,
-                    Name = "VF 3",
-                    Price = "240,000,000",
-                    Seat = 4,
-                    Image = "vinfast-vf3.png"
-                },
-                new Cars
-                {
-                    Id = 2,
-                    Name = "VF 5",
-                    Price = "460,000,000",
-                    Seat = 5,
-                    Image = "vinfast-vf5.png"
-                },
-                new Cars
-                {
-                    Id = 3,
-                    Name = "VF 6",
-                    Price = "675,000,000",
-                    Seat = 5,
-                    Image = "vinfast-vf6.png"
-                },
-                new Cars
-                {
-                    Id = 4,
-                    Name = "VF 7",
-                    Price = "850,000,000",
-                    Seat = 5,
-                    Image = "vinfast-vf7.png"
-                },
-                new Cars
-                {
-                    Id = 5,
-                    Name = "VF 8",
-                    Price = "1,170,000,000",
-                    Seat = 5,
-                    Image = "vinfast-vf8.png"
-                },
-                new Cars
-                {
-                    Id = 6,
-                    Name = "VF 9",
-                    Price = "1,604,000,000",
-                    Seat = 7,
-                    Image = "vinfast-vf9.png"
-                }
-             );
+            modelBuilder.Entity<Cars>().HasData(
+               new Cars
+               {
+                   Id = 1,
+                   Name = "Vinfast VF3",
+                   Seats = 4,
+                   Image = "vinfast-vf3.png",
+                   SpecImage = "vinfast-vf3-spec.png",
+                   ColorImage1 = "vinfast-vf3-white.png",
+                   ColorImage2 = "vinfast-vf3-grey.png",
+                   ColorImage3 = "vinfast-vf3-red.png",
+                   ColorImage4 = "vinfast-vf3-yellow.png",
+                   ColorImage5 = "vinfast-vf3-green.png",
+                   ImageBanner = "vinfast-banner.png",
+                   PriceBatteryRental = 240000000,
+                   PriceBatteryOwn = 322000000,
+                   PriceDeposite = 15000000
+               },
+               new Cars
+               {
+                   Id = 2,
+                   Name = "Vinfast VF5",
+                   Seats = 5,
+                   Image = "vinfast-vf5.png",
+                   SpecImage = "vinfast-vf5-spec.png",
+                   ColorImage1 = "vinfast-vf5-white.png",
+                   ColorImage2 = "vinfast-vf5-grey.png",
+                   ColorImage3 = "vinfast-vf5-red.png",
+                   ColorImage4 = "vinfast-vf5-yellow.png",
+                   ColorImage5 = "vinfast-vf5-green.png",
+                   ImageBanner = "vinfast-banner.png",
+                   PriceBatteryRental = 460000000,
+                   PriceBatteryOwn = 540000000,
+                   PriceDeposite = 20000000
+               },
+               new Cars
+               {
+                   Id = 3,
+                   Name = "Vinfast VF6",
+                   Seats = 5,
+                   Image = "vinfast-vf6.png",
+                   SpecImage = "vinfast-vf6-spec.png",
+                   ColorImage1 = "vinfast-vf6-white.png",
+                   ColorImage2 = "vinfast-vf6-black.png",
+                   ColorImage3 = "vinfast-vf6-red.png",
+                   ColorImage4 = "vinfast-vf6-green.png",
+                   ColorImage5 = "vinfast-vf6-blue.png",
+                   ImageBanner = "vinfast-banner.png",
+                   PriceBatteryRental = 675000000,
+                   PriceBatteryOwn = 765000000,
+                   PriceDeposite = 30000000
+               },
+               new Cars
+               {
+                   Id = 4,
+                   Name = "Vinfast VF7",
+                   Seats = 5,
+                   Image = "vinfast-vf7.png",
+                   SpecImage = "vinfast-vf7-spec.png",
+                   ColorImage1 = "vinfast-vf7-white.png",
+                   ColorImage2 = "vinfast-vf7-black.png",
+                   ColorImage3 = "vinfast-vf7-red.png",
+                   ColorImage4 = "vinfast-vf7-green.png",
+                   ColorImage5 = "vinfast-vf7-blue.png",
+                   ImageBanner = "vinfast-banner.png",
+                   PriceBatteryRental = 850000000,
+                   PriceBatteryOwn = 999000000,
+                   PriceDeposite = 50000000
+               },
+               new Cars
+               {
+                   Id = 5,
+                   Name = "Vinfast VF8",
+                   Seats = 5,
+                   Image = "vinfast-vf8.png",
+                   SpecImage = "vinfast-vf8-spec.png",
+                   ColorImage1 = "vinfast-vf8-white.png",
+                   ColorImage2 = "vinfast-vf8-black.png",
+                   ColorImage3 = "vinfast-vf8-red.png",
+                   ColorImage4 = "vinfast-vf8-green.png",
+                   ColorImage5 = "vinfast-vf8-blue.png",
+                   ImageBanner = "vinfast-banner.png",
+                   PriceBatteryRental = 1170000000,
+                   PriceBatteryOwn = 1359000000,
+                   PriceDeposite = 50000000
+               },
+               new Cars
+               {
+                   Id = 6,
+                   Name = "Vinfast VF9",
+                   Seats = 7,
+                   Image = "vinfast-vf9.png",
+                   SpecImage = "vinfast-vf9-spec.png",
+                   ColorImage1 = "vinfast-vf9-white.png",
+                   ColorImage2 = "vinfast-vf9-black.png",
+                   ColorImage3 = "vinfast-vf9-red.png",
+                   ColorImage4 = "vinfast-vf9-green.png",
+                   ColorImage5 = "vinfast-vf9-blue.png",
+                   ImageBanner = "vinfast-banner.png",
+                   PriceBatteryRental = 1604000000,
+                   PriceBatteryOwn = 2129000000,
+                   PriceDeposite = 50000000
+               }
+            );
             // Seed the database with initial data
             modelBuilder.Entity<Roles>().HasData(
                 new Roles

@@ -12,8 +12,16 @@ function CarsPage() {
   const [cars, setCars] = useState([]);
 
   const fetchCars = async () => {
-    const response = await carService.getCar();
-    setCars(response.data);
+    try {
+      const response = await carService.getCar();
+      if (response.statusCode !== 200) {
+        setCars([]);
+      } else {
+        setCars(JSON.parse(response.data));
+      }
+    } catch (error) {
+      setCars([]);
+    }
   };
 
   useEffect(() => {
@@ -21,6 +29,7 @@ function CarsPage() {
   }, []);
 
   const handleClickCard = (carId) => () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
     navigate(`/cars/${carId}`);
   };
 
@@ -46,10 +55,13 @@ function CarsPage() {
             <div
               className={cx("car-card")}
               key={index}
-              onClick={handleClickCard(car.id)}
+              onClick={handleClickCard(car.Id)}
             >
               <div className={cx("card-image")}>
-                <img src={"https://localhost:7005/api/Images/Car/" + car.image} alt="card-image" />
+                <img
+                  src={`https://localhost:7005/api/Images/Car/${car.Image}`}
+                  alt={car.Name}
+                />
               </div>
               <div className={cx("card-title")}>
                 <Typography
@@ -64,10 +76,10 @@ function CarsPage() {
               </div>
               <div className={cx("card-info")}>
                 <div className={cx("price")}>
-                  <Typography>Price: {car.price} vnd</Typography>
+                  <Typography>Price: {car.Price} vnd</Typography>
                 </div>
                 <div className={cx("seat")}>
-                  <Typography>Seats: {car.seat}</Typography>
+                  <Typography>Seats: {car.Seat}</Typography>
                 </div>
               </div>
             </div>

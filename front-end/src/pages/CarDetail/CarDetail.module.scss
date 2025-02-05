@@ -1,0 +1,143 @@
+.container {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.content {
+  width: var(--default-width);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.color-block {
+  width: 1200px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.car-color-block {
+  width: 100%; 
+  width: 1200px;
+  padding-top: 120px;
+  img{
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.car-color-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-height: 600px;
+}
+
+.car-color-item img {
+  width: 100%; 
+  height: 1350px; 
+  max-height: 100%;
+}
+
+.car-color {
+  width: 1200px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 25px;
+}
+
+.car-color-item {
+  width: 120px;
+  img {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.car-color {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 25px;
+}
+
+.car-color-button {
+  max-width: 120px;
+  max-height: 68px;
+  cursor: pointer;
+  transition: all 0.3s;
+  &:hover {
+    transform: scale(1.1);
+  }
+  &.active {
+    border: none;
+  }
+  img {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.car-info{
+  padding-top: 120px;
+  width: 1200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.car-banner {
+  width: 100%;
+  height: 799px;
+  img{
+    width: 100%;
+    height: 100%;
+  }
+}
+.price-info {
+  width: 1200px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 25px;
+}
+
+.battery-price {
+  width: 538px;
+  height: 149px;
+  padding: 30px;
+  border: 1px solid #84a3b6;
+}
+
+.battery-price {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.deposit-btn{
+  width: 1200px;
+  height: 48px;
+  display: flex;
+  justify-content: center;
+}
+
+.car-specs {
+  width: 1200px;
+  padding-top: 120px;
+  padding-bottom: 20px;
+  img{
+    width: 100%;
+    height: 100%;
+  }
+}

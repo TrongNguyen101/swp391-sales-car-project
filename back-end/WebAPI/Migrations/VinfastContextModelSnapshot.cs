@@ -31,21 +31,57 @@ namespace WebAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("ColorImage1")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Color Image 1");
+
+                    b.Property<string>("ColorImage2")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Color Image 2");
+
+                    b.Property<string>("ColorImage3")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Color Image 3");
+
+                    b.Property<string>("ColorImage4")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Color Image 4");
+
+                    b.Property<string>("ColorImage5")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Color Image 5");
+
                     b.Property<string>("Image")
                         .HasColumnType("nvarchar(max)")
-                        .HasColumnName("Car Image");
+                        .HasColumnName("Image");
+
+                    b.Property<string>("ImageBanner")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Image Banner");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("Car Name");
 
-                    b.Property<string>("Price")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("Car Price");
+                    b.Property<double>("PriceBatteryOwn")
+                        .HasColumnType("float")
+                        .HasColumnName("Price Battery Own");
 
-                    b.Property<int>("Seat")
+                    b.Property<double>("PriceBatteryRental")
+                        .HasColumnType("float")
+                        .HasColumnName("Price Battery Rental");
+
+                    b.Property<double>("PriceDeposite")
+                        .HasColumnType("float")
+                        .HasColumnName("Price Deposite");
+
+                    b.Property<int>("Seats")
                         .HasColumnType("int")
-                        .HasColumnName("Car Seat");
+                        .HasColumnName("Seats");
+
+                    b.Property<string>("SpecImage")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Spec Image");
 
                     b.HasKey("Id");
 
@@ -55,50 +91,104 @@ namespace WebAPI.Migrations
                         new
                         {
                             Id = 1,
+                            ColorImage1 = "vinfast-vf3-white.png",
+                            ColorImage2 = "vinfast-vf3-grey.png",
+                            ColorImage3 = "vinfast-vf3-red.png",
+                            ColorImage4 = "vinfast-vf3-yellow.png",
+                            ColorImage5 = "vinfast-vf3-green.png",
                             Image = "vinfast-vf3.png",
-                            Name = "VF 3",
-                            Price = "240,000,000",
-                            Seat = 4
+                            ImageBanner = "vinfast-banner.png",
+                            Name = "Vinfast VF3",
+                            PriceBatteryOwn = 322000000.0,
+                            PriceBatteryRental = 240000000.0,
+                            PriceDeposite = 15000000.0,
+                            Seats = 4,
+                            SpecImage = "vinfast-vf3-spec.png"
                         },
                         new
                         {
                             Id = 2,
+                            ColorImage1 = "vinfast-vf5-white.png",
+                            ColorImage2 = "vinfast-vf5-grey.png",
+                            ColorImage3 = "vinfast-vf5-red.png",
+                            ColorImage4 = "vinfast-vf5-yellow.png",
+                            ColorImage5 = "vinfast-vf5-green.png",
                             Image = "vinfast-vf5.png",
-                            Name = "VF 5",
-                            Price = "460,000,000",
-                            Seat = 5
+                            ImageBanner = "vinfast-banner.png",
+                            Name = "Vinfast VF5",
+                            PriceBatteryOwn = 540000000.0,
+                            PriceBatteryRental = 460000000.0,
+                            PriceDeposite = 20000000.0,
+                            Seats = 5,
+                            SpecImage = "vinfast-vf5-spec.png"
                         },
                         new
                         {
                             Id = 3,
+                            ColorImage1 = "vinfast-vf6-white.png",
+                            ColorImage2 = "vinfast-vf6-black.png",
+                            ColorImage3 = "vinfast-vf6-red.png",
+                            ColorImage4 = "vinfast-vf6-green.png",
+                            ColorImage5 = "vinfast-vf6-blue.png",
                             Image = "vinfast-vf6.png",
-                            Name = "VF 6",
-                            Price = "675,000,000",
-                            Seat = 5
+                            ImageBanner = "vinfast-banner.png",
+                            Name = "Vinfast VF6",
+                            PriceBatteryOwn = 765000000.0,
+                            PriceBatteryRental = 675000000.0,
+                            PriceDeposite = 30000000.0,
+                            Seats = 5,
+                            SpecImage = "vinfast-vf6-spec.png"
                         },
                         new
                         {
                             Id = 4,
+                            ColorImage1 = "vinfast-vf7-white.png",
+                            ColorImage2 = "vinfast-vf7-black.png",
+                            ColorImage3 = "vinfast-vf7-red.png",
+                            ColorImage4 = "vinfast-vf7-green.png",
+                            ColorImage5 = "vinfast-vf7-blue.png",
                             Image = "vinfast-vf7.png",
-                            Name = "VF 7",
-                            Price = "850,000,000",
-                            Seat = 5
+                            ImageBanner = "vinfast-banner.png",
+                            Name = "Vinfast VF7",
+                            PriceBatteryOwn = 999000000.0,
+                            PriceBatteryRental = 850000000.0,
+                            PriceDeposite = 50000000.0,
+                            Seats = 5,
+                            SpecImage = "vinfast-vf7-spec.png"
                         },
                         new
                         {
                             Id = 5,
+                            ColorImage1 = "vinfast-vf8-white.png",
+                            ColorImage2 = "vinfast-vf8-black.png",
+                            ColorImage3 = "vinfast-vf8-red.png",
+                            ColorImage4 = "vinfast-vf8-green.png",
+                            ColorImage5 = "vinfast-vf8-blue.png",
                             Image = "vinfast-vf8.png",
-                            Name = "VF 8",
-                            Price = "1,170,000,000",
-                            Seat = 5
+                            ImageBanner = "vinfast-banner.png",
+                            Name = "Vinfast VF8",
+                            PriceBatteryOwn = 1359000000.0,
+                            PriceBatteryRental = 1170000000.0,
+                            PriceDeposite = 50000000.0,
+                            Seats = 5,
+                            SpecImage = "vinfast-vf8-spec.png"
                         },
                         new
                         {
                             Id = 6,
+                            ColorImage1 = "vinfast-vf9-white.png",
+                            ColorImage2 = "vinfast-vf9-black.png",
+                            ColorImage3 = "vinfast-vf9-red.png",
+                            ColorImage4 = "vinfast-vf9-green.png",
+                            ColorImage5 = "vinfast-vf9-blue.png",
                             Image = "vinfast-vf9.png",
-                            Name = "VF 9",
-                            Price = "1,604,000,000",
-                            Seat = 7
+                            ImageBanner = "vinfast-banner.png",
+                            Name = "Vinfast VF9",
+                            PriceBatteryOwn = 2129000000.0,
+                            PriceBatteryRental = 1604000000.0,
+                            PriceDeposite = 50000000.0,
+                            Seats = 7,
+                            SpecImage = "vinfast-vf9-spec.png"
                         });
                 });
 
