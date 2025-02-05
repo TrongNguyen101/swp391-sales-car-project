@@ -8,6 +8,8 @@ namespace WebAPI.DTO
         public string? ColorImage1 { get; set; }
         public string? ColorImage2 { get; set; }
         public string? ColorImage3 { get; set; }
+        public string? ColorImage4 { get; set; }
+        public string? ColorImage5 { get; set; }
         public string? ImageBanner { get; set; }
         public string? PriceBatteryRental { get; set; }
         public string? PriceBatteryOwn { get; set; }

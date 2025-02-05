@@ -29,7 +29,19 @@ function CarDetailPage() {
       name: car.ColorImage3,
       image: car.ColorImage3,
     },
+    {
+        id: 4,
+        name: car.ColorImage4,
+        image: car.ColorImage4,
+      },
+      {
+        id: 5,
+        name: car.ColorImage5,
+        image: car.ColorImage5,
+      },
   ];
+
+  console.log(car);
 
   const toTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });

@@ -108,6 +108,8 @@ namespace WebAPI.Utils.AutoMapper
                 ColorImage1 = car.ColorImage1,
                 ColorImage2 = car.ColorImage2,
                 ColorImage3 = car.ColorImage3,
+                ColorImage4 = car.ColorImage4,
+                ColorImage5 = car.ColorImage5,
                 ImageBanner = car.ImageBanner
             };
         }

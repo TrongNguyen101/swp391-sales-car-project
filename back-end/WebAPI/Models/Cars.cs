@@ -23,6 +23,10 @@ namespace WebAPI.Models
         public string? ColorImage2 { get; set; }
         [Column("Color Image 3")]
         public string? ColorImage3 { get; set; }
+        [Column("Color Image 4")]
+        public string? ColorImage4 { get; set; }
+        [Column("Color Image 5")]
+        public string? ColorImage5 { get; set; }
         [Column("Image Banner")]
         public string? ImageBanner { get; set; }
         [Column("Price Battery Rental")]

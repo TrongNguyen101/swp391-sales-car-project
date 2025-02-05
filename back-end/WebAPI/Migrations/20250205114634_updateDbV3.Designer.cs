@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebAPI.DataContext;
 
@@ -11,9 +12,11 @@ using WebAPI.DataContext;
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(VinfastContext))]
-    partial class VinfastContextModelSnapshot : ModelSnapshot
+    [Migration("20250205114634_updateDbV3")]
+    partial class updateDbV3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -97,7 +100,7 @@ namespace WebAPI.Migrations
                             ColorImage4 = "vinfast-vf3-yellow.png",
                             ColorImage5 = "vinfast-vf3-green.png",
                             Image = "vinfast-vf3.png",
-                            ImageBanner = "vinfast-banner.png",
+                            ImageBanner = "vinfast-vf3-banner.png",
                             Name = "Vinfast VF3",
                             PriceBatteryOwn = 322000000.0,
                             PriceBatteryRental = 240000000.0,

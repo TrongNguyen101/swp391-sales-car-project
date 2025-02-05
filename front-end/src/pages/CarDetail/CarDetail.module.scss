@@ -14,6 +14,9 @@
 
 .color-block {
   width: 1200px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .car-color-block {
@@ -30,7 +33,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 600px;
+  max-height: 600px;
 }
 
 .car-color-item img {
@@ -66,8 +69,8 @@
 }
 
 .car-color-button {
-  width: 120px;
-  height: 68px;
+  max-width: 120px;
+  max-height: 68px;
   cursor: pointer;
   transition: all 0.3s;
   &:hover {
