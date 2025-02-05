@@ -36,6 +36,25 @@ function CarDetailPage() {
   return (
     <div className={cx("container")}>
       <div className={cx("content")}>
+        <div className={cx("car-color-block")}>
+          <div className={cx("color-image-result")}>
+            <img
+              src={`https://localhost:7005/api/Images/Car/${car.Image}`}
+              alt={car.Name}
+            />
+          </div>
+          <div className={cx("car-color")}>
+            <div className={cx("car-color-item")}>
+              <img src="../vinfast-vf3-white.png" alt="demo" />
+            </div>
+            <div className={cx("car-color-item")}>
+              <img src="../vinfast-vf3-red.png" alt="demo" />
+            </div>
+            <div className={cx("car-color-item")}>
+              <img src="../vinfast-vf3-grey.png" alt="demo" />
+            </div>
+          </div>
+        </div>
         <div className={cx("car-detail")}>
           <div className={cx("car-image")}>
             <img

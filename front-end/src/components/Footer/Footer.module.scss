@@ -216,3 +216,11 @@
 .bct-certificate {
   cursor: pointer;
 }
+
+// This media query applies styles to screens with a maximum width of 75em (1200px).
+// It sets the width of elements with the class 'content' to 1120px.
+@media only screen and (max-width: 93.75em) {
+  .footer-content {
+    width: 1400px;
+  }
+}

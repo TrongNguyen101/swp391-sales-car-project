@@ -13,3 +13,34 @@
   align-items: center;
 }
 
+.car-color-block {
+  width: 1400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.car-color {
+  width: 1200px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 25px;
+}
+
+.car-color-item {
+  width: 120px;
+  height: 68px;
+  cursor: pointer;
+  transition: all 0.3s;
+  img{
+    width: 100%;
+    height: 100%;
+  }
+  &:hover {
+    transform: scale(1.1);
+  }
+}
