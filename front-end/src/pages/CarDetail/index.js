@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import classNames from "classnames/bind";
 import styles from "./CarDetail.module.scss";
 import * as carService from "../../services/CarService";
@@ -10,6 +10,7 @@ const cx = classNames.bind(styles);
 
 function CarDetailPage() {
   const { carId } = useParams();
+  const navigate = useNavigate();
   const [car, setCar] = useState({});
   const [selectedColor, setSelectedColor] = useState(0);
 
@@ -30,15 +31,15 @@ function CarDetailPage() {
       image: car.ColorImage3,
     },
     {
-        id: 4,
-        name: car.ColorImage4,
-        image: car.ColorImage4,
-      },
-      {
-        id: 5,
-        name: car.ColorImage5,
-        image: car.ColorImage5,
-      },
+      id: 4,
+      name: car.ColorImage4,
+      image: car.ColorImage4,
+    },
+    {
+      id: 5,
+      name: car.ColorImage5,
+      image: car.ColorImage5,
+    },
   ];
 
   console.log(car);
@@ -76,6 +77,10 @@ function CarDetailPage() {
 
   const handleColorChange = (index) => {
     setSelectedColor(index);
+  };
+
+  const handleClickDepositButton = () => {
+    navigate("/deposit");
   };
 
   console.log(car);
@@ -182,7 +187,7 @@ function CarDetailPage() {
             </div>
           </div>
           <div className={cx("deposit-btn")}>
-            <Button variant="contained">
+            <Button variant="contained" onClick={handleClickDepositButton}>
               <Typography sx={{ textTransform: "none" }}>
                 Deposit {car.PriceDeposite} VND
               </Typography>
@@ -220,7 +225,10 @@ function CarDetailPage() {
           </div>
         </div>
         <div className={cx("car-specs")}>
-            <img src={`https://localhost:7005/api/Images/Spec/${car.SpecImage}`} alt={car.SpecImage} />
+          <img
+            src={`https://localhost:7005/api/Images/Spec/${car.SpecImage}`}
+            alt={car.SpecImage}
+          />
         </div>
       </div>
     </div>

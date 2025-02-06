@@ -5,6 +5,7 @@ import ProfilePage from "../pages/Profile";
 import AccessoriesPage from "../pages/Accessories";
 import RegisterPage from "../pages/Register";
 import CarDetailPage from "../pages/CarDetail";
+import DepositPaymentPage from "../pages/DepositPayment";
 
 const publicRoutes = [
   { path: "/", page: HomePage },
@@ -14,6 +15,7 @@ const publicRoutes = [
   { path: "/accessories", page: AccessoriesPage },
   { path: "/login", page: LoginPage, layout: null },
   { path: "/register", page: RegisterPage, layout: null },
+  { path: "/deposit", page: DepositPaymentPage },
 ];
 
 export { publicRoutes };
