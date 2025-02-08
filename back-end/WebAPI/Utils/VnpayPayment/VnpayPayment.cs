@@ -1,6 +1,7 @@
 using System.Text;
 using System.Security.Cryptography;
 using WebAPI.DTO;
+using Microsoft.Extensions.Configuration;
 
 namespace WebAPI.Utils.VnpayPayment
 {
@@ -20,13 +21,14 @@ namespace WebAPI.Utils.VnpayPayment
             HashSecret = vnpaySettings.HashSecret;
         }
 
-        public string CreatePaymentUrl(double amount, string orderInfo)
+        public string CreatePaymentUrl(string amount, string orderInfo)
         {
+            var amountDouble = FormatStringToDouble(amount);
             var vnpay = new SortedList<string, string>();
             vnpay.Add("vnp_Version", "2.1.0");
             vnpay.Add("vnp_Command", "pay");
             vnpay.Add("vnp_TmnCode", TmnCode);
-            vnpay.Add("vnp_Amount", (amount * 100).ToString());
+            vnpay.Add("vnp_Amount", (amountDouble * 100).ToString());
             vnpay.Add("vnp_CurrCode", "VND");
             vnpay.Add("vnp_CreateDate", DateTime.Now.ToString("yyyyMMddHHmmss"));
             vnpay.Add("vnp_OrderInfo", orderInfo);
@@ -72,6 +74,23 @@ namespace WebAPI.Utils.VnpayPayment
             }
 
             return null;
+        }
+        private double FormatStringToDouble(string amount)
+        {
+            if (string.IsNullOrEmpty(amount))
+            {
+            throw new ArgumentException("Amount cannot be null or empty", nameof(amount));
+            }
+            string cleanedAmount = amount.Replace(",", "");
+
+            if (double.TryParse(cleanedAmount, out double result))
+            {
+            return result;
+            }
+            else
+            {
+            throw new FormatException("Invalid amount format");
+            }
         }
     }
 }
