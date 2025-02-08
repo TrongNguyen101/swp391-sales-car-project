@@ -13,7 +13,7 @@ namespace WebAPI.Utils.VnpayPayment
 
         public VnpayPayment(IConfiguration configuration)
         {
-            var vnpaySettings = configuration.GetSection("VnpaySettings").Get<VnpaySettings>();
+            var vnpaySettings = configuration.GetSection("VnpayPayment").Get<VnpaySettings>();
             VnpayUrl = vnpaySettings.VnpayUrl;
             ReturnUrl = vnpaySettings.ReturnUrl;
             TmnCode = vnpaySettings.TmnCode;
@@ -23,12 +23,11 @@ namespace WebAPI.Utils.VnpayPayment
         public string CreatePaymentUrl(double amount, string orderInfo)
         {
             var vnpay = new SortedList<string, string>();
-            vnpay.Add("vnp_Version", "2.0.0");
+            vnpay.Add("vnp_Version", "2.1.0");
             vnpay.Add("vnp_Command", "pay");
             vnpay.Add("vnp_TmnCode", TmnCode);
             vnpay.Add("vnp_Amount", (amount * 100).ToString());
             vnpay.Add("vnp_CurrCode", "VND");
-            vnpay.Add("vnp_BankCode", "NCB");
             vnpay.Add("vnp_CreateDate", DateTime.Now.ToString("yyyyMMddHHmmss"));
             vnpay.Add("vnp_OrderInfo", orderInfo);
             vnpay.Add("vnp_ReturnUrl", ReturnUrl);
