@@ -7,7 +7,9 @@ const cx = classNames.bind(styles);
 function DepositPaymentPage() {
   return (
     <div className={cx("container")}>
-      <Typography>Deposit Payment Page</Typography>
+      <div className={cx("content")}>
+        <Typography>Deposit Payment Page</Typography>
+      </div>
     </div>
   );
 }
