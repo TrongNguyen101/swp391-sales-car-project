@@ -5,7 +5,7 @@ using WebAPI.Models;
 
 namespace WebAPI.Utils.AutoMapper
 {
-    public static class AutoMapper
+    public class AutoMapper
     {
         /// <summary>
         /// Convert User to UserDTO
