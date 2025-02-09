@@ -1,17 +1,42 @@
-import classNames from "classnames/bind";
-import styles from "./DepositPayment.module.scss";
-import { Typography } from "@mui/material";
+import { useState } from 'react';
+import * as DepositService from '../../services/DepositService';
 
-const cx = classNames.bind(styles);
+const DepositPaymentPage = () => {
+  const [amount, setAmount] = useState('');
+  const [orderInfo, setOrderInfo] = useState('');
 
-function DepositPaymentPage() {
+  const handlePayment = async () => {
+    try {
+      const response = await DepositService.postDeposit(amount, orderInfo);
+      console.log(response);
+      if (response.statusCode === 200) {
+        window.location.href = response.data;
+      } else {
+        alert('Failed to create payment URL');
+      }
+    } catch (error) {
+      alert('Error creating payment URL');
+    }
+  };
+
   return (
-    <div className={cx("container")}>
-      <div className={cx("content")}>
-        <Typography>Deposit Payment Page</Typography>
-      </div>
+    <div>
+      <h1>Payment Page</h1>
+      <input
+        type="text"
+        value={amount}
+        onChange={(e) => setAmount(e.target.value)}
+        placeholder="Amount"
+      />
+      <input
+        type="text"
+        value={orderInfo}
+        onChange={(e) => setOrderInfo(e.target.value)}
+        placeholder="Order Info"
+      />
+      <button onClick={handlePayment}>Pay Now</button>
     </div>
   );
-}
+};
 
 export default DepositPaymentPage;

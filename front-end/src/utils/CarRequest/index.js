@@ -1,11 +1,11 @@
 import request from '../BaseURL';
 
-export const get = async (path, option = {}) => {
-  const response = await request.get(path, option);
+export const get = async (path, data, config) => {
+  const response = await request.get(path, data, config);
   return response;
 }
 
-export const getById = async (path, data, option = {}) => {
-  const response = await request.get(path, data, option);
+export const getById = async (path, data, config) => {
+  const response = await request.get(path, data, config);
   return response;
 }

@@ -4,6 +4,8 @@ using WebAPI.Utils.VnpayPayment;
 
 namespace WebAPI.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class PaymentController : ControllerBase
     {
         private readonly VnpayPayment vnpayPayment;
@@ -14,9 +16,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("CreatePaymentUrl")]
-        public async Task<IActionResult> CreatePayment(double amount, string orderInfo)
+        public IActionResult CreatePayment([FromBody] DepositInfo depositInfo)
         {
-            var paymentUrl = vnpayPayment.CreatePaymentUrl(amount, orderInfo);
+            var paymentUrl = vnpayPayment.CreatePaymentUrl(depositInfo.Amount, depositInfo.OrderInfo);
             return Ok(new DataResponse
             {
                 StatusCode = 200,
@@ -26,10 +28,10 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("PaymentResponse")]
-        public async Task<IActionResult> ProcessPaymentResponse([FromBody] HttpRequestMessage request)
+        public async Task<IActionResult> ProcessPaymentResponse([FromQuery] HttpRequestMessage request)
         {
             var paymentResponse = await vnpayPayment.ProcessPaymentResponse(request);
-            if (paymentResponse == null && paymentResponse.TransactionStatus != "00")
+            if (paymentResponse == null || paymentResponse.TransactionStatus != "00")
             {
                 return BadRequest(new DataResponse
                 {
