@@ -15,7 +15,7 @@ const publicRoutes = [
   { path: "/accessories", page: AccessoriesPage },
   { path: "/login", page: LoginPage, layout: null },
   { path: "/register", page: RegisterPage, layout: null },
-  { path: "/deposit", page: DepositPaymentPage },
+  { path: "/deposit/:carId", page: DepositPaymentPage },
 ];
 
 export { publicRoutes };

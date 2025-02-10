@@ -42,8 +42,6 @@ function CarDetailPage() {
     },
   ];
 
-  console.log(car);
-
   const toTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -80,10 +78,13 @@ function CarDetailPage() {
   };
 
   const handleClickDepositButton = () => {
-    navigate("/deposit");
+    if (localStorage.getItem("Bearer") === null) {
+      navigate("/login");
+    } else {
+      navigate(`/deposit/${carId}`);
+    }
   };
 
-  console.log(car);
   return (
     <div className={cx("container")}>
       <div className={cx("car-banner")}>

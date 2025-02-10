@@ -27,7 +27,7 @@ namespace WebAPI.Utils.VnpayPayment
             vnpay.Add("vnp_Version", "2");
             vnpay.Add("vnp_Command", "pay");
             vnpay.Add("vnp_TmnCode", TmnCode);
-            vnpay.Add("vnp_Amount", ((int)amountDouble * 100).ToString());
+            vnpay.Add("vnp_Amount", ((double)amountDouble * 100).ToString());
             vnpay.Add("vnp_CurrCode", "VND");
             vnpay.Add("vnp_CreateDate", DateTime.Now.ToString("yyyyMMddHHmmss"));
             vnpay.Add("vnp_OrderInfo", orderInfo);
