@@ -28,10 +28,32 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("PaymentResponse")]
-        public async Task<IActionResult> ProcessPaymentResponse([FromQuery] HttpRequestMessage request)
+        public async Task<IActionResult> ProcessPaymentResponse()
         {
-            var paymentResponse = await vnpayPayment.ProcessPaymentResponse(request);
-            if (paymentResponse == null || paymentResponse.TransactionStatus != "00")
+            var queryParams = HttpContext.Request.Query;
+            var vnp_SecureHash = queryParams["vnp_SecureHash"];
+            var sortedQueryParams = queryParams
+                .Where(q => q.Key != "vnp_SecureHash")
+                .OrderBy(q => q.Key)
+                .ToDictionary(q => q.Key, q => q.Value.ToString());
+            var paymentResponse = new PaymentResponse
+            {
+                Amount = double.Parse(queryParams["vnp_Amount"]) / 100,
+                OrderInfo = queryParams["vnp_OrderInfo"],
+                TransactionStatus = queryParams["vnp_TransactionStatus"]
+            };
+
+            if (paymentResponse.TransactionStatus == "00")
+            {
+                return Ok(new DataResponse
+                {
+                    StatusCode = 200,
+                    Success = true,
+                    Message = "Payment successful",
+                    Data = paymentResponse,
+                });
+            }
+            else
             {
                 return BadRequest(new DataResponse
                 {
@@ -40,12 +62,6 @@ namespace WebAPI.Controllers
                     Message = "Payment failed",
                 });
             }
-            return Ok(new DataResponse
-            {
-                StatusCode = 200,
-                Success = true,
-                Data = paymentResponse,
-            });
         }
     }
 }

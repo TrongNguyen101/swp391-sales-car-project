@@ -43,7 +43,7 @@ namespace WebAPI.Utils.VnpayPayment
             return $"{VnpayUrl}?{queryString}&vnp_SecureHash={vnp_SecureHash}";
         }
 
-        private string ComputeHMACSHA512(string data, string key)
+        public string ComputeHMACSHA512(string data, string key)
         {
             using (var hmac = new HMACSHA512(Encoding.UTF8.GetBytes(key)))
             {
@@ -51,30 +51,7 @@ namespace WebAPI.Utils.VnpayPayment
                 return BitConverter.ToString(hashValue).Replace("-", "").ToLower();
             }
         }
-
-        public async Task<PaymentResponse> ProcessPaymentResponse(HttpRequestMessage request)
-        {
-            var queryParams = System.Web.HttpUtility.ParseQueryString(request.RequestUri.Query);
-            var vnp_SecureHash = queryParams["vnp_SecureHash"];
-            queryParams.Remove("vnp_SecureHash");
-
-            string rawData = string.Join("&", queryParams.AllKeys.OrderBy(k => k).Select(k => $"{k}={queryParams[k]}"));
-            string computedHash = ComputeHMACSHA512(rawData, HashSecret);
-
-            if (vnp_SecureHash == computedHash)
-            {
-                var response = new PaymentResponse
-                {
-                    Amount = double.Parse(queryParams["vnp_Amount"]) / 100,
-                    OrderInfo = queryParams["vnp_OrderInfo"],
-                    TransactionStatus = queryParams["vnp_TransactionStatus"]
-                };
-
-                return response;
-            }
-
-            return null;
-        }
+        
         private double FormatStringToDouble(string amount)
         {
             if (string.IsNullOrEmpty(amount))

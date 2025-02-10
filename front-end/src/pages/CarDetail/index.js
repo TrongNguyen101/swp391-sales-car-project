@@ -78,11 +78,7 @@ function CarDetailPage() {
   };
 
   const handleClickDepositButton = () => {
-    if (localStorage.getItem("Bearer") === null) {
-      navigate("/login");
-    } else {
-      navigate(`/deposit/${carId}`);
-    }
+    navigate(`/deposit/${carId}`);
   };
 
   return (
