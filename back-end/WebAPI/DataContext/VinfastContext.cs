@@ -56,7 +56,7 @@ namespace WebAPI.DataContext
                    .Build();
 
                 // Get the connection string from the configuration
-                var connectionString = configuration.GetConnectionString("MacConnection");
+                var connectionString = configuration.GetConnectionString("winConnection");
 
                 // Configure the context to use SQL Server with the connection string
                 optionsBuilder.UseSqlServer(connectionString);
