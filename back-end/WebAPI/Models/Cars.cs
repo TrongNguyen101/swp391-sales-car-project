@@ -35,5 +35,10 @@ namespace WebAPI.Models
         public double PriceBatteryOwn { get; set; }
         [Column("Price Deposite")]
         public double PriceDeposite { get; set; }
+        [Column("Quantity")]
+        public int Quantity { get; set; }
+        [Column("Is Deleted")]
+        public bool IsDeleted { get; set; }
+        public ICollection<CarColor>? CarColors { get; set; } = new List<CarColor>();
     }
 }

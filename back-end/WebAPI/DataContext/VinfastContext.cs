@@ -36,6 +36,8 @@ namespace WebAPI.DataContext
 
         public DbSet<Cars> Cars { get; set; }
 
+        public DbSet<CarColor> CarColor { get; set; }
+
         /// <summary>
         /// Configures the database context options.
         /// </summary>
@@ -69,6 +71,253 @@ namespace WebAPI.DataContext
         /// <param name="modelBuilder">The builder being used to construct the model for this context.</param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<CarColor>().HasData(
+                new CarColor
+                {
+                    ColorId = 1,
+                    ColorName = "White",
+                    ColorImage = "vinfast-vf3-white.png",
+                    IsDeleted = false,
+                    CarId = 1
+                },
+
+                new CarColor
+                {
+                    ColorId = 2,
+                    ColorName = "Grey",
+                    ColorImage = "vinfast-vf3-grey.png",
+                    IsDeleted = false,
+                    CarId = 1
+                },
+
+                new CarColor
+                {
+                    ColorId = 3,
+                    ColorName = "Red",
+                    ColorImage = "vinfast-vf3-red.png",
+                    IsDeleted = false,
+                    CarId = 1
+                },
+
+                new CarColor
+                {
+                    ColorId = 4,
+                    ColorName = "Yellow",
+                    ColorImage = "vinfast-vf3-yellow.png",
+                    IsDeleted = false,
+                    CarId = 1
+                },
+
+                new CarColor
+                {
+                    ColorId = 5,
+                    ColorName = "Green",
+                    ColorImage = "vinfast-vf3-green.png",
+                    IsDeleted = false,
+                    CarId = 1
+                },
+                new CarColor
+                {
+                    ColorId = 6,
+                    ColorName = "White",
+                    ColorImage = "vinfast-vf5-white.png",
+                    IsDeleted = false,
+                    CarId = 2
+                },
+                new CarColor
+                {
+                    ColorId = 7,
+                    ColorName = "Grey",
+                    ColorImage = "vinfast-vf5-grey.png",
+                    IsDeleted = false,
+                    CarId = 2
+                },
+                new CarColor
+                {
+                    ColorId = 8,
+                    ColorName = "Red",
+                    ColorImage = "vinfast-vf5-red.png",
+                    IsDeleted = false,
+                    CarId = 2
+                },
+                new CarColor
+                {
+                    ColorId = 9,
+                    ColorName = "Yellow",
+                    ColorImage = "vinfast-vf5-yellow.png",
+                    IsDeleted = false,
+                    CarId = 2
+                },
+                new CarColor
+                {
+                    ColorId = 10,
+                    ColorName = "Green",
+                    ColorImage = "vinfast-vf5-green.png",
+                    IsDeleted = false,
+                    CarId = 2
+                },
+                new CarColor
+                {
+                    ColorId = 11,
+                    ColorName = "White",
+                    ColorImage = "vinfast-vf6-white.png",
+                    IsDeleted = false,
+                    CarId = 3
+                },
+                new CarColor
+                {
+                    ColorId = 12,
+                    ColorName = "Black",
+                    ColorImage = "vinfast-vf6-black.png",
+                    IsDeleted = false,
+                    CarId = 3
+                },
+                new CarColor
+                {
+                    ColorId = 13,
+                    ColorName = "Red",
+                    ColorImage = "vinfast-vf6-red.png",
+                    IsDeleted = false,
+                    CarId = 3
+                },
+                new CarColor
+                {
+                    ColorId = 14,
+                    ColorName = "Green",
+                    ColorImage = "vinfast-vf6-green.png",
+                    IsDeleted = false,
+                    CarId = 3
+                },
+                new CarColor
+                {
+                    ColorId = 15,
+                    ColorName = "Blue",
+                    ColorImage = "vinfast-vf6-blue.png",
+                    IsDeleted = false,
+                    CarId = 3
+                },
+                new CarColor
+                {
+                    ColorId = 16,
+                    ColorName = "White",
+                    ColorImage = "vinfast-vf7-white.png",
+                    IsDeleted = false,
+                    CarId = 4
+                },
+                new CarColor
+                {
+                    ColorId = 17,
+                    ColorName = "Black",
+                    ColorImage = "vinfast-vf7-black.png",
+                    IsDeleted = false,
+                    CarId = 4
+                },
+                new CarColor
+                {
+                    ColorId = 18,
+                    ColorName = "Red",
+                    ColorImage = "vinfast-vf7-red.png",
+                    IsDeleted = false,
+                    CarId = 4
+                },
+                new CarColor
+                {
+                    ColorId = 19,
+                    ColorName = "Green",
+                    ColorImage = "vinfast-vf7-green.png",
+                    IsDeleted = false,
+                    CarId = 4
+                },
+                new CarColor
+                {
+                    ColorId = 20,
+                    ColorName = "Blue",
+                    ColorImage = "vinfast-vf7-blue.png",
+                    IsDeleted = false,
+                    CarId = 4
+                },
+                new CarColor
+                {
+                    ColorId = 21,
+                    ColorName = "White",
+                    ColorImage = "vinfast-vf8-white.png",
+                    IsDeleted = false,
+                    CarId = 5
+                },
+                new CarColor
+                {
+                    ColorId = 22,
+                    ColorName = "Black",
+                    ColorImage = "vinfast-vf8-black.png",
+                    IsDeleted = false,
+                    CarId = 5
+                },
+                new CarColor
+                {
+                    ColorId = 23,
+                    ColorName = "Red",
+                    ColorImage = "vinfast-vf8-red.png",
+                    IsDeleted = false,
+                    CarId = 5
+                },
+                new CarColor
+                {
+                    ColorId = 24,
+                    ColorName = "Green",
+                    ColorImage = "vinfast-vf8-green.png",
+                    IsDeleted = false,
+                    CarId = 5
+                },
+                new CarColor
+                {
+                    ColorId = 25,
+                    ColorName = "Blue",
+                    ColorImage = "vinfast-vf8-blue.png",
+                    IsDeleted = false,
+                    CarId = 5
+                },
+                new CarColor
+                {
+                    ColorId = 26,
+                    ColorName = "White",
+                    ColorImage = "vinfast-vf9-white.png",
+                    IsDeleted = false,
+                    CarId = 6
+                },
+                new CarColor
+                {
+                    ColorId = 27,
+                    ColorName = "Black",
+                    ColorImage = "vinfast-vf9-black.png",
+                    IsDeleted = false,
+                    CarId = 6
+                },
+                new CarColor
+                {
+                    ColorId = 28,
+                    ColorName = "Red",
+                    ColorImage = "vinfast-vf9-red.png",
+                    IsDeleted = false,
+                    CarId = 6
+                },
+                new CarColor
+                {
+                    ColorId = 29,
+                    ColorName = "Green",
+                    ColorImage = "vinfast-vf9-green.png",
+                    IsDeleted = false,
+                    CarId = 6
+                },
+                new CarColor
+                {
+                    ColorId = 30,
+                    ColorName = "Blue",
+                    ColorImage = "vinfast-vf9-blue.png",
+                    IsDeleted = false,
+                    CarId = 6
+                }
+            );
+
             modelBuilder.Entity<Cars>().HasData(
                new Cars
                {
@@ -77,12 +326,8 @@ namespace WebAPI.DataContext
                    Seats = 4,
                    Image = "vinfast-vf3.png",
                    SpecImage = "vinfast-vf3-spec.png",
-                   ColorImage1 = "vinfast-vf3-white.png",
-                   ColorImage2 = "vinfast-vf3-grey.png",
-                   ColorImage3 = "vinfast-vf3-red.png",
-                   ColorImage4 = "vinfast-vf3-yellow.png",
-                   ColorImage5 = "vinfast-vf3-green.png",
                    ImageBanner = "vinfast-banner.png",
+                   Quantity = 10,
                    PriceBatteryRental = 240000000,
                    PriceBatteryOwn = 322000000,
                    PriceDeposite = 15000000
@@ -94,12 +339,8 @@ namespace WebAPI.DataContext
                    Seats = 5,
                    Image = "vinfast-vf5.png",
                    SpecImage = "vinfast-vf5-spec.png",
-                   ColorImage1 = "vinfast-vf5-white.png",
-                   ColorImage2 = "vinfast-vf5-grey.png",
-                   ColorImage3 = "vinfast-vf5-red.png",
-                   ColorImage4 = "vinfast-vf5-yellow.png",
-                   ColorImage5 = "vinfast-vf5-green.png",
                    ImageBanner = "vinfast-banner.png",
+                   Quantity = 10,
                    PriceBatteryRental = 460000000,
                    PriceBatteryOwn = 540000000,
                    PriceDeposite = 20000000
@@ -111,12 +352,8 @@ namespace WebAPI.DataContext
                    Seats = 5,
                    Image = "vinfast-vf6.png",
                    SpecImage = "vinfast-vf6-spec.png",
-                   ColorImage1 = "vinfast-vf6-white.png",
-                   ColorImage2 = "vinfast-vf6-black.png",
-                   ColorImage3 = "vinfast-vf6-red.png",
-                   ColorImage4 = "vinfast-vf6-green.png",
-                   ColorImage5 = "vinfast-vf6-blue.png",
                    ImageBanner = "vinfast-banner.png",
+                   Quantity = 10,
                    PriceBatteryRental = 675000000,
                    PriceBatteryOwn = 765000000,
                    PriceDeposite = 30000000
@@ -128,12 +365,8 @@ namespace WebAPI.DataContext
                    Seats = 5,
                    Image = "vinfast-vf7.png",
                    SpecImage = "vinfast-vf7-spec.png",
-                   ColorImage1 = "vinfast-vf7-white.png",
-                   ColorImage2 = "vinfast-vf7-black.png",
-                   ColorImage3 = "vinfast-vf7-red.png",
-                   ColorImage4 = "vinfast-vf7-green.png",
-                   ColorImage5 = "vinfast-vf7-blue.png",
                    ImageBanner = "vinfast-banner.png",
+                   Quantity = 10,
                    PriceBatteryRental = 850000000,
                    PriceBatteryOwn = 999000000,
                    PriceDeposite = 50000000
@@ -145,12 +378,8 @@ namespace WebAPI.DataContext
                    Seats = 5,
                    Image = "vinfast-vf8.png",
                    SpecImage = "vinfast-vf8-spec.png",
-                   ColorImage1 = "vinfast-vf8-white.png",
-                   ColorImage2 = "vinfast-vf8-black.png",
-                   ColorImage3 = "vinfast-vf8-red.png",
-                   ColorImage4 = "vinfast-vf8-green.png",
-                   ColorImage5 = "vinfast-vf8-blue.png",
                    ImageBanner = "vinfast-banner.png",
+                   Quantity = 10,
                    PriceBatteryRental = 1170000000,
                    PriceBatteryOwn = 1359000000,
                    PriceDeposite = 50000000
@@ -162,12 +391,8 @@ namespace WebAPI.DataContext
                    Seats = 7,
                    Image = "vinfast-vf9.png",
                    SpecImage = "vinfast-vf9-spec.png",
-                   ColorImage1 = "vinfast-vf9-white.png",
-                   ColorImage2 = "vinfast-vf9-black.png",
-                   ColorImage3 = "vinfast-vf9-red.png",
-                   ColorImage4 = "vinfast-vf9-green.png",
-                   ColorImage5 = "vinfast-vf9-blue.png",
                    ImageBanner = "vinfast-banner.png",
+                   Quantity = 10,
                    PriceBatteryRental = 1604000000,
                    PriceBatteryOwn = 2129000000,
                    PriceDeposite = 50000000
@@ -196,7 +421,7 @@ namespace WebAPI.DataContext
                     Address = "123 Admin St",
                     Phone = "1234567890",
                     Email = "admin@example.com",
-                    Password = EncyptHelper.Sha256Encrypt("admin@123345"), // Note: In a real application, store hashed passwords
+                    Password = EncyptHelper.Sha256Encrypt("Admin@123345"), // Note: In a real application, store hashed passwords
                     CreatedAt = new DateTime(2023, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                     IsDeleted = false,
                     LastChange = new DateTime(2023, 1, 1, 0, 0, 0, DateTimeKind.Utc),
@@ -209,7 +434,7 @@ namespace WebAPI.DataContext
                     Address = "456 User St",
                     Phone = "0987654321",
                     Email = "user@example.com",
-                    Password = EncyptHelper.Sha256Encrypt("user@12345"), // Note: In a real application, store hashed passwords
+                    Password = EncyptHelper.Sha256Encrypt("User@12345"), // Note: In a real application, store hashed passwords
                     CreatedAt = new DateTime(2023, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                     IsDeleted = false,
                     LastChange = new DateTime(2023, 1, 1, 0, 0, 0, DateTimeKind.Utc),
@@ -227,6 +452,14 @@ namespace WebAPI.DataContext
                       // The foreign key in the Users table is RoleId
                       .HasForeignKey(user => user.RoleId)
                       // RoleId is required
+                      .IsRequired();
+            });
+
+            modelBuilder.Entity<Cars>(entity =>
+            {
+                entity.HasMany(color => color.CarColors)
+                      .WithOne(car => car.Car)
+                      .HasForeignKey(car => car.CarId)
                       .IsRequired();
             });
         }

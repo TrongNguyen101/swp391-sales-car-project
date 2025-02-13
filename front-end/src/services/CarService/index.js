@@ -17,3 +17,12 @@ export const getCarById = async (id) => {
     return error.response;
   }
 }
+
+export const getCarColorById = async (carId) => {
+  try {
+    const response = await request.getById(`/api/Cars/Color/${carId}`);
+    return response.data;
+  } catch (error) {
+    return error.response;
+  }
+}

@@ -41,5 +41,13 @@ namespace WebAPI.DAO
                 return await context.Cars.FindAsync(id);
             }
         }
+
+        public async Task<List<CarColor>> GetCarColorsByCarId(int carId)
+        {
+            using (var context = new VinfastContext())
+            {
+                return await context.CarColor.Where(CarColor => CarColor.CarId == carId).ToListAsync();
+            }
+        }
     }
 }

@@ -18,7 +18,7 @@ namespace WebAPI.Controllers
         [HttpPost("CreatePaymentUrl")]
         public IActionResult CreatePayment([FromBody] DepositInfo depositInfo)
         {
-            var paymentUrl = vnpayPayment.CreatePaymentUrl(depositInfo.Amount, depositInfo.OrderInfo);
+            var paymentUrl = vnpayPayment.CreatePaymentUrl(depositInfo);
             return Ok(new DataResponse
             {
                 StatusCode = 200,

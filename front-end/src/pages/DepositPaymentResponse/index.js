@@ -13,13 +13,13 @@ function DepositPaymentResponsePage() {
         alert("Failed to get payment response");
       } else {
         alert("Payment successful");
+        console.log(response.data);
       }
     } catch (error) {
       alert("Error getting payment response");
     }
   };
 
-  console.log(location);
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
     fetchDepositPaymentResponse(queryParams);
