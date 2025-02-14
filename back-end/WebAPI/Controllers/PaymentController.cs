@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualBasic;
 using WebAPI.DTO;
+using WebAPI.Utils.JwtTokenHelper;
 using WebAPI.Utils.VnpayPayment;
 
 namespace WebAPI.Controllers
@@ -18,6 +20,27 @@ namespace WebAPI.Controllers
         [HttpPost("CreatePaymentUrl")]
         public IActionResult CreatePayment([FromBody] DepositInfo depositInfo)
         {
+            var authorizationHeader = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
+            if (authorizationHeader == null)
+            {
+                return Unauthorized(new DataResponse
+                {
+                    StatusCode = 401,
+                    Success = false,
+                    Message = "Unauthorized",
+                });
+            }
+            var token = authorizationHeader.Split(" ")[1];
+            bool isAuthorized = JwtTokenHelper.VerifyJwtToken(token);
+            if (!isAuthorized)
+            {
+                return Unauthorized(new DataResponse
+                {
+                    StatusCode = 401,
+                    Success = false,
+                    Message = "Unauthorized",
+                });
+            }
             var paymentUrl = vnpayPayment.CreatePaymentUrl(depositInfo);
             return Ok(new DataResponse
             {

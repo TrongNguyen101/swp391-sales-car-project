@@ -1,6 +1,7 @@
 import * as request from "../../utils/DepositPayment";
 
 export const postDeposit = async (amount, orderInfo) => {
+  const token = localStorage.getItem("Bearer");
   try {
     const response = await request.post(
       "/api/Payment/CreatePaymentUrl",
@@ -11,6 +12,7 @@ export const postDeposit = async (amount, orderInfo) => {
       {
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
         },
       }
     );

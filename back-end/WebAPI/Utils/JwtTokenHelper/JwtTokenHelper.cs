@@ -35,6 +35,7 @@ namespace WebAPI.Utils.JwtTokenHelper
                 sub = user.UserId,
                 name = user.UserName,
                 email = user.Email,
+                phone = user.Phone,
                 role = user.RoleId,
                 iss = configuration.GetSection("JWT:Issuer").Value,
                 aud = configuration.GetSection("JWT:Audience").Value,
@@ -82,7 +83,6 @@ namespace WebAPI.Utils.JwtTokenHelper
             .SetBasePath(Directory.GetCurrentDirectory())
             .AddJsonFile("appsettings.json")
             .Build();
-
             string secretKey = configuration.GetSection("Jwt:Key").Value;
             string[] parts = token.Split('.');
             string headerEncoded = parts[0];

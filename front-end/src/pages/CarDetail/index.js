@@ -65,10 +65,14 @@ function CarDetailPage() {
   };
 
   const handleClickDepositButton = () => {
-    navigate(`/deposit/${carId}`);
+    const token = localStorage.getItem("Bearer");
+    if (!token) {
+      navigate("/login");
+    } else {
+      navigate(`/deposit/${carId}`);
+    }
   };
 
-  console.log(colors);
   return (
     <div className={cx("container")}>
       <div className={cx("car-banner")}>

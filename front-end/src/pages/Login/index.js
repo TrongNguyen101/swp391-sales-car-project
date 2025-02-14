@@ -97,7 +97,7 @@ function LoginPage() {
 
   const handleCloseDialog = () => {
     setOpenDialog(false);
-    navigate("/"); // Navigate to home page after closing the dialog
+    navigate("/");
   };
 
   const Transition = forwardRef(function Transition(props, ref) {

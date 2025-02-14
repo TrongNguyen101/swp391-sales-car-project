@@ -30,7 +30,7 @@ namespace WebAPI.Utils.VnpayPayment
             vnpay.Add("vnp_Amount", ((double)amountDouble * 100).ToString());
             vnpay.Add("vnp_CurrCode", "VND");
             vnpay.Add("vnp_CreateDate", DateTime.Now.ToString("yyyyMMddHHmmss"));
-            vnpay.Add("vnp_OrderInfo", $"{depositInfo.OrderInfo} - ${depositInfo.CarColor} - ${depositInfo.Options}");
+            vnpay.Add("vnp_OrderInfo", $"{depositInfo.OrderInfo}");
             vnpay.Add("vnp_ReturnUrl", ReturnUrl);
             vnpay.Add("vnp_Locale", "en");
             vnpay.Add("vnp_TxnRef", DateTime.Now.Ticks.ToString());
