@@ -1,6 +1,4 @@
-using System.Diagnostics.Eventing.Reader;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualBasic;
 using WebAPI.DTO;
 using WebAPI.Utils.JwtTokenHelper;
 using WebAPI.Utils.VnpayPayment;
@@ -69,27 +67,6 @@ namespace WebAPI.Controllers
         [HttpGet("PaymentResponse")]
         public async Task<IActionResult> ProcessPaymentResponse()
         {
-            var authorizationHeader = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
-            if (authorizationHeader == null)
-            {
-                return Unauthorized(new DataResponse
-                {
-                    StatusCode = 401,
-                    Success = false,
-                    Message = "Unauthorized",
-                });
-            }
-            var token = authorizationHeader.Split(" ")[1];
-            bool isAuthorized = JwtTokenHelper.VerifyJwtToken(token);
-            if (!isAuthorized)
-            {
-                return Unauthorized(new DataResponse
-                {
-                    StatusCode = 401,
-                    Success = false,
-                    Message = "Unauthorized",
-                });
-            }
             var queryParams = HttpContext.Request.Query;
             var vnp_SecureHash = queryParams["vnp_SecureHash"];
             var sortedQueryParams = queryParams

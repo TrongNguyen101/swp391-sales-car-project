@@ -81,8 +81,7 @@ const DepositPaymentPage = () => {
         orderInfo
       );
       if (response.statusCode === 200) {
-        console.log(response);
-        //window.location.href = response.data;
+        window.location.href = response.data;
       } else {
         alert(response.data.message);
       }

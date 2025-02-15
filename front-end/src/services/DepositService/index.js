@@ -23,7 +23,6 @@ export const postDeposit = async (amount, orderInfo) => {
 };
 
 export const getDeposit = async (queryParams) => {
-  const token = localStorage.getItem("Bearer");
   try {
     const response = await request.get("/api/Payment/PaymentResponse", {
       params: queryParams,
@@ -31,7 +30,6 @@ export const getDeposit = async (queryParams) => {
   {
     headers: {
       "Content-Type": "application/json",
-      "Authorization": `Bearer ${token}`,
     },
   });
     return response.data;

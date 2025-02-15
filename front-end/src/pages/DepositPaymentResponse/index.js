@@ -10,7 +10,7 @@ function DepositPaymentResponsePage() {
     try {
       const response = await DepositService.getDeposit(queryParams);
       if (response.statusCode !== 200) {
-        alert("Failed to get payment response");
+        alert(response.data.message);
       } else {
         alert("Payment successful");
         console.log(response.data);
