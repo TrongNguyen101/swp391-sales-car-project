@@ -1,10 +1,18 @@
 import { Typography } from "@mui/material";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import * as DepositService from "../../services/DepositService";
 
 function DepositPaymentResponsePage() {
   const location = useLocation();
+  const [deposit, setDeposit] = useState({});
+  const data = {
+    productId: localStorage.getItem("productId"),
+    userId: 1,
+    amount: deposit.Amount,
+    orderInfo: deposit.OrderInfo,
+    transactionStatus: deposit.TransactionStatus,
+  }
 
   const fetchDepositPaymentResponse = async (queryParams) => {
     try {
@@ -14,12 +22,14 @@ function DepositPaymentResponsePage() {
       } else {
         alert("Payment successful");
         console.log(response.data);
+        setDeposit(JSON.parse(response.data));
       }
     } catch (error) {
       alert("Error getting payment response");
     }
   };
-
+  console.log(deposit);
+  console.log(data);
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
     fetchDepositPaymentResponse(queryParams);

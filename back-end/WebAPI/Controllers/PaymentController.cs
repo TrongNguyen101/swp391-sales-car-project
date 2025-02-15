@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.DTO;
 using WebAPI.Utils.JwtTokenHelper;
@@ -21,7 +22,6 @@ namespace WebAPI.Controllers
         {
             try
             {
-
                 var authorizationHeader = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
                 var token = authorizationHeader.Split(" ")[1];
                 bool isAuthorized = JwtTokenHelper.VerifyJwtToken(token);
@@ -86,7 +86,7 @@ namespace WebAPI.Controllers
                     StatusCode = 200,
                     Success = true,
                     Message = "Payment successful",
-                    Data = paymentResponse,
+                    Data = JsonSerializer.Serialize(paymentResponse),
                 });
             }
             else
@@ -96,6 +96,50 @@ namespace WebAPI.Controllers
                     StatusCode = 400,
                     Success = false,
                     Message = "Payment failed",
+                });
+            }
+        }
+
+        [HttpPost("PaymentStorage")]
+        public async Task<IActionResult> PaymentStorage(DepositPaymentDTO depositPaymentDTO)
+        {
+            try
+            {
+                var token = HttpContext.Request.Headers["Authorization"].FirstOrDefault().Split(" ")[1];
+                bool isAuthorized = JwtTokenHelper.VerifyJwtToken(token);
+                var role = JwtTokenHelper.GetUserRole(token);
+                if (!isAuthorized)
+                {
+                    return Unauthorized(new DataResponse
+                    {
+                        StatusCode = 401,
+                        Success = false,
+                        Message = "Unauthorized token is invalid",
+                    });
+                }
+                if (role.ToString() != "2")
+                {
+                    return Unauthorized(new DataResponse
+                    {
+                        StatusCode = 401,
+                        Success = false,
+                        Message = "Unauthorized access denied",
+                    });
+                }
+                return Ok(new DataResponse
+                {
+                    StatusCode = 200,
+                    Success = true,
+                    Message = "Payment storage successfully",
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new DataResponse
+                {
+                    StatusCode = 400,
+                    Success = false,
+                    Message = ex.Message,
                 });
             }
         }
