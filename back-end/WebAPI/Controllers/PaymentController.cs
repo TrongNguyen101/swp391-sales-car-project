@@ -42,7 +42,6 @@ namespace WebAPI.Controllers
                         StatusCode = 401,
                         Success = false,
                         Message = "Unauthorized access denied",
-                        Data = isAuthorized + "+" + role,
                     });
                 }
                 var paymentUrl = vnpayPayment.CreatePaymentUrl(depositInfo);
