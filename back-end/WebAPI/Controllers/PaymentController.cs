@@ -1,3 +1,4 @@
+using System.Diagnostics.Eventing.Reader;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualBasic;
 using WebAPI.DTO;
@@ -20,6 +21,54 @@ namespace WebAPI.Controllers
         [HttpPost("CreatePaymentUrl")]
         public IActionResult CreatePayment([FromBody] DepositInfo depositInfo)
         {
+            try
+            {
+
+                var authorizationHeader = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
+                var token = authorizationHeader.Split(" ")[1];
+                bool isAuthorized = JwtTokenHelper.VerifyJwtToken(token);
+                var role = JwtTokenHelper.GetUserRole(token);
+                if (!isAuthorized)
+                {
+                    return Unauthorized(new DataResponse
+                    {
+                        StatusCode = 401,
+                        Success = false,
+                        Message = "Unauthorized token is invalid",
+                    });
+                }
+                if (role.ToString() != "2")
+                {
+                    return Unauthorized(new DataResponse
+                    {
+                        StatusCode = 401,
+                        Success = false,
+                        Message = "Unauthorized access denied",
+                        Data = isAuthorized + "+" + role,
+                    });
+                }
+                var paymentUrl = vnpayPayment.CreatePaymentUrl(depositInfo);
+                return Ok(new DataResponse
+                {
+                    StatusCode = 200,
+                    Success = true,
+                    Data = paymentUrl,
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new DataResponse
+                {
+                    StatusCode = 400,
+                    Success = false,
+                    Message = ex.Message,
+                });
+            }
+        }
+
+        [HttpGet("PaymentResponse")]
+        public async Task<IActionResult> ProcessPaymentResponse()
+        {
             var authorizationHeader = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
             if (authorizationHeader == null)
             {
@@ -41,18 +90,6 @@ namespace WebAPI.Controllers
                     Message = "Unauthorized",
                 });
             }
-            var paymentUrl = vnpayPayment.CreatePaymentUrl(depositInfo);
-            return Ok(new DataResponse
-            {
-                StatusCode = 200,
-                Success = true,
-                Data = paymentUrl,
-            });
-        }
-
-        [HttpGet("PaymentResponse")]
-        public async Task<IActionResult> ProcessPaymentResponse()
-        {
             var queryParams = HttpContext.Request.Query;
             var vnp_SecureHash = queryParams["vnp_SecureHash"];
             var sortedQueryParams = queryParams

@@ -81,9 +81,10 @@ const DepositPaymentPage = () => {
         orderInfo
       );
       if (response.statusCode === 200) {
-        window.location.href = response.data;
+        console.log(response);
+        //window.location.href = response.data;
       } else {
-        alert("Failed to create payment URL");
+        alert(response.data.message);
       }
     } catch (error) {
       alert("Error creating payment URL");

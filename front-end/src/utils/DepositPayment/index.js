@@ -5,7 +5,7 @@ export const get = async (path, option = {}) => {
   return response;
 }
 
-export const post = async (path, data, option = {}) => {
-  const response = await request.post(path, data, option);
+export const post = async (path, options = {}, data) => {
+  const response = await request.post(path, options, data);
   return response;
 }

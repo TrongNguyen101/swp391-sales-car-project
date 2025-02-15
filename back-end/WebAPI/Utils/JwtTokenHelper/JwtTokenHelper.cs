@@ -83,6 +83,10 @@ namespace WebAPI.Utils.JwtTokenHelper
             .SetBasePath(Directory.GetCurrentDirectory())
             .AddJsonFile("appsettings.json")
             .Build();
+            if(token == null)
+            {
+                return false;
+            }
             string secretKey = configuration.GetSection("Jwt:Key").Value;
             string[] parts = token.Split('.');
             string headerEncoded = parts[0];
