@@ -5,7 +5,7 @@ using WebAPI.Models;
 
 namespace WebAPI.Utils.AutoMapper
 {
-    public static class AutoMapper
+    public class AutoMapper
     {
         /// <summary>
         /// Convert User to UserDTO
@@ -105,11 +105,6 @@ namespace WebAPI.Utils.AutoMapper
                 PriceBatteryOwn = carPriceOwn,
                 PriceDeposite = carDeposite,
                 SpecImage = car.SpecImage,
-                ColorImage1 = car.ColorImage1,
-                ColorImage2 = car.ColorImage2,
-                ColorImage3 = car.ColorImage3,
-                ColorImage4 = car.ColorImage4,
-                ColorImage5 = car.ColorImage5,
                 ImageBanner = car.ImageBanner
             };
         }
@@ -122,6 +117,20 @@ namespace WebAPI.Utils.AutoMapper
         private static string FormatPrice(double price)
         {
             return price.ToString("N0", new CultureInfo("en-US")).Replace(",", ".");
+        }
+
+        public static CarColorDTO ToCarColorDTO(CarColor carColor)
+        {
+            return new CarColorDTO
+            {
+                Id = carColor.ColorId,
+                ColorName = carColor.ColorName,
+                ColorImage = carColor.ColorImage
+            };
+        }
+        public static List<CarColorDTO> ToCarColorDTOList(List<CarColor> carColors)
+        {
+            return carColors.Select(carColor => ToCarColorDTO(carColor)).ToList();
         }
     }
 }

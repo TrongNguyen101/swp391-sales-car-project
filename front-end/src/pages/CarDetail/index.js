@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import classNames from "classnames/bind";
 import styles from "./CarDetail.module.scss";
 import * as carService from "../../services/CarService";
@@ -10,41 +10,26 @@ const cx = classNames.bind(styles);
 
 function CarDetailPage() {
   const { carId } = useParams();
+  const navigate = useNavigate();
   const [car, setCar] = useState({});
   const [selectedColor, setSelectedColor] = useState(0);
-
-  const colors = [
-    {
-      id: 1,
-      name: car.ColorImage1,
-      image: car.ColorImage1,
-    },
-    {
-      id: 2,
-      name: car.ColorImage2,
-      image: car.ColorImage2,
-    },
-    {
-      id: 3,
-      name: car.ColorImage3,
-      image: car.ColorImage3,
-    },
-    {
-        id: 4,
-        name: car.ColorImage4,
-        image: car.ColorImage4,
-      },
-      {
-        id: 5,
-        name: car.ColorImage5,
-        image: car.ColorImage5,
-      },
-  ];
-
-  console.log(car);
+  const [colors, setColors] = useState([]);
 
   const toTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const fetchCarColors = async (Id) => {
+    try {
+      const response = await carService.getCarColorById(Id);
+      if (response.statusCode !== 200) {
+        setColors([]);
+      } else {
+        setColors(JSON.parse(response.data));
+      }
+    } catch (error) {
+      setColors([]);
+    }
   };
 
   const fetchCarDetails = async (Id) => {
@@ -62,6 +47,7 @@ function CarDetailPage() {
 
   useEffect(() => {
     toTop();
+    fetchCarColors(carId);
     fetchCarDetails(carId);
   }, [carId]);
 
@@ -78,7 +64,15 @@ function CarDetailPage() {
     setSelectedColor(index);
   };
 
-  console.log(car);
+  const handleClickDepositButton = () => {
+    const token = localStorage.getItem("Bearer");
+    if (!token) {
+      navigate("/login");
+    } else {
+      navigate(`/deposit/${carId}`);
+    }
+  };
+
   return (
     <div className={cx("container")}>
       <div className={cx("car-banner")}>
@@ -182,7 +176,7 @@ function CarDetailPage() {
             </div>
           </div>
           <div className={cx("deposit-btn")}>
-            <Button variant="contained">
+            <Button variant="contained" onClick={handleClickDepositButton}>
               <Typography sx={{ textTransform: "none" }}>
                 Deposit {car.PriceDeposite} VND
               </Typography>
@@ -195,8 +189,8 @@ function CarDetailPage() {
               {colors.map((color, index) => (
                 <div className={cx("car-color-item")} key={index}>
                   <img
-                    src={`https://localhost:7005/api/Images/ColorDetail/${color.image}`}
-                    alt={color.name}
+                    src={`https://localhost:7005/api/Images/ColorDetail/${color.ColorImage}`}
+                    alt={color.ColorName}
                   />
                 </div>
               ))}
@@ -212,15 +206,18 @@ function CarDetailPage() {
                 onClick={() => handleColorChange(index)}
               >
                 <img
-                  src={`https://localhost:7005/api/Images/Color/${color.image}`}
-                  alt={color.name}
+                  src={`https://localhost:7005/api/Images/Color/${color.ColorImage}`}
+                  alt={color.ColorName}
                 />
               </div>
             ))}
           </div>
         </div>
         <div className={cx("car-specs")}>
-            <img src={`https://localhost:7005/api/Images/Spec/${car.SpecImage}`} alt={car.SpecImage} />
+          <img
+            src={`https://localhost:7005/api/Images/Spec/${car.SpecImage}`}
+            alt={car.SpecImage}
+          />
         </div>
       </div>
     </div>

@@ -1,0 +1,31 @@
+import { Typography } from "@mui/material";
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
+import * as DepositService from "../../services/DepositService";
+
+function DepositPaymentResponsePage() {
+  const location = useLocation();
+
+  const fetchDepositPaymentResponse = async (queryParams) => {
+    try {
+      const response = await DepositService.getDeposit(queryParams);
+      if (response.statusCode !== 200) {
+        alert(response.data.message);
+      } else {
+        alert("Payment successful");
+        console.log(response.data);
+      }
+    } catch (error) {
+      alert("Error getting payment response");
+    }
+  };
+
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    fetchDepositPaymentResponse(queryParams);
+  }, [location]);
+
+  return <div><Typography>Deposit payment response</Typography></div>;
+}
+
+export default DepositPaymentResponsePage;

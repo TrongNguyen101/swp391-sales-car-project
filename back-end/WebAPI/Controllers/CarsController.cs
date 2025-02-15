@@ -80,5 +80,40 @@ namespace WebAPI.Controllers
                 });
             }
         }
+
+        [HttpGet("Color/{carId}")]
+        public async Task<IActionResult> GetColorByCarId(int carId)
+        {
+            try
+            {
+                var carColors = await CarsDAO.GetInstance().GetCarColorsByCarId(carId);
+                if (carColors == null || carColors.Count == 0)
+                {
+                    return NotFound(new DataResponse
+                    {
+                        StatusCode = 404,
+                        Message = "No color found",
+                        Success = false
+                    });
+                }
+                var carColorDTOs = AutoMapper.ToCarColorDTOList(carColors);
+                return Ok(new DataResponse
+                {
+                    StatusCode = 200,
+                    Message = "Get all colors by car id successfully",
+                    Success = true,
+                    Data = JsonSerializer.Serialize(carColorDTOs)
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new DataResponse
+                {
+                    StatusCode = 400,
+                    Message = ex.Message,
+                    Success = false
+                });
+            }
+        }
     }
 }
