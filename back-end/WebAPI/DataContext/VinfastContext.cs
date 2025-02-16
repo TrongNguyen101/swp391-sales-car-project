@@ -38,6 +38,8 @@ namespace WebAPI.DataContext
 
         public DbSet<CarColor> CarColor { get; set; }
 
+        public DbSet<CarDeposit> CarDeposit { get; set; }
+
         /// <summary>
         /// Configures the database context options.
         /// </summary>
@@ -460,6 +462,22 @@ namespace WebAPI.DataContext
                 entity.HasMany(color => color.CarColors)
                       .WithOne(car => car.Car)
                       .HasForeignKey(car => car.CarId)
+                      .IsRequired();
+            });
+
+            modelBuilder.Entity<Cars>(entity =>
+            {
+                entity.HasMany(carDeposit => carDeposit.CarDeposits)
+                      .WithOne(deposit => deposit.Car)
+                      .HasForeignKey(user => user.UserId)
+                      .IsRequired();
+            });
+
+            modelBuilder.Entity<Users>(entity =>
+            {
+                entity.HasMany(carDeposit => carDeposit.CarDeposits)
+                      .WithOne(user => user.User)
+                      .HasForeignKey(user => user.UserId)
                       .IsRequired();
             });
         }

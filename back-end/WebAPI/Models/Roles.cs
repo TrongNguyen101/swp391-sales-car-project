@@ -7,6 +7,7 @@ namespace WebAPI.Models
     public class Roles
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("Role ID")]
         public int RoleId { get; set; }
         [Column("Role Name")]

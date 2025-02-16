@@ -7,6 +7,7 @@ namespace WebAPI.Models
     public class Users
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("User ID")]
         public Guid Id { get; set; }
         [Column("User Name")]
@@ -28,5 +29,6 @@ namespace WebAPI.Models
         [Column("User Role")]
         public int RoleId { get; set; }
         public Roles? Role { get; set; }
+        public ICollection<CarDeposit>? CarDeposits { get; set; } = new List<CarDeposit>();
     }
 }
