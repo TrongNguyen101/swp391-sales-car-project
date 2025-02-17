@@ -4,6 +4,11 @@ import classNames from "classnames/bind";
 import styles from "./DepositPayment.module.scss";
 import {
   Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   FormControl,
   FormControlLabel,
   InputLabel,
@@ -26,6 +31,8 @@ const DepositPaymentPage = () => {
   const [colors, setColors] = useState([]);
   const [selectedVersion, setSelectedVersion] = useState("");
   const [user, setUser] = useState({});
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [dialogMessage, setDialogMessage] = useState("");
   const navigate = useNavigate();
   const orderInfo =
     "Deposit payment for car " +
@@ -75,6 +82,16 @@ const DepositPaymentPage = () => {
   }, [carId]);
 
   const handlePayment = async () => {
+    if (!selectedColor) {
+      setDialogMessage("Please select color of car");
+      setDialogOpen(true);
+      return;
+    }
+    if (!selectedVersion) {
+      setDialogMessage("Please select version of car");
+      setDialogOpen(true);
+      return;
+    }
     try {
       const response = await DepositService.postDeposit(
         car.PriceDeposite,
@@ -98,6 +115,10 @@ const DepositPaymentPage = () => {
     setSelectedVersion(event.target.value);
   };
 
+  const handleCloseDialog = () => {
+    setDialogOpen(false);
+  };
+
   console.log(orderInfo);
   console.log(user);
   return (
@@ -113,7 +134,8 @@ const DepositPaymentPage = () => {
           >
             Account Information
           </Typography>
-          <div className={cx("user-infor")}>
+          <div className={cx("user-info")}>
+            <Typography>UserId: {user.sub}</Typography>
             <Typography>Fullname: {user.name}</Typography>
             <Typography>Email: {user.email}</Typography>
             <Typography>Phone: {user.phone}</Typography>
@@ -170,6 +192,22 @@ const DepositPaymentPage = () => {
           </Button>
         </div>
       </div>
+      <Dialog
+        open={dialogOpen}
+        onClose={handleCloseDialog}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title" sx={{textAlign: "center"}}>{"Notofication"}</DialogTitle>
+        <DialogContent id="alert-dialog-description" sx={{ textAlign: "center", width: "400px", height: "60px" }}>
+          <DialogContentText>{dialogMessage}</DialogContentText>
+        </DialogContent>
+        <DialogActions sx={{ justifyContent: "center" }}>
+          <Button onClick={handleCloseDialog} variant="contained" autoFocus>
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };

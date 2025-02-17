@@ -432,7 +432,7 @@ namespace WebAPI.DataContext
                 new Users
                 {
                     Id = new Guid("e4b8a1e1-5d4b-5c4b-9a1e-2d4b5c4b9a1e"),
-                    UserName = "user",
+                    UserName = "User A",
                     Address = "456 User St",
                     Phone = "0987654321",
                     Email = "user@example.com",
@@ -469,7 +469,7 @@ namespace WebAPI.DataContext
             {
                 entity.HasMany(carDeposit => carDeposit.CarDeposits)
                       .WithOne(deposit => deposit.Car)
-                      .HasForeignKey(user => user.UserId)
+                      .HasForeignKey(user => user.CarId)
                       .IsRequired();
             });
 
