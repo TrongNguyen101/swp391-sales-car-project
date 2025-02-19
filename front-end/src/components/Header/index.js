@@ -18,6 +18,7 @@ import {
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
+import * as DecodePayload from "../../lib/DecodePayload";
 
 // Bind styles to classname of html
 const cx = classnames.bind(styles);
@@ -48,6 +49,7 @@ function HeaderComponent() {
   const navigate = useNavigate(); // Navigate page using useNavigate hook from library react-router-dom
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [disableDashboard, setDisableDashboard] = useState(true);
   const open = Boolean(anchorEl);
   /**
    * Redirects the user to the login page.
@@ -89,6 +91,10 @@ function HeaderComponent() {
     const token = localStorage.getItem("Bearer");
     if (token) {
       setIsLoggedIn(true);
+      const decoded = DecodePayload.decodePayload(token);
+      if (decoded.role === 1) {
+        setDisableDashboard(false);
+      }
     }
   }, []);
 
@@ -263,7 +269,7 @@ function HeaderComponent() {
                   </ListItemIcon>
                   User Profile
                 </MenuItem>
-                <MenuItem onClick={handleClose}>
+                <MenuItem onClick={handleClose} sx={{ display: disableDashboard ? "none" : "block" }}>
                   <ListItemIcon>
                     <FontAwesomeIcon icon={faClipboard}></FontAwesomeIcon>
                   </ListItemIcon>
