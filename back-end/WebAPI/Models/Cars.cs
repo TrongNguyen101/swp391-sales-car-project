@@ -7,6 +7,7 @@ namespace WebAPI.Models
     public class Cars
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("Car ID")]
         public int Id { get; set; }
         [Column("Car Name")]
@@ -17,16 +18,6 @@ namespace WebAPI.Models
         public string? Image { get; set; }
         [Column("Spec Image")]
         public string? SpecImage { get; set; }
-        [Column("Color Image 1")]
-        public string? ColorImage1 { get; set; }
-        [Column("Color Image 2")]
-        public string? ColorImage2 { get; set; }
-        [Column("Color Image 3")]
-        public string? ColorImage3 { get; set; }
-        [Column("Color Image 4")]
-        public string? ColorImage4 { get; set; }
-        [Column("Color Image 5")]
-        public string? ColorImage5 { get; set; }
         [Column("Image Banner")]
         public string? ImageBanner { get; set; }
         [Column("Price Battery Rental")]
@@ -40,5 +31,6 @@ namespace WebAPI.Models
         [Column("Is Deleted")]
         public bool IsDeleted { get; set; }
         public ICollection<CarColor>? CarColors { get; set; } = new List<CarColor>();
+        public ICollection<CarDeposit>? CarDeposits { get; set; } = new List<CarDeposit>();
     }
 }

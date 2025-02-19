@@ -69,6 +69,8 @@ function CarDetailPage() {
     if (!token) {
       navigate("/login");
     } else {
+      const productId = carId;
+      localStorage.setItem("productId", productId);
       navigate(`/deposit/${carId}`);
     }
   };
