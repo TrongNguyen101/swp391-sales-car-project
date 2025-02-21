@@ -82,15 +82,10 @@ const DepositPaymentPage = () => {
   }, [carId]);
 
   const handlePayment = async () => {
-    if (!selectedColor) {
-      setDialogMessage("Please select color of car");
+    if (!selectedColor || !selectedVersion) {
+      setDialogMessage("Please select color and version of car");
       setDialogOpen(true);
-      return;
-    }
-    if (!selectedVersion) {
-      setDialogMessage("Please select version of car");
-      setDialogOpen(true);
-      return;
+      return
     }
     try {
       const response = await DepositService.postDeposit(
@@ -198,7 +193,7 @@ const DepositPaymentPage = () => {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title" sx={{textAlign: "center"}}>{"Notofication"}</DialogTitle>
+        <DialogTitle id="alert-dialog-title" sx={{textAlign: "center"}}>{"Notification"}</DialogTitle>
         <DialogContent id="alert-dialog-description" sx={{ textAlign: "center", width: "400px", height: "60px" }}>
           <DialogContentText>{dialogMessage}</DialogContentText>
         </DialogContent>

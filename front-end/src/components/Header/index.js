@@ -81,10 +81,19 @@ function HeaderComponent() {
     setAnchorEl(null);
   };
 
+  const handleToProfile = () => {
+    navigate("/profile");
+  };
+
+  const handleToDashboard = () => {
+    navigate("/dashboard");
+  };
+
   const handleLogout = () => {
     localStorage.removeItem("Bearer");
     setIsLoggedIn(false);
     handleClose();
+    navigate("/");
   };
 
   useEffect(() => {
@@ -206,13 +215,14 @@ function HeaderComponent() {
         </div>
         <div className={cx("header-action")}>
           <div className={cx("login-text")}>
-            <div className={isLoggedIn === true ? cx("disabled") : cx("account")} onClick={handleToLoginPage}>
+            <div
+              className={isLoggedIn === true ? cx("disabled") : cx("account")}
+              onClick={handleToLoginPage}
+            >
               <Typography variant="body1">Account</Typography>
             </div>
             <div
-              className={
-                isLoggedIn === false ? cx("disabled") : cx("profile")
-              }
+              className={isLoggedIn === false ? cx("disabled") : cx("profile")}
             >
               <Tooltip title="Profile">
                 <IconButton
@@ -263,13 +273,16 @@ function HeaderComponent() {
                 transformOrigin={{ horizontal: "right", vertical: "top" }}
                 anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
               >
-                <MenuItem onClick={handleClose}>
+                <MenuItem onClick={handleToProfile}>
                   <ListItemIcon>
                     <FontAwesomeIcon icon={faUser}></FontAwesomeIcon>
                   </ListItemIcon>
                   User Profile
                 </MenuItem>
-                <MenuItem onClick={handleClose} sx={{ display: disableDashboard ? "none" : "block" }}>
+                <MenuItem
+                  onClick={handleToDashboard}
+                  sx={{ display: disableDashboard ? "none" : "block" }}
+                >
                   <ListItemIcon>
                     <FontAwesomeIcon icon={faClipboard}></FontAwesomeIcon>
                   </ListItemIcon>

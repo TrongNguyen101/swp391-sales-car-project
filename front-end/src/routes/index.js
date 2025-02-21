@@ -7,6 +7,7 @@ import RegisterPage from "../pages/Register";
 import CarDetailPage from "../pages/CarDetail";
 import DepositPaymentPage from "../pages/DepositPayment";
 import DepositPaymentResponsePage from "../pages/DepositPaymentResponse";
+import DashBoardPage from "../pages/DashBoard";
 
 const publicRoutes = [
   { path: "/", page: HomePage },
@@ -18,6 +19,7 @@ const publicRoutes = [
   { path: "/register", page: RegisterPage, layout: null },
   { path: "/deposit/:carId", page: DepositPaymentPage },
   { path: "/deposit-response", page: DepositPaymentResponsePage },
+  { path: "/dashboard", page: DashBoardPage },
 ];
 
 export { publicRoutes };
