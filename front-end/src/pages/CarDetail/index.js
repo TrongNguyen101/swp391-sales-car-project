@@ -5,6 +5,7 @@ import styles from "./CarDetail.module.scss";
 import * as carService from "../../services/CarService";
 import Slider from "react-slick";
 import { Button, Typography } from "@mui/material";
+import * as DecodePayload from "../../lib/DecodePayload";
 
 const cx = classNames.bind(styles);
 
@@ -14,6 +15,7 @@ function CarDetailPage() {
   const [car, setCar] = useState({});
   const [selectedColor, setSelectedColor] = useState(0);
   const [colors, setColors] = useState([]);
+  const [disableDepositButton, setDisableDepositButton] = useState(false);
 
   const toTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -49,6 +51,11 @@ function CarDetailPage() {
     toTop();
     fetchCarColors(carId);
     fetchCarDetails(carId);
+    const token = localStorage.getItem("Bearer");
+    const decoded = DecodePayload.decodePayload(token);
+    if (decoded.role !== 2) {
+      setDisableDepositButton(true);
+    }
   }, [carId]);
 
   const settings = {
@@ -178,7 +185,11 @@ function CarDetailPage() {
             </div>
           </div>
           <div className={cx("deposit-btn")}>
-            <Button variant="contained" onClick={handleClickDepositButton}>
+            <Button
+              variant="contained"
+              onClick={handleClickDepositButton}
+              disabled={disableDepositButton}
+            >
               <Typography sx={{ textTransform: "none" }}>
                 Deposit {car.PriceDeposite} VND
               </Typography>

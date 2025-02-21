@@ -2,6 +2,7 @@ import classNames from "classnames/bind";
 import styles from "./Home.module.scss";
 import { Button, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
+import { useEffect } from "react";
 
 const cx = classNames.bind(styles);
 
@@ -20,6 +21,10 @@ const cx = classNames.bind(styles);
  * @returns {JSX.Element} The rendered home page component.
  */
 function HomePage() {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <div className={cx("container")}>
       <div className={cx("banner-container")}>
