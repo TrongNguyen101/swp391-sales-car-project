@@ -16,6 +16,7 @@ import {
   Radio,
   RadioGroup,
   Select,
+  TextField,
   Typography,
 } from "@mui/material";
 import * as DepositService from "../../services/DepositService";
@@ -26,14 +27,17 @@ const cx = classNames.bind(styles);
 
 const DepositPaymentPage = () => {
   const { carId } = useParams();
-  const [car, setCar] = useState({});
-  const [selectedColor, setSelectedColor] = useState("");
-  const [colors, setColors] = useState([]);
-  const [selectedVersion, setSelectedVersion] = useState("");
-  const [user, setUser] = useState({});
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [dialogMessage, setDialogMessage] = useState("");
   const navigate = useNavigate();
+  const [car, setCar] = useState({});
+  const [user, setUser] = useState({});
+  const [colors, setColors] = useState([]);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedColor, setSelectedColor] = useState("");
+  const [selectedVersion, setSelectedVersion] = useState("");
+  const [dialogMessage, setDialogMessage] = useState("");
+  const [inputFullname, setInputFullname] = useState("");
+  const [inputPhone, setInputPhone] = useState("");
+  const [inputEmail, setInputEmail] = useState("");
   const orderInfo =
     "Deposit payment for car " +
     car.Name +
@@ -83,6 +87,9 @@ const DepositPaymentPage = () => {
     } else {
       const decoded = DecodePayload.decodePayload(token);
       setUser(decoded);
+      setInputFullname(decoded.name);
+      setInputPhone(decoded.phone);
+      setInputEmail(decoded.email);
       fetchCarDetails(carId);
       fetchCarColors(carId);
     }
@@ -124,6 +131,7 @@ const DepositPaymentPage = () => {
     setDialogOpen(false);
   };
 
+  console.log(inputFullname);
   console.log(orderInfo);
   console.log(user);
   return (
@@ -140,10 +148,27 @@ const DepositPaymentPage = () => {
             Account Information
           </Typography>
           <div className={cx("user-info")}>
-            <Typography>UserId: {user.sub}</Typography>
-            <Typography>Fullname: {user.name}</Typography>
-            <Typography>Email: {user.email}</Typography>
-            <Typography>Phone: {user.phone}</Typography>
+            <FormControl sx={{gap: 3}}>
+              <TextField
+                label="Fullname"
+                variant="outlined"
+                disabled
+                value={inputFullname}
+                onChange={(e) => setInputFullname(e.target.value)}
+              />
+              <TextField
+                label="Phone"
+                variant="outlined"
+                value={inputPhone}
+                onChange={(e) => setInputPhone(e.target.value)}
+              />
+              <TextField
+                label="Email"
+                variant="outlined"
+                value={inputEmail}
+                onChange={(e) => setInputEmail(e.target.value)}
+              />
+            </FormControl>
           </div>
         </div>
         <div className={cx("payment-info")}>
@@ -154,7 +179,7 @@ const DepositPaymentPage = () => {
         </div>
         <div className={cx("form-control")}>
           <FormControl sx={{ m: 1, minWidth: 160 }}>
-            <InputLabel id="color-select-label" sx={{ zIndex: -1 }}>
+            <InputLabel id="color-select-label">
               Select Color
             </InputLabel>
             <Select
@@ -193,7 +218,7 @@ const DepositPaymentPage = () => {
         </div>
         <div className={cx("button-payment")}>
           <Button variant="contained" onClick={handlePayment}>
-            Pay Now
+            Pay Now with VNPay
           </Button>
         </div>
       </div>
