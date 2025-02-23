@@ -46,12 +46,16 @@ const DepositPaymentPage = () => {
     try {
       const response = await CarService.getCarColorById(Id);
       if (response.statusCode !== 200) {
+        setDialogMessage(response.data.message);
+        setDialogOpen(true);
         setColors([]);
       } else {
         setColors(JSON.parse(response.data));
       }
     } catch (error) {
       setColors([]);
+      setDialogMessage("Error fetching car colors");
+      setDialogOpen(true);
     }
   };
 
@@ -60,11 +64,15 @@ const DepositPaymentPage = () => {
       const response = await CarService.getCarById(Id);
       if (response.statusCode !== 200) {
         setCar({});
+        setDialogMessage(response.data.message);
+        setDialogOpen(true);
       } else {
         setCar(JSON.parse(response.data));
       }
     } catch (error) {
       setCar({});
+      setDialogMessage(error.response.data.message);
+      setDialogOpen(true);
     }
   };
 
@@ -85,7 +93,7 @@ const DepositPaymentPage = () => {
     if (!selectedColor || !selectedVersion) {
       setDialogMessage("Please select color and version of car");
       setDialogOpen(true);
-      return
+      return;
     }
     try {
       const response = await DepositService.postDeposit(
@@ -95,10 +103,12 @@ const DepositPaymentPage = () => {
       if (response.statusCode === 200) {
         window.location.href = response.data;
       } else {
-        alert(response.data.message);
+        setDialogMessage(response.data.message);
+        setDialogOpen(true);
       }
     } catch (error) {
-      alert("Error creating payment URL");
+      setDialogMessage(error.response.data.message);
+      setDialogOpen(true);
     }
   };
 
@@ -193,8 +203,13 @@ const DepositPaymentPage = () => {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title" sx={{textAlign: "center"}}>{"Notification"}</DialogTitle>
-        <DialogContent id="alert-dialog-description" sx={{ textAlign: "center", width: "400px", height: "60px" }}>
+        <DialogTitle id="alert-dialog-title" sx={{ textAlign: "center" }}>
+          {"Notification"}
+        </DialogTitle>
+        <DialogContent
+          id="alert-dialog-description"
+          sx={{ textAlign: "center", width: "400px", height: "60px" }}
+        >
           <DialogContentText>{dialogMessage}</DialogContentText>
         </DialogContent>
         <DialogActions sx={{ justifyContent: "center" }}>
