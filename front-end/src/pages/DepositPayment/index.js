@@ -29,7 +29,6 @@ const DepositPaymentPage = () => {
   const { carId } = useParams();
   const navigate = useNavigate();
   const [car, setCar] = useState({});
-  const [user, setUser] = useState({});
   const [colors, setColors] = useState([]);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedColor, setSelectedColor] = useState("");
@@ -39,6 +38,7 @@ const DepositPaymentPage = () => {
   const [inputPhone, setInputPhone] = useState("");
   const [inputEmail, setInputEmail] = useState("");
   const [colorToImageUrl, setColorToImageUrl] = useState("");
+  const [remainingAmount, setRemainingAmount] = useState(0);
 
   const orderInfo =
     "Deposit payment for car " +
@@ -52,6 +52,10 @@ const DepositPaymentPage = () => {
     Id: colors[0]?.Id,
     ColorName: colors[0]?.ColorName,
     ColorImage: colors[0]?.ColorImage,
+  };
+
+  const toTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const fetchCarColors = async (Id) => {
@@ -88,19 +92,36 @@ const DepositPaymentPage = () => {
     }
   };
 
+  const fetchRemainingAmount = async (Id) => {
+    try {
+      const response = await DepositService.getRemainingAmount(Id);
+      if (response.statusCode !== 200) {
+        setDialogMessage(response.data.message);
+        setDialogOpen(true);
+      } else {
+        console.log(JSON.parse(response.data));
+        setRemainingAmount(JSON.parse(response.data));
+      }
+    } catch (error) {
+      setDialogMessage(error.response.data.message);
+      setDialogOpen(true);
+    }
+  };
+
   useEffect(() => {
+    toTop();
     const token = localStorage.getItem("Bearer");
     if (!token) {
       navigate("/login");
     } else {
       const decoded = DecodePayload.decodePayload(token);
-      setUser(decoded);
       setInputFullname(decoded.name);
       setInputPhone(decoded.phone);
       setInputEmail(decoded.email);
       fetchCarDetails(carId);
       fetchCarColors(carId);
       setColorToImageUrl(defualtColor.ColorImage);
+      fetchRemainingAmount(carId);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [carId]);
@@ -117,6 +138,11 @@ const DepositPaymentPage = () => {
         orderInfo
       );
       if (response.statusCode === 200) {
+        localStorage.setItem("productVersion", selectedVersion);
+        localStorage.setItem("remainingAmountRent", remainingAmount.remainingAmountBatteryRent);
+        localStorage.setItem("remainingAmountOwn", remainingAmount.remainingAmountBatteryOwn);
+        localStorage.setItem("priceBatteryRent", car.PriceBatteryRental);
+        localStorage.setItem("priceBatteryOwn", car.PriceBatteryOwn);
         window.location.href = response.data;
       } else {
         setDialogMessage(response.data.message);
@@ -146,13 +172,6 @@ const DepositPaymentPage = () => {
     setDialogOpen(false);
   };
 
-  console.log(inputFullname);
-  console.log(orderInfo);
-  console.log(user);
-  console.log(colors[0]);
-  console.log(selectedColor);
-  console.log(colorToImageUrl);
-  console.log(defualtColor);
   return (
     <div className={cx("container")}>
       <div className={cx("content")}>
@@ -188,12 +207,21 @@ const DepositPaymentPage = () => {
                 value={inputEmail}
                 onChange={(e) => setInputEmail(e.target.value)}
               />
+              <TextField
+                label="Description"
+                variant="outlined"
+                multiline
+                rows={2}
+                disabled
+                value={orderInfo}
+              />
             </FormControl>
-            <div className={cx("payment-info")}>
-              <Typography>Deposit payment page</Typography>
-              <Typography>Car name: {car.Name}</Typography>
-              <Typography>Deposit price: {car.PriceDeposite}</Typography>
-              <Typography>Description:{orderInfo}</Typography>
+            <div className={cx("tutorial")}>
+              <Typography>
+                You can place a deposit via VnPAY. Our team will contact you
+                shortly to guide you through the necessary procedures. The
+                vehicle will be handed over at our showroom.
+              </Typography>
             </div>
             <div className={cx("form-control")}>
               <FormControl sx={{ m: 1, minWidth: 160 }}>
@@ -243,15 +271,77 @@ const DepositPaymentPage = () => {
                 alt={selectedColor}
               />
             </div>
-            <div className={cx("car-price")}>
-              <Typography variant="h5" sx={{ fontWeight: "600" }}>
-                Car price:{" "}
-                {selectedVersion === "Battery Rental"
-                  ? car.PriceBatteryRental
-                  : car.PriceBatteryOwn}
-              </Typography>
-              <Typography variant="h5" sx={{fontWeight: "600"}}>Deposit price: {car.PriceDeposite}</Typography>
-              <Typography>{selectedColor === "Battery Rental" ? car.PriceBatteryRental - car.PriceDeposite : car.PriceBatteryOwn - car.PriceDeposite}</Typography>
+            <div className={cx("car-price-info")}>
+              <div className={cx("car-price-title")}>
+                <Typography
+                  variant="h5"
+                  sx={{
+                    fontWeight: "600",
+                    color: "#3C3C3C",
+                    fontSize: "1.5rem",
+                  }}
+                >
+                  Car price:
+                </Typography>
+                <Typography
+                  variant="h5"
+                  sx={{
+                    fontWeight: "600",
+                    color: "#3C3C3C",
+                    fontSize: "1.5rem",
+                  }}
+                >
+                  Deposit price:
+                </Typography>
+                <Typography
+                  variant="h5"
+                  sx={{
+                    fontWeight: "600",
+                    color: "#3C3C3C",
+                    fontSize: "1.5rem",
+                  }}
+                >
+                  Remaining amount:
+                </Typography>
+              </div>
+              <div className={cx("car-price")}>
+                <Typography
+                  variant="h5"
+                  sx={{
+                    fontWeight: "600",
+                    color: "#3C3C3C",
+                    fontSize: "1.5rem",
+                  }}
+                >
+                  {selectedVersion === "Battery Rental"
+                    ? car.PriceBatteryRental
+                    : car.PriceBatteryOwn}{" "}
+                  VND
+                </Typography>
+                <Typography
+                  variant="h5"
+                  sx={{
+                    fontWeight: "600",
+                    color: "#3C3C3C",
+                    fontSize: "1.5rem",
+                  }}
+                >
+                  {car.PriceDeposite} VND
+                </Typography>
+                <Typography
+                  variant="h5"
+                  sx={{
+                    fontWeight: "600",
+                    color: "#3C3C3C",
+                    fontSize: "1.5rem",
+                  }}
+                >
+                  {selectedVersion === "Battery Rental"
+                    ? remainingAmount.remainingAmountBatteryRent
+                    : remainingAmount.remainingAmountBatteryOwn}{" "}
+                  VND
+                </Typography>
+              </div>
             </div>
           </div>
         </div>

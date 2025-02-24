@@ -1,8 +1,10 @@
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
+using WebAPI.DAO;
 using WebAPI.DTO;
 using WebAPI.Utils.JwtTokenHelper;
 using WebAPI.Utils.VnpayPayment;
+using System.Globalization;
 
 namespace WebAPI.Controllers
 {
@@ -142,6 +144,52 @@ namespace WebAPI.Controllers
                     Message = ex.Message,
                 });
             }
+        }
+
+        [HttpGet("RemainingAmount/{carId}")]
+        public async Task<IActionResult> GetRemainingBalance(int carId)
+        {
+            try
+            {
+                var car = await CarsDAO.GetInstance().GetCarById(carId);
+                if (car == null)
+                {
+                    return NotFound(new DataResponse
+                    {
+                        StatusCode = 404,
+                        Success = false,
+                        Message = "Car not found",
+                    });
+                }
+                var remainingAmountBatteryOwn = car.PriceBatteryOwn - car.PriceDeposite;
+                var remainingAmoauntBattryRental = car.PriceBatteryRental- car.PriceDeposite;
+                var FormatRemainingAmountBatteryOwn = FormatPrice(remainingAmountBatteryOwn);
+                var FormatRemainingAmountBatteryRental = FormatPrice(remainingAmoauntBattryRental);
+                return Ok(new DataResponse
+                {
+                    StatusCode = 200,
+                    Success = true,
+                    Data = JsonSerializer.Serialize(new RemainingAmountDTO
+                    {
+                        remainingAmountBatteryOwn = FormatRemainingAmountBatteryOwn,
+                        remainingAmountBatteryRent = FormatRemainingAmountBatteryRental,
+                    }),
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new DataResponse
+                {
+                    StatusCode = 400,
+                    Success = false,
+                    Message = ex.Message,
+                });
+            }
+        }
+
+        private static string FormatPrice(double price)
+        {
+            return price.ToString("N0", new CultureInfo("en-US")).Replace(",", ".");
         }
     }
 }

@@ -12,7 +12,7 @@ export const postDeposit = async (amount, orderInfo) => {
       {
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
       }
     );
@@ -24,14 +24,28 @@ export const postDeposit = async (amount, orderInfo) => {
 
 export const getDeposit = async (queryParams) => {
   try {
-    const response = await request.get("/api/Payment/PaymentResponse", {
-      params: queryParams,
-    },
-  {
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+    const response = await request.get(
+      "/api/Payment/PaymentResponse",
+      {
+        params: queryParams,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    return error.response;
+  }
+};
+
+export const getRemainingAmount = async (carId) => {
+  try {
+    const response = await request.get(
+      `/api/Payment/RemainingAmount/${carId}`
+    );
     return response.data;
   } catch (error) {
     return error.response;
