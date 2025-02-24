@@ -1,6 +1,6 @@
-import { Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import * as DepositService from "../../services/DepositService";
 import * as DecodePayload from "../../lib/DecodePayload";
 import classNames from "classnames/bind";
@@ -10,8 +10,10 @@ const cx = classNames.bind(styles);
 
 function DepositPaymentResponsePage() {
   const location = useLocation();
+  const navigate = useNavigate();
   const [deposit, setDeposit] = useState({});
   const [user, setUser] = useState({});
+  const [message, setMessage] = useState("");
 
   const data = {
     productId: localStorage.getItem("productId"),
@@ -29,14 +31,21 @@ function DepositPaymentResponsePage() {
     remainingAmountOwn: localStorage.getItem("remainingAmountOwn"),
   };
 
+  const ToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleToHome = () => {
+    navigate("/");
+  };
+
   const fetchDepositPaymentResponse = async (queryParams) => {
     try {
       const response = await DepositService.getDeposit(queryParams);
       if (response.statusCode !== 200) {
-        alert(response.data.message);
+        setMessage(response.data.message);
       } else {
-        alert("Payment successful");
-        console.log(response.data);
+        setMessage(response.data.message);
         setDeposit(JSON.parse(response.data));
       }
     } catch (error) {
@@ -47,6 +56,7 @@ function DepositPaymentResponsePage() {
   console.log(data);
   console.log(user);
   useEffect(() => {
+    ToTop();
     const token = localStorage.getItem("Bearer");
     const decodedToken = DecodePayload.decodePayload(token);
     const queryParams = new URLSearchParams(location.search);
@@ -58,37 +68,39 @@ function DepositPaymentResponsePage() {
   return (
     <div className={cx("container")}>
       <div className={cx("content")}>
-        <Typography variant="h4">Invoice</Typography>
-        <div className={cx("invoice-section")}>
-          <Typography variant="h6">Transaction Information</Typography>
-          <Typography>{data.name}</Typography>
-          <Typography>{data.email}</Typography>
-          <Typography>{data.phone}</Typography>
+        <div className={cx("image-check")}>
+          {data.transactionStatus === "00" ? (
+            <img src="green-check-in.png" alt="Success" />
+          ) : (
+            <img src="error-icon.png" alt="Fail" />
+          )}
         </div>
-        <div className={cx("invoice-section")}>
-          <Typography variant="h6">Payment Detail</Typography>
-          <Typography>Deposit price: {data.amount}</Typography>
-          <Typography>Description: {data.orderInfo}</Typography>
-          <Typography>
-            Transaction Status:{" "}
-            {data.transactionStatus === "00" ? "Success" : "Cancel"}
+        <div className={cx("message")}>
+          <Typography
+            sx={{
+              fontSize: "1.8rem",
+              fontWeight: "500",
+              color: "#333",
+            }}
+          >
+            {message}
           </Typography>
         </div>
-        <div className={cx("invoice-section")}>
-          <Typography variant="h6">Product Detail</Typography>
-          <Typography>Car Version: {data.productVersion}</Typography>
-          <Typography>
-            Car Price:{" "}
-            {data.productVersion === "Battery Rental"
-              ? data.priceBatteryRent
-              : data.priceBatteryOwn}
+        <div className={cx("description")}>
+          <Typography
+            sx={{
+              fontSize: "1.2rem",
+              fontWeight: "500",
+              color: "#333",
+            }}
+          >
+            {data.transactionStatus === "00"
+              ? "Congratulations! Your deposit is successful. We’ll contact you soon to complete the process. For support, call 1900 23 23 89."
+              : "Seems there was an issue or incomplete deposit payment. Don’t worry! We’ll contact you soon. For support, call 1900 23 23 89."}
           </Typography>
-          <Typography>
-            Remaining Amount:{" "}
-            {data.productVersion === "Battery Rental"
-              ? data.remainingAmountRent
-              : data.remainingAmountOwn}
-          </Typography>
+        </div>
+        <div className={cx("action-btn")}>
+          <Button variant="contained" onClick={handleToHome}>confirm</Button>
         </div>
       </div>
     </div>

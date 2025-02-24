@@ -127,8 +127,8 @@ const DepositPaymentPage = () => {
   }, [carId]);
 
   const handlePayment = async () => {
-    if (!selectedColor || !selectedVersion) {
-      setDialogMessage("Please select color and version of car");
+    if (!selectedColor) {
+      setDialogMessage("Please select color for your car");
       setDialogOpen(true);
       return;
     }
@@ -368,7 +368,7 @@ const DepositPaymentPage = () => {
         </DialogContent>
         <DialogActions sx={{ justifyContent: "center" }}>
           <Button onClick={handleCloseDialog} variant="contained" autoFocus>
-            OK
+            close
           </Button>
         </DialogActions>
       </Dialog>
