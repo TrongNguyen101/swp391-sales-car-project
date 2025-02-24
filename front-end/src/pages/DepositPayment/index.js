@@ -33,11 +33,13 @@ const DepositPaymentPage = () => {
   const [colors, setColors] = useState([]);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedColor, setSelectedColor] = useState("");
-  const [selectedVersion, setSelectedVersion] = useState("");
+  const [selectedVersion, setSelectedVersion] = useState("Battery Rental");
   const [dialogMessage, setDialogMessage] = useState("");
   const [inputFullname, setInputFullname] = useState("");
   const [inputPhone, setInputPhone] = useState("");
   const [inputEmail, setInputEmail] = useState("");
+  const [colorToImageUrl, setColorToImageUrl] = useState("");
+
   const orderInfo =
     "Deposit payment for car " +
     car.Name +
@@ -45,6 +47,12 @@ const DepositPaymentPage = () => {
     selectedColor +
     " and version " +
     selectedVersion;
+
+  const defualtColor = {
+    Id: colors[0]?.Id,
+    ColorName: colors[0]?.ColorName,
+    ColorImage: colors[0]?.ColorImage,
+  };
 
   const fetchCarColors = async (Id) => {
     try {
@@ -92,6 +100,7 @@ const DepositPaymentPage = () => {
       setInputEmail(decoded.email);
       fetchCarDetails(carId);
       fetchCarColors(carId);
+      setColorToImageUrl(defualtColor.ColorImage);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [carId]);
@@ -120,7 +129,13 @@ const DepositPaymentPage = () => {
   };
 
   const handleColorChange = (event) => {
-    setSelectedColor(event.target.value);
+    const selectColor = event.target.value;
+    setSelectedColor(selectColor);
+    colors.forEach((color) => {
+      if (color.ColorName === selectColor) {
+        setColorToImageUrl(color.ColorImage);
+      }
+    });
   };
 
   const handleVersionChange = (event) => {
@@ -134,21 +149,26 @@ const DepositPaymentPage = () => {
   console.log(inputFullname);
   console.log(orderInfo);
   console.log(user);
+  console.log(colors[0]);
+  console.log(selectedColor);
+  console.log(colorToImageUrl);
+  console.log(defualtColor);
   return (
     <div className={cx("container")}>
       <div className={cx("content")}>
-        <div className={cx("account-infor")}>
-          <Typography
-            sx={{
-              fontSize: "1.8rem",
-              fontWeight: "500",
-              color: "#333",
-            }}
-          >
-            Account Information
-          </Typography>
+        <Typography
+          variant="h2"
+          sx={{
+            fontSize: "1.8rem",
+            fontWeight: "600",
+            color: "#3C3C3C",
+          }}
+        >
+          Deposit Payment Information
+        </Typography>
+        <div className={cx("display-info")}>
           <div className={cx("user-info")}>
-            <FormControl sx={{gap: 3}}>
+            <FormControl sx={{ gap: 3 }}>
               <TextField
                 label="Fullname"
                 variant="outlined"
@@ -169,52 +189,71 @@ const DepositPaymentPage = () => {
                 onChange={(e) => setInputEmail(e.target.value)}
               />
             </FormControl>
+            <div className={cx("payment-info")}>
+              <Typography>Deposit payment page</Typography>
+              <Typography>Car name: {car.Name}</Typography>
+              <Typography>Deposit price: {car.PriceDeposite}</Typography>
+              <Typography>Description:{orderInfo}</Typography>
+            </div>
+            <div className={cx("form-control")}>
+              <FormControl sx={{ m: 1, minWidth: 160 }}>
+                <InputLabel id="color-select-label">Select Color</InputLabel>
+                <Select
+                  labelId="color-select-label"
+                  value={selectedColor}
+                  onChange={handleColorChange}
+                  label="Select Color"
+                >
+                  {colors.map((color, index) => (
+                    <MenuItem key={index} value={color.ColorName}>
+                      {color.ColorName}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <FormControl component="fieldset">
+                <RadioGroup
+                  aria-label="version"
+                  name="version"
+                  value={selectedVersion}
+                  onChange={handleVersionChange}
+                >
+                  <FormControlLabel
+                    value="Battery Rental"
+                    control={<Radio />}
+                    label="Battery Rental"
+                  />
+                  <FormControlLabel
+                    value="Battery Own"
+                    control={<Radio />}
+                    label="Battery Own"
+                  />
+                </RadioGroup>
+              </FormControl>
+            </div>
           </div>
-        </div>
-        <div className={cx("payment-info")}>
-          <Typography>Deposit payment page</Typography>
-          <Typography>Car name: {car.Name}</Typography>
-          <Typography>Deposit price: {car.PriceDeposite}</Typography>
-          <Typography>Description:{orderInfo}</Typography>
-        </div>
-        <div className={cx("form-control")}>
-          <FormControl sx={{ m: 1, minWidth: 160 }}>
-            <InputLabel id="color-select-label">
-              Select Color
-            </InputLabel>
-            <Select
-              labelId="color-select-label"
-              value={selectedColor}
-              onChange={handleColorChange}
-              label="Select Color"
-            >
-              {colors &&
-                colors.map((color, index) => (
-                  <MenuItem key={index} value={color.ColorName}>
-                    {color.ColorName}
-                  </MenuItem>
-                ))}
-            </Select>
-          </FormControl>
-          <FormControl component="fieldset">
-            <RadioGroup
-              aria-label="version"
-              name="version"
-              value={selectedVersion}
-              onChange={handleVersionChange}
-            >
-              <FormControlLabel
-                value="Battery Rental"
-                control={<Radio />}
-                label="Battery Rental"
+          <div className={cx("car-image-price")}>
+            <div className={cx("color-image")}>
+              <img
+                src={
+                  !selectedColor
+                    ? `https://localhost:7005/api/Images/ColorDetail/${defualtColor.ColorImage}`
+                    : `https://localhost:7005/api/Images/ColorDetail/${colorToImageUrl}`
+                }
+                alt={selectedColor}
               />
-              <FormControlLabel
-                value="Battery Own"
-                control={<Radio />}
-                label="Battery Own"
-              />
-            </RadioGroup>
-          </FormControl>
+            </div>
+            <div className={cx("car-price")}>
+              <Typography variant="h5" sx={{ fontWeight: "600" }}>
+                Car price:{" "}
+                {selectedVersion === "Battery Rental"
+                  ? car.PriceBatteryRental
+                  : car.PriceBatteryOwn}
+              </Typography>
+              <Typography variant="h5" sx={{fontWeight: "600"}}>Deposit price: {car.PriceDeposite}</Typography>
+              <Typography>{selectedColor === "Battery Rental" ? car.PriceBatteryRental - car.PriceDeposite : car.PriceBatteryOwn - car.PriceDeposite}</Typography>
+            </div>
+          </div>
         </div>
         <div className={cx("button-payment")}>
           <Button variant="contained" onClick={handlePayment}>
