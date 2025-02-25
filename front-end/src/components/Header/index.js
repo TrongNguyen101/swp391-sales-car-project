@@ -91,6 +91,12 @@ function HeaderComponent() {
 
   const handleLogout = () => {
     localStorage.removeItem("Bearer");
+    localStorage.removeItem("productId");
+    localStorage.removeItem("productVersion");
+    localStorage.removeItem("priceBatteryRent");
+    localStorage.removeItem("priceBatteryOwn");
+    localStorage.removeItem("remainingAmountRent");
+    localStorage.removeItem("remainingAmountOwn");
     setIsLoggedIn(false);
     handleClose();
     navigate("/");

@@ -13,10 +13,12 @@ function CarDetailPage() {
   const { carId } = useParams();
   const navigate = useNavigate();
   const [car, setCar] = useState({});
+  const [user, setUser] = useState({});
   const [selectedColor, setSelectedColor] = useState(0);
   const [colors, setColors] = useState([]);
-  const [disableDepositButton, setDisableDepositButton] = useState(false);
 
+
+  
   const toTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -53,8 +55,8 @@ function CarDetailPage() {
     fetchCarDetails(carId);
     const token = localStorage.getItem("Bearer");
     const decoded = DecodePayload.decodePayload(token);
-    if (decoded.role !== 2) {
-      setDisableDepositButton(true);
+    if (decoded) {
+      setUser(decoded);
     }
   }, [carId]);
 
@@ -188,7 +190,7 @@ function CarDetailPage() {
             <Button
               variant="contained"
               onClick={handleClickDepositButton}
-              disabled={disableDepositButton}
+              disabled={!user || user.role !== 1 ? false : true}
             >
               <Typography sx={{ textTransform: "none" }}>
                 Deposit {car.PriceDeposite} VND
