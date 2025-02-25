@@ -40,6 +40,10 @@ namespace WebAPI.DataContext
 
         public DbSet<CarDeposit> CarDeposit { get; set; }
 
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<Accessory> Accessories { get; set; }
+
+
         /// <summary>
         /// Configures the database context options.
         /// </summary>
@@ -444,6 +448,144 @@ namespace WebAPI.DataContext
                 }
             );
 
+            // Seed the database with initial data
+            modelBuilder.Entity<Category>(entity =>
+            {
+                entity.HasData(
+                    new Category
+                    {
+                        Id = 1,
+                        Name = "New product",
+                        ParentsId = 0,
+                        IsDeleted = false
+                    },
+                    new Category
+                    {
+                        Id = 2,
+                        Name = "LifeStyle",
+                        ParentsId = 0,
+                        IsDeleted = false
+                    },
+                    new Category
+                    {
+                        Id = 3,
+                        Name = "Electric car accessories",
+                        ParentsId = 0,
+                        IsDeleted = false
+                    },
+                    new Category
+                    {
+                        Id = 4,
+                        Name = "Gasoline car accessories",
+                        ParentsId = 0,
+                        IsDeleted = false
+                    },
+                    new Category
+                    {
+                        Id = 5,
+                        Name = "Accessories of VF3",
+                        ParentsId = 3,
+                        IsDeleted = false
+                    },
+                    new Category
+                    {
+                        Id = 6,
+                        Name = "Accessories of VF5",
+                        ParentsId = 3,
+                        IsDeleted = false
+                    },
+                    new Category
+                    {
+                        Id = 7,
+                        Name = "Accessories of VF6",
+                        ParentsId = 3,
+                        IsDeleted = false
+                    },
+                    new Category
+                    {
+                        Id = 8,
+                        Name = "Accessories of VF7",
+                        ParentsId = 3,
+                        IsDeleted = false
+                    },
+                    new Category
+                    {
+                        Id = 9,
+                        Name = "Accessories of VF8",
+                        ParentsId = 3,
+                        IsDeleted = false
+                    },
+                    new Category
+                    {
+                        Id = 10,
+                        Name = "Accessories of VF9",
+                        ParentsId = 3,
+                        IsDeleted = false
+                    }
+                );
+
+            });
+
+            modelBuilder.Entity<Accessory>(entity =>
+            {
+                entity.HasData(
+                    new Accessory
+                    {
+                        Id = 1,
+                        Name = "Vinfast VF3",
+                        Price = 100000000,
+                        Image = "vinfast-vf3.png",
+                        CategoryId = 5,
+                        IsDeleted = false
+                    },
+                    new Accessory
+                    {
+                        Id = 2,
+                        Name = "Vinfast VF5",
+                        Price = 200000000,
+                        Image = "vinfast-vf5.png",
+                        CategoryId = 6,
+                        IsDeleted = false
+                    },
+                    new Accessory
+                    {
+                        Id = 3,
+                        Name = "Vinfast VF6",
+                        Price = 300000000,
+                        Image = "vinfast-vf6.png",
+                        CategoryId = 7,
+                        IsDeleted = false
+                    },
+                    new Accessory
+                    {
+                        Id = 4,
+                        Name = "Vinfast VF7",
+                        Price = 400000000,
+                        Image = "vinfast-vf7.png",
+                        CategoryId = 8,
+                        IsDeleted = false
+                    },
+                    new Accessory
+                    {
+                        Id = 5,
+                        Name = "Vinfast VF8",
+                        Price = 500000000,
+                        Image = "vinfast-vf8.png",
+                        CategoryId = 1,
+                        IsDeleted = false
+                    },
+                    new Accessory
+                    {
+                        Id = 6,
+                        Name = "Vinfast VF9",
+                        Price = 600000000,
+                        Image = "vinfast-vf9.png",
+                        CategoryId = 2,
+                        IsDeleted = false
+                    }
+                );
+            });
+
             // Configure the relationship between Users and Roles
             modelBuilder.Entity<Users>(entity =>
             {
@@ -478,6 +620,15 @@ namespace WebAPI.DataContext
                 entity.HasMany(carDeposit => carDeposit.CarDeposits)
                       .WithOne(user => user.User)
                       .HasForeignKey(user => user.UserId)
+                      .IsRequired();
+            });
+
+            modelBuilder.Entity<Accessory>(entity =>
+            {
+                entity.HasOne(accessory => accessory.Category)
+                      .WithMany(category => category.Accessories)
+                      .HasForeignKey(accessory => accessory.CategoryId)
+                      .OnDelete(DeleteBehavior.Cascade)
                       .IsRequired();
             });
         }

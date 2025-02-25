@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebAPI.DataContext;
 
@@ -11,9 +12,11 @@ using WebAPI.DataContext;
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(VinfastContext))]
-    partial class VinfastContextModelSnapshot : ModelSnapshot
+    [Migration("20250224165005_updateDb_V4_Add_Category_Accessory")]
+    partial class updateDb_V4_Add_Category_Accessory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -55,7 +58,7 @@ namespace WebAPI.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Accessory", (string)null);
+                    b.ToTable("Accessory");
 
                     b.HasData(
                         new
@@ -143,7 +146,7 @@ namespace WebAPI.Migrations
 
                     b.HasIndex("CarId");
 
-                    b.ToTable("CarColor", (string)null);
+                    b.ToTable("CarColor");
 
                     b.HasData(
                         new
@@ -425,7 +428,7 @@ namespace WebAPI.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("CarDeposit", (string)null);
+                    b.ToTable("CarDeposit");
                 });
 
             modelBuilder.Entity("WebAPI.Models.Cars", b =>
@@ -479,7 +482,7 @@ namespace WebAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Cars", (string)null);
+                    b.ToTable("Cars");
 
                     b.HasData(
                         new
@@ -591,7 +594,7 @@ namespace WebAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Category", (string)null);
+                    b.ToTable("Category");
 
                     b.HasData(
                         new
@@ -682,7 +685,7 @@ namespace WebAPI.Migrations
 
                     b.HasKey("RoleId");
 
-                    b.ToTable("User Roles", (string)null);
+                    b.ToTable("User Roles");
 
                     b.HasData(
                         new
@@ -744,7 +747,7 @@ namespace WebAPI.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
 
                     b.HasData(
                         new

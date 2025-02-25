@@ -1,5 +1,6 @@
 // filepath: /Users/nguyentrong/swp391-sales-car-project/back-end/WebAPI/Services/MappingService.cs
 using System.Globalization;
+using WebAPI.Controllers;
 using WebAPI.DTO;
 using WebAPI.Models;
 
@@ -131,6 +132,38 @@ namespace WebAPI.Utils.AutoMapper
         public static List<CarColorDTO> ToCarColorDTOList(List<CarColor> carColors)
         {
             return carColors.Select(carColor => ToCarColorDTO(carColor)).ToList();
+        }
+
+        public static CategoryDTO ToCategoryDTO(Category category)
+        {
+            return new CategoryDTO
+            {
+                Id = category.Id,
+                Name = category.Name,
+                ParentsId = category.ParentsId
+            };
+        }
+
+        public static List<CategoryDTO> ToCategoryDTOList(List<Category> categories)
+        {
+            return categories.Select(category => ToCategoryDTO(category)).ToList();
+        }
+
+        public static AccessoryDTO ToAccessoryDTO(Accessory accessory)
+        {
+            return new AccessoryDTO
+            {
+                Id = accessory.Id,
+                Name = accessory.Name,
+                Image = accessory.Image,
+                Price = accessory.Price,
+                CategoryId = accessory.CategoryId
+            };
+        }
+
+        public static List<AccessoryDTO> ToAccessoryDTOList(List<Accessory> accessories)
+        {
+            return accessories.Select(accessory => ToAccessoryDTO(accessory)).ToList();
         }
     }
 }
