@@ -5,6 +5,7 @@ import styles from "./CarDetail.module.scss";
 import * as carService from "../../services/CarService";
 import Slider from "react-slick";
 import { Button, Typography } from "@mui/material";
+import * as DecodePayload from "../../lib/DecodePayload";
 
 const cx = classNames.bind(styles);
 
@@ -12,9 +13,12 @@ function CarDetailPage() {
   const { carId } = useParams();
   const navigate = useNavigate();
   const [car, setCar] = useState({});
+  const [user, setUser] = useState({});
   const [selectedColor, setSelectedColor] = useState(0);
   const [colors, setColors] = useState([]);
 
+
+  
   const toTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -49,6 +53,11 @@ function CarDetailPage() {
     toTop();
     fetchCarColors(carId);
     fetchCarDetails(carId);
+    const token = localStorage.getItem("Bearer");
+    const decoded = DecodePayload.decodePayload(token);
+    if (decoded) {
+      setUser(decoded);
+    }
   }, [carId]);
 
   const settings = {
@@ -178,7 +187,11 @@ function CarDetailPage() {
             </div>
           </div>
           <div className={cx("deposit-btn")}>
-            <Button variant="contained" onClick={handleClickDepositButton}>
+            <Button
+              variant="contained"
+              onClick={handleClickDepositButton}
+              disabled={!user || user.role !== 1 ? false : true}
+            >
               <Typography sx={{ textTransform: "none" }}>
                 Deposit {car.PriceDeposite} VND
               </Typography>

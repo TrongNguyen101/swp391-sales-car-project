@@ -71,7 +71,7 @@ function CarsPage() {
                     color: "#333",
                   }}
                 >
-                  {car.name}
+                  {car.Name}
                 </Typography>
               </div>
               <div className={cx("card-info")}>

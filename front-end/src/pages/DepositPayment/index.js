@@ -16,6 +16,7 @@ import {
   Radio,
   RadioGroup,
   Select,
+  TextField,
   Typography,
 } from "@mui/material";
 import * as DepositService from "../../services/DepositService";
@@ -26,14 +27,19 @@ const cx = classNames.bind(styles);
 
 const DepositPaymentPage = () => {
   const { carId } = useParams();
-  const [car, setCar] = useState({});
-  const [selectedColor, setSelectedColor] = useState("");
-  const [colors, setColors] = useState([]);
-  const [selectedVersion, setSelectedVersion] = useState("");
-  const [user, setUser] = useState({});
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [dialogMessage, setDialogMessage] = useState("");
   const navigate = useNavigate();
+  const [car, setCar] = useState({});
+  const [colors, setColors] = useState([]);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedColor, setSelectedColor] = useState("");
+  const [selectedVersion, setSelectedVersion] = useState("Battery Rental");
+  const [dialogMessage, setDialogMessage] = useState("");
+  const [inputFullname, setInputFullname] = useState("");
+  const [inputPhone, setInputPhone] = useState("");
+  const [inputEmail, setInputEmail] = useState("");
+  const [colorToImageUrl, setColorToImageUrl] = useState("");
+  const [remainingAmount, setRemainingAmount] = useState(0);
+
   const orderInfo =
     "Deposit payment for car " +
     car.Name +
@@ -42,16 +48,30 @@ const DepositPaymentPage = () => {
     " and version " +
     selectedVersion;
 
+  const defualtColor = {
+    Id: colors[0]?.Id,
+    ColorName: colors[0]?.ColorName,
+    ColorImage: colors[0]?.ColorImage,
+  };
+
+  const toTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   const fetchCarColors = async (Id) => {
     try {
       const response = await CarService.getCarColorById(Id);
       if (response.statusCode !== 200) {
+        setDialogMessage(response.data.message);
+        setDialogOpen(true);
         setColors([]);
       } else {
         setColors(JSON.parse(response.data));
       }
     } catch (error) {
       setColors([]);
+      setDialogMessage("Error fetching car colors");
+      setDialogOpen(true);
     }
   };
 
@@ -60,32 +80,57 @@ const DepositPaymentPage = () => {
       const response = await CarService.getCarById(Id);
       if (response.statusCode !== 200) {
         setCar({});
+        setDialogMessage(response.data.message);
+        setDialogOpen(true);
       } else {
         setCar(JSON.parse(response.data));
       }
     } catch (error) {
       setCar({});
+      setDialogMessage(error.response.data.message);
+      setDialogOpen(true);
+    }
+  };
+
+  const fetchRemainingAmount = async (Id) => {
+    try {
+      const response = await DepositService.getRemainingAmount(Id);
+      if (response.statusCode !== 200) {
+        setDialogMessage(response.data.message);
+        setDialogOpen(true);
+      } else {
+        console.log(JSON.parse(response.data));
+        setRemainingAmount(JSON.parse(response.data));
+      }
+    } catch (error) {
+      setDialogMessage(error.response.data.message);
+      setDialogOpen(true);
     }
   };
 
   useEffect(() => {
+    toTop();
     const token = localStorage.getItem("Bearer");
     if (!token) {
       navigate("/login");
     } else {
       const decoded = DecodePayload.decodePayload(token);
-      setUser(decoded);
+      setInputFullname(decoded.name);
+      setInputPhone(decoded.phone);
+      setInputEmail(decoded.email);
       fetchCarDetails(carId);
       fetchCarColors(carId);
+      setColorToImageUrl(defualtColor.ColorImage);
+      fetchRemainingAmount(carId);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [carId]);
 
   const handlePayment = async () => {
-    if (!selectedColor || !selectedVersion) {
-      setDialogMessage("Please select color and version of car");
+    if (!selectedColor) {
+      setDialogMessage("Please select color for your car");
       setDialogOpen(true);
-      return
+      return;
     }
     try {
       const response = await DepositService.postDeposit(
@@ -93,17 +138,30 @@ const DepositPaymentPage = () => {
         orderInfo
       );
       if (response.statusCode === 200) {
+        localStorage.setItem("productVersion", selectedVersion);
+        localStorage.setItem("remainingAmountRent", remainingAmount.remainingAmountBatteryRent);
+        localStorage.setItem("remainingAmountOwn", remainingAmount.remainingAmountBatteryOwn);
+        localStorage.setItem("priceBatteryRent", car.PriceBatteryRental);
+        localStorage.setItem("priceBatteryOwn", car.PriceBatteryOwn);
         window.location.href = response.data;
       } else {
-        alert(response.data.message);
+        setDialogMessage(response.data.message);
+        setDialogOpen(true);
       }
     } catch (error) {
-      alert("Error creating payment URL");
+      setDialogMessage(error.response.data.message);
+      setDialogOpen(true);
     }
   };
 
   const handleColorChange = (event) => {
-    setSelectedColor(event.target.value);
+    const selectColor = event.target.value;
+    setSelectedColor(selectColor);
+    colors.forEach((color) => {
+      if (color.ColorName === selectColor) {
+        setColorToImageUrl(color.ColorImage);
+      }
+    });
   };
 
   const handleVersionChange = (event) => {
@@ -114,76 +172,182 @@ const DepositPaymentPage = () => {
     setDialogOpen(false);
   };
 
-  console.log(orderInfo);
-  console.log(user);
   return (
     <div className={cx("container")}>
       <div className={cx("content")}>
-        <div className={cx("account-infor")}>
-          <Typography
-            sx={{
-              fontSize: "1.8rem",
-              fontWeight: "500",
-              color: "#333",
-            }}
-          >
-            Account Information
-          </Typography>
+        <Typography
+          variant="h2"
+          sx={{
+            fontSize: "1.8rem",
+            fontWeight: "600",
+            color: "#3C3C3C",
+          }}
+        >
+          Deposit Payment Information
+        </Typography>
+        <div className={cx("display-info")}>
           <div className={cx("user-info")}>
-            <Typography>UserId: {user.sub}</Typography>
-            <Typography>Fullname: {user.name}</Typography>
-            <Typography>Email: {user.email}</Typography>
-            <Typography>Phone: {user.phone}</Typography>
+            <FormControl sx={{ gap: 3 }}>
+              <TextField
+                label="Fullname"
+                variant="outlined"
+                disabled
+                value={inputFullname}
+                onChange={(e) => setInputFullname(e.target.value)}
+              />
+              <TextField
+                label="Phone"
+                variant="outlined"
+                value={inputPhone}
+                onChange={(e) => setInputPhone(e.target.value)}
+              />
+              <TextField
+                label="Email"
+                variant="outlined"
+                value={inputEmail}
+                onChange={(e) => setInputEmail(e.target.value)}
+              />
+              <TextField
+                label="Description"
+                variant="outlined"
+                multiline
+                rows={2}
+                disabled
+                value={orderInfo}
+              />
+            </FormControl>
+            <div className={cx("tutorial")}>
+              <Typography>
+                You can place a deposit via VnPAY. Our team will contact you
+                shortly to guide you through the necessary procedures. The
+                vehicle will be handed over at our showroom.
+              </Typography>
+            </div>
+            <div className={cx("form-control")}>
+              <FormControl sx={{ m: 1, minWidth: 160 }}>
+                <InputLabel id="color-select-label">Select Color</InputLabel>
+                <Select
+                  labelId="color-select-label"
+                  value={selectedColor}
+                  onChange={handleColorChange}
+                  label="Select Color"
+                >
+                  {colors.map((color, index) => (
+                    <MenuItem key={index} value={color.ColorName}>
+                      {color.ColorName}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <FormControl component="fieldset">
+                <RadioGroup
+                  aria-label="version"
+                  name="version"
+                  value={selectedVersion}
+                  onChange={handleVersionChange}
+                >
+                  <FormControlLabel
+                    value="Battery Rental"
+                    control={<Radio />}
+                    label="Battery Rental"
+                  />
+                  <FormControlLabel
+                    value="Battery Own"
+                    control={<Radio />}
+                    label="Battery Own"
+                  />
+                </RadioGroup>
+              </FormControl>
+            </div>
           </div>
-        </div>
-        <div className={cx("payment-info")}>
-          <Typography>Deposit payment page</Typography>
-          <Typography>Car name: {car.Name}</Typography>
-          <Typography>Deposit price: {car.PriceDeposite}</Typography>
-          <Typography>Description:{orderInfo}</Typography>
-        </div>
-        <div className={cx("form-control")}>
-          <FormControl sx={{ m: 1, minWidth: 160 }}>
-            <InputLabel id="color-select-label" sx={{ zIndex: -1 }}>
-              Select Color
-            </InputLabel>
-            <Select
-              labelId="color-select-label"
-              value={selectedColor}
-              onChange={handleColorChange}
-              label="Select Color"
-            >
-              {colors &&
-                colors.map((color, index) => (
-                  <MenuItem key={index} value={color.ColorName}>
-                    {color.ColorName}
-                  </MenuItem>
-                ))}
-            </Select>
-          </FormControl>
-          <FormControl component="fieldset">
-            <RadioGroup
-              aria-label="version"
-              name="version"
-              value={selectedVersion}
-              onChange={handleVersionChange}
-            >
-              <FormControlLabel
-                value="Battery Rental"
-                control={<Radio />}
-                label="Battery Rental"
+          <div className={cx("car-image-price")}>
+            <div className={cx("color-image")}>
+              <img
+                src={
+                  !selectedColor
+                    ? `https://localhost:7005/api/Images/ColorDetail/${defualtColor.ColorImage}`
+                    : `https://localhost:7005/api/Images/ColorDetail/${colorToImageUrl}`
+                }
+                alt={selectedColor}
               />
-              <FormControlLabel
-                value="Battery Own"
-                control={<Radio />}
-                label="Battery Own"
-              />
-            </RadioGroup>
-          </FormControl>
+            </div>
+            <div className={cx("car-price-info")}>
+              <div className={cx("car-price-title")}>
+                <Typography
+                  variant="h5"
+                  sx={{
+                    fontWeight: "600",
+                    color: "#3C3C3C",
+                    fontSize: "1.5rem",
+                  }}
+                >
+                  Car price:
+                </Typography>
+                <Typography
+                  variant="h5"
+                  sx={{
+                    fontWeight: "600",
+                    color: "#3C3C3C",
+                    fontSize: "1.5rem",
+                  }}
+                >
+                  Deposit price:
+                </Typography>
+                <Typography
+                  variant="h5"
+                  sx={{
+                    fontWeight: "600",
+                    color: "#3C3C3C",
+                    fontSize: "1.5rem",
+                  }}
+                >
+                  Remaining amount:
+                </Typography>
+              </div>
+              <div className={cx("car-price")}>
+                <Typography
+                  variant="h5"
+                  sx={{
+                    fontWeight: "600",
+                    color: "#3C3C3C",
+                    fontSize: "1.5rem",
+                  }}
+                >
+                  {selectedVersion === "Battery Rental"
+                    ? car.PriceBatteryRental
+                    : car.PriceBatteryOwn}{" "}
+                  VND
+                </Typography>
+                <Typography
+                  variant="h5"
+                  sx={{
+                    fontWeight: "600",
+                    color: "#3C3C3C",
+                    fontSize: "1.5rem",
+                  }}
+                >
+                  {car.PriceDeposite} VND
+                </Typography>
+                <Typography
+                  variant="h5"
+                  sx={{
+                    fontWeight: "600",
+                    color: "#3C3C3C",
+                    fontSize: "1.5rem",
+                  }}
+                >
+                  {selectedVersion === "Battery Rental"
+                    ? remainingAmount.remainingAmountBatteryRent
+                    : remainingAmount.remainingAmountBatteryOwn}{" "}
+                  VND
+                </Typography>
+              </div>
+            </div>
+          </div>
         </div>
         <div className={cx("button-payment")}>
           <Button variant="contained" onClick={handlePayment}>
-            Pay Now
+            Pay Now with VNPay
           </Button>
         </div>
       </div>
@@ -193,13 +357,18 @@ const DepositPaymentPage = () => {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title" sx={{textAlign: "center"}}>{"Notification"}</DialogTitle>
-        <DialogContent id="alert-dialog-description" sx={{ textAlign: "center", width: "400px", height: "60px" }}>
+        <DialogTitle id="alert-dialog-title" sx={{ textAlign: "center" }}>
+          {"Notification"}
+        </DialogTitle>
+        <DialogContent
+          id="alert-dialog-description"
+          sx={{ textAlign: "center", width: "400px", height: "60px" }}
+        >
           <DialogContentText>{dialogMessage}</DialogContentText>
         </DialogContent>
         <DialogActions sx={{ justifyContent: "center" }}>
           <Button onClick={handleCloseDialog} variant="contained" autoFocus>
-            OK
+            close
           </Button>
         </DialogActions>
       </Dialog>
