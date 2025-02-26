@@ -1,9 +1,16 @@
 import { useEffect, useState } from "react";
 import { List, ListItem, ListItemText, Collapse } from "@mui/material";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import * as categoriesService from "../../services/AccessoryService";
 
-const Sidebar = () => {
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
+import classNames from "classnames/bind";
+
+import * as categoriesService from "../../services/AccessoryService";
+import styles from "./Sidebar.module.scss";
+
+const cx = classNames.bind(styles);
+
+const Sidebar = ({ onSelectCategory }) => {
   const [expanded, setExpanded] = useState({});
   const [categories, setCategories] = useState([]);
 
@@ -24,35 +31,60 @@ const Sidebar = () => {
     fetchCategories();
   }, []);
 
-  const renderCategories = (parentId = 0) => {
-    return categories
-      .filter((cat) => cat.parentsId === parentId)
-      .map((category) => (
-        <div key={category.id}>
-          <ListItem button onClick={() => handleExpand(category.id)}>
-            <ListItemText primary={category.name} />
-            {categories.some((cat) => cat.parentsId === category.id) ? (
-              expanded[category.id] ? (
-                <FontAwesomeIcon icon="fa-solid fa-chevron-down" />
-              ) : (
-                <FontAwesomeIcon icon="fa-solid fa-chevron-down" />
-              )
-            ) : null}
-          </ListItem>
+  const handleCategoryClick = (id) => {
+    onSelectCategory(id); // Call the callback function with the selected category ID
+  };
 
-          <Collapse in={expanded[category.id]} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding>
-              {renderCategories(category.id)}
-            </List>
-          </Collapse>
-        </div>
-      ));
+  const renderCategories = (parentsId = 0) => {
+    return categories
+      .filter((cat) => cat.parentsId === parentsId)
+      .map((category) => {
+        const hasSubcategories = categories.some(
+          (cat) => cat.parentsId === category.id
+        );
+        return (
+          <div key={category.id}>
+            <ListItem
+              button
+              onClick={() => {
+                handleExpand(category.id);
+                if (!hasSubcategories) {
+                  handleCategoryClick(category.id);
+                }
+              }}
+            >
+              <ListItemText primary={category.name} />
+              {hasSubcategories ? (
+                expanded[category.id] ? (
+                  <FontAwesomeIcon icon={faChevronUp} />
+                ) : (
+                  <FontAwesomeIcon icon={faChevronDown} />
+                )
+              ) : null}
+            </ListItem>
+
+            {hasSubcategories && (
+              <Collapse
+                className={cx("sidebar__sub-item")}
+                in={expanded[category.id]}
+                timeout="auto"
+                unmountOnExit
+              >
+                <List component="div" disablePadding>
+                  {renderCategories(category.id)}
+                </List>
+              </Collapse>
+            )}
+          </div>
+        );
+      });
   };
 
   return (
-    <List anchor="left" open={true}>
-      <List>{renderCategories()}</List>
-    </List>
+    <div className={cx("sidebar")}>
+      <div className={cx("sidebar__title")}>DANH MỤC SẢN PHẨM</div>
+      <div className={cx("sidebar__content")}>{renderCategories()}</div>
+    </div>
   );
 };
 

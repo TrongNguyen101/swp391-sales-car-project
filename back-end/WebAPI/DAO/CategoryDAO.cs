@@ -33,5 +33,13 @@ namespace WebAPI.DAO
                 return await context.Categories.ToListAsync();
             }
         }
+
+        public async Task<Category> GetCategoryById(int id)
+        {
+            using (var context = new VinfastContext())
+            {
+                return await context.Categories.FindAsync(id);
+            }
+        }
     }
 }

@@ -43,5 +43,40 @@ namespace WebAPI.Controllers
                 });
             }
         }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult> GetCategoryById(int id)
+        {
+            try
+            {
+                var category = await CategoryDAO.GetInstance().GetCategoryById(id);
+                if (category == null)
+                {
+                    return NotFound(new DataResponse
+                    {
+                        StatusCode = 404,
+                        Message = "Category not found",
+                        Success = false
+                    });
+                }
+                var categoryDTO = AutoMapper.ToCategoryDTO(category);
+                return Ok(new DataResponse
+                {
+                    StatusCode = 200,
+                    Message = "Get category by id successfully",
+                    Success = true,
+                    Data = categoryDTO
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new DataResponse
+                {
+                    StatusCode = 400,
+                    Message = ex.Message,
+                    Success = false
+                });
+            }
+        }
     }
 }

@@ -78,5 +78,40 @@ namespace WebAPI.Controllers
                 });
             }
         }
+
+        [HttpGet("getAccesoriesByCategoryId/{categoryId}")]
+        public async Task<IActionResult> GetAllAccessoriesByCategoryId(int categoryId)
+        {
+            try
+            {
+                var accessories = await AccessoriesDAO.GetInstance().GetAccessoriesByCategoryId(categoryId);
+                if (!accessories.Any())
+                {
+                    return NotFound(new DataResponse
+                    {
+                        StatusCode = 404,
+                        Message = "No accessory found",
+                        Success = false
+                    });
+                }
+                var accessoriesDTOs = AutoMapper.ToAccessoryDTOList(accessories);
+                return Ok(new DataResponse
+                {
+                    StatusCode = 200,
+                    Message = "Get all accessories by category id successfully",
+                    Success = true,
+                    Data = accessoriesDTOs
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new DataResponse
+                {
+                    StatusCode = 400,
+                    Message = ex.Message,
+                    Success = false
+                });
+            }
+        }
     }
 }

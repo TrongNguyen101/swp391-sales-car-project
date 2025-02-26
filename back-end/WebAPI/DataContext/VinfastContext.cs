@@ -532,55 +532,82 @@ namespace WebAPI.DataContext
                     new Accessory
                     {
                         Id = 1,
-                        Name = "Vinfast VF3",
-                        Price = 100000000,
-                        Image = "vinfast-vf3.png",
+                        Name = "Sạc tại nhà",
+                        Price = 6000000,
+                        Image = "Sac_tai_nha.png",
                         CategoryId = 5,
                         IsDeleted = false
                     },
                     new Accessory
                     {
                         Id = 2,
-                        Name = "Vinfast VF5",
-                        Price = 200000000,
-                        Image = "vinfast-vf5.png",
-                        CategoryId = 6,
+                        Name = "Thảm nhựa VF3",
+                        Price = 1668000,
+                        Image = "VF3_tham_nhua.png",
+                        CategoryId = 5,
                         IsDeleted = false
                     },
                     new Accessory
                     {
                         Id = 3,
-                        Name = "Vinfast VF6",
-                        Price = 300000000,
-                        Image = "vinfast-vf6.png",
-                        CategoryId = 7,
+                        Name = "Camera Lùi VF3",
+                        Price = 26720000,
+                        Image = "VF3_Camera_lui.png",
+                        CategoryId = 5,
                         IsDeleted = false
                     },
                     new Accessory
                     {
                         Id = 4,
-                        Name = "Vinfast VF7",
-                        Price = 400000000,
-                        Image = "vinfast-vf7.png",
-                        CategoryId = 8,
+                        Name = "Thảm nhựa VF5",
+                        Price = 1969000,
+                        Image = "VF5_tham_nhua.png",
+                        CategoryId = 6,
                         IsDeleted = false
                     },
                     new Accessory
                     {
                         Id = 5,
-                        Name = "Vinfast VF8",
-                        Price = 500000000,
-                        Image = "vinfast-vf8.png",
-                        CategoryId = 1,
+                        Name = "Gói Dán Film Cách Nhiệt VinFast VF5",
+                        Price = 5500000,
+                        Image = "VF5_Goi_dan_phim_cach_nhiet.png",
+                        CategoryId = 6,
                         IsDeleted = false
                     },
                     new Accessory
                     {
                         Id = 6,
-                        Name = "Vinfast VF9",
-                        Price = 600000000,
-                        Image = "vinfast-vf9.png",
-                        CategoryId = 2,
+                        Name = "Thảm cốp 3D VF5",
+                        Price = 990000,
+                        Image = "VF5_Tham_cop.png",
+                        CategoryId = 6,
+                        IsDeleted = false
+                    },
+                    new Accessory
+                    {
+                        Id = 7,
+                        Name = "Gói dán film cách nhiệt VF6",
+                        Price = 5500000,
+                        Image = "VF6_Goi_dan_phim_cach_nhiet.png",
+                        CategoryId = 7,
+                        IsDeleted = false
+                    },
+                    new Accessory
+                    {
+                        Id = 8,
+                        Name = "Thảm nhựa 3D VF6",
+                        Price = 1990000,
+                        Image = "VF6_tham_nhua.png",
+                        CategoryId = 7,
+                        IsDeleted = false
+                    },
+                    new Accessory
+                    {
+                        Id = 9,
+                        Name = "Thảm cốp 3D VF6",
+                        Price = 990000,
+                        Image = "VF6_Tham_cop.png",
+                        CategoryId = 7,
                         IsDeleted = false
                     }
                 );

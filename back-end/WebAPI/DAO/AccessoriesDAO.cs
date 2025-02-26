@@ -41,5 +41,13 @@ namespace WebAPI.DAO
                 return await context.Accessories.FindAsync(id);
             }
         }
+
+        public async Task<List<Accessory>> GetAccessoriesByCategoryId(int categoryId)
+        {
+            using (var context = new VinfastContext())
+            {
+                return await context.Accessories.Where(accessory => accessory.CategoryId == categoryId).ToListAsync();
+            }
+        }
     }
 }
