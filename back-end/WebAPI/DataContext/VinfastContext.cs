@@ -40,6 +40,10 @@ namespace WebAPI.DataContext
 
         public DbSet<CarDeposit> CarDeposit { get; set; }
 
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<Accessory> Accessories { get; set; }
+
+
         /// <summary>
         /// Configures the database context options.
         /// </summary>
@@ -60,7 +64,7 @@ namespace WebAPI.DataContext
                    .Build();
 
                 // Get the connection string from the configuration
-                var connectionString = configuration.GetConnectionString("MacConnection");
+                var connectionString = configuration.GetConnectionString("QAnhConnection");
 
                 // Configure the context to use SQL Server with the connection string
                 optionsBuilder.UseSqlServer(connectionString);
@@ -444,6 +448,171 @@ namespace WebAPI.DataContext
                 }
             );
 
+            // Seed the database with initial data
+            modelBuilder.Entity<Category>(entity =>
+            {
+                entity.HasData(
+                    new Category
+                    {
+                        Id = 1,
+                        Name = "New product",
+                        ParentsId = 0,
+                        IsDeleted = false
+                    },
+                    new Category
+                    {
+                        Id = 2,
+                        Name = "LifeStyle",
+                        ParentsId = 0,
+                        IsDeleted = false
+                    },
+                    new Category
+                    {
+                        Id = 3,
+                        Name = "Electric car accessories",
+                        ParentsId = 0,
+                        IsDeleted = false
+                    },
+                    new Category
+                    {
+                        Id = 4,
+                        Name = "Gasoline car accessories",
+                        ParentsId = 0,
+                        IsDeleted = false
+                    },
+                    new Category
+                    {
+                        Id = 5,
+                        Name = "Accessories of VF3",
+                        ParentsId = 3,
+                        IsDeleted = false
+                    },
+                    new Category
+                    {
+                        Id = 6,
+                        Name = "Accessories of VF5",
+                        ParentsId = 3,
+                        IsDeleted = false
+                    },
+                    new Category
+                    {
+                        Id = 7,
+                        Name = "Accessories of VF6",
+                        ParentsId = 3,
+                        IsDeleted = false
+                    },
+                    new Category
+                    {
+                        Id = 8,
+                        Name = "Accessories of VF7",
+                        ParentsId = 3,
+                        IsDeleted = false
+                    },
+                    new Category
+                    {
+                        Id = 9,
+                        Name = "Accessories of VF8",
+                        ParentsId = 3,
+                        IsDeleted = false
+                    },
+                    new Category
+                    {
+                        Id = 10,
+                        Name = "Accessories of VF9",
+                        ParentsId = 3,
+                        IsDeleted = false
+                    }
+                );
+
+            });
+
+            modelBuilder.Entity<Accessory>(entity =>
+            {
+                entity.HasData(
+                    new Accessory
+                    {
+                        Id = 1,
+                        Name = "Sạc tại nhà",
+                        Price = 6000000,
+                        Image = "Sac_tai_nha.png",
+                        CategoryId = 5,
+                        IsDeleted = false
+                    },
+                    new Accessory
+                    {
+                        Id = 2,
+                        Name = "Thảm nhựa VF3",
+                        Price = 1668000,
+                        Image = "VF3_tham_nhua.png",
+                        CategoryId = 5,
+                        IsDeleted = false
+                    },
+                    new Accessory
+                    {
+                        Id = 3,
+                        Name = "Camera Lùi VF3",
+                        Price = 26720000,
+                        Image = "VF3_Camera_lui.png",
+                        CategoryId = 5,
+                        IsDeleted = false
+                    },
+                    new Accessory
+                    {
+                        Id = 4,
+                        Name = "Thảm nhựa VF5",
+                        Price = 1969000,
+                        Image = "VF5_tham_nhua.png",
+                        CategoryId = 6,
+                        IsDeleted = false
+                    },
+                    new Accessory
+                    {
+                        Id = 5,
+                        Name = "Gói Dán Film Cách Nhiệt VinFast VF5",
+                        Price = 5500000,
+                        Image = "VF5_Goi_dan_phim_cach_nhiet.png",
+                        CategoryId = 6,
+                        IsDeleted = false
+                    },
+                    new Accessory
+                    {
+                        Id = 6,
+                        Name = "Thảm cốp 3D VF5",
+                        Price = 990000,
+                        Image = "VF5_Tham_cop.png",
+                        CategoryId = 6,
+                        IsDeleted = false
+                    },
+                    new Accessory
+                    {
+                        Id = 7,
+                        Name = "Gói dán film cách nhiệt VF6",
+                        Price = 5500000,
+                        Image = "VF6_Goi_dan_phim_cach_nhiet.png",
+                        CategoryId = 7,
+                        IsDeleted = false
+                    },
+                    new Accessory
+                    {
+                        Id = 8,
+                        Name = "Thảm nhựa 3D VF6",
+                        Price = 1990000,
+                        Image = "VF6_tham_nhua.png",
+                        CategoryId = 7,
+                        IsDeleted = false
+                    },
+                    new Accessory
+                    {
+                        Id = 9,
+                        Name = "Thảm cốp 3D VF6",
+                        Price = 990000,
+                        Image = "VF6_Tham_cop.png",
+                        CategoryId = 7,
+                        IsDeleted = false
+                    }
+                );
+            });
+
             // Configure the relationship between Users and Roles
             modelBuilder.Entity<Users>(entity =>
             {
@@ -478,6 +647,15 @@ namespace WebAPI.DataContext
                 entity.HasMany(carDeposit => carDeposit.CarDeposits)
                       .WithOne(user => user.User)
                       .HasForeignKey(user => user.UserId)
+                      .IsRequired();
+            });
+
+            modelBuilder.Entity<Accessory>(entity =>
+            {
+                entity.HasOne(accessory => accessory.Category)
+                      .WithMany(category => category.Accessories)
+                      .HasForeignKey(accessory => accessory.CategoryId)
+                      .OnDelete(DeleteBehavior.Cascade)
                       .IsRequired();
             });
         }

@@ -1,0 +1,123 @@
+.wrapper {
+  //width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.container {
+  width: var(--default-width);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.container__category {
+  display: flex;
+  width: 1390px;
+  margin: 0 auto;
+  justify-content: space-between;
+}
+
+.container__sidebar {
+  margin: 0 15px;
+  width: 317.5px;
+  height: 100%;
+  margin-right: 20px;
+}
+
+.container__banner {
+  padding: 0 15px;
+  width: 1042.5px;
+  height: 569px;
+  img {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.content {
+  margin-top: 3rem;
+  width: var(--default-width);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.page-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 40px;
+}
+
+.container__list-accessories {
+  width: 1390px;
+  padding: 0 15px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  justify-content: center;
+  gap: 0px;
+}
+
+.container__accessory-card {
+  width: 347.5px;
+  padding: 30px 15px;
+  cursor: pointer;
+
+  .container__accessory-content {
+    width: 317.5px;
+    height: 420px;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s;
+    user-select: none;
+
+    &:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .card-image {
+      display: flex;
+      justify-content: center;
+      height: 240px;
+      width: 100%;
+      img {
+        width: 80%;
+        height: 100%;
+      }
+    }
+    .card-title {
+      height: 72px;
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-top: 20px;
+      padding-left: 30px;
+      padding-right: 30px;
+    }
+
+    .card-info {
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      padding-left: 30px;
+      padding-right: 30px;
+      gap: 10px;
+    }
+  }
+}
+
+@media only screen and (max-width: 100em) {
+  .container {
+    width: 1400px;
+  }
+  .content {
+    width: 1400px;
+  }
+}

@@ -1,0 +1,26 @@
+.sidebar {
+  width: 100%;
+  border: solid 1px;
+  border-radius: 6px;
+}
+
+.sidebar__title {
+  border-radius: 6px 6px 0px 0px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f1f1f1;
+}
+
+.sidebar__content {
+  padding: 0px;
+}
+
+.sidebar__sub-item {
+  padding-left: 20px;
+}
+
+.sidebar__text {
+  cursor: pointer;
+}

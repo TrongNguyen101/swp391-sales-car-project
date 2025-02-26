@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebAPI.DataContext;
 
@@ -11,9 +12,11 @@ using WebAPI.DataContext;
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(VinfastContext))]
-    partial class VinfastContextModelSnapshot : ModelSnapshot
+    [Migration("20250225031017_UpdateDb_V4.1_Add_Category_Accessory_Add_data_of_Accessory")]
+    partial class UpdateDb_V41_Add_Category_Accessory_Add_data_of_Accessory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

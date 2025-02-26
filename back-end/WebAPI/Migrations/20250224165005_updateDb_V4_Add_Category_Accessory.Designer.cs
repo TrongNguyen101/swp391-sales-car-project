@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebAPI.DataContext;
 
@@ -11,9 +12,11 @@ using WebAPI.DataContext;
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(VinfastContext))]
-    partial class VinfastContextModelSnapshot : ModelSnapshot
+    [Migration("20250224165005_updateDb_V4_Add_Category_Accessory")]
+    partial class updateDb_V4_Add_Category_Accessory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -62,82 +65,55 @@ namespace WebAPI.Migrations
                         {
                             Id = 1,
                             CategoryId = 5,
-                            Image = "Sac_tai_nha.png",
+                            Image = "vinfast-vf3.png",
                             IsDeleted = false,
-                            Name = "Sạc tại nhà",
-                            Price = 6000000.0
+                            Name = "Vinfast VF3",
+                            Price = 100000000.0
                         },
                         new
                         {
                             Id = 2,
-                            CategoryId = 5,
-                            Image = "VF3_tham_nhua.png",
+                            CategoryId = 6,
+                            Image = "vinfast-vf5.png",
                             IsDeleted = false,
-                            Name = "Thảm nhựa VF3",
-                            Price = 1668000.0
+                            Name = "Vinfast VF5",
+                            Price = 200000000.0
                         },
                         new
                         {
                             Id = 3,
-                            CategoryId = 5,
-                            Image = "VF3_Camera_lui.png",
+                            CategoryId = 7,
+                            Image = "vinfast-vf6.png",
                             IsDeleted = false,
-                            Name = "Camera Lùi VF3",
-                            Price = 26720000.0
+                            Name = "Vinfast VF6",
+                            Price = 300000000.0
                         },
                         new
                         {
                             Id = 4,
-                            CategoryId = 6,
-                            Image = "VF5_tham_nhua.png",
+                            CategoryId = 8,
+                            Image = "vinfast-vf7.png",
                             IsDeleted = false,
-                            Name = "Thảm nhựa VF5",
-                            Price = 1969000.0
+                            Name = "Vinfast VF7",
+                            Price = 400000000.0
                         },
                         new
                         {
                             Id = 5,
-                            CategoryId = 6,
-                            Image = "VF5_Goi_dan_phim_cach_nhiet.png",
+                            CategoryId = 1,
+                            Image = "vinfast-vf8.png",
                             IsDeleted = false,
-                            Name = "Gói Dán Film Cách Nhiệt VinFast VF5",
-                            Price = 5500000.0
+                            Name = "Vinfast VF8",
+                            Price = 500000000.0
                         },
                         new
                         {
                             Id = 6,
-                            CategoryId = 6,
-                            Image = "VF5_Tham_cop.png",
+                            CategoryId = 2,
+                            Image = "vinfast-vf9.png",
                             IsDeleted = false,
-                            Name = "Thảm cốp 3D VF5",
-                            Price = 990000.0
-                        },
-                        new
-                        {
-                            Id = 7,
-                            CategoryId = 7,
-                            Image = "VF6_Goi_dan_phim_cach_nhiet.png",
-                            IsDeleted = false,
-                            Name = "Gói dán film cách nhiệt VF6",
-                            Price = 5500000.0
-                        },
-                        new
-                        {
-                            Id = 8,
-                            CategoryId = 7,
-                            Image = "VF6_tham_nhua.png",
-                            IsDeleted = false,
-                            Name = "Thảm nhựa 3D VF6",
-                            Price = 1990000.0
-                        },
-                        new
-                        {
-                            Id = 9,
-                            CategoryId = 7,
-                            Image = "VF6_Tham_cop.png",
-                            IsDeleted = false,
-                            Name = "Thảm cốp 3D VF6",
-                            Price = 990000.0
+                            Name = "Vinfast VF9",
+                            Price = 600000000.0
                         });
                 });
 

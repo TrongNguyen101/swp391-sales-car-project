@@ -65,5 +65,17 @@ namespace WebAPI.Controllers
             var image = System.IO.File.OpenRead(imagePath);
             return File(image, "image/jpeg");
         }
+
+        [HttpGet("Accessory/{imageName}")]
+        public IActionResult GetAccessoryImage(string imageName)
+        {
+            var imagePath = Path.Combine(Directory.GetCurrentDirectory(), "Images/AccessoryImage", imageName);
+            if (!System.IO.File.Exists(imagePath))
+            {
+                return NotFound();
+            }
+            var image = System.IO.File.OpenRead(imagePath);
+            return File(image, "image/jpeg");
+        }
     }
 }
