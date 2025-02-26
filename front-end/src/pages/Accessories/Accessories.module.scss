@@ -1,5 +1,5 @@
 .wrapper {
-  width: 100%;
+  //width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -110,5 +110,14 @@
       padding-right: 30px;
       gap: 10px;
     }
+  }
+}
+
+@media only screen and (max-width: 100em) {
+  .container {
+    width: 1400px;
+  }
+  .content {
+    width: 1400px;
   }
 }

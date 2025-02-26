@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { List, ListItem, ListItemText, Collapse } from "@mui/material";
+import { ListItem, ListItemText, Collapse, Typography } from "@mui/material";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
@@ -45,7 +45,7 @@ const Sidebar = ({ onSelectCategory }) => {
         return (
           <div key={category.id}>
             <ListItem
-              button
+              button="true"
               onClick={() => {
                 handleExpand(category.id);
                 if (!hasSubcategories) {
@@ -53,7 +53,10 @@ const Sidebar = ({ onSelectCategory }) => {
                 }
               }}
             >
-              <ListItemText primary={category.name} />
+              <ListItemText
+                primary={category.name}
+                className={cx("sidebar__text")}
+              />
               {hasSubcategories ? (
                 expanded[category.id] ? (
                   <FontAwesomeIcon icon={faChevronUp} />
@@ -70,9 +73,7 @@ const Sidebar = ({ onSelectCategory }) => {
                 timeout="auto"
                 unmountOnExit
               >
-                <List component="div" disablePadding>
-                  {renderCategories(category.id)}
-                </List>
+                {renderCategories(category.id)}
               </Collapse>
             )}
           </div>
@@ -82,7 +83,9 @@ const Sidebar = ({ onSelectCategory }) => {
 
   return (
     <div className={cx("sidebar")}>
-      <div className={cx("sidebar__title")}>DANH MỤC SẢN PHẨM</div>
+      <Typography className={cx("sidebar__title")}>
+        Categories
+      </Typography>
       <div className={cx("sidebar__content")}>{renderCategories()}</div>
     </div>
   );

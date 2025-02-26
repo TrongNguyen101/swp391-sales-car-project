@@ -5,6 +5,7 @@
 }
 
 .sidebar__title {
+  border-radius: 6px 6px 0px 0px;
   height: 40px;
   display: flex;
   justify-content: center;
@@ -18,4 +19,8 @@
 
 .sidebar__sub-item {
   padding-left: 20px;
+}
+
+.sidebar__text {
+  cursor: pointer;
 }
