@@ -42,6 +42,8 @@ namespace WebAPI.DataContext
 
         public DbSet<Category> Categories { get; set; }
         public DbSet<Accessory> Accessories { get; set; }
+        public DbSet<AccessoryImage> AccessoryImages { get; set; }
+
 
 
         /// <summary>
@@ -532,7 +534,7 @@ namespace WebAPI.DataContext
                     new Accessory
                     {
                         Id = 1,
-                        Name = "Sạc tại nhà",
+                        Name = "VinFast Home Charger",
                         Price = 6000000,
                         Image = "Sac_tai_nha.png",
                         CategoryId = 5,
@@ -613,6 +615,79 @@ namespace WebAPI.DataContext
                 );
             });
 
+            modelBuilder.Entity<AccessoryImage>().HasData(
+                new AccessoryImage
+                {
+                    ColorId = 1,
+                    ColorName = "White",
+                    ColorImage = "homecharger-1.png",
+                    IsDeleted = false,
+                    AccessoryId = 1
+                },
+
+                new AccessoryImage
+                {
+                    ColorId = 2,
+                    ColorName = "White",
+                    ColorImage = "homecharger-2.png",
+                    IsDeleted = false,
+                    AccessoryId = 1
+                },
+
+                new AccessoryImage
+                {
+                    ColorId = 3,
+                    ColorName = "White",
+                    ColorImage = "homecharger-3.png",
+                    IsDeleted = false,
+                    AccessoryId = 1
+                },
+
+                new AccessoryImage
+                {
+                    ColorId = 4,
+                    ColorName = "White",
+                    ColorImage = "homecharger-4.png",
+                    IsDeleted = false,
+                    AccessoryId = 1
+                },
+                new AccessoryImage
+                {
+                    ColorId = 5,
+                    ColorName = "White",
+                    ColorImage = "VF3_tham_nhua_detail1.png",
+                    IsDeleted = false,
+                    AccessoryId = 2
+                },
+
+                new AccessoryImage
+                {
+                    ColorId = 6,
+                    ColorName = "White",
+                    ColorImage = "VF3_tham_nhua_detail2.png",
+                    IsDeleted = false,
+                    AccessoryId = 2
+                },
+
+                new AccessoryImage
+                {
+                    ColorId = 7,
+                    ColorName = "White",
+                    ColorImage = "VF3_camera_lui_1.jpg",
+                    IsDeleted = false,
+                    AccessoryId = 3
+                },
+
+                new AccessoryImage
+                {
+                    ColorId = 8,
+                    ColorName = "White",
+                    ColorImage = "VF3_camera_lui_1.jpg",
+                    IsDeleted = false,
+                    AccessoryId = 3
+                }
+            );
+
             // Configure the relationship between Users and Roles
             modelBuilder.Entity<Users>(entity =>
             {
@@ -656,6 +731,14 @@ namespace WebAPI.DataContext
                       .WithMany(category => category.Accessories)
                       .HasForeignKey(accessory => accessory.CategoryId)
                       .OnDelete(DeleteBehavior.Cascade)
+                      .IsRequired();
+            });
+
+            modelBuilder.Entity<Accessory>(entity =>
+            {
+                entity.HasMany(color => color.AccessoryColors)
+                      .WithOne(accessory => accessory.Accessory)
+                      .HasForeignKey(accessory => accessory.AccessoryId)
                       .IsRequired();
             });
         }

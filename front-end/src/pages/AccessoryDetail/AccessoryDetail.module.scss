@@ -1,0 +1,54 @@
+.wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.container {
+  width: 100px;
+}
+
+.container__accessory-overview {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  background-color: antiquewhite;
+}
+
+.container__accessory-image {
+  background-color: aqua;
+  width: 700px;
+}
+
+.container__accessory-info {
+  background-color: aquamarine;
+  width: 700px;
+}
+
+.container__description {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  //draft
+  background-color: cadetblue;
+  height: 200px;
+}
+
+.container__specification {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  // draft
+  background-color: cornflowerblue;
+  height: 200px;
+}
+
+@media only screen and (max-width: 100em) {
+  .container {
+    width: 1400px;
+  }
+}

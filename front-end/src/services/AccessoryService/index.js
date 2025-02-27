@@ -20,7 +20,18 @@ export const getAllAccessories = async () => {
 
 export const getAccessoriesByCategoryId = async (categoryId) => {
   try {
-    const response = await request.get(`/api/Accessories/getAccesoriesByCategoryId/${categoryId}`);
+    const response = await request.get(
+      `/api/Accessories/getAccesoriesByCategoryId/${categoryId}`
+    );
+    return response.data;
+  } catch (error) {
+    return error.response;
+  }
+};
+
+export const getAccessoryImageByAccessoryId = async (carId) => {
+  try {
+    const response = await request.get(`/api/Accessories/image/${carId}`);
     return response.data;
   } catch (error) {
     return error.response;
