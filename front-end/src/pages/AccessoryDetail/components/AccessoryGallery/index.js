@@ -11,14 +11,18 @@ const cx = classNames.bind(styles);
 
 const AccessoryGallery = ({ accessoryId }) => {
   const [images, setImages] = useState([]);
-  const [selectedImage, setSelectedImage] = useState(images[0]);
+  const [selectedImage, setSelectedImage] = useState(null);
 
+  console.log(accessoryId);
   const fetchAccessoryImages = async () => {
     try {
-      const response = await accessoryService.getAccessoryImageByAccessoryId(1);
+      const response = await accessoryService.getAccessoryImageByAccessoryId(
+        accessoryId
+      );
       if (response.statusCode !== 200) {
         setImages([]);
       } else {
+        console.log("respond " + response.data);
         setImages(response.data);
       }
     } catch (error) {
@@ -43,7 +47,7 @@ const AccessoryGallery = ({ accessoryId }) => {
             key={index}
             src={`https://localhost:7005/api/Images/Accessory/${img.colorImage}`}
             onClick={() => setSelectedImage(img.colorImage)}
-            isActive={img === selectedImage}
+            isActive={img.colorImage === selectedImage}
           />
         ))}
       </div>

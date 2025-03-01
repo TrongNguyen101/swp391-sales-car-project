@@ -8,9 +8,7 @@ const ImageThumbnail = ({ src, onClick, isActive }) => {
   return (
     <img
       src={src}
-      className={cx("thumbnail__picture", {
-        "thumbnail__picture--active": isActive,
-      })}
+      className={cx("thumbnail__picture", {"thumbnail__picture--active": isActive})}
       onClick={onClick}
       alt="Thumbnail"
     />
