@@ -31,6 +31,7 @@ const AccessoryGallery = ({ accessoryId }) => {
 
   useEffect(() => {
     fetchAccessoryImages();
+    // eslint-disable-next-line
   }, []);
 
   return (
