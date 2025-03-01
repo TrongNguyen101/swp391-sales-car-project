@@ -1,28 +1,75 @@
 .wrapper {
+  margin: 0;
+}
+
+.wrapper__line {
   width: 100%;
-  display: flex;
-  justify-content: center;
+  position: fixed;
+  border-top: solid 1px rgb(204, 200, 200);
 }
 
 .container {
-  width: 100px;
+  width: 1610px;
+  margin: 0 auto;
 }
 
 .container__accessory-overview {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
   width: 100%;
-  background-color: antiquewhite;
+  padding-top: 30px;
 }
 
 .container__accessory-image {
-  background-color: aqua;
   width: 700px;
 }
 
 .container__accessory-info {
-  background-color: aquamarine;
+  //background-color: aquamarine;
   width: 700px;
+  .information__name {
+    color: #151515;
+    font-size: 36px;
+    font-weight: 300;
+    letter-spacing: -0.02em;
+    line-height: 45px;
+    margin-bottom: 24px;
+  }
+  .information__price {
+    padding: 1em 0;
+    font-size: 2em;
+    color: var(--primary-color);
+  }
+  .information__description {
+    font-size: 1.5em;
+    p {
+      padding: 1em 0;
+    }
+  }
+  .information__button {
+    padding: 1.5em 0;
+    display: flex;
+    justify-content: left;
+    .button__add-to-cart {
+      padding-right:  2em;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1.5em;
+      transition: background-color 0.3s;
+    }
+    span {
+      padding: 0 1em;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .button {
+      :hover {
+        padding: 0;
+        background-color: var(--primary-color);
+        color: white;
+      }
+    }
+  }
 }
 
 .container__description {
@@ -30,10 +77,6 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-
-  //draft
-  background-color: cadetblue;
-  height: 200px;
 }
 
 .container__specification {

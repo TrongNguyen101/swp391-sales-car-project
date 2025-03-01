@@ -21,6 +21,6 @@ namespace WebAPI.Models
         [Column("Category ID")]
         public int CategoryId { get; set; }
         public Category? Category { get; set; }
-        public ICollection<AccessoryImage>? AccessoryColors { get; set; } = new List<AccessoryImage>();
+        public ICollection<AccessoryImage>? AccessoryImages { get; set; } = new List<AccessoryImage>();
     }
 }

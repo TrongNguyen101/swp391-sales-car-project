@@ -117,7 +117,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("image/{accessoryId}")]
-        public async Task<IActionResult> GetImageByAccessoryId(int accessoryId)
+        public async Task<IActionResult> GetImagesByAccessoryId(int accessoryId)
         {
             try
             {

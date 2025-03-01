@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebAPI.Models
 {
-    [Table("AccessoryColor")]
+    [Table("AccessoryImage")]
     public class AccessoryImage
     {
         [Key]

@@ -13,17 +13,16 @@ const AccessoryGallery = ({ accessoryId }) => {
   const [images, setImages] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
 
-  console.log(accessoryId);
   const fetchAccessoryImages = async () => {
     try {
-      const response = await accessoryService.getAccessoryImageByAccessoryId(
+      const response = await accessoryService.getAccessoryImagesByAccessoryId(
         accessoryId
       );
       if (response.statusCode !== 200) {
         setImages([]);
       } else {
-        console.log("respond " + response.data);
         setImages(response.data);
+        setSelectedImage(response.data[0].colorImage);
       }
     } catch (error) {
       setImages([]);

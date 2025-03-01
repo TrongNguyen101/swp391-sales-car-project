@@ -2,9 +2,12 @@
   flex: 1;
   .gallery__main-image {
     width: 100%;
+    display: flex;
+    justify-content: center;
   }
   .gallery__thumbnails {
     display: flex;
     justify-content: center;
+    padding: 10px;
   }
 }

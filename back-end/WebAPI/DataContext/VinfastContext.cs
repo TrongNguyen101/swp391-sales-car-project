@@ -736,7 +736,7 @@ namespace WebAPI.DataContext
 
             modelBuilder.Entity<Accessory>(entity =>
             {
-                entity.HasMany(color => color.AccessoryColors)
+                entity.HasMany(image => image.AccessoryImages)
                       .WithOne(accessory => accessory.Accessory)
                       .HasForeignKey(accessory => accessory.AccessoryId)
                       .IsRequired();
