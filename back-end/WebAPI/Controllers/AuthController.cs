@@ -6,7 +6,9 @@ using WebAPI.DTO;
 using Microsoft.AspNetCore.Authorization;
 using WebAPI.Utils.JwtTokenHelper;
 using WebAPI.Models;
-using System.Text.Json;
+using System.Text;
+using System.Net.Mail;
+using System.Net;
 
 namespace WebAPI.Controllers
 {
@@ -14,6 +16,9 @@ namespace WebAPI.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
+        // not done yet
+        private readonly Dictionary<string, string> otpCodeStorage = new Dictionary<string, string>();
+
         /// <summary>
         /// Authenticates a user based on the provided login credentials.
         /// </summary>
@@ -147,12 +152,12 @@ namespace WebAPI.Controllers
         /// <item><description>400 Bad Request: If an exception occurs during the process.</description></item>
         /// </list>
         /// </returns>
-        [HttpPost("ChangePassword")]
-        public async Task<IActionResult> ChangePassword(RequestChangePassword RequestChangePassword)
+        [HttpPost("SendOTP")]
+        public async Task<IActionResult> SendOTP([FromBody] RequestForgotPassword request)
         {
             try
             {
-                var user = await UsersDAO.GetInstance().findUserByEmail(RequestChangePassword.Email);
+                var user = await UsersDAO.GetInstance().findUserByEmail(request.Email);
                 if (user == null)
                 {
                     return NotFound(new DataResponse
@@ -162,22 +167,13 @@ namespace WebAPI.Controllers
                         Message = "Email not found",
                     });
                 }
-                if (user.Password != EncyptHelper.Sha256Encrypt(RequestChangePassword.OldPassword))
-                {
-                    return Unauthorized(new DataResponse
-                    {
-                        StatusCode = 401,
-                        Success = false,
-                        Message = "Old password is incorrect",
-                    });
-                }
-                user.Password = EncyptHelper.Sha256Encrypt(RequestChangePassword.NewPassword);
-                UsersDAO.GetInstance().UpdateUser(user);
+                var userDTO = AutoMapper.ToUserDTO(user);
                 return Ok(new DataResponse
                 {
                     StatusCode = 200,
                     Success = true,
-                    Message = "Change password successfully",
+                    Message = "Email found",
+                    Data = userDTO.Email,
                 });
             }
             catch (Exception e)
@@ -189,6 +185,60 @@ namespace WebAPI.Controllers
                     Message = e.Message,
                 });
             }
+        }
+        [HttpPost("veryfyOTP")]
+        public async Task<IActionResult> VeryfyOTP([FromBody] RequestForgotPassword request)
+        {
+            try
+            {
+                // Not done yet
+                return Ok(new DataResponse
+                {
+                    StatusCode = 200,
+                    Success = true,
+                    Message = "OTP is correct",
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new DataResponse
+                {
+                    StatusCode = 400,
+                    Success = false,
+                    Message = ex.Message,
+                });
+            }
+        }
+
+        private string GenerateOTP(int lengthOTP = 6)
+        {
+            var random = new Random();
+            var otp = new StringBuilder();
+            for (int i = 0; i < lengthOTP; i++)
+            {
+                otp.Append(random.Next(0, 9));
+            }
+            return otp.ToString();
+        }
+
+        private void SendEmail(string toEmail, string otp)
+        {
+            var smtpClient = new SmtpClient("smtp.gmail.com")
+            {
+                Port = 587,
+                Credentials = new NetworkCredential("email@example.com", "email-password"),
+                EnableSsl = true,
+            };
+
+            var mailMessage = new MailMessage
+            {
+                From = new MailAddress("myEamil"),
+                Subject = "OTP",
+                Body = $"Your OTP is: {otp}",
+                IsBodyHtml = true,
+            };
+            mailMessage.To.Add(toEmail);
+            smtpClient.Send(mailMessage);
         }
     }
 }

@@ -57,3 +57,22 @@ export const postRegister = async (fullname, email, password ) => {
     return error.response;
   }
 }
+
+export const postEmail = async (email) => {
+  try {
+    const response = await request.post(
+      "api/Auth/CheckEmail",
+      {
+        email: email,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response;
+  } catch (error) {
+    return error.response;
+  }
+};
