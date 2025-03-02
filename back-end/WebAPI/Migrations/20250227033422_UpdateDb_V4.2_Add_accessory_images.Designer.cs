@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebAPI.DataContext;
 
@@ -11,9 +12,11 @@ using WebAPI.DataContext;
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(VinfastContext))]
-    partial class VinfastContextModelSnapshot : ModelSnapshot
+    [Migration("20250227033422_UpdateDb_V4.2_Add_accessory_images")]
+    partial class UpdateDb_V42_Add_accessory_images
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -141,7 +144,7 @@ namespace WebAPI.Migrations
                         });
                 });
 
-            modelBuilder.Entity("WebAPI.Models.AccessoryImage", b =>
+            modelBuilder.Entity("WebAPI.Models.AccessoryColor", b =>
                 {
                     b.Property<int>("ColorId")
                         .ValueGeneratedOnAdd()
@@ -170,7 +173,7 @@ namespace WebAPI.Migrations
 
                     b.HasIndex("AccessoryId");
 
-                    b.ToTable("AccessoryImage");
+                    b.ToTable("AccessoryColor");
 
                     b.HasData(
                         new
@@ -822,45 +825,6 @@ namespace WebAPI.Migrations
                         });
                 });
 
-            modelBuilder.Entity("WebAPI.Models.TestDriveRegistration", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("TestDrive ID");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CarId")
-                        .HasColumnType("int")
-                        .HasColumnName("Car ID");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("Description");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("Customer Email");
-
-                    b.Property<string>("FullName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("Customer Name");
-
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("Phone Number");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CarId");
-
-                    b.ToTable("TestDriveRegistrations");
-                });
-
             modelBuilder.Entity("WebAPI.Models.Users", b =>
                 {
                     b.Property<Guid>("Id")
@@ -950,10 +914,10 @@ namespace WebAPI.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("WebAPI.Models.AccessoryImage", b =>
+            modelBuilder.Entity("WebAPI.Models.AccessoryColor", b =>
                 {
                     b.HasOne("WebAPI.Models.Accessory", "Accessory")
-                        .WithMany("AccessoryImages")
+                        .WithMany("AccessoryColors")
                         .HasForeignKey("AccessoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -991,17 +955,6 @@ namespace WebAPI.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("WebAPI.Models.TestDriveRegistration", b =>
-                {
-                    b.HasOne("WebAPI.Models.Cars", "Car")
-                        .WithMany()
-                        .HasForeignKey("CarId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Car");
-                });
-
             modelBuilder.Entity("WebAPI.Models.Users", b =>
                 {
                     b.HasOne("WebAPI.Models.Roles", "Role")
@@ -1015,7 +968,7 @@ namespace WebAPI.Migrations
 
             modelBuilder.Entity("WebAPI.Models.Accessory", b =>
                 {
-                    b.Navigation("AccessoryImages");
+                    b.Navigation("AccessoryColors");
                 });
 
             modelBuilder.Entity("WebAPI.Models.Cars", b =>

@@ -79,6 +79,8 @@ namespace WebAPI.Controllers
             }
         }
 
+
+
         [HttpGet("getAccesoriesByCategoryId/{categoryId}")]
         public async Task<IActionResult> GetAllAccessoriesByCategoryId(int categoryId)
         {
@@ -101,6 +103,41 @@ namespace WebAPI.Controllers
                     Message = "Get all accessories by category id successfully",
                     Success = true,
                     Data = accessoriesDTOs
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new DataResponse
+                {
+                    StatusCode = 400,
+                    Message = ex.Message,
+                    Success = false
+                });
+            }
+        }
+
+        [HttpGet("image/{accessoryId}")]
+        public async Task<IActionResult> GetImagesByAccessoryId(int accessoryId)
+        {
+            try
+            {
+                var accessoryImages = await AccessoriesDAO.GetInstance().GetAccessoryImagesByAccessoryId(accessoryId);
+                if (!accessoryImages.Any())
+                {
+                    return NotFound(new DataResponse
+                    {
+                        StatusCode = 404,
+                        Message = "No image found",
+                        Success = false
+                    });
+                }
+                var accessoryImageDTOs = AutoMapper.ToAccessoryImageDTOList(accessoryImages);
+                return Ok(new DataResponse
+                {
+                    StatusCode = 200,
+                    Message = "Get all images by accessory id successfully",
+                    Success = true,
+                    Data = accessoryImageDTOs
                 });
             }
             catch (Exception ex)

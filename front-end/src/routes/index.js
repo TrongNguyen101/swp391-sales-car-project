@@ -3,6 +3,7 @@ import LoginPage from "../pages/Login";
 import CarsPage from "../pages/Cars";
 import ProfilePage from "../pages/Profile";
 import AccessoriesPage from "../pages/Accessories";
+import AccessoryDetailPage from "../pages/AccessoryDetail";
 import RegisterPage from "../pages/Register";
 import CarDetailPage from "../pages/CarDetail";
 import DepositPaymentPage from "../pages/DepositPayment";
@@ -16,6 +17,7 @@ const publicRoutes = [
   { path: "/cars", page: CarsPage },
   { path: "/cars/:carId", page: CarDetailPage },
   { path: "/accessories", page: AccessoriesPage },
+  { path: "/accessories/:accessoryId", page: AccessoryDetailPage },
   { path: "/login", page: LoginPage, layout: null },
   { path: "/register", page: RegisterPage, layout: null },
   { path: "/deposit/:carId", page: DepositPaymentPage },
