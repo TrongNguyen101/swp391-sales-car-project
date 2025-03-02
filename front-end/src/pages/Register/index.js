@@ -184,10 +184,9 @@ function RegisterPage() {
               onChange={(e) => {
                 setPassword(e.target.value);
                 setErrorPassword("");
-                setRePassword("");
               }}
             />
-            {errorPassword && (
+            {errorRePassword && (
               <Typography sx={{ color: "red" }}>{errorPassword}</Typography>
             )}
             <div className={cx("icon")}>
@@ -208,7 +207,6 @@ function RegisterPage() {
               value={rePassword}
               onChange={(e) => {
                 setRePassword(e.target.value);
-                setPassword("");
                 setErrorRePassword("");
               }}
             />

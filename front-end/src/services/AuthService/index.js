@@ -58,10 +58,10 @@ export const postRegister = async (fullname, email, password ) => {
   }
 }
 
-export const postEmail = async (email) => {
+export const postSendOTP = async (email) => {
   try {
     const response = await request.post(
-      "api/Auth/CheckEmail",
+      "api/Auth/SendOTP",
       {
         email: email,
       },

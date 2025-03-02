@@ -13,9 +13,10 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import * as authService from "../../services/AuthService";
 import * as AuthValidator from "../../validation/AuthValidation";
+import * as OTPValidator from "../../validation/OTPValidation";
 
 const cx = classNames.bind(styles);
 
@@ -38,6 +39,10 @@ function LoginPage() {
   const [forgotPasswordOpen, setForgotPasswordOpen] = useState(false);
   const [forgotPasswordEmail, setForgotPasswordEmail] = useState("");
   const [errorForgotPasswordEmail, setErrorForgotPasswordEmail] = useState("");
+  const [otpDialogOpen, setOtpDialogOpen] = useState(false);
+  const [otpValue, setOtpValue] = useState(new Array(6).fill(""));
+  const [errorOtp, setErrorOtp] = useState("");
+  const otpRefs = useRef([]);
   const navigate = useNavigate();
 
   const handleShowPassword = () => {
@@ -79,9 +84,9 @@ function LoginPage() {
     }
   };
 
-  const fetchEmail = async (email) => {
+  const fetchSendOTP = async (email) => {
     try {
-      const response = await authService.postEmail(email);
+      const response = await authService.postSendOTP(email);
       if (response.status !== 200) {
         setErrorForgotPasswordEmail(response.data.message);
       } else {
@@ -92,6 +97,8 @@ function LoginPage() {
       return error.response;
     }
   };
+
+  const fetchVerifyOTP = async (otp) => {};
 
   const handleOnSubmit = (event) => {
     event.preventDefault();
@@ -119,6 +126,32 @@ function LoginPage() {
     setForgotPasswordEmail("");
   };
 
+  const handleOtpDialogClose = () => {
+    setOtpDialogOpen(false);
+  };
+
+  const handleOtpChange = (e, index) => {
+    const {value} = e.target;
+    if(/^[0-9]$/.test(value) || value === "") {
+      const newOtpValue = [...otpValue];
+      newOtpValue[index] = value;
+      setOtpValue(newOtpValue);
+    }
+    if(value !==null && index < otpRefs.cunrrent.Length - 1){
+      otpRefs.current[index + 1].focus();
+    }
+  };
+
+  const handleOtpSubmit = () => {
+    const otp = otpValue.join("");
+    const otpError = OTPValidator.validateOtp(otp);
+    if(otpError){
+      setErrorOtp(otpError);
+    } else {
+      fetchVerifyOTP(otp);
+    }
+  };
+
   const handleToFogotPassword = () => {
     setForgotPasswordOpen(true);
   };
@@ -128,7 +161,8 @@ function LoginPage() {
     if (emailError) {
       setErrorForgotPasswordEmail(emailError);
     } else {
-      fetchEmail(forgotPasswordEmail);
+      fetchSendOTP(forgotPasswordEmail);
+      localStorage.setItem("email", forgotPasswordEmail);
     }
   };
 
@@ -295,6 +329,13 @@ function LoginPage() {
             Cancel
           </Button>
         </DialogActions>
+      </Dialog>
+      <Dialog 
+      open={otpDialogOpen}
+      >
+        <DialogTitle></DialogTitle>
+        <DialogContent></DialogContent>
+        <DialogActions></DialogActions>
       </Dialog>
     </div>
   );

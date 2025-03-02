@@ -17,7 +17,7 @@ namespace WebAPI.Controllers
     public class AuthController : ControllerBase
     {
         // not done yet
-        private readonly Dictionary<string, string> otpCodeStorage = new Dictionary<string, string>();
+        private readonly Dictionary<string, OTPCode> otpCodeStorage = new Dictionary<string, OTPCode>();
 
         /// <summary>
         /// Authenticates a user based on the provided login credentials.
@@ -168,12 +168,18 @@ namespace WebAPI.Controllers
                     });
                 }
                 var userDTO = AutoMapper.ToUserDTO(user);
+                var otpCode = GenerateOTP();
+                otpCodeStorage[request.Email] = new OTPCode
+                {
+                    OTP = otpCode,
+                    CreateAt = DateTime.UtcNow,
+                };
+                SendEmail(request.Email, otpCode);
                 return Ok(new DataResponse
                 {
                     StatusCode = 200,
                     Success = true,
-                    Message = "Email found",
-                    Data = userDTO.Email,
+                    Message = "Send OTP successfully",
                 });
             }
             catch (Exception e)
@@ -187,17 +193,28 @@ namespace WebAPI.Controllers
             }
         }
         [HttpPost("veryfyOTP")]
-        public async Task<IActionResult> VeryfyOTP([FromBody] RequestForgotPassword request)
+        public async Task<IActionResult> VeryfyOTP([FromBody] RequestVerifyOTP request)
         {
             try
             {
-                // Not done yet
-                return Ok(new DataResponse
+               if (VerifyOTP(request.Email, request.OTP))
                 {
-                    StatusCode = 200,
-                    Success = true,
-                    Message = "OTP is correct",
-                });
+                    return Ok(new DataResponse
+                    {
+                        StatusCode = 200,
+                        Success = true,
+                        Message = "OTP verified successfully",
+                    });
+                }
+                else
+                {
+                    return BadRequest(new DataResponse
+                    {
+                        StatusCode = 400,
+                        Success = false,
+                        Message = "Invalid or expired OTP",
+                    });
+                }
             }
             catch (Exception ex)
             {
@@ -226,19 +243,87 @@ namespace WebAPI.Controllers
             var smtpClient = new SmtpClient("smtp.gmail.com")
             {
                 Port = 587,
-                Credentials = new NetworkCredential("email@example.com", "email-password"),
+                UseDefaultCredentials = false,
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                Credentials = new NetworkCredential("tronglion9@gmail.com", "zwlh htyu xegp unwd"),
                 EnableSsl = true,
             };
 
             var mailMessage = new MailMessage
             {
-                From = new MailAddress("myEamil"),
+                From = new MailAddress("tronglion9@gmail.com"),
                 Subject = "OTP",
-                Body = $"Your OTP is: {otp}",
+                Body = $@"
+                <html>
+                 <head>
+                    <style>
+                        body {{
+                            font-family: Arial, sans-serif;
+                            background-color: #f4f4f4;
+                            color: #333333;
+                            margin: 0;
+                            padding: 0;
+                        }}
+                        .container {{
+                            max-width: 600px;
+                            margin: 0 auto;
+                            background: #ffffff;
+                            padding: 20px;
+                            border-radius: 8px;
+                            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                        }}
+                        h1 {{
+                            font-size: 24px;
+                            color: #333333;
+                        }}
+                        p {{
+                            font-size: 16px;
+                            line-height: 1.5;
+                            color: #555555;
+                        }}
+                        strong {{
+                            font-size: 18px;
+                            color: #000000;
+                        }}
+                        .footer {{
+                            margin-top: 20px;
+                            padding-top: 10px;
+                            border-top: 1px solid #dddddd;
+                            font-size: 14px;
+                            color: #777777;
+                        }}
+                        .footer p {{
+                            margin: 5px 0;
+                        }}
+                    </style>
+                </head>
+                <body>
+                    <p>Hi,</p>
+                    <p>We have received a request for an OTP from your account. Please use the OTP below to proceed with verification:</p>
+                    <p>🔑 <strong>Your OTP Code: {otp}</strong></p>
+                    <p>This code is valid for 5 minutes and can only be used once. Do not share this code with anyone.</p>
+                    <p>If you did not request this OTP, please check your account security and contact us for assistance.</p>
+                    <p>📞 Hotline: 1900 23 23 89</p>
+                    <p>📧 Support Email: Suport.Vinfast@gmail.com</p>
+                    <p>Best regards,</p>
+                    <p>VinFast Support Team</p>
+                </body>
+                </html>",
                 IsBodyHtml = true,
             };
             mailMessage.To.Add(toEmail);
             smtpClient.Send(mailMessage);
+        }
+        private bool VerifyOTP(string email, string otp, int otpLifetimeMinutes = 5)
+        {
+            if (otpCodeStorage.TryGetValue(email, out OTPCode otpEntry))
+            {
+                if (otpEntry.OTP == otp && (DateTime.UtcNow - otpEntry.CreateAt).TotalMinutes <= otpLifetimeMinutes)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }
