@@ -9,6 +9,7 @@ import CarDetailPage from "../pages/CarDetail";
 import DepositPaymentPage from "../pages/DepositPayment";
 import DepositPaymentResponsePage from "../pages/DepositPaymentResponse";
 import DashBoardPage from "../pages/DashBoard";
+import TestDriveRegistration from "../pages/TestDriveRegistration";
 
 const publicRoutes = [
   { path: "/", page: HomePage },
@@ -22,6 +23,8 @@ const publicRoutes = [
   { path: "/deposit/:carId", page: DepositPaymentPage },
   { path: "/deposit-response", page: DepositPaymentResponsePage },
   { path: "/dashboard", page: DashBoardPage },
+  { path: "/testdrivegistration", page: TestDriveRegistration },
+
 ];
 
 export { publicRoutes };

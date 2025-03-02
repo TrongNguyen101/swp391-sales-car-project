@@ -12,8 +12,8 @@ using WebAPI.DataContext;
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(VinfastContext))]
-    [Migration("20250224165005_updateDb_V4_Add_Category_Accessory")]
-    partial class updateDb_V4_Add_Category_Accessory
+    [Migration("20250226215359_AddTestDriveRegistrationTable")]
+    partial class AddTestDriveRegistrationTable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -65,55 +65,82 @@ namespace WebAPI.Migrations
                         {
                             Id = 1,
                             CategoryId = 5,
-                            Image = "vinfast-vf3.png",
+                            Image = "Sac_tai_nha.png",
                             IsDeleted = false,
-                            Name = "Vinfast VF3",
-                            Price = 100000000.0
+                            Name = "Sạc tại nhà",
+                            Price = 6000000.0
                         },
                         new
                         {
                             Id = 2,
-                            CategoryId = 6,
-                            Image = "vinfast-vf5.png",
+                            CategoryId = 5,
+                            Image = "VF3_tham_nhua.png",
                             IsDeleted = false,
-                            Name = "Vinfast VF5",
-                            Price = 200000000.0
+                            Name = "Thảm nhựa VF3",
+                            Price = 1668000.0
                         },
                         new
                         {
                             Id = 3,
-                            CategoryId = 7,
-                            Image = "vinfast-vf6.png",
+                            CategoryId = 5,
+                            Image = "VF3_Camera_lui.png",
                             IsDeleted = false,
-                            Name = "Vinfast VF6",
-                            Price = 300000000.0
+                            Name = "Camera Lùi VF3",
+                            Price = 26720000.0
                         },
                         new
                         {
                             Id = 4,
-                            CategoryId = 8,
-                            Image = "vinfast-vf7.png",
+                            CategoryId = 6,
+                            Image = "VF5_tham_nhua.png",
                             IsDeleted = false,
-                            Name = "Vinfast VF7",
-                            Price = 400000000.0
+                            Name = "Thảm nhựa VF5",
+                            Price = 1969000.0
                         },
                         new
                         {
                             Id = 5,
-                            CategoryId = 1,
-                            Image = "vinfast-vf8.png",
+                            CategoryId = 6,
+                            Image = "VF5_Goi_dan_phim_cach_nhiet.png",
                             IsDeleted = false,
-                            Name = "Vinfast VF8",
-                            Price = 500000000.0
+                            Name = "Gói Dán Film Cách Nhiệt VinFast VF5",
+                            Price = 5500000.0
                         },
                         new
                         {
                             Id = 6,
-                            CategoryId = 2,
-                            Image = "vinfast-vf9.png",
+                            CategoryId = 6,
+                            Image = "VF5_Tham_cop.png",
                             IsDeleted = false,
-                            Name = "Vinfast VF9",
-                            Price = 600000000.0
+                            Name = "Thảm cốp 3D VF5",
+                            Price = 990000.0
+                        },
+                        new
+                        {
+                            Id = 7,
+                            CategoryId = 7,
+                            Image = "VF6_Goi_dan_phim_cach_nhiet.png",
+                            IsDeleted = false,
+                            Name = "Gói dán film cách nhiệt VF6",
+                            Price = 5500000.0
+                        },
+                        new
+                        {
+                            Id = 8,
+                            CategoryId = 7,
+                            Image = "VF6_tham_nhua.png",
+                            IsDeleted = false,
+                            Name = "Thảm nhựa 3D VF6",
+                            Price = 1990000.0
+                        },
+                        new
+                        {
+                            Id = 9,
+                            CategoryId = 7,
+                            Image = "VF6_Tham_cop.png",
+                            IsDeleted = false,
+                            Name = "Thảm cốp 3D VF6",
+                            Price = 990000.0
                         });
                 });
 
@@ -700,6 +727,45 @@ namespace WebAPI.Migrations
                         });
                 });
 
+            modelBuilder.Entity("WebAPI.Models.TestDriveRegistration", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("TestDrive ID");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CarId")
+                        .HasColumnType("int")
+                        .HasColumnName("Car ID");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Description");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Customer Email");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Customer Name");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Phone Number");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CarId");
+
+                    b.ToTable("TestDriveRegistrations");
+                });
+
             modelBuilder.Entity("WebAPI.Models.Users", b =>
                 {
                     b.Property<Guid>("Id")
@@ -817,6 +883,17 @@ namespace WebAPI.Migrations
                     b.Navigation("Car");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("WebAPI.Models.TestDriveRegistration", b =>
+                {
+                    b.HasOne("WebAPI.Models.Cars", "Car")
+                        .WithMany()
+                        .HasForeignKey("CarId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Car");
                 });
 
             modelBuilder.Entity("WebAPI.Models.Users", b =>

@@ -12,8 +12,8 @@ using WebAPI.DataContext;
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(VinfastContext))]
-    [Migration("20250213035539_UpdateV2")]
-    partial class UpdateV2
+    [Migration("20250226194250_Init_Migration")]
+    partial class Init_Migration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,125 @@ namespace WebAPI.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("WebAPI.Models.Accessory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("Accessory ID");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int")
+                        .HasColumnName("Category ID");
+
+                    b.Property<string>("Image")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Accessory Image");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit")
+                        .HasColumnName("Is Deleted");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Accessory Name");
+
+                    b.Property<double>("Price")
+                        .HasColumnType("float")
+                        .HasColumnName("Accessory Price");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("Accessory");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CategoryId = 5,
+                            Image = "Sac_tai_nha.png",
+                            IsDeleted = false,
+                            Name = "Sạc tại nhà",
+                            Price = 6000000.0
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CategoryId = 5,
+                            Image = "VF3_tham_nhua.png",
+                            IsDeleted = false,
+                            Name = "Thảm nhựa VF3",
+                            Price = 1668000.0
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CategoryId = 5,
+                            Image = "VF3_Camera_lui.png",
+                            IsDeleted = false,
+                            Name = "Camera Lùi VF3",
+                            Price = 26720000.0
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CategoryId = 6,
+                            Image = "VF5_tham_nhua.png",
+                            IsDeleted = false,
+                            Name = "Thảm nhựa VF5",
+                            Price = 1969000.0
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CategoryId = 6,
+                            Image = "VF5_Goi_dan_phim_cach_nhiet.png",
+                            IsDeleted = false,
+                            Name = "Gói Dán Film Cách Nhiệt VinFast VF5",
+                            Price = 5500000.0
+                        },
+                        new
+                        {
+                            Id = 6,
+                            CategoryId = 6,
+                            Image = "VF5_Tham_cop.png",
+                            IsDeleted = false,
+                            Name = "Thảm cốp 3D VF5",
+                            Price = 990000.0
+                        },
+                        new
+                        {
+                            Id = 7,
+                            CategoryId = 7,
+                            Image = "VF6_Goi_dan_phim_cach_nhiet.png",
+                            IsDeleted = false,
+                            Name = "Gói dán film cách nhiệt VF6",
+                            Price = 5500000.0
+                        },
+                        new
+                        {
+                            Id = 8,
+                            CategoryId = 7,
+                            Image = "VF6_tham_nhua.png",
+                            IsDeleted = false,
+                            Name = "Thảm nhựa 3D VF6",
+                            Price = 1990000.0
+                        },
+                        new
+                        {
+                            Id = 9,
+                            CategoryId = 7,
+                            Image = "VF6_Tham_cop.png",
+                            IsDeleted = false,
+                            Name = "Thảm cốp 3D VF6",
+                            Price = 990000.0
+                        });
+                });
 
             modelBuilder.Entity("WebAPI.Models.CarColor", b =>
                 {
@@ -299,6 +418,46 @@ namespace WebAPI.Migrations
                         });
                 });
 
+            modelBuilder.Entity("WebAPI.Models.CarDeposit", b =>
+                {
+                    b.Property<Guid>("CarDepsoitId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("Deposit Payment ID");
+
+                    b.Property<string>("Amount")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Amount");
+
+                    b.Property<int>("CarId")
+                        .HasColumnType("int")
+                        .HasColumnName("Car ID");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("Created At");
+
+                    b.Property<string>("OrderInfo")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Order Info");
+
+                    b.Property<string>("TransactionStatus")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Transaction Status");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("User ID");
+
+                    b.HasKey("CarDepsoitId");
+
+                    b.HasIndex("CarId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("CarDeposit");
+                });
+
             modelBuilder.Entity("WebAPI.Models.Cars", b =>
                 {
                     b.Property<int>("Id")
@@ -307,26 +466,6 @@ namespace WebAPI.Migrations
                         .HasColumnName("Car ID");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ColorImage1")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("Color Image 1");
-
-                    b.Property<string>("ColorImage2")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("Color Image 2");
-
-                    b.Property<string>("ColorImage3")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("Color Image 3");
-
-                    b.Property<string>("ColorImage4")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("Color Image 4");
-
-                    b.Property<string>("ColorImage5")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("Color Image 5");
 
                     b.Property<string>("Image")
                         .HasColumnType("nvarchar(max)")
@@ -459,6 +598,104 @@ namespace WebAPI.Migrations
                         });
                 });
 
+            modelBuilder.Entity("WebAPI.Models.Category", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("Category ID");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit")
+                        .HasColumnName("Is Deleted");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Category Name");
+
+                    b.Property<int>("ParentsId")
+                        .HasColumnType("int")
+                        .HasColumnName("Category Parents ID");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Category");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            IsDeleted = false,
+                            Name = "New product",
+                            ParentsId = 0
+                        },
+                        new
+                        {
+                            Id = 2,
+                            IsDeleted = false,
+                            Name = "LifeStyle",
+                            ParentsId = 0
+                        },
+                        new
+                        {
+                            Id = 3,
+                            IsDeleted = false,
+                            Name = "Electric car accessories",
+                            ParentsId = 0
+                        },
+                        new
+                        {
+                            Id = 4,
+                            IsDeleted = false,
+                            Name = "Gasoline car accessories",
+                            ParentsId = 0
+                        },
+                        new
+                        {
+                            Id = 5,
+                            IsDeleted = false,
+                            Name = "Accessories of VF3",
+                            ParentsId = 3
+                        },
+                        new
+                        {
+                            Id = 6,
+                            IsDeleted = false,
+                            Name = "Accessories of VF5",
+                            ParentsId = 3
+                        },
+                        new
+                        {
+                            Id = 7,
+                            IsDeleted = false,
+                            Name = "Accessories of VF6",
+                            ParentsId = 3
+                        },
+                        new
+                        {
+                            Id = 8,
+                            IsDeleted = false,
+                            Name = "Accessories of VF7",
+                            ParentsId = 3
+                        },
+                        new
+                        {
+                            Id = 9,
+                            IsDeleted = false,
+                            Name = "Accessories of VF8",
+                            ParentsId = 3
+                        },
+                        new
+                        {
+                            Id = 10,
+                            IsDeleted = false,
+                            Name = "Accessories of VF9",
+                            ParentsId = 3
+                        });
+                });
+
             modelBuilder.Entity("WebAPI.Models.Roles", b =>
                 {
                     b.Property<int>("RoleId")
@@ -564,8 +801,19 @@ namespace WebAPI.Migrations
                             Password = "e7f5c00bfc7067a49da98fa9b1eacd8d428a4632197edaa84c9dacd40ca35050",
                             Phone = "0987654321",
                             RoleId = 2,
-                            UserName = "user"
+                            UserName = "User A"
                         });
+                });
+
+            modelBuilder.Entity("WebAPI.Models.Accessory", b =>
+                {
+                    b.HasOne("WebAPI.Models.Category", "Category")
+                        .WithMany("Accessories")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
                 });
 
             modelBuilder.Entity("WebAPI.Models.CarColor", b =>
@@ -577,6 +825,25 @@ namespace WebAPI.Migrations
                         .IsRequired();
 
                     b.Navigation("Car");
+                });
+
+            modelBuilder.Entity("WebAPI.Models.CarDeposit", b =>
+                {
+                    b.HasOne("WebAPI.Models.Cars", "Car")
+                        .WithMany("CarDeposits")
+                        .HasForeignKey("CarId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WebAPI.Models.Users", "User")
+                        .WithMany("CarDeposits")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Car");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("WebAPI.Models.Users", b =>
@@ -593,11 +860,23 @@ namespace WebAPI.Migrations
             modelBuilder.Entity("WebAPI.Models.Cars", b =>
                 {
                     b.Navigation("CarColors");
+
+                    b.Navigation("CarDeposits");
+                });
+
+            modelBuilder.Entity("WebAPI.Models.Category", b =>
+                {
+                    b.Navigation("Accessories");
                 });
 
             modelBuilder.Entity("WebAPI.Models.Roles", b =>
                 {
                     b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("WebAPI.Models.Users", b =>
+                {
+                    b.Navigation("CarDeposits");
                 });
 #pragma warning restore 612, 618
         }

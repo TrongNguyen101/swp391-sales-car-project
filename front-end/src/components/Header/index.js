@@ -88,6 +88,9 @@ function HeaderComponent() {
   const handleToDashboard = () => {
     navigate("/dashboard");
   };
+  const handleToTestDrive = () => {
+    navigate("/testdrivegistration");
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("Bearer");
@@ -227,7 +230,7 @@ function HeaderComponent() {
               </Menu>
             </div>
           </div>
-          <Button variant="contained" onClick={handleToHomePage}>
+          <Button variant="contained" onClick={handleToTestDrive}>
             test drive registration
           </Button>
         </div>
