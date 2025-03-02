@@ -33,14 +33,11 @@ namespace WebAPI.DataContext
         /// Gets or sets the Roles DbSet.
         /// </summary>
         public DbSet<Roles> Roles { get; set; }
-
         public DbSet<Cars> Cars { get; set; }
-
         public DbSet<CarColor> CarColor { get; set; }
-
         public DbSet<CarDeposit> CarDeposit { get; set; }
-
         public DbSet<Category> Categories { get; set; }
+        public DbSet<TestDriveRegistration> TestDriveRegistrations { get; set; }
         public DbSet<Accessory> Accessories { get; set; }
         public DbSet<AccessoryImage> AccessoryImages { get; set; }
 

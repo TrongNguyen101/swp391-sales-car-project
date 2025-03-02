@@ -18,6 +18,7 @@ import * as authService from "../../services/AuthService";
 import * as AuthValidator from "../../validation/AuthValidation";
 import * as OTPValidator from "../../validation/OTPValidation";
 
+
 const cx = classNames.bind(styles);
 
 /**
@@ -144,8 +145,8 @@ function LoginPage() {
 
   const handleOtpSubmit = () => {
     const otp = otpValue.join("");
-    const otpError = OTPValidator.validateOtp(otp);
-    if(otpError){
+    const otpError = OTPValidator.validateOTP(otp);
+    if(otpError) {
       setErrorOtp(otpError);
     } else {
       fetchVerifyOTP(otp);
