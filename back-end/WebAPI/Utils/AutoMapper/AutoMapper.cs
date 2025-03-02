@@ -165,5 +165,18 @@ namespace WebAPI.Utils.AutoMapper
         {
             return accessories.Select(accessory => ToAccessoryDTO(accessory)).ToList();
         }
+
+        public static TestDriveRegistration ToTestDriveRegistration(TestDriveRegistrationDTO testDriveDTO)
+{
+            return new TestDriveRegistration
+            {
+                FullName = testDriveDTO.FullName,
+                Phone = testDriveDTO.Phone,
+                Email = testDriveDTO.Email,
+                CarId = testDriveDTO.CarId,
+                Description = testDriveDTO.Description
+            };
+}
+
     }
 }
