@@ -49,5 +49,13 @@ namespace WebAPI.DAO
                 return await context.Accessories.Where(accessory => accessory.CategoryId == categoryId).ToListAsync();
             }
         }
+
+        public async Task<List<AccessoryImage>> GetAccessoryImagesByAccessoryId(int accessoryId)
+        {
+            using (var context = new VinfastContext())
+            {
+                return await context.AccessoryImages.Where(image => image.AccessoryId == accessoryId).ToListAsync();
+            }
+        }
     }
 }

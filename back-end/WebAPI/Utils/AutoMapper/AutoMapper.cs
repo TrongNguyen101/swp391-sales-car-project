@@ -165,5 +165,20 @@ namespace WebAPI.Utils.AutoMapper
         {
             return accessories.Select(accessory => ToAccessoryDTO(accessory)).ToList();
         }
+
+        public static AccessoryImageDTO ToAccessoryImageDTO(AccessoryImage accessoryImage)
+        {
+            return new AccessoryImageDTO
+            {
+                Id = accessoryImage.ColorId,
+                ColorName = accessoryImage.ColorName,
+                ColorImage = accessoryImage.ColorImage
+            };
+        }
+
+        public static List<AccessoryImageDTO> ToAccessoryImageDTOList(List<AccessoryImage> accessoryImage)
+        {
+            return accessoryImage.Select(image => ToAccessoryImageDTO(image)).ToList();
+        }
     }
 }

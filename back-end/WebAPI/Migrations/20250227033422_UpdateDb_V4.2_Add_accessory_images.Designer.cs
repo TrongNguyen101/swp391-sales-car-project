@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebAPI.DataContext;
 
@@ -11,9 +12,11 @@ using WebAPI.DataContext;
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(VinfastContext))]
-    partial class VinfastContextModelSnapshot : ModelSnapshot
+    [Migration("20250227033422_UpdateDb_V4.2_Add_accessory_images")]
+    partial class UpdateDb_V42_Add_accessory_images
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -141,7 +144,7 @@ namespace WebAPI.Migrations
                         });
                 });
 
-            modelBuilder.Entity("WebAPI.Models.AccessoryImage", b =>
+            modelBuilder.Entity("WebAPI.Models.AccessoryColor", b =>
                 {
                     b.Property<int>("ColorId")
                         .ValueGeneratedOnAdd()
@@ -170,7 +173,7 @@ namespace WebAPI.Migrations
 
                     b.HasIndex("AccessoryId");
 
-                    b.ToTable("AccessoryImage");
+                    b.ToTable("AccessoryColor");
 
                     b.HasData(
                         new
@@ -911,10 +914,10 @@ namespace WebAPI.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("WebAPI.Models.AccessoryImage", b =>
+            modelBuilder.Entity("WebAPI.Models.AccessoryColor", b =>
                 {
                     b.HasOne("WebAPI.Models.Accessory", "Accessory")
-                        .WithMany("AccessoryImages")
+                        .WithMany("AccessoryColors")
                         .HasForeignKey("AccessoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -965,7 +968,7 @@ namespace WebAPI.Migrations
 
             modelBuilder.Entity("WebAPI.Models.Accessory", b =>
                 {
-                    b.Navigation("AccessoryImages");
+                    b.Navigation("AccessoryColors");
                 });
 
             modelBuilder.Entity("WebAPI.Models.Cars", b =>
