@@ -57,3 +57,22 @@ export const postRegister = async (fullname, email, password ) => {
     return error.response;
   }
 }
+
+export const postSendOTP = async (email) => {
+  try {
+    const response = await request.post(
+      "api/Auth/SendOTP",
+      {
+        email: email,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response;
+  } catch (error) {
+    return error.response;
+  }
+};

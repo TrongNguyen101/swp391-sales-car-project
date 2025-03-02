@@ -6,7 +6,9 @@ using WebAPI.DTO;
 using Microsoft.AspNetCore.Authorization;
 using WebAPI.Utils.JwtTokenHelper;
 using WebAPI.Models;
-using System.Text.Json;
+using System.Text;
+using System.Net.Mail;
+using System.Net;
 
 namespace WebAPI.Controllers
 {
@@ -14,6 +16,9 @@ namespace WebAPI.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
+        // not done yet
+        private readonly Dictionary<string, OTPCode> otpCodeStorage = new Dictionary<string, OTPCode>();
+
         /// <summary>
         /// Authenticates a user based on the provided login credentials.
         /// </summary>
@@ -147,12 +152,12 @@ namespace WebAPI.Controllers
         /// <item><description>400 Bad Request: If an exception occurs during the process.</description></item>
         /// </list>
         /// </returns>
-        [HttpPost("ChangePassword")]
-        public async Task<IActionResult> ChangePassword(RequestChangePassword RequestChangePassword)
+        [HttpPost("SendOTP")]
+        public async Task<IActionResult> SendOTP([FromBody] RequestForgotPassword request)
         {
             try
             {
-                var user = await UsersDAO.GetInstance().findUserByEmail(RequestChangePassword.Email);
+                var user = await UsersDAO.GetInstance().findUserByEmail(request.Email);
                 if (user == null)
                 {
                     return NotFound(new DataResponse
@@ -162,22 +167,19 @@ namespace WebAPI.Controllers
                         Message = "Email not found",
                     });
                 }
-                if (user.Password != EncyptHelper.Sha256Encrypt(RequestChangePassword.OldPassword))
+                var userDTO = AutoMapper.ToUserDTO(user);
+                var otpCode = GenerateOTP();
+                otpCodeStorage[request.Email] = new OTPCode
                 {
-                    return Unauthorized(new DataResponse
-                    {
-                        StatusCode = 401,
-                        Success = false,
-                        Message = "Old password is incorrect",
-                    });
-                }
-                user.Password = EncyptHelper.Sha256Encrypt(RequestChangePassword.NewPassword);
-                UsersDAO.GetInstance().UpdateUser(user);
+                    OTP = otpCode,
+                    CreateAt = DateTime.UtcNow,
+                };
+                SendEmail(request.Email, otpCode);
                 return Ok(new DataResponse
                 {
                     StatusCode = 200,
                     Success = true,
-                    Message = "Change password successfully",
+                    Message = "Send OTP successfully",
                 });
             }
             catch (Exception e)
@@ -189,6 +191,139 @@ namespace WebAPI.Controllers
                     Message = e.Message,
                 });
             }
+        }
+        [HttpPost("veryfyOTP")]
+        public async Task<IActionResult> VeryfyOTP([FromBody] RequestVerifyOTP request)
+        {
+            try
+            {
+               if (VerifyOTP(request.Email, request.OTP))
+                {
+                    return Ok(new DataResponse
+                    {
+                        StatusCode = 200,
+                        Success = true,
+                        Message = "OTP verified successfully",
+                    });
+                }
+                else
+                {
+                    return BadRequest(new DataResponse
+                    {
+                        StatusCode = 400,
+                        Success = false,
+                        Message = "Invalid or expired OTP",
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new DataResponse
+                {
+                    StatusCode = 400,
+                    Success = false,
+                    Message = ex.Message,
+                });
+            }
+        }
+
+        private string GenerateOTP(int lengthOTP = 6)
+        {
+            var random = new Random();
+            var otp = new StringBuilder();
+            for (int i = 0; i < lengthOTP; i++)
+            {
+                otp.Append(random.Next(0, 9));
+            }
+            return otp.ToString();
+        }
+
+        private void SendEmail(string toEmail, string otp)
+        {
+            var smtpClient = new SmtpClient("smtp.gmail.com")
+            {
+                Port = 587,
+                UseDefaultCredentials = false,
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                Credentials = new NetworkCredential("tronglion9@gmail.com", "zwlh htyu xegp unwd"),
+                EnableSsl = true,
+            };
+
+            var mailMessage = new MailMessage
+            {
+                From = new MailAddress("tronglion9@gmail.com"),
+                Subject = "OTP",
+                Body = $@"
+                <html>
+                 <head>
+                    <style>
+                        body {{
+                            font-family: Arial, sans-serif;
+                            background-color: #f4f4f4;
+                            color: #333333;
+                            margin: 0;
+                            padding: 0;
+                        }}
+                        .container {{
+                            max-width: 600px;
+                            margin: 0 auto;
+                            background: #ffffff;
+                            padding: 20px;
+                            border-radius: 8px;
+                            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                        }}
+                        h1 {{
+                            font-size: 24px;
+                            color: #333333;
+                        }}
+                        p {{
+                            font-size: 16px;
+                            line-height: 1.5;
+                            color: #555555;
+                        }}
+                        strong {{
+                            font-size: 18px;
+                            color: #000000;
+                        }}
+                        .footer {{
+                            margin-top: 20px;
+                            padding-top: 10px;
+                            border-top: 1px solid #dddddd;
+                            font-size: 14px;
+                            color: #777777;
+                        }}
+                        .footer p {{
+                            margin: 5px 0;
+                        }}
+                    </style>
+                </head>
+                <body>
+                    <p>Hi,</p>
+                    <p>We have received a request for an OTP from your account. Please use the OTP below to proceed with verification:</p>
+                    <p>🔑 <strong>Your OTP Code: {otp}</strong></p>
+                    <p>This code is valid for 5 minutes and can only be used once. Do not share this code with anyone.</p>
+                    <p>If you did not request this OTP, please check your account security and contact us for assistance.</p>
+                    <p>📞 Hotline: 1900 23 23 89</p>
+                    <p>📧 Support Email: Suport.Vinfast@gmail.com</p>
+                    <p>Best regards,</p>
+                    <p>VinFast Support Team</p>
+                </body>
+                </html>",
+                IsBodyHtml = true,
+            };
+            mailMessage.To.Add(toEmail);
+            smtpClient.Send(mailMessage);
+        }
+        private bool VerifyOTP(string email, string otp, int otpLifetimeMinutes = 5)
+        {
+            if (otpCodeStorage.TryGetValue(email, out OTPCode otpEntry))
+            {
+                if (otpEntry.OTP == otp && (DateTime.UtcNow - otpEntry.CreateAt).TotalMinutes <= otpLifetimeMinutes)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

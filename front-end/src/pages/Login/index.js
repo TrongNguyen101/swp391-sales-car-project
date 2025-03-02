@@ -7,15 +7,16 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  Slide,
+  TextField,
   Typography,
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-import { forwardRef, useState } from "react";
+import { useRef, useState } from "react";
 import * as authService from "../../services/AuthService";
 import * as AuthValidator from "../../validation/AuthValidation";
+import * as OTPValidator from "../../validation/OTPValidation";
 
 const cx = classNames.bind(styles);
 
@@ -35,6 +36,13 @@ function LoginPage() {
   const [errorPassword, setErrorPassword] = useState("");
   const [message, setMessage] = useState("");
   const [openDialog, setOpenDialog] = useState(false);
+  const [forgotPasswordOpen, setForgotPasswordOpen] = useState(false);
+  const [forgotPasswordEmail, setForgotPasswordEmail] = useState("");
+  const [errorForgotPasswordEmail, setErrorForgotPasswordEmail] = useState("");
+  const [otpDialogOpen, setOtpDialogOpen] = useState(false);
+  const [otpValue, setOtpValue] = useState(new Array(6).fill(""));
+  const [errorOtp, setErrorOtp] = useState("");
+  const otpRefs = useRef([]);
   const navigate = useNavigate();
 
   const handleShowPassword = () => {
@@ -42,10 +50,6 @@ function LoginPage() {
   };
   const handleBackToHome = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-    navigate("/");
-  };
-
-  const handleToFogotPassword = () => {
     navigate("/");
   };
 
@@ -80,6 +84,22 @@ function LoginPage() {
     }
   };
 
+  const fetchSendOTP = async (email) => {
+    try {
+      const response = await authService.postSendOTP(email);
+      if (response.status !== 200) {
+        setErrorForgotPasswordEmail(response.data.message);
+      } else {
+        console.log(response.data);
+        return response.data;
+      }
+    } catch (error) {
+      return error.response;
+    }
+  };
+
+  const fetchVerifyOTP = async (otp) => {};
+
   const handleOnSubmit = (event) => {
     event.preventDefault();
     const emailError = AuthValidator.validateEmail(email);
@@ -100,9 +120,51 @@ function LoginPage() {
     navigate("/");
   };
 
-  const Transition = forwardRef(function Transition(props, ref) {
-    return <Slide direction="down" ref={ref} {...props} />;
-  });
+  const handleForgotPasswordClose = () => {
+    setForgotPasswordOpen(false);
+    setErrorForgotPasswordEmail("");
+    setForgotPasswordEmail("");
+  };
+
+  const handleOtpDialogClose = () => {
+    setOtpDialogOpen(false);
+  };
+
+  const handleOtpChange = (e, index) => {
+    const {value} = e.target;
+    if(/^[0-9]$/.test(value) || value === "") {
+      const newOtpValue = [...otpValue];
+      newOtpValue[index] = value;
+      setOtpValue(newOtpValue);
+    }
+    if(value !==null && index < otpRefs.cunrrent.Length - 1){
+      otpRefs.current[index + 1].focus();
+    }
+  };
+
+  const handleOtpSubmit = () => {
+    const otp = otpValue.join("");
+    const otpError = OTPValidator.validateOtp(otp);
+    if(otpError){
+      setErrorOtp(otpError);
+    } else {
+      fetchVerifyOTP(otp);
+    }
+  };
+
+  const handleToFogotPassword = () => {
+    setForgotPasswordOpen(true);
+  };
+
+  const handleForgotPasswordSubmit = () => {
+    const emailError = AuthValidator.validateEmail(forgotPasswordEmail);
+    if (emailError) {
+      setErrorForgotPasswordEmail(emailError);
+    } else {
+      fetchSendOTP(forgotPasswordEmail);
+      localStorage.setItem("email", forgotPasswordEmail);
+    }
+  };
 
   return (
     <div className={cx("container")}>
@@ -173,7 +235,7 @@ function LoginPage() {
           <div className={cx("register")}>
             <Typography>
               If you don't have an account{" "}
-              <Link to="/register">  
+              <Link to="/register">
                 <Typography
                   variant="span"
                   sx={{ color: "var(--primary-color)", cursor: "pointer" }}
@@ -187,7 +249,6 @@ function LoginPage() {
       </div>
       <Dialog
         open={openDialog}
-        TransitionComponent={Transition}
         keepMounted
         onClose={handleCloseDialog}
         aria-labelledby="alert-dialog-slide-title"
@@ -204,7 +265,12 @@ function LoginPage() {
         </DialogTitle>
         <DialogContent sx={{ textAlign: "center" }}>
           <DialogContentText id="alert-dialog-slide-description">
-            <Typography variant="h6" sx={{ fontSize: "1.2rem", fontWeight: "300", lineHeight: "1.5" }}>You have successfully logged in.</Typography>
+            <Typography
+              variant="h6"
+              sx={{ fontSize: "1.2rem", fontWeight: "300", lineHeight: "1.5" }}
+            >
+              You have successfully logged in.
+            </Typography>
           </DialogContentText>
         </DialogContent>
         <DialogActions sx={{ justifyContent: "center" }}>
@@ -216,6 +282,60 @@ function LoginPage() {
             OK
           </Button>
         </DialogActions>
+      </Dialog>
+      <Dialog
+        open={forgotPasswordOpen}
+        onClose={handleForgotPasswordClose}
+        aria-labelledby="forgot-password-dialog-title"
+        aria-describedby="forgot-password-dialog-description"
+      >
+        <DialogTitle id="forgot-password-dialog-title">
+          Forgot Password
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="forgot-password-dialog-description">
+            To reset your password, please enter your email address.
+          </DialogContentText>
+          <TextField
+            autoFocus={true}
+            margin="dense"
+            id="forgot-password-email"
+            label="Email Address"
+            type="email"
+            fullWidth
+            variant="outlined"
+            value={forgotPasswordEmail}
+            onChange={(e) => {
+              setForgotPasswordEmail(e.target.value);
+              setErrorForgotPasswordEmail("");
+            }}
+            error={!!errorForgotPasswordEmail}
+            helperText={errorForgotPasswordEmail}
+          />
+        </DialogContent>
+        <DialogActions sx={{ justifyContent: "center" }}>
+          <Button
+            onClick={handleForgotPasswordSubmit}
+            color="primary"
+            variant="contained"
+          >
+            Submit
+          </Button>
+          <Button
+            onClick={handleForgotPasswordClose}
+            color="error"
+            variant="outlined"
+          >
+            Cancel
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog 
+      open={otpDialogOpen}
+      >
+        <DialogTitle></DialogTitle>
+        <DialogContent></DialogContent>
+        <DialogActions></DialogActions>
       </Dialog>
     </div>
   );
