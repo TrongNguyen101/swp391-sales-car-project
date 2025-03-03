@@ -16,7 +16,6 @@ namespace WebAPI.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        // not done yet
         private readonly Dictionary<string, OTPCode> otpCodeStorage = new Dictionary<string, OTPCode>();
 
         /// <summary>
@@ -192,18 +191,20 @@ namespace WebAPI.Controllers
                 });
             }
         }
-        [HttpPost("veryfyOTP")]
+        [HttpPost("VeryfyOTP")]
         public async Task<IActionResult> VeryfyOTP([FromBody] RequestVerifyOTP request)
         {
             try
             {
-               if (VerifyOTP(request.Email, request.OTP))
+                var verification = VerifyOTPCode(request.Email, request.OTP);
+               if (verification != "")
                 {
                     return Ok(new DataResponse
                     {
                         StatusCode = 200,
                         Success = true,
                         Message = "OTP verified successfully",
+                        Data = verification
                     });
                 }
                 else
@@ -213,6 +214,7 @@ namespace WebAPI.Controllers
                         StatusCode = 400,
                         Success = false,
                         Message = "Invalid or expired OTP",
+                        Data = verification
                     });
                 }
             }
@@ -314,16 +316,16 @@ namespace WebAPI.Controllers
             mailMessage.To.Add(toEmail);
             smtpClient.Send(mailMessage);
         }
-        private bool VerifyOTP(string email, string otp, int otpLifetimeMinutes = 5)
+        private object VerifyOTPCode(string email, string otp)
         {
-            if (otpCodeStorage.TryGetValue(email, out OTPCode otpEntry))
+            var otpStorage = otpCodeStorage.TryGetValue(email, out OTPCode otpEntry);
+            if (!otpStorage)
             {
-                if (otpEntry.OTP == otp && (DateTime.UtcNow - otpEntry.CreateAt).TotalMinutes <= otpLifetimeMinutes)
-                {
-                    return true;
-                }
+                return otpEntry;
             }
-            return false;
+            Console.Write($"OTP verified: {otpStorage}");
+            otpCodeStorage.Remove(email);
+            return "a";
         }
     }
 }

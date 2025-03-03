@@ -18,7 +18,6 @@ import * as authService from "../../services/AuthService";
 import * as AuthValidator from "../../validation/AuthValidation";
 import * as OTPValidator from "../../validation/OTPValidation";
 
-
 const cx = classNames.bind(styles);
 
 /**
@@ -132,13 +131,13 @@ function LoginPage() {
   };
 
   const handleOtpChange = (e, index) => {
-    const {value} = e.target;
-    if(/^[0-9]$/.test(value) || value === "") {
+    const { value } = e.target;
+    if (/^[0-9]$/.test(value) || value === "") {
       const newOtpValue = [...otpValue];
       newOtpValue[index] = value;
       setOtpValue(newOtpValue);
     }
-    if(value !==null && index < otpRefs.cunrrent.Length - 1){
+    if (value !== null && index < otpRefs.cunrrent.Length - 1) {
       otpRefs.current[index + 1].focus();
     }
   };
@@ -146,10 +145,16 @@ function LoginPage() {
   const handleOtpSubmit = () => {
     const otp = otpValue.join("");
     const otpError = OTPValidator.validateOTP(otp);
-    if(otpError) {
+    if (otpError) {
       setErrorOtp(otpError);
     } else {
       fetchVerifyOTP(otp);
+    }
+  };
+
+  const handleOtpKeyDown = (e, index) => {
+    if (e.key === "Backspace" && otpValue[index]) {
+      otpRefs.current[index].focus();
     }
   };
 
@@ -331,12 +336,46 @@ function LoginPage() {
           </Button>
         </DialogActions>
       </Dialog>
-      <Dialog 
-      open={otpDialogOpen}
+      <Dialog
+        open={otpDialogOpen}
+        onClose={handleOtpDialogClose}
+        aria-labelledby="otp-dialog-title"
+        aria-describedby="otp-dialog-description"
       >
-        <DialogTitle></DialogTitle>
-        <DialogContent></DialogContent>
-        <DialogActions></DialogActions>
+        <DialogTitle id="otp-dilog-title">Enter OTP code</DialogTitle>
+        <DialogContent id="otp-dialog-description">
+          <DialogContentText>
+            Please enter OTP code sent to your email
+          </DialogContentText>
+        </DialogContent>
+        <div className={cx("otp-inputs")}>
+          {otpValue.map((value, index) => (
+            <input
+              key={index}
+              inputRef={(el) => (otpRefs.current[index] = el)}
+              margin="dense"
+              type="text"
+              variant="outlined"
+              value={value}
+              onChange={(e) => handleOtpChange(e, index)}
+              onKeyDown={(e) => handleOtpKeyDown(e, index)}
+              inputProps={{
+                maxLength: 1,
+                style: { textAlign: "center", width: "40px" },
+              }}
+              error={!!errorOtp}
+            />
+          ))}
+        </div>
+        {errorOtp && (
+          <Typography sx={{ color: "red", textAlign: "center" }}>
+            {errorOtp}
+          </Typography>
+        )}
+        <DialogActions sx={{ justifyContent: "center" }}>
+          <Button onClick={handleOtpSubmit}>Submit</Button>
+          <Button onClick={handleOtpDialogClose}>Cancel</Button>
+        </DialogActions>
       </Dialog>
     </div>
   );
