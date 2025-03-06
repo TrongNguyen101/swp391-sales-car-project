@@ -6,9 +6,11 @@ using WebAPI.DTO;
 using Microsoft.AspNetCore.Authorization;
 using WebAPI.Utils.JwtTokenHelper;
 using WebAPI.Models;
-using System.Text;
 using System.Net.Mail;
 using System.Net;
+using System.Collections.Concurrent;
+using System.Security.Cryptography;
+using StackExchange.Redis;
 
 namespace WebAPI.Controllers
 {
@@ -16,7 +18,13 @@ namespace WebAPI.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly Dictionary<string, OTPCode> otpCodeStorage = new Dictionary<string, OTPCode>();
+        private readonly IDatabase _cache;
+
+        public AuthController(IDatabase cache)
+        {
+            _cache = cache;
+        }
+
 
         /// <summary>
         /// Authenticates a user based on the provided login credentials.
@@ -156,6 +164,16 @@ namespace WebAPI.Controllers
         {
             try
             {
+                if (string.IsNullOrEmpty(request.Email))
+                {
+                    return BadRequest(new DataResponse
+                    {
+                        StatusCode = 400,
+                        Success = false,
+                        Message = "Email is required",
+                    });
+                }
+
                 var user = await UsersDAO.GetInstance().findUserByEmail(request.Email);
                 if (user == null)
                 {
@@ -168,12 +186,10 @@ namespace WebAPI.Controllers
                 }
                 var userDTO = AutoMapper.ToUserDTO(user);
                 var otpCode = GenerateOTP();
-                otpCodeStorage[request.Email] = new OTPCode
-                {
-                    OTP = otpCode,
-                    CreateAt = DateTime.UtcNow,
-                };
+                await _cache.StringSetAsync(request.Email, otpCode, TimeSpan.FromMinutes(5));
+
                 SendEmail(request.Email, otpCode);
+
                 return Ok(new DataResponse
                 {
                     StatusCode = 200,
@@ -191,20 +207,39 @@ namespace WebAPI.Controllers
                 });
             }
         }
-        [HttpPost("VeryfyOTP")]
-        public async Task<IActionResult> VeryfyOTP([FromBody] RequestVerifyOTP request)
+
+        private string GenerateOTP()
+        {
+            using var rng = RandomNumberGenerator.Create();
+            byte[] bytes = new byte[6];
+            rng.GetBytes(bytes);
+            int otp = Math.Abs(BitConverter.ToInt32(bytes, 0)) % 1000000;
+            return otp.ToString("D6");
+        }
+
+        [HttpPost("VerifyOTP")]
+        public async Task<IActionResult> VerifyOTP([FromBody] RequestVerifyOTP request)
         {
             try
             {
-                var verification = VerifyOTPCode(request.Email, request.OTP);
-               if (verification != "")
+                if (string.IsNullOrEmpty(request.Email) || string.IsNullOrEmpty(request.OTP))
+                {
+                    return BadRequest(new DataResponse
+                    {
+                        StatusCode = 400,
+                        Success = false,
+                        Message = "Email and OTP are required",
+                    });
+                }
+
+                bool isVerified = await VerifyOTPCode(request.Email, request.OTP);
+                if (isVerified)
                 {
                     return Ok(new DataResponse
                     {
                         StatusCode = 200,
                         Success = true,
                         Message = "OTP verified successfully",
-                        Data = verification
                     });
                 }
                 else
@@ -214,7 +249,6 @@ namespace WebAPI.Controllers
                         StatusCode = 400,
                         Success = false,
                         Message = "Invalid or expired OTP",
-                        Data = verification
                     });
                 }
             }
@@ -229,15 +263,24 @@ namespace WebAPI.Controllers
             }
         }
 
-        private string GenerateOTP(int lengthOTP = 6)
+        private async Task<bool> VerifyOTPCode(string email, string otp)
         {
-            var random = new Random();
-            var otp = new StringBuilder();
-            for (int i = 0; i < lengthOTP; i++)
+            // Check if OTP exists and get remaining TTL
+            TimeSpan? timeToLive = await _cache.KeyTimeToLiveAsync(email);
+
+            if (!timeToLive.HasValue)
             {
-                otp.Append(random.Next(0, 9));
+                return false; // OTP expired or does not exist
             }
-            return otp.ToString();
+
+            string storedOtp = await _cache.StringGetAsync(email);
+            if (storedOtp == otp)
+            {
+                await _cache.KeyDeleteAsync(email); // Delete OTP after successful verification
+                return true; // OTP verified successfully
+            }
+
+            return false; // Invalid OTP
         }
 
         private void SendEmail(string toEmail, string otp)
@@ -316,16 +359,7 @@ namespace WebAPI.Controllers
             mailMessage.To.Add(toEmail);
             smtpClient.Send(mailMessage);
         }
-        private object VerifyOTPCode(string email, string otp)
-        {
-            var otpStorage = otpCodeStorage.TryGetValue(email, out OTPCode otpEntry);
-            if (!otpStorage)
-            {
-                return otpEntry;
-            }
-            Console.Write($"OTP verified: {otpStorage}");
-            otpCodeStorage.Remove(email);
-            return "a";
-        }
+
+
     }
 }

@@ -84,6 +84,18 @@ function LoginPage() {
     }
   };
 
+  const handleForgotPasswordSubmit = () => {
+    const emailError = AuthValidator.validateEmail(forgotPasswordEmail);
+    if (emailError) {
+      setErrorForgotPasswordEmail(emailError);
+    } else {
+      fetchSendOTP(forgotPasswordEmail);
+      localStorage.setItem("email", forgotPasswordEmail);
+      setForgotPasswordOpen(false);
+      setOtpDialogOpen(true);
+    }
+  };
+
   const fetchSendOTP = async (email) => {
     try {
       const response = await authService.postSendOTP(email);
@@ -137,9 +149,11 @@ function LoginPage() {
       newOtpValue[index] = value;
       setOtpValue(newOtpValue);
     }
-    if (value !== null && index < otpRefs.cunrrent.Length - 1) {
-      otpRefs.current[index + 1].focus();
-    }
+    setTimeout(() => {
+      if (value !== "" && index < otpRefs.current.length - 1) {
+        otpRefs.current[index + 1].focus();
+      }
+    }, 0);
   };
 
   const handleOtpSubmit = () => {
@@ -153,8 +167,8 @@ function LoginPage() {
   };
 
   const handleOtpKeyDown = (e, index) => {
-    if (e.key === "Backspace" && otpValue[index]) {
-      otpRefs.current[index].focus();
+    if (e.key === "Backspace" && otpValue[index] === "" && index > 0) {
+      otpRefs.current[index - 1].focus();
     }
   };
 
@@ -162,18 +176,9 @@ function LoginPage() {
     setForgotPasswordOpen(true);
   };
 
-  const handleForgotPasswordSubmit = () => {
-    const emailError = AuthValidator.validateEmail(forgotPasswordEmail);
-    if (emailError) {
-      setErrorForgotPasswordEmail(emailError);
-    } else {
-      fetchSendOTP(forgotPasswordEmail);
-      localStorage.setItem("email", forgotPasswordEmail);
-    }
-  };
-
   return (
     <div className={cx("container")}>
+      {/* Form login */}
       <div className={cx("content")}>
         <form className={cx("form")} onSubmit={handleOnSubmit}>
           <div className={cx("vinfast-logo")}>
@@ -253,6 +258,7 @@ function LoginPage() {
           </div>
         </form>
       </div>
+      {/* Show login successful dialog */}
       <Dialog
         open={openDialog}
         keepMounted
@@ -261,22 +267,23 @@ function LoginPage() {
         aria-describedby="alert-dialog-slide-description"
         sx={{ "& .MuiDialog-paper": { width: "440px", height: "180px" } }}
       >
-        <DialogTitle id="alert-dialog-slide-title" sx={{ textAlign: "center" }}>
-          <Typography
-            variant="h5"
-            sx={{ fontSize: "1.6rem", fontWeight: "500", lineHeight: "1.5" }}
-          >
-            {message}
-          </Typography>
+        <DialogTitle
+          id="alert-dialog-slide-title"
+          sx={{
+            textAlign: "center",
+            fontSize: "1.6rem",
+            fontWeight: "500",
+            lineHeight: "1.5",
+          }}
+        >
+          {message}
         </DialogTitle>
         <DialogContent sx={{ textAlign: "center" }}>
-          <DialogContentText id="alert-dialog-slide-description">
-            <Typography
-              variant="h6"
-              sx={{ fontSize: "1.2rem", fontWeight: "300", lineHeight: "1.5" }}
-            >
-              You have successfully logged in.
-            </Typography>
+          <DialogContentText
+            id="alert-dialog-slide-description"
+            sx={{ fontSize: "1.2rem", fontWeight: "300", lineHeight: "1.5" }}
+          >
+            You have successfully logged in.
           </DialogContentText>
         </DialogContent>
         <DialogActions sx={{ justifyContent: "center" }}>
@@ -289,6 +296,8 @@ function LoginPage() {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* Show forgot password popup */}
       <Dialog
         open={forgotPasswordOpen}
         onClose={handleForgotPasswordClose}
@@ -336,24 +345,32 @@ function LoginPage() {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* Show Enter OTP code popup */}
       <Dialog
         open={otpDialogOpen}
         onClose={handleOtpDialogClose}
         aria-labelledby="otp-dialog-title"
         aria-describedby="otp-dialog-description"
+        sx={{ textAlign: "center" }}
       >
         <DialogTitle id="otp-dilog-title">Enter OTP code</DialogTitle>
-        <DialogContent id="otp-dialog-description">
-          <DialogContentText>
-            Please enter OTP code sent to your email
-          </DialogContentText>
-        </DialogContent>
+        <DialogContentText
+          sx={{
+            fontSize: "1.2rem",
+            fontWeight: "300",
+            width: "400px",
+            height: "50px",
+          }}
+        >
+          Please enter OTP code sent to your email
+        </DialogContentText>
         <div className={cx("otp-inputs")}>
           {otpValue.map((value, index) => (
             <input
               key={index}
-              inputRef={(el) => (otpRefs.current[index] = el)}
-              margin="dense"
+              ref={(el) => (otpRefs.current[index] = el)}
+              margin="10px"
               type="text"
               variant="outlined"
               value={value}
@@ -361,7 +378,6 @@ function LoginPage() {
               onKeyDown={(e) => handleOtpKeyDown(e, index)}
               inputProps={{
                 maxLength: 1,
-                style: { textAlign: "center", width: "40px" },
               }}
               error={!!errorOtp}
             />
@@ -372,9 +388,17 @@ function LoginPage() {
             {errorOtp}
           </Typography>
         )}
-        <DialogActions sx={{ justifyContent: "center" }}>
-          <Button onClick={handleOtpSubmit}>Submit</Button>
-          <Button onClick={handleOtpDialogClose}>Cancel</Button>
+        <DialogActions sx={{ justifyContent: "center", marginBottom: "15px" }}>
+          <Button variant="contained" onClick={handleOtpSubmit}>
+            Submit
+          </Button>
+          <Button
+            color="error"
+            variant="outlined"
+            onClick={handleOtpDialogClose}
+          >
+            Cancel
+          </Button>
         </DialogActions>
       </Dialog>
     </div>
