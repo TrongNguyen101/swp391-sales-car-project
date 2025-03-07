@@ -43,12 +43,25 @@ function LoginPage() {
   const [newPasswordDialogOpen, setNewPasswordDialogOpen] = useState(false);
   const [otpValue, setOtpValue] = useState(new Array(6).fill(""));
   const [errorOtp, setErrorOtp] = useState("");
+
+  const [rePassword, setRePassword] = useState("");
+  const [errorRePassword, setErrorRePassword] = useState("");
+  const [showRePassword, setShowRePassword] = useState(false);
+
+
+
+
   const otpRefs = useRef([]);
   const navigate = useNavigate();
 
   const handleShowPassword = () => {
     setShowPassword(!showPassword);
   };
+
+  const handleShowRePassword = () => {
+    setShowRePassword(!showRePassword);
+  };
+  
   const handleBackToHome = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
     navigate("/");
@@ -85,32 +98,6 @@ function LoginPage() {
     }
   };
 
-  const handleForgotPasswordSubmit = () => {
-    const emailError = AuthValidator.validateEmail(forgotPasswordEmail);
-    if (emailError) {
-      setErrorForgotPasswordEmail(emailError);
-    } else {
-      fetchSendOTP(forgotPasswordEmail);
-      localStorage.setItem("email", forgotPasswordEmail);
-      setForgotPasswordOpen(false);
-      setOtpDialogOpen(true);
-    }
-  };
-
-  const fetchSendOTP = async (email) => {
-    try {
-      const response = await authService.postSendOTP(email);
-      if (response.status !== 200) {
-        setErrorForgotPasswordEmail(response.data.message);
-      } else {
-        console.log(response.data);
-        return response.data;
-      }
-    } catch (error) {
-      return error.response;
-    }
-  };
-
   const handleOnSubmit = (event) => {
     event.preventDefault();
     const emailError = AuthValidator.validateEmail(email);
@@ -124,6 +111,32 @@ function LoginPage() {
       setErrorPassword(passwordError);
     }
     if (!emailError && !passwordError) fetchLogin();
+  };
+
+  const handleForgotPasswordSubmit = () => {
+    const emailError = AuthValidator.validateEmail(forgotPasswordEmail);
+    if (emailError) {
+      setErrorForgotPasswordEmail(emailError);
+    } else {
+      fetchSendOTP(forgotPasswordEmail);
+    }
+  };
+
+  const fetchSendOTP = async (email) => {
+    try {
+      const response = await authService.postSendOTP(email);
+      if (response.status === 200) {
+        localStorage.setItem("email", email);
+        setForgotPasswordOpen(false);
+        setOtpDialogOpen(true);
+        setErrorForgotPasswordEmail("");
+      } else {
+        setErrorForgotPasswordEmail(response.data.message);
+      }
+      return response.data;
+    } catch (error) {
+      return error.response;
+    }
   };
 
   const handleCloseDialog = () => {
@@ -165,7 +178,6 @@ function LoginPage() {
     } else {
       console.log(otp);
       fetchVerifyOTP(otp);
-
     }
   };
 
@@ -175,7 +187,7 @@ function LoginPage() {
         localStorage.getItem("email"),
         otp
       );
-      
+
       if (response.status === 200) {
         setOtpDialogOpen(false);
         setNewPasswordDialogOpen(true);
@@ -198,25 +210,28 @@ function LoginPage() {
 
   const handleOtpPaste = (e) => {
     e.preventDefault(); // Prevent default paste behavior
-  
+
     const pastedText = e.clipboardData.getData("text");
     const cleanText = pastedText.replace(/\D/g, ""); // Remove non-numeric characters
-  
+
     if (!cleanText) return;
-  
+
     const newOtpValue = [...otpValue];
-  
+
     for (let i = 0; i < cleanText.length && i < otpRefs.current.length; i++) {
       newOtpValue[i] = cleanText[i];
     }
-  
+
     setOtpValue(newOtpValue);
-  
+
     // Move focus to the last entered character
     const nextIndex = Math.min(cleanText.length, otpRefs.current.length - 1);
     otpRefs.current[nextIndex]?.focus();
   };
-  
+
+  const handleResetPasswordClose = () => {
+    setNewPasswordDialogOpen(false);
+  };
 
   const handleToFogotPassword = () => {
     setForgotPasswordOpen(true);
@@ -394,57 +409,96 @@ function LoginPage() {
 
       {/* Show reset password popup */}
       <Dialog
-        open={newPasswordDialogOpen}
-        onClose={handleForgotPasswordClose}
+        open="true" //{newPasswordDialogOpen}
         aria-labelledby="forgot-password-dialog-title"
         aria-describedby="forgot-password-dialog-description"
+        sx={{ textAlign: "center" }}
       >
         <DialogTitle id="forgot-password-dialog-title">
           Reset Password
         </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="forgot-password-dialog-description">
+        <DialogContent sx={{ width: "400px" }}>
+          <DialogContentText
+            id="forgot-password-dialog-description"
+            sx={{ fontSize: "1.2rem", fontWeight: "300", marginBottom: "15px" }}
+          >
             Please enter new password.
           </DialogContentText>
-          <TextField
-            autoFocus={true}
-            margin="dense"
-            id="forgot-password-email"
-            label="Email Address"
-            type="email"
-            fullWidth
-            variant="outlined"
-            value={forgotPasswordEmail}
-            onChange={(e) => {
-              setForgotPasswordEmail(e.target.value);
-              setErrorForgotPasswordEmail("");
-            }}
-            error={!!errorForgotPasswordEmail}
-            helperText={errorForgotPasswordEmail}
-          />
+          <form className={cx("form")} onSubmit={handleOnSubmit}>
+            <div className={cx("form-group")}>
+              <div className={cx("field-password")}>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  id="password"
+                  className={!errorPassword ? cx("input") : cx("error-input")}
+                  placeholder="Password"
+                  spellCheck="false"
+                  value={password}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    setErrorPassword("");
+                  }}
+                />
+                {errorRePassword && (
+                  <Typography sx={{ color: "red" }}>{errorPassword}</Typography>
+                )}
+                <div className={cx("icon")}>
+                  <FontAwesomeIcon
+                    onClick={handleShowPassword}
+                    icon={showPassword ? faEyeSlash : faEye}
+                    style={{ cursor: "pointer", color: "#8a8a8a" }}
+                  ></FontAwesomeIcon>
+                </div>
+              </div>
+              <div className={cx("field-password")}>
+                <input
+                  type={showRePassword ? "text" : "password"}
+                  id="re-password"
+                  className={!errorRePassword ? cx("input") : cx("error-input")}
+                  placeholder="Confirm password"
+                  spellCheck="false"
+                  value={rePassword}
+                  onChange={(e) => {
+                    setRePassword(e.target.value);
+                    setErrorRePassword("");
+                  }}
+                />
+                {errorRePassword && (
+                  <Typography sx={{ color: "red" }}>
+                    {errorRePassword}
+                  </Typography>
+                )}
+                <div className={cx("icon")}>
+                  <FontAwesomeIcon
+                    onClick={handleShowRePassword}
+                    icon={showRePassword ? faEyeSlash : faEye}
+                    style={{ cursor: "pointer", color: "#8a8a8a" }}
+                  ></FontAwesomeIcon>
+                </div>
+              </div>
+            </div>
+            <Button
+              onClick={handleForgotPasswordSubmit}
+              color="primary"
+              variant="contained"
+            >
+              Submit
+            </Button>
+            <Button
+              onClick={handleResetPasswordClose}
+              color="error"
+              variant="outlined"
+            >
+              Cancel
+            </Button>
+          </form>
         </DialogContent>
-        <DialogActions sx={{ justifyContent: "center" }}>
-          <Button
-            onClick={handleForgotPasswordSubmit}
-            color="primary"
-            variant="contained"
-          >
-            Submit
-          </Button>
-          <Button
-            onClick={handleForgotPasswordClose}
-            color="error"
-            variant="outlined"
-          >
-            Cancel
-          </Button>
-        </DialogActions>
       </Dialog>
 
       {/* Show Enter OTP code popup */}
       <Dialog
         open={otpDialogOpen}
-       // onClose={handleOtpDialogClose}
+        // onClose={handleOtpDialogClose}
         aria-labelledby="otp-dialog-title"
         aria-describedby="otp-dialog-description"
         sx={{ textAlign: "center" }}
