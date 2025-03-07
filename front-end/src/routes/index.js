@@ -24,6 +24,7 @@ const publicRoutes = [
   { path: "/deposit-response", page: DepositPaymentResponsePage },
   { path: "/dashboard", page: DashBoardPage },
   { path: "/testdrivegistration", page: TestDriveRegistration },
+  { path: "/reset-password", page: TestDriveRegistration },
 
 ];
 

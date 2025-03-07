@@ -40,6 +40,7 @@ function LoginPage() {
   const [forgotPasswordEmail, setForgotPasswordEmail] = useState("");
   const [errorForgotPasswordEmail, setErrorForgotPasswordEmail] = useState("");
   const [otpDialogOpen, setOtpDialogOpen] = useState(false);
+  const [newPasswordDialogOpen, setNewPasswordDialogOpen] = useState(false);
   const [otpValue, setOtpValue] = useState(new Array(6).fill(""));
   const [errorOtp, setErrorOtp] = useState("");
   const otpRefs = useRef([]);
@@ -110,8 +111,6 @@ function LoginPage() {
     }
   };
 
-  const fetchVerifyOTP = async (otp) => {};
-
   const handleOnSubmit = (event) => {
     event.preventDefault();
     const emailError = AuthValidator.validateEmail(email);
@@ -140,6 +139,8 @@ function LoginPage() {
 
   const handleOtpDialogClose = () => {
     setOtpDialogOpen(false);
+    setErrorOtp("");
+    setOtpValue(new Array(6).fill(""));
   };
 
   const handleOtpChange = (e, index) => {
@@ -162,7 +163,30 @@ function LoginPage() {
     if (otpError) {
       setErrorOtp(otpError);
     } else {
+      console.log(otp);
       fetchVerifyOTP(otp);
+
+    }
+  };
+
+  const fetchVerifyOTP = async (otp) => {
+    try {
+      const response = await authService.postVerifyOTP(
+        localStorage.getItem("email"),
+        otp
+      );
+      
+      if (response.status === 200) {
+        setOtpDialogOpen(false);
+        setNewPasswordDialogOpen(true);
+      }
+      if (response.status === 400) {
+        setErrorOtp(response.data.message);
+      }
+    } catch (error) {
+      if (error.response) {
+        console.log(error.response);
+      }
     }
   };
 
@@ -171,6 +195,28 @@ function LoginPage() {
       otpRefs.current[index - 1].focus();
     }
   };
+
+  const handleOtpPaste = (e) => {
+    e.preventDefault(); // Prevent default paste behavior
+  
+    const pastedText = e.clipboardData.getData("text");
+    const cleanText = pastedText.replace(/\D/g, ""); // Remove non-numeric characters
+  
+    if (!cleanText) return;
+  
+    const newOtpValue = [...otpValue];
+  
+    for (let i = 0; i < cleanText.length && i < otpRefs.current.length; i++) {
+      newOtpValue[i] = cleanText[i];
+    }
+  
+    setOtpValue(newOtpValue);
+  
+    // Move focus to the last entered character
+    const nextIndex = Math.min(cleanText.length, otpRefs.current.length - 1);
+    otpRefs.current[nextIndex]?.focus();
+  };
+  
 
   const handleToFogotPassword = () => {
     setForgotPasswordOpen(true);
@@ -346,10 +392,59 @@ function LoginPage() {
         </DialogActions>
       </Dialog>
 
+      {/* Show reset password popup */}
+      <Dialog
+        open={newPasswordDialogOpen}
+        onClose={handleForgotPasswordClose}
+        aria-labelledby="forgot-password-dialog-title"
+        aria-describedby="forgot-password-dialog-description"
+      >
+        <DialogTitle id="forgot-password-dialog-title">
+          Reset Password
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="forgot-password-dialog-description">
+            Please enter new password.
+          </DialogContentText>
+          <TextField
+            autoFocus={true}
+            margin="dense"
+            id="forgot-password-email"
+            label="Email Address"
+            type="email"
+            fullWidth
+            variant="outlined"
+            value={forgotPasswordEmail}
+            onChange={(e) => {
+              setForgotPasswordEmail(e.target.value);
+              setErrorForgotPasswordEmail("");
+            }}
+            error={!!errorForgotPasswordEmail}
+            helperText={errorForgotPasswordEmail}
+          />
+        </DialogContent>
+        <DialogActions sx={{ justifyContent: "center" }}>
+          <Button
+            onClick={handleForgotPasswordSubmit}
+            color="primary"
+            variant="contained"
+          >
+            Submit
+          </Button>
+          <Button
+            onClick={handleForgotPasswordClose}
+            color="error"
+            variant="outlined"
+          >
+            Cancel
+          </Button>
+        </DialogActions>
+      </Dialog>
+
       {/* Show Enter OTP code popup */}
       <Dialog
         open={otpDialogOpen}
-        onClose={handleOtpDialogClose}
+       // onClose={handleOtpDialogClose}
         aria-labelledby="otp-dialog-title"
         aria-describedby="otp-dialog-description"
         sx={{ textAlign: "center" }}
@@ -379,6 +474,7 @@ function LoginPage() {
               inputProps={{
                 maxLength: 1,
               }}
+              onPaste={handleOtpPaste}
               error={!!errorOtp}
             />
           ))}

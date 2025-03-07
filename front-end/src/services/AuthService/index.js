@@ -91,7 +91,7 @@ export const postVerifyOTP = async (email, otp) => {
         },
       }
     );
-    return
+    return response;
   } catch (error) {
     return error.response;
   }

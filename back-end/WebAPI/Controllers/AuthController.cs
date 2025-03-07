@@ -174,6 +174,13 @@ namespace WebAPI.Controllers
                     });
                 }
 
+                string storedOtp = await _cache.StringGetAsync(request.Email);
+
+                if (!string.IsNullOrEmpty(storedOtp))
+                {
+                    await _cache.KeyDeleteAsync(request.Email); // Delete existing OTP before sending a new one
+                }
+
                 var user = await UsersDAO.GetInstance().findUserByEmail(request.Email);
                 if (user == null)
                 {
@@ -185,25 +192,36 @@ namespace WebAPI.Controllers
                     });
                 }
                 var userDTO = AutoMapper.ToUserDTO(user);
+
                 var otpCode = GenerateOTP();
                 await _cache.StringSetAsync(request.Email, otpCode, TimeSpan.FromMinutes(5));
-
-                SendEmail(request.Email, otpCode);
-
-                return Ok(new DataResponse
+                bool isSentEmail = await SendEmail(request.Email, otpCode);
+                if (isSentEmail)
                 {
-                    StatusCode = 200,
-                    Success = true,
-                    Message = "Send OTP successfully",
-                });
+                    return Ok(new DataResponse
+                    {
+                        StatusCode = 200,
+                        Success = true,
+                        Message = "Send OTP successfully",
+                    });
+                }
+                else
+                {
+                    return BadRequest(new DataResponse
+                    {
+                        StatusCode = 400,
+                        Success = false,
+                        Message = "Failed to send OTP. Please try again.",
+                    });
+                }
             }
             catch (Exception e)
             {
                 return BadRequest(new DataResponse
                 {
-                    StatusCode = 400,
+                    StatusCode = 500,
                     Success = false,
-                    Message = e.Message,
+                    Message = "Internal server error. Please contact support.",
                 });
             }
         }
@@ -211,9 +229,9 @@ namespace WebAPI.Controllers
         private string GenerateOTP()
         {
             using var rng = RandomNumberGenerator.Create();
-            byte[] bytes = new byte[6];
+            byte[] bytes = new byte[4];
             rng.GetBytes(bytes);
-            int otp = Math.Abs(BitConverter.ToInt32(bytes, 0)) % 1000000;
+            int otp = (int)(Math.Abs(BitConverter.ToUInt32(bytes, 0)) % 1000000);
             return otp.ToString("D6");
         }
 
@@ -274,31 +292,34 @@ namespace WebAPI.Controllers
             }
 
             string storedOtp = await _cache.StringGetAsync(email);
+
             if (storedOtp == otp)
             {
-                await _cache.KeyDeleteAsync(email); // Delete OTP after successful verification
-                return true; // OTP verified successfully
+                bool deleted = await _cache.KeyDeleteAsync(email); // Delete OTP after successful verification
+                return deleted; // OTP verified successfully
             }
 
             return false; // Invalid OTP
         }
 
-        private void SendEmail(string toEmail, string otp)
+        private async Task<bool> SendEmail(string toEmail, string otp)
         {
-            var smtpClient = new SmtpClient("smtp.gmail.com")
+            try
             {
-                Port = 587,
-                UseDefaultCredentials = false,
-                DeliveryMethod = SmtpDeliveryMethod.Network,
-                Credentials = new NetworkCredential("tronglion9@gmail.com", "zwlh htyu xegp unwd"),
-                EnableSsl = true,
-            };
+                var smtpClient = new SmtpClient("smtp.gmail.com")
+                {
+                    Port = 587,
+                    UseDefaultCredentials = false,
+                    DeliveryMethod = SmtpDeliveryMethod.Network,
+                    Credentials = new NetworkCredential("tronglion9@gmail.com", "zwlh htyu xegp unwd"),
+                    EnableSsl = true,
+                };
 
-            var mailMessage = new MailMessage
-            {
-                From = new MailAddress("tronglion9@gmail.com"),
-                Subject = "OTP",
-                Body = $@"
+                var mailMessage = new MailMessage
+                {
+                    From = new MailAddress("tronglion9@gmail.com"),
+                    Subject = "OTP",
+                    Body = $@"
                 <html>
                  <head>
                     <style>
@@ -354,12 +375,17 @@ namespace WebAPI.Controllers
                     <p>VinFast Support Team</p>
                 </body>
                 </html>",
-                IsBodyHtml = true,
-            };
-            mailMessage.To.Add(toEmail);
-            smtpClient.Send(mailMessage);
+                    IsBodyHtml = true,
+                };
+                mailMessage.To.Add(toEmail);
+
+                await smtpClient.SendMailAsync(mailMessage);
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
         }
-
-
     }
 }
