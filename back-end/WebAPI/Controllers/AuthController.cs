@@ -6,9 +6,11 @@ using WebAPI.DTO;
 using Microsoft.AspNetCore.Authorization;
 using WebAPI.Utils.JwtTokenHelper;
 using WebAPI.Models;
-using System.Text;
 using System.Net.Mail;
 using System.Net;
+using System.Collections.Concurrent;
+using System.Security.Cryptography;
+using StackExchange.Redis;
 
 namespace WebAPI.Controllers
 {
@@ -16,8 +18,13 @@ namespace WebAPI.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        // not done yet
-        private readonly Dictionary<string, OTPCode> otpCodeStorage = new Dictionary<string, OTPCode>();
+        private readonly IDatabase _cache;
+
+        public AuthController(IDatabase cache)
+        {
+            _cache = cache;
+        }
+
 
         /// <summary>
         /// Authenticates a user based on the provided login credentials.
@@ -157,6 +164,23 @@ namespace WebAPI.Controllers
         {
             try
             {
+                if (string.IsNullOrEmpty(request.Email))
+                {
+                    return BadRequest(new DataResponse
+                    {
+                        StatusCode = 400,
+                        Success = false,
+                        Message = "Email is required",
+                    });
+                }
+                // please code again just for runnning
+                string storedOtp = await _cache.StringGetAsync(request.Email);
+
+                if (!string.IsNullOrEmpty(storedOtp))
+                {
+                    await _cache.KeyDeleteAsync(request.Email); // Delete existing OTP before sending a new one
+                }
+
                 var user = await UsersDAO.GetInstance().findUserByEmail(request.Email);
                 if (user == null)
                 {
@@ -168,36 +192,66 @@ namespace WebAPI.Controllers
                     });
                 }
                 var userDTO = AutoMapper.ToUserDTO(user);
+
                 var otpCode = GenerateOTP();
-                otpCodeStorage[request.Email] = new OTPCode
+                await _cache.StringSetAsync(request.Email, otpCode, TimeSpan.FromMinutes(5));
+                bool isSentEmail = await SendEmail(request.Email, otpCode);
+                if (isSentEmail)
                 {
-                    OTP = otpCode,
-                    CreateAt = DateTime.UtcNow,
-                };
-                SendEmail(request.Email, otpCode);
-                return Ok(new DataResponse
+                    return Ok(new DataResponse
+                    {
+                        StatusCode = 200,
+                        Success = true,
+                        Message = "Send OTP successfully",
+                    });
+                }
+                else
                 {
-                    StatusCode = 200,
-                    Success = true,
-                    Message = "Send OTP successfully",
-                });
+                    return BadRequest(new DataResponse
+                    {
+                        StatusCode = 400,
+                        Success = false,
+                        Message = "Failed to send OTP. Please try again.",
+                    });
+                }
             }
             catch (Exception e)
             {
                 return BadRequest(new DataResponse
                 {
-                    StatusCode = 400,
+                    StatusCode = 500,
                     Success = false,
-                    Message = e.Message,
+                    Message = "Internal server error. Please contact support.",
                 });
             }
         }
-        [HttpPost("veryfyOTP")]
-        public async Task<IActionResult> VeryfyOTP([FromBody] RequestVerifyOTP request)
+
+        private string GenerateOTP()
+        {
+            using var rng = RandomNumberGenerator.Create();
+            byte[] bytes = new byte[4];
+            rng.GetBytes(bytes);
+            int otp = (int)(Math.Abs(BitConverter.ToUInt32(bytes, 0)) % 1000000);
+            return otp.ToString("D6");
+        }
+
+        [HttpPost("VerifyOTP")]
+        public async Task<IActionResult> VerifyOTP([FromBody] RequestVerifyOTP request)
         {
             try
             {
-               if (VerifyOTP(request.Email, request.OTP))
+                if (string.IsNullOrEmpty(request.Email) || string.IsNullOrEmpty(request.OTP))
+                {
+                    return BadRequest(new DataResponse
+                    {
+                        StatusCode = 400,
+                        Success = false,
+                        Message = "Email and OTP are required",
+                    });
+                }
+
+                bool isVerified = await VerifyOTPCode(request.Email, request.OTP);
+                if (isVerified)
                 {
                     return Ok(new DataResponse
                     {
@@ -227,33 +281,44 @@ namespace WebAPI.Controllers
             }
         }
 
-        private string GenerateOTP(int lengthOTP = 6)
+        private async Task<bool> VerifyOTPCode(string email, string otp)
         {
-            var random = new Random();
-            var otp = new StringBuilder();
-            for (int i = 0; i < lengthOTP; i++)
+            // Check if OTP exists and get remaining TTL
+            TimeSpan? timeToLive = await _cache.KeyTimeToLiveAsync(email);
+
+            if (!timeToLive.HasValue)
             {
-                otp.Append(random.Next(0, 9));
+                return false; // OTP expired or does not exist
             }
-            return otp.ToString();
+
+            string storedOtp = await _cache.StringGetAsync(email);
+
+            if (storedOtp == otp)
+            {
+                return true; // OTP verified successfully
+            }
+
+            return false; // Invalid OTP
         }
 
-        private void SendEmail(string toEmail, string otp)
+        private async Task<bool> SendEmail(string toEmail, string otp)
         {
-            var smtpClient = new SmtpClient("smtp.gmail.com")
+            try
             {
-                Port = 587,
-                UseDefaultCredentials = false,
-                DeliveryMethod = SmtpDeliveryMethod.Network,
-                Credentials = new NetworkCredential("tronglion9@gmail.com", "zwlh htyu xegp unwd"),
-                EnableSsl = true,
-            };
+                var smtpClient = new SmtpClient("smtp.gmail.com")
+                {
+                    Port = 587,
+                    UseDefaultCredentials = false,
+                    DeliveryMethod = SmtpDeliveryMethod.Network,
+                    Credentials = new NetworkCredential("tronglion9@gmail.com", "zwlh htyu xegp unwd"),
+                    EnableSsl = true,
+                };
 
-            var mailMessage = new MailMessage
-            {
-                From = new MailAddress("tronglion9@gmail.com"),
-                Subject = "OTP",
-                Body = $@"
+                var mailMessage = new MailMessage
+                {
+                    From = new MailAddress("tronglion9@gmail.com"),
+                    Subject = "OTP",
+                    Body = $@"
                 <html>
                  <head>
                     <style>
@@ -309,21 +374,84 @@ namespace WebAPI.Controllers
                     <p>VinFast Support Team</p>
                 </body>
                 </html>",
-                IsBodyHtml = true,
-            };
-            mailMessage.To.Add(toEmail);
-            smtpClient.Send(mailMessage);
-        }
-        private bool VerifyOTP(string email, string otp, int otpLifetimeMinutes = 5)
-        {
-            if (otpCodeStorage.TryGetValue(email, out OTPCode otpEntry))
-            {
-                if (otpEntry.OTP == otp && (DateTime.UtcNow - otpEntry.CreateAt).TotalMinutes <= otpLifetimeMinutes)
-                {
-                    return true;
-                }
+                    IsBodyHtml = true,
+                };
+                mailMessage.To.Add(toEmail);
+
+                await smtpClient.SendMailAsync(mailMessage);
+                return true;
             }
-            return false;
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+
+        [HttpPost("ResetPassword")]
+        public async Task<IActionResult> ResetPassword([FromBody] ChangePasswordRequestDTO request)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(new DataResponse
+                    {
+                        StatusCode = 400,
+                        Success = false,
+                        Message = "Email and new password are required",
+                    });
+                }
+
+                if (request.Password != request.rePassword)
+                {
+                    return BadRequest(new DataResponse
+                    {
+                        StatusCode = 400,
+                        Success = false,
+                        Message = "Passwords do not match",
+                    });
+                }
+
+                if (await VerifyOTPCode(request.Email, request.OTP) == false)
+                {
+                    return BadRequest(new DataResponse
+                    {
+                        StatusCode = 400,
+                        Success = false,
+                        Message = "Invalid or expired OTP",
+                    });
+                }
+
+                if (await UsersDAO.GetInstance().ResetPassword(request))
+                {
+                    return Ok(new DataResponse
+                    {
+                        StatusCode = 200,
+                        Success = true,
+                        Message = "Password changed successfully",
+                    });
+                }
+                else
+                {
+                    return BadRequest(new DataResponse
+                    {
+                        StatusCode = 400,
+                        Success = false,
+                        Message = "Failed to reset password. Please try again.",
+                    });
+                }
+
+
+            }
+            catch (Exception)
+            {
+                return BadRequest(new DataResponse
+                {
+                    StatusCode = 400,
+                    Success = false,
+                    Message = "Internal server error. Please contact support."
+                });
+            }
         }
     }
 }

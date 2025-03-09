@@ -204,7 +204,7 @@ a {
 // The 'user-select: none;' property ensures that the text within the element cannot be selected by the user.
 .register {
   user-select: none;
-  a{
+  a {
     text-decoration-color: var(--primary-color);
     color: var(--primary-color);
   }
@@ -220,5 +220,16 @@ a {
 
   &:focus {
     border-color: var(--primary-color);
+  }
+}
+
+.otp-inputs {
+  padding-bottom: 10px;
+  input {
+    outline-color: var(--primary-color);
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    margin: 5px;
   }
 }

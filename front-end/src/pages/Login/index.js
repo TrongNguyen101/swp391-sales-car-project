@@ -18,7 +18,6 @@ import * as authService from "../../services/AuthService";
 import * as AuthValidator from "../../validation/AuthValidation";
 import * as OTPValidator from "../../validation/OTPValidation";
 
-
 const cx = classNames.bind(styles);
 
 /**
@@ -41,14 +40,25 @@ function LoginPage() {
   const [forgotPasswordEmail, setForgotPasswordEmail] = useState("");
   const [errorForgotPasswordEmail, setErrorForgotPasswordEmail] = useState("");
   const [otpDialogOpen, setOtpDialogOpen] = useState(false);
+  const [newPasswordDialogOpen, setNewPasswordDialogOpen] = useState(false);
   const [otpValue, setOtpValue] = useState(new Array(6).fill(""));
   const [errorOtp, setErrorOtp] = useState("");
+  const [navigateTo, setNavigateTo] = useState("");
+
+  const [newPassword, setNewPassword] = useState("");
+  const [errorNewPassword, setErrorNewPassword] = useState("");
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [reNewPassword, setReNewPassword] = useState("");
+  const [errorReNewPassword, setErrorReNewPassword] = useState("");
+  const [showReNewPassword, setShowReNewPassword] = useState(false);
+
   const otpRefs = useRef([]);
   const navigate = useNavigate();
 
   const handleShowPassword = () => {
     setShowPassword(!showPassword);
   };
+
   const handleBackToHome = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
     navigate("/");
@@ -67,6 +77,7 @@ function LoginPage() {
       if (response.status === 200) {
         localStorage.setItem("Bearer", response.data.data.token);
         setMessage(response.data.message);
+        setNavigateTo("/");
         setOpenDialog(true);
       }
       if (response.status === 404) {
@@ -85,23 +96,7 @@ function LoginPage() {
     }
   };
 
-  const fetchSendOTP = async (email) => {
-    try {
-      const response = await authService.postSendOTP(email);
-      if (response.status !== 200) {
-        setErrorForgotPasswordEmail(response.data.message);
-      } else {
-        console.log(response.data);
-        return response.data;
-      }
-    } catch (error) {
-      return error.response;
-    }
-  };
-
-  const fetchVerifyOTP = async (otp) => {};
-
-  const handleOnSubmit = (event) => {
+  const handleOnLogin = (event) => {
     event.preventDefault();
     const emailError = AuthValidator.validateEmail(email);
     const passwordError = AuthValidator.validatePassword(password);
@@ -116,9 +111,36 @@ function LoginPage() {
     if (!emailError && !passwordError) fetchLogin();
   };
 
-  const handleCloseDialog = () => {
+  const handleForgotPasswordSubmit = () => {
+    const emailError = AuthValidator.validateEmail(forgotPasswordEmail);
+    if (emailError) {
+      setErrorForgotPasswordEmail(emailError);
+    } else {
+      fetchSendOTP(forgotPasswordEmail);
+    }
+  };
+
+  const fetchSendOTP = async (email) => {
+    try {
+      const response = await authService.postSendOTP(email);
+      if (response.status === 200) {
+        localStorage.setItem("email", email);
+        setForgotPasswordOpen(false);
+        setOtpDialogOpen(true);
+        setErrorForgotPasswordEmail("");
+      } else {
+        setErrorForgotPasswordEmail(response.data.message);
+      }
+      return response.data;
+    } catch (error) {
+      return error.response;
+    }
+  };
+
+  const handleCloseDialog = ( ) => {
     setOpenDialog(false);
-    navigate("/");
+    navigate(navigateTo);
+    setNavigateTo("");
   };
 
   const handleForgotPasswordClose = () => {
@@ -129,48 +151,145 @@ function LoginPage() {
 
   const handleOtpDialogClose = () => {
     setOtpDialogOpen(false);
+    setErrorOtp("");
+    setOtpValue(new Array(6).fill(""));
   };
 
   const handleOtpChange = (e, index) => {
-    const {value} = e.target;
-    if(/^[0-9]$/.test(value) || value === "") {
+    const { value } = e.target;
+    if (/^[0-9]$/.test(value) || value === "") {
       const newOtpValue = [...otpValue];
       newOtpValue[index] = value;
       setOtpValue(newOtpValue);
     }
-    if(value !==null && index < otpRefs.cunrrent.Length - 1){
-      otpRefs.current[index + 1].focus();
-    }
+    setTimeout(() => {
+      if (value !== "" && index < otpRefs.current.length - 1) {
+        otpRefs.current[index + 1].focus();
+      }
+    }, 0);
   };
 
   const handleOtpSubmit = () => {
     const otp = otpValue.join("");
     const otpError = OTPValidator.validateOTP(otp);
-    if(otpError) {
+    if (otpError) {
       setErrorOtp(otpError);
     } else {
       fetchVerifyOTP(otp);
     }
   };
 
+  const fetchVerifyOTP = async (otp) => {
+    try {
+      const response = await authService.postVerifyOTP(
+        localStorage.getItem("email"),
+        otp
+      );
+
+      if (response.status === 200) {
+        setOtpDialogOpen(false);
+        setNewPasswordDialogOpen(true);
+        setErrorOtp("");
+      }
+      if (response.status === 400) {
+        setErrorOtp(response.data.message);
+      }
+    } catch (error) {
+      if (error.response) {
+        console.log(error.response);
+      }
+    }
+  };
+
+  const handleOtpKeyDown = (e, index) => {
+    if (e.key === "Backspace" && otpValue[index] === "" && index > 0) {
+      otpRefs.current[index - 1].focus();
+    }
+  };
+
+  const handleOtpPaste = (e) => {
+    e.preventDefault(); // Prevent default paste behavior
+
+    const pastedText = e.clipboardData.getData("text");
+    const cleanText = pastedText.replace(/\D/g, ""); // Remove non-numeric characters
+
+    if (!cleanText) return;
+
+    const newOtpValue = [...otpValue];
+
+    for (let i = 0; i < cleanText.length && i < otpRefs.current.length; i++) {
+      newOtpValue[i] = cleanText[i];
+    }
+
+    setOtpValue(newOtpValue);
+
+    // Move focus to the last entered character
+    const nextIndex = Math.min(cleanText.length, otpRefs.current.length - 1);
+    otpRefs.current[nextIndex]?.focus();
+  };
+
+  const handleShowNewPassword = () => {
+    setShowNewPassword(!showNewPassword);
+  };
+
+  const handleShowReNewPassword = () => {
+    setShowReNewPassword(!showReNewPassword);
+  };
+
+  // Reset password
+  const handleResetPasswordSubmit = (event) => {
+    event.preventDefault();
+    const newPasswordError = AuthValidator.validatePassword(newPassword);
+    const reNewPasswordError = AuthValidator.validateConfirmPassword(
+      newPassword,
+      reNewPassword
+    );
+
+    if (newPasswordError) {
+      setErrorNewPassword(newPasswordError);
+    }
+
+    if (reNewPasswordError) {
+      setErrorReNewPassword(reNewPasswordError);
+    }
+    if (!reNewPasswordError && !newPasswordError) fetchResetPassword();
+  };
+
+  const fetchResetPassword = async () => {
+    try {
+      const response = await authService.postResetPassword(
+        localStorage.getItem("email"),
+        newPassword,
+        reNewPassword,
+        otpValue.join("")
+      );
+      if (response.status === 200) {
+        setNewPasswordDialogOpen(false);
+        setMessage(response.data.message);
+        setOpenDialog(true);
+        setNavigateTo("/login");
+      }
+      if (response.status === 400) {
+        setErrorNewPassword(response.data.message);
+      }
+    } catch (error) {
+      console.log(error.response);
+    }
+  };
+
+  const handleResetPasswordClose = () => {
+    setNewPasswordDialogOpen(false);
+  };
+
   const handleToFogotPassword = () => {
     setForgotPasswordOpen(true);
   };
 
-  const handleForgotPasswordSubmit = () => {
-    const emailError = AuthValidator.validateEmail(forgotPasswordEmail);
-    if (emailError) {
-      setErrorForgotPasswordEmail(emailError);
-    } else {
-      fetchSendOTP(forgotPasswordEmail);
-      localStorage.setItem("email", forgotPasswordEmail);
-    }
-  };
-
   return (
     <div className={cx("container")}>
+      {/* Form login */}
       <div className={cx("content")}>
-        <form className={cx("form")} onSubmit={handleOnSubmit}>
+        <form className={cx("form")} onSubmit={handleOnLogin}>
           <div className={cx("vinfast-logo")}>
             <div className={cx("logo-image")} onClick={handleBackToHome}>
               <img src="./logoJPG-removebg-preview.png" alt="vinfast-logo" />
@@ -248,32 +367,26 @@ function LoginPage() {
           </div>
         </form>
       </div>
+      {/* Show login successful dialog */}
       <Dialog
         open={openDialog}
         keepMounted
         onClose={handleCloseDialog}
         aria-labelledby="alert-dialog-slide-title"
         aria-describedby="alert-dialog-slide-description"
-        sx={{ "& .MuiDialog-paper": { width: "440px", height: "180px" } }}
+        sx={{ "& .MuiDialog-paper": { width: "440px", height: "140px" } }}
       >
-        <DialogTitle id="alert-dialog-slide-title" sx={{ textAlign: "center" }}>
-          <Typography
-            variant="h5"
-            sx={{ fontSize: "1.6rem", fontWeight: "500", lineHeight: "1.5" }}
-          >
-            {message}
-          </Typography>
+        <DialogTitle
+          id="alert-dialog-slide-title"
+          sx={{
+            textAlign: "center",
+            fontSize: "1.6rem",
+            fontWeight: "500",
+            lineHeight: "1.5",
+          }}
+        >
+          {message}
         </DialogTitle>
-        <DialogContent sx={{ textAlign: "center" }}>
-          <DialogContentText id="alert-dialog-slide-description">
-            <Typography
-              variant="h6"
-              sx={{ fontSize: "1.2rem", fontWeight: "300", lineHeight: "1.5" }}
-            >
-              You have successfully logged in.
-            </Typography>
-          </DialogContentText>
-        </DialogContent>
         <DialogActions sx={{ justifyContent: "center" }}>
           <Button
             variant="contained"
@@ -284,6 +397,8 @@ function LoginPage() {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* Show forgot password popup */}
       <Dialog
         open={forgotPasswordOpen}
         onClose={handleForgotPasswordClose}
@@ -331,12 +446,154 @@ function LoginPage() {
           </Button>
         </DialogActions>
       </Dialog>
-      <Dialog 
-      open={otpDialogOpen}
+
+      {/* Show reset password popup */}
+      <Dialog
+        open={newPasswordDialogOpen}
+        aria-labelledby="forgot-password-dialog-title"
+        aria-describedby="forgot-password-dialog-description"
       >
-        <DialogTitle></DialogTitle>
-        <DialogContent></DialogContent>
-        <DialogActions></DialogActions>
+        <DialogTitle id="forgot-password-dialog-title" sx={{ textAlign: "center" }}>
+          Reset Password
+        </DialogTitle>
+        <DialogContent sx={{ width: "400px" }}>
+          <DialogContentText
+            id="forgot-password-dialog-description"
+            sx={{ fontSize: "1.2rem", fontWeight: "300", marginBottom: "15px", textAlign: "center" }}
+          >
+            Please enter new password.
+          </DialogContentText>
+          <form className={cx("form")} onSubmit={handleResetPasswordSubmit}>
+            <div className={cx("form-group")}>
+              <div className={cx("field-password")}>
+                <input
+                  type={showNewPassword ? "text" : "password"}
+                  id="password"
+                  className={
+                    !errorNewPassword ? cx("input") : cx("error-input")
+                  }
+                  placeholder="Password"
+                  spellCheck="false"
+                  value={newPassword}
+                  onChange={(e) => {
+                    setNewPassword(e.target.value);
+                    setErrorNewPassword("");
+                  }}
+                />
+                {errorNewPassword && (
+                  <Typography sx={{ color: "red" }}>
+                    {errorNewPassword}
+                  </Typography>
+                )}
+                <div className={cx("icon")}>
+                  <FontAwesomeIcon
+                    onClick={handleShowNewPassword}
+                    icon={showNewPassword ? faEyeSlash : faEye}
+                    style={{ cursor: "pointer", color: "#8a8a8a" }}
+                  ></FontAwesomeIcon>
+                </div>
+              </div>
+              <div className={cx("field-password")}>
+                <input
+                  type={showReNewPassword ? "text" : "password"}
+                  id="re-password"
+                  className={
+                    !errorReNewPassword ? cx("input") : cx("error-input")
+                  }
+                  placeholder="Confirm password"
+                  spellCheck="false"
+                  value={reNewPassword}
+                  onChange={(e) => {
+                    setReNewPassword(e.target.value);
+                    setErrorReNewPassword("");
+                  }}
+                />
+                {errorReNewPassword && (
+                  <Typography sx={{ color: "red" }}>
+                    {errorReNewPassword}
+                  </Typography>
+                )}
+                <div className={cx("icon")}>
+                  <FontAwesomeIcon
+                    onClick={handleShowReNewPassword}
+                    icon={showReNewPassword ? faEyeSlash : faEye}
+                    style={{ cursor: "pointer", color: "#8a8a8a" }}
+                  ></FontAwesomeIcon>
+                </div>
+              </div>
+            </div>
+            <Button
+              onClick={handleResetPasswordSubmit}
+              color="primary"
+              variant="contained"
+            >
+              Submit
+            </Button>
+            <Button
+              onClick={handleResetPasswordClose}
+              color="error"
+              variant="outlined"
+            >
+              Cancel
+            </Button>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Show Enter OTP code popup */}
+      <Dialog
+        open={otpDialogOpen}
+        aria-labelledby="otp-dialog-title"
+        aria-describedby="otp-dialog-description"
+        sx={{ textAlign: "center" }}
+      >
+        <DialogTitle id="otp-dilog-title">Enter OTP code</DialogTitle>
+        <DialogContentText
+          sx={{
+            fontSize: "1.2rem",
+            fontWeight: "300",
+            width: "400px",
+            height: "50px",
+          }}
+        >
+          Please enter OTP code sent to your email
+        </DialogContentText>
+        <div className={cx("otp-inputs")}>
+          {otpValue.map((value, index) => (
+            <input
+              key={index}
+              ref={(el) => (otpRefs.current[index] = el)}
+              margin="10px"
+              type="text"
+              variant="outlined"
+              value={value}
+              onChange={(e) => handleOtpChange(e, index)}
+              onKeyDown={(e) => handleOtpKeyDown(e, index)}
+              inputProps={{
+                maxLength: 1,
+              }}
+              onPaste={handleOtpPaste}
+              error={!!errorOtp}
+            />
+          ))}
+        </div>
+        {errorOtp && (
+          <Typography sx={{ color: "red", textAlign: "center" }}>
+            {errorOtp}
+          </Typography>
+        )}
+        <DialogActions sx={{ justifyContent: "center", marginBottom: "15px" }}>
+          <Button variant="contained" onClick={handleOtpSubmit}>
+            Submit
+          </Button>
+          <Button
+            color="error"
+            variant="outlined"
+            onClick={handleOtpDialogClose}
+          >
+            Cancel
+          </Button>
+        </DialogActions>
       </Dialog>
     </div>
   );

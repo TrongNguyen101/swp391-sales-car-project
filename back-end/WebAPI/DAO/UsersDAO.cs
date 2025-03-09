@@ -1,6 +1,8 @@
 using WebAPI.DataContext;
 using WebAPI.Models;
 using Microsoft.EntityFrameworkCore;
+using WebAPI.DTO;
+using WebAPI.Utils.EncyptHelper;
 
 namespace WebAPI.DAO
 {
@@ -83,6 +85,23 @@ namespace WebAPI.DAO
                 user.IsDeleted = true;
                 context.Users.Update(user);
                 context.SaveChanges();
+            }
+        }
+
+        public async Task<bool> ResetPassword(ChangePasswordRequestDTO request)
+        {
+            using (var context = new VinfastContext())
+            {
+                var user = await context.Users.Where(u => u.Email == request.Email).FirstOrDefaultAsync();
+                if (user == null)
+                {
+                    return false;
+                }
+                user.Password = EncyptHelper.Sha256Encrypt(request.Password);
+                context.Entry(user).Property(u => u.Password).IsModified = true; // Only update password
+                context.SaveChanges();
+
+                return true;
             }
         }
     }
