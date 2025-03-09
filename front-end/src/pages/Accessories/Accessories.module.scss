@@ -1,24 +1,21 @@
 .wrapper {
-  //width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-.container {
-  width: var(--default-width);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  width: 100%;
 }
 
-.container__category {
-  display: flex;
-  width: 1390px;
+.wrapper__line {
+  width: 100%;
+  height: 100px;
+  position: fixed;
+  border-top: solid 1px rgb(204, 200, 200);
+}
+
+.container {
   margin: 0 auto;
-  justify-content: space-between;
+  width: 1400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .container__sidebar {
@@ -30,7 +27,8 @@
 
 .container__banner {
   padding: 0 15px;
-  width: 1042.5px;
+  width: 1390px;
+
   height: 569px;
   img {
     width: 100%;
@@ -50,7 +48,7 @@
 .page-title {
   font-size: 2rem;
   font-weight: 700;
-  margin-bottom: 40px;
+  margin: 40px 0;
 }
 
 .container__list-accessories {
@@ -58,6 +56,49 @@
   padding: 0 15px;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
+  justify-content: center;
+  gap: 0px;
+}
+
+.container__accessories {
+  width: 1042px;
+}
+
+.container__accessories--top {
+  padding: 0 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.container__accessories--search {
+  width: 317.5px;
+  input {
+    width: 100%;
+    height: 40px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    padding: 0 10px;
+    outline: none;
+  }
+}
+
+.container__accessories--cart {
+  width: 80px;
+  height: 40px;
+  padding: 0 15px;
+  font-size: 18px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container__accessories--list {
+  width: 100%;
+  padding: 0 15px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   justify-content: center;
   gap: 0px;
 }
@@ -111,6 +152,11 @@
       gap: 10px;
     }
   }
+}
+
+.wrapper__line-bottom {
+  width: 100%;
+  border-top: solid 1px rgb(204, 200, 200);
 }
 
 @media only screen and (max-width: 100em) {
