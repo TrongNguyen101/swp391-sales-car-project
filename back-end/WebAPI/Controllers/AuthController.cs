@@ -173,7 +173,7 @@ namespace WebAPI.Controllers
                         Message = "Email is required",
                     });
                 }
-
+                // please code again just for runnning
                 string storedOtp = await _cache.StringGetAsync(request.Email);
 
                 if (!string.IsNullOrEmpty(storedOtp))
@@ -295,8 +295,7 @@ namespace WebAPI.Controllers
 
             if (storedOtp == otp)
             {
-                bool deleted = await _cache.KeyDeleteAsync(email); // Delete OTP after successful verification
-                return deleted; // OTP verified successfully
+                return true; // OTP verified successfully
             }
 
             return false; // Invalid OTP
@@ -385,6 +384,73 @@ namespace WebAPI.Controllers
             catch (Exception e)
             {
                 return false;
+            }
+        }
+
+        [HttpPost("ResetPassword")]
+        public async Task<IActionResult> ResetPassword([FromBody] ChangePasswordRequestDTO request)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(new DataResponse
+                    {
+                        StatusCode = 400,
+                        Success = false,
+                        Message = "Email and new password are required",
+                    });
+                }
+
+                if (request.Password != request.rePassword)
+                {
+                    return BadRequest(new DataResponse
+                    {
+                        StatusCode = 400,
+                        Success = false,
+                        Message = "Passwords do not match",
+                    });
+                }
+
+                if (await VerifyOTPCode(request.Email, request.OTP) == false)
+                {
+                    return BadRequest(new DataResponse
+                    {
+                        StatusCode = 400,
+                        Success = false,
+                        Message = "Invalid or expired OTP",
+                    });
+                }
+
+                if (await UsersDAO.GetInstance().ResetPassword(request))
+                {
+                    return Ok(new DataResponse
+                    {
+                        StatusCode = 200,
+                        Success = true,
+                        Message = "Password changed successfully",
+                    });
+                }
+                else
+                {
+                    return BadRequest(new DataResponse
+                    {
+                        StatusCode = 400,
+                        Success = false,
+                        Message = "Failed to reset password. Please try again.",
+                    });
+                }
+
+
+            }
+            catch (Exception)
+            {
+                return BadRequest(new DataResponse
+                {
+                    StatusCode = 400,
+                    Success = false,
+                    Message = "Internal server error. Please contact support."
+                });
             }
         }
     }

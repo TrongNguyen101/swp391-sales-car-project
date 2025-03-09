@@ -96,3 +96,26 @@ export const postVerifyOTP = async (email, otp) => {
     return error.response;
   }
 };
+
+export const postResetPassword = async (email, newPassword, rePassword, OTPCode) => {
+  try {
+    const response = await request.post(
+      "api/Auth/ResetPassword",
+      {
+        Email: email,
+        Password: newPassword,
+        rePassword: rePassword,
+        OTP: OTPCode,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response;
+  } catch (error) {
+    return error.response;
+  }
+
+};
