@@ -29,6 +29,17 @@ export const getAccessoriesByCategoryId = async (categoryId) => {
   }
 };
 
+export const getAccessoryById = async (accessoryId) => {
+  try {
+    const response = await request.get(
+      `/api/Accessories/${accessoryId}`
+    );
+    return response.data;
+  } catch (error) {
+    return error.response;
+  }
+};
+
 export const getAccessoryImagesByAccessoryId = async (categoryId) => {
   try {
     const response = await request.get(`/api/Accessories/image/${categoryId}`);

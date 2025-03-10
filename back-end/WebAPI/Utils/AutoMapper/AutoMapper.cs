@@ -157,7 +157,16 @@ namespace WebAPI.Utils.AutoMapper
                 Name = accessory.Name,
                 Image = accessory.Image,
                 Price = accessory.Price,
-                CategoryId = accessory.CategoryId
+                Quantity = accessory.Quantity,
+                Description = accessory.Description,
+                IsDeleted = accessory.IsDeleted,
+                CategoryId = accessory.CategoryId,
+                Origin = accessory.Origin,
+                Dimensions = accessory.Dimensions,
+                Weight = accessory.Weight,
+                Material = accessory.Material,
+                Color = accessory.Color,
+                Warranty = accessory.Warranty
             };
         }
 
@@ -177,7 +186,7 @@ namespace WebAPI.Utils.AutoMapper
                 Description = testDriveDTO.Description
             };
         }
-      
+
         public static AccessoryImageDTO ToAccessoryImageDTO(AccessoryImage accessoryImage)
         {
             return new AccessoryImageDTO
@@ -191,6 +200,25 @@ namespace WebAPI.Utils.AutoMapper
         public static List<AccessoryImageDTO> ToAccessoryImageDTOList(List<AccessoryImage> accessoryImage)
         {
             return accessoryImage.Select(image => ToAccessoryImageDTO(image)).ToList();
+        }
+
+        public static CartItemDTO ToCartItemDTO(CartItem cartItem)
+        {
+            return new CartItemDTO
+            {
+                Id = cartItem.Id,
+                ProductId = cartItem.ProductId,
+                ProductName = cartItem.ProductName,
+                Price = cartItem.Price,
+                Quantity = cartItem.Quantity,
+                ImageUrl = cartItem.ImageUrl,
+                UserId = cartItem.UserId
+            };
+        }
+
+        public static List<CartItemDTO> ToCartItemDTOList(List<CartItem> cartItems)
+        {
+            return cartItems.Select(cartItem => ToCartItemDTO(cartItem)).ToList();
         }
 
     }
