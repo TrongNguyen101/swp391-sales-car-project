@@ -40,7 +40,7 @@ namespace WebAPI.DataContext
         public DbSet<TestDriveRegistration> TestDriveRegistrations { get; set; }
         public DbSet<Accessory> Accessories { get; set; }
         public DbSet<AccessoryImage> AccessoryImages { get; set; }
-
+        public DbSet<CartItem> CartItems { get; set; }
 
 
         /// <summary>
@@ -533,81 +533,153 @@ namespace WebAPI.DataContext
                         Id = 1,
                         Name = "VinFast Home Charger",
                         Price = 6000000,
+                        Quantity = 10,
                         Image = "Sac_tai_nha.png",
                         CategoryId = 5,
-                        IsDeleted = false
+                        IsDeleted = false,
+                        Origin = "Vietnam",
+                        Dimensions = "30x20x10 cm",
+                        Weight = 2.5,
+                        Material = "Plastic",
+                        Color = "White",
+                        Warranty = "1 year",
+                        Description = "A convenient home charger for your VinFast electric vehicle."
                     },
                     new Accessory
                     {
                         Id = 2,
                         Name = "Thảm nhựa VF3",
                         Price = 1668000,
+                        Quantity = 10,
                         Image = "VF3_tham_nhua.png",
                         CategoryId = 5,
-                        IsDeleted = false
+                        IsDeleted = false,
+                        Origin = "Vietnam",
+                        Dimensions = "50x40x5 cm",
+                        Weight = 1.2,
+                        Material = "Rubber",
+                        Color = "Black",
+                        Warranty = "6 months",
+                        Description = "Durable rubber floor mats for the VinFast VF3."
                     },
                     new Accessory
                     {
                         Id = 3,
                         Name = "Camera Lùi VF3",
                         Price = 26720000,
+                        Quantity = 10,
                         Image = "VF3_Camera_lui.png",
                         CategoryId = 5,
-                        IsDeleted = false
+                        IsDeleted = false,
+                        Origin = "Japan",
+                        Dimensions = "10x5x5 cm",
+                        Weight = 0.3,
+                        Material = "Metal",
+                        Color = "Black",
+                        Warranty = "2 years",
+                        Description = "High-quality rearview camera for the VinFast VF3."
                     },
                     new Accessory
                     {
                         Id = 4,
                         Name = "Thảm nhựa VF5",
                         Price = 1969000,
+                        Quantity = 10,
                         Image = "VF5_tham_nhua.png",
                         CategoryId = 6,
-                        IsDeleted = false
+                        IsDeleted = false,
+                        Origin = "Vietnam",
+                        Dimensions = "50x40x5 cm",
+                        Weight = 1.2,
+                        Material = "Rubber",
+                        Color = "Black",
+                        Warranty = "6 months",
+                        Description = "Durable rubber floor mats for the VinFast VF5."
                     },
                     new Accessory
                     {
                         Id = 5,
                         Name = "Gói Dán Film Cách Nhiệt VinFast VF5",
                         Price = 5500000,
+                        Quantity = 10,
                         Image = "VF5_Goi_dan_phim_cach_nhiet.png",
                         CategoryId = 6,
-                        IsDeleted = false
+                        IsDeleted = false,
+                        Origin = "Vietnam",
+                        Dimensions = "100x50x0.1 cm",
+                        Weight = 0.5,
+                        Material = "Film",
+                        Color = "Transparent",
+                        Warranty = "1 year",
+                        Description = "Heat-resistant film package for the VinFast VF5."
                     },
                     new Accessory
                     {
                         Id = 6,
                         Name = "Thảm cốp 3D VF5",
                         Price = 990000,
+                        Quantity = 10,
                         Image = "VF5_Tham_cop.png",
                         CategoryId = 6,
-                        IsDeleted = false
+                        IsDeleted = false,
+                        Origin = "Vietnam",
+                        Dimensions = "100x80x5 cm",
+                        Weight = 2.0,
+                        Material = "Rubber",
+                        Color = "Black",
+                        Warranty = "6 months",
+                        Description = "3D trunk mat for the VinFast VF5."
                     },
                     new Accessory
                     {
                         Id = 7,
                         Name = "Gói dán film cách nhiệt VF6",
                         Price = 5500000,
+                        Quantity = 10,
                         Image = "VF6_Goi_dan_phim_cach_nhiet.png",
                         CategoryId = 7,
-                        IsDeleted = false
+                        IsDeleted = false,
+                        Origin = "Vietnam",
+                        Dimensions = "100x50x0.1 cm",
+                        Weight = 0.5,
+                        Material = "Film",
+                        Color = "Transparent",
+                        Warranty = "1 year",
+                        Description = "Heat-resistant film package for the VinFast VF6."
                     },
                     new Accessory
                     {
                         Id = 8,
                         Name = "Thảm nhựa 3D VF6",
                         Price = 1990000,
+                        Quantity = 10,
                         Image = "VF6_tham_nhua.png",
                         CategoryId = 7,
-                        IsDeleted = false
+                        IsDeleted = false,
+                        Origin = "Vietnam",
+                        Dimensions = "50x40x5 cm",
+                        Weight = 1.2,
+                        Material = "Rubber",
+                        Color = "Black",
+                        Warranty = "6 months",
+                        Description = "Durable rubber floor mats for the VinFast VF6."
                     },
                     new Accessory
                     {
                         Id = 9,
                         Name = "Thảm cốp 3D VF6",
                         Price = 990000,
+                        Quantity = 10,
                         Image = "VF6_Tham_cop.png",
                         CategoryId = 7,
-                        IsDeleted = false
+                        IsDeleted = false,
+                        Origin = "Vietnam",
+                        Dimensions = "100x80x5 cm",
+                        Weight = 2.0,
+                        Material = "Rubber",
+                        Color = "Black",
+                        Warranty = "6 months",
+                        Description = "3D trunk mat for the VinFast VF6."
                     }
                 );
             });
@@ -736,6 +808,22 @@ namespace WebAPI.DataContext
                 entity.HasMany(image => image.AccessoryImages)
                       .WithOne(accessory => accessory.Accessory)
                       .HasForeignKey(accessory => accessory.AccessoryId)
+                      .IsRequired();
+            });
+
+            modelBuilder.Entity<CartItem>(entity =>
+            {
+                entity.HasOne(cartItem => cartItem.User)
+                      .WithMany(user => user.CartItems)
+                      .HasForeignKey(cartItem => cartItem.UserId)
+                      .IsRequired();
+            });
+
+            modelBuilder.Entity<CartItem>(entity =>
+            {
+                entity.HasOne(cartItem => cartItem.Product)
+                      .WithMany(product => product.CartItems)
+                      .HasForeignKey(cartItem => cartItem.ProductId)
                       .IsRequired();
             });
         }

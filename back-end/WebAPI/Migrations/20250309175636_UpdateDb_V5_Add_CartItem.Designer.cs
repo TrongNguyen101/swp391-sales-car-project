@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebAPI.DataContext;
 
@@ -11,9 +12,11 @@ using WebAPI.DataContext;
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(VinfastContext))]
-    partial class VinfastContextModelSnapshot : ModelSnapshot
+    [Migration("20250309175636_UpdateDb_V5_Add_CartItem")]
+    partial class UpdateDb_V5_Add_CartItem
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -35,64 +38,21 @@ namespace WebAPI.Migrations
                         .HasColumnType("int")
                         .HasColumnName("Category ID");
 
-                    b.Property<string>("Color")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)")
-                        .HasColumnName("Color");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(5000)
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("Description");
-
-                    b.Property<string>("Dimensions")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)")
-                        .HasColumnName("Dimensions");
-
                     b.Property<string>("Image")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)")
+                        .HasColumnType("nvarchar(max)")
                         .HasColumnName("Accessory Image");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit")
                         .HasColumnName("Is Deleted");
 
-                    b.Property<string>("Material")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)")
-                        .HasColumnName("Material");
-
                     b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)")
+                        .HasColumnType("nvarchar(max)")
                         .HasColumnName("Accessory Name");
-
-                    b.Property<string>("Origin")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)")
-                        .HasColumnName("Origin");
 
                     b.Property<double>("Price")
                         .HasColumnType("float")
                         .HasColumnName("Accessory Price");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int")
-                        .HasColumnName("Quantity");
-
-                    b.Property<string>("Warranty")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)")
-                        .HasColumnName("Warranty");
-
-                    b.Property<double?>("Weight")
-                        .HasColumnType("float")
-                        .HasColumnName("Weight");
 
                     b.HasKey("Id");
 
@@ -105,154 +65,82 @@ namespace WebAPI.Migrations
                         {
                             Id = 1,
                             CategoryId = 5,
-                            Color = "White",
-                            Description = "A convenient home charger for your VinFast electric vehicle.",
-                            Dimensions = "30x20x10 cm",
                             Image = "Sac_tai_nha.png",
                             IsDeleted = false,
-                            Material = "Plastic",
                             Name = "VinFast Home Charger",
-                            Origin = "Vietnam",
-                            Price = 6000000.0,
-                            Quantity = 10,
-                            Warranty = "1 year",
-                            Weight = 2.5
+                            Price = 6000000.0
                         },
                         new
                         {
                             Id = 2,
                             CategoryId = 5,
-                            Color = "Black",
-                            Description = "Durable rubber floor mats for the VinFast VF3.",
-                            Dimensions = "50x40x5 cm",
                             Image = "VF3_tham_nhua.png",
                             IsDeleted = false,
-                            Material = "Rubber",
                             Name = "Thảm nhựa VF3",
-                            Origin = "Vietnam",
-                            Price = 1668000.0,
-                            Quantity = 10,
-                            Warranty = "6 months",
-                            Weight = 1.2
+                            Price = 1668000.0
                         },
                         new
                         {
                             Id = 3,
                             CategoryId = 5,
-                            Color = "Black",
-                            Description = "High-quality rearview camera for the VinFast VF3.",
-                            Dimensions = "10x5x5 cm",
                             Image = "VF3_Camera_lui.png",
                             IsDeleted = false,
-                            Material = "Metal",
                             Name = "Camera Lùi VF3",
-                            Origin = "Japan",
-                            Price = 26720000.0,
-                            Quantity = 10,
-                            Warranty = "2 years",
-                            Weight = 0.29999999999999999
+                            Price = 26720000.0
                         },
                         new
                         {
                             Id = 4,
                             CategoryId = 6,
-                            Color = "Black",
-                            Description = "Durable rubber floor mats for the VinFast VF5.",
-                            Dimensions = "50x40x5 cm",
                             Image = "VF5_tham_nhua.png",
                             IsDeleted = false,
-                            Material = "Rubber",
                             Name = "Thảm nhựa VF5",
-                            Origin = "Vietnam",
-                            Price = 1969000.0,
-                            Quantity = 10,
-                            Warranty = "6 months",
-                            Weight = 1.2
+                            Price = 1969000.0
                         },
                         new
                         {
                             Id = 5,
                             CategoryId = 6,
-                            Color = "Transparent",
-                            Description = "Heat-resistant film package for the VinFast VF5.",
-                            Dimensions = "100x50x0.1 cm",
                             Image = "VF5_Goi_dan_phim_cach_nhiet.png",
                             IsDeleted = false,
-                            Material = "Film",
                             Name = "Gói Dán Film Cách Nhiệt VinFast VF5",
-                            Origin = "Vietnam",
-                            Price = 5500000.0,
-                            Quantity = 10,
-                            Warranty = "1 year",
-                            Weight = 0.5
+                            Price = 5500000.0
                         },
                         new
                         {
                             Id = 6,
                             CategoryId = 6,
-                            Color = "Black",
-                            Description = "3D trunk mat for the VinFast VF5.",
-                            Dimensions = "100x80x5 cm",
                             Image = "VF5_Tham_cop.png",
                             IsDeleted = false,
-                            Material = "Rubber",
                             Name = "Thảm cốp 3D VF5",
-                            Origin = "Vietnam",
-                            Price = 990000.0,
-                            Quantity = 10,
-                            Warranty = "6 months",
-                            Weight = 2.0
+                            Price = 990000.0
                         },
                         new
                         {
                             Id = 7,
                             CategoryId = 7,
-                            Color = "Transparent",
-                            Description = "Heat-resistant film package for the VinFast VF6.",
-                            Dimensions = "100x50x0.1 cm",
                             Image = "VF6_Goi_dan_phim_cach_nhiet.png",
                             IsDeleted = false,
-                            Material = "Film",
                             Name = "Gói dán film cách nhiệt VF6",
-                            Origin = "Vietnam",
-                            Price = 5500000.0,
-                            Quantity = 10,
-                            Warranty = "1 year",
-                            Weight = 0.5
+                            Price = 5500000.0
                         },
                         new
                         {
                             Id = 8,
                             CategoryId = 7,
-                            Color = "Black",
-                            Description = "Durable rubber floor mats for the VinFast VF6.",
-                            Dimensions = "50x40x5 cm",
                             Image = "VF6_tham_nhua.png",
                             IsDeleted = false,
-                            Material = "Rubber",
                             Name = "Thảm nhựa 3D VF6",
-                            Origin = "Vietnam",
-                            Price = 1990000.0,
-                            Quantity = 10,
-                            Warranty = "6 months",
-                            Weight = 1.2
+                            Price = 1990000.0
                         },
                         new
                         {
                             Id = 9,
                             CategoryId = 7,
-                            Color = "Black",
-                            Description = "3D trunk mat for the VinFast VF6.",
-                            Dimensions = "100x80x5 cm",
                             Image = "VF6_Tham_cop.png",
                             IsDeleted = false,
-                            Material = "Rubber",
                             Name = "Thảm cốp 3D VF6",
-                            Origin = "Vietnam",
-                            Price = 990000.0,
-                            Quantity = 10,
-                            Warranty = "6 months",
-                            Weight = 2.0
+                            Price = 990000.0
                         });
                 });
 

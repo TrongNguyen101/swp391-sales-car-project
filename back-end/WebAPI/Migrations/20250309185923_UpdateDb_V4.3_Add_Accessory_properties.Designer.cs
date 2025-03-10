@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebAPI.DataContext;
 
@@ -11,9 +12,11 @@ using WebAPI.DataContext;
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(VinfastContext))]
-    partial class VinfastContextModelSnapshot : ModelSnapshot
+    [Migration("20250309185923_UpdateDb_V4.3_Add_Accessory_properties")]
+    partial class UpdateDb_V43_Add_Accessory_properties
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -39,12 +42,6 @@ namespace WebAPI.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)")
                         .HasColumnName("Color");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(5000)
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("Description");
 
                     b.Property<string>("Dimensions")
                         .HasMaxLength(255)
@@ -106,7 +103,6 @@ namespace WebAPI.Migrations
                             Id = 1,
                             CategoryId = 5,
                             Color = "White",
-                            Description = "A convenient home charger for your VinFast electric vehicle.",
                             Dimensions = "30x20x10 cm",
                             Image = "Sac_tai_nha.png",
                             IsDeleted = false,
@@ -123,7 +119,6 @@ namespace WebAPI.Migrations
                             Id = 2,
                             CategoryId = 5,
                             Color = "Black",
-                            Description = "Durable rubber floor mats for the VinFast VF3.",
                             Dimensions = "50x40x5 cm",
                             Image = "VF3_tham_nhua.png",
                             IsDeleted = false,
@@ -140,7 +135,6 @@ namespace WebAPI.Migrations
                             Id = 3,
                             CategoryId = 5,
                             Color = "Black",
-                            Description = "High-quality rearview camera for the VinFast VF3.",
                             Dimensions = "10x5x5 cm",
                             Image = "VF3_Camera_lui.png",
                             IsDeleted = false,
@@ -157,7 +151,6 @@ namespace WebAPI.Migrations
                             Id = 4,
                             CategoryId = 6,
                             Color = "Black",
-                            Description = "Durable rubber floor mats for the VinFast VF5.",
                             Dimensions = "50x40x5 cm",
                             Image = "VF5_tham_nhua.png",
                             IsDeleted = false,
@@ -174,7 +167,6 @@ namespace WebAPI.Migrations
                             Id = 5,
                             CategoryId = 6,
                             Color = "Transparent",
-                            Description = "Heat-resistant film package for the VinFast VF5.",
                             Dimensions = "100x50x0.1 cm",
                             Image = "VF5_Goi_dan_phim_cach_nhiet.png",
                             IsDeleted = false,
@@ -191,7 +183,6 @@ namespace WebAPI.Migrations
                             Id = 6,
                             CategoryId = 6,
                             Color = "Black",
-                            Description = "3D trunk mat for the VinFast VF5.",
                             Dimensions = "100x80x5 cm",
                             Image = "VF5_Tham_cop.png",
                             IsDeleted = false,
@@ -208,7 +199,6 @@ namespace WebAPI.Migrations
                             Id = 7,
                             CategoryId = 7,
                             Color = "Transparent",
-                            Description = "Heat-resistant film package for the VinFast VF6.",
                             Dimensions = "100x50x0.1 cm",
                             Image = "VF6_Goi_dan_phim_cach_nhiet.png",
                             IsDeleted = false,
@@ -225,7 +215,6 @@ namespace WebAPI.Migrations
                             Id = 8,
                             CategoryId = 7,
                             Color = "Black",
-                            Description = "Durable rubber floor mats for the VinFast VF6.",
                             Dimensions = "50x40x5 cm",
                             Image = "VF6_tham_nhua.png",
                             IsDeleted = false,
@@ -242,7 +231,6 @@ namespace WebAPI.Migrations
                             Id = 9,
                             CategoryId = 7,
                             Color = "Black",
-                            Description = "3D trunk mat for the VinFast VF6.",
                             Dimensions = "100x80x5 cm",
                             Image = "VF6_Tham_cop.png",
                             IsDeleted = false,

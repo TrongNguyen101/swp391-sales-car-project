@@ -1,8 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
-import { Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import classNames from "classnames/bind";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
 
 import styles from "./Accessories.module.scss";
 import Sidebar from "../../components/Sidebar";
@@ -88,64 +90,91 @@ function AccessoriesPage() {
 
   return (
     <div className={cx("wrapper")}>
+      <div className={cx("wrapper__line")}></div>
       <div className={cx("container")}>
-        <div className={cx("container__category")}>
+        <div className={cx("container__banner")}>
+          <img src="car-page-bannel.png" alt="banner" />
+        </div>
+        <div className={cx("page-title")}>
+          <Typography
+            sx={{
+              fontSize: "1.8rem",
+              fontWeight: "500",
+              color: "#333",
+            }}
+          >
+            Product Vinfast's Accessories
+          </Typography>
+        </div>
+        <div className={cx("container__list-accessories")}>
           <div className={cx("container__sidebar")}>
             {/* Pass callback to Sidebar */}
             <Sidebar onSelectCategory={setSelectedCategoryId} />
           </div>
-          <div className={cx("container__banner")}>
-            <img src="img_banner.jpg" alt="banner" />
-          </div>
-        </div>
-        <div className={cx("content")}>
-          <div className={cx("page-title")}>
-            <Typography
-              sx={{
-                fontSize: "1.8rem",
-                fontWeight: "500",
-                color: "#333",
-              }}
-            >
-              Product Vinfast's Accessories
-            </Typography>
-          </div>
-          <div className={cx("container__list-accessories")}>
-            {accessories.map((accessory, index) => (
-              <div
-                className={cx("container__accessory-card")}
-                key={index}
-                onClick={handleClickCard(accessory.id)}
+          <div className={cx("container__accessories")}>
+            <div className={cx("container__accessories--top")}>
+              <div className={cx("container__accessories--search")}>
+                <input
+                  type="text"
+                  placeholder="Search..."
+                  className={cx("search")}
+                />
+              </div>
+              <div className={cx("")}></div>
+              <Button
+                variant="outlined"
+                sx={{
+                  width: "80px",
+                  height: "40px",
+                  "&:hover": {
+                    backgroundColor: "var(--primary-color)",
+                    color: "white",
+                  },
+                }}
               >
-                <div className={cx("container__accessory-content")}>
-                  <div className={cx("card-image")}>
-                    <img
-                      src={`https://localhost:7005/api/Images/Accessory/${accessory.image}`}
-                      alt={accessory.name}
-                    />
-                  </div>
-                  <div className={cx("card-title")}>
-                    <Typography
-                      sx={{
-                        fontSize: "1.5rem",
-                        fontWeight: "500",
-                        color: "#333",
-                      }}
-                    >
-                      {accessory.name}
-                    </Typography>
-                  </div>
-                  <div className={cx("card-info")}>
-                    <div className={cx("price")}>
-                      <Typography>Price: {accessory.price} vnd</Typography>
+                <span className={cx("container__accessories--cart")}>
+                  <FontAwesomeIcon icon={faCartShopping} />
+                </span>
+              </Button>
+            </div>
+            <div className={cx("container__accessories--list")}>
+              {accessories.map((accessory, index) => (
+                <div
+                  className={cx("container__accessory-card")}
+                  key={index}
+                  onClick={handleClickCard(accessory.id)}
+                >
+                  <div className={cx("container__accessory-content")}>
+                    <div className={cx("card-image")}>
+                      <img
+                        src={`https://localhost:7005/api/Images/Accessory/${accessory.image}`}
+                        alt={accessory.name}
+                      />
+                    </div>
+                    <div className={cx("card-title")}>
+                      <Typography
+                        sx={{
+                          fontSize: "1.5rem",
+                          fontWeight: "500",
+                          color: "#333",
+                        }}
+                      >
+                        {accessory.name}
+                      </Typography>
+                    </div>
+                    <div className={cx("card-info")}>
+                      <div className={cx("price")}>
+                        <Typography>Price: {accessory.price} VND</Typography>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </div>
+      <div className={cx("wrapper__line-bottom")}></div>
     </div>
   );
 }

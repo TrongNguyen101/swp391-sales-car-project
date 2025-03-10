@@ -77,8 +77,26 @@
     font-weight: 300;
     padding: 0.5em 0;
   }
-  p {
-    padding-bottom: 2em;
+}
+
+.container__specification--list {
+  width: 50%;
+  padding: 0 15px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  justify-content: center;
+  gap: 0px;
+  margin-bottom: 50px;
+  .specification__item {
+    display: flex;
+    padding: 0.5em 0.5em;
+    border: 1px solid #ccc;
+  }
+  .specification__value {
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+    font-size: 16px;
   }
 }
 
