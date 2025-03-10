@@ -424,6 +424,7 @@ namespace WebAPI.Controllers
 
                 if (await UsersDAO.GetInstance().ResetPassword(request))
                 {
+                    await _cache.KeyDeleteAsync(request.Email); // Delete existing OTP after update password
                     return Ok(new DataResponse
                     {
                         StatusCode = 200,
