@@ -109,7 +109,7 @@ namespace WebAPI.DAO
         {
             using (var context = new VinfastContext())
             {
-                return await context.Users.ToListAsync();
+                return await context.Users.Where(user => user.RoleId == 2).ToListAsync();
             }
         }
     }

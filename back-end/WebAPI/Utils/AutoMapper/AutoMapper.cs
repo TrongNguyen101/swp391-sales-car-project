@@ -22,8 +22,8 @@ namespace WebAPI.Utils.AutoMapper
                 Address = user.Address,
                 Phone = user.Phone,
                 Email = user.Email,
-                CreatedAt = user.CreatedAt,
-                IsDeleted = user.IsDeleted,
+                CreatedAt = FormatDateTime(user.CreatedAt),
+                IsDeleted = FormatBooleanToString(user.IsDeleted),
                 LastChange = user.LastChange,
                 RoleId = user.RoleId
             };
@@ -43,8 +43,7 @@ namespace WebAPI.Utils.AutoMapper
                 Address = userDTO.Address,
                 Phone = userDTO.Phone,
                 Email = userDTO.Email,
-                CreatedAt = userDTO.CreatedAt,
-                IsDeleted = userDTO.IsDeleted,
+                IsDeleted = FormatStringToBoolean(userDTO.IsDeleted),
                 LastChange = userDTO.LastChange,
                 RoleId = userDTO.RoleId
             };
@@ -243,6 +242,26 @@ namespace WebAPI.Utils.AutoMapper
             }
 
             return string.Join(' ', words);
+        }
+
+        private static string FormatBooleanToString(bool isDeleted)
+        {
+            return isDeleted ? "True" : "False";
+        }
+        private static bool FormatStringToBoolean(string isDeleted)
+        {
+            if (isDeleted == "True")
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        private static string FormatDateTime(DateTime dateTime)
+        {
+            return dateTime.ToString("dd-MM-yyyy HH:mm");
         }
     }
 }

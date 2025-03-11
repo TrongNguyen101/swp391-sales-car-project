@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -16,28 +16,14 @@ import {
   Button,
   TextField,
   InputAdornment,
+  Typography,
 } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash, faSearch } from "@fortawesome/free-solid-svg-icons";
-
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
-
-const initialRows = [
-  createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
-  createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
-  createData("Eclair", 262, 16.0, 24, 6.0),
-  createData("Cupcake", 305, 3.7, 67, 4.3),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
-];
+import * as AdminServices from "../../services/AdminServices";
 
 function AccountTablePage() {
-  const [rows, setRows] = useState(initialRows);
+  const [rows, setRows] = useState([]);
   const [open, setOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
   const [editMode, setEditMode] = useState(false);
@@ -45,6 +31,23 @@ function AccountTablePage() {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [rowToDelete, setRowToDelete] = useState(null);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
+
+  const fetchData = async () => {
+    try {
+      const response = await AdminServices.getAllUsers();
+      if (response.statusCode !== 200) {
+        setRows([]);
+      } else {
+        setRows(response.data);
+      }
+    } catch (error) {
+      console.error("Failed to fetch users:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const handleClickOpen = (row) => {
     setSelectedRow(row);
@@ -74,7 +77,7 @@ function AccountTablePage() {
   };
 
   const handleDelete = () => {
-    setRows(rows.filter((row) => row.name !== rowToDelete.name));
+    setRows(rows.filter((row) => row.id !== rowToDelete.id));
     setDeleteDialogOpen(false);
     setRowToDelete(null);
   };
@@ -89,17 +92,16 @@ function AccountTablePage() {
     setRowToDelete(null);
   };
 
-  const filteredRows = rows.filter((row) =>
-    row.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    row.calories.toString().includes(searchQuery) ||
-    row.fat.toString().includes(searchQuery) ||
-    row.carbs.toString().includes(searchQuery) ||
-    row.protein.toString().includes(searchQuery)
-  );
-
   return (
     <>
-      <div style={{ display: "flex", justifyContent: "flex-end", width: "91%", margin: "0 auto" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          width: "91%",
+          margin: "0 auto",
+        }}
+      >
         <TextField
           label="Search"
           variant="outlined"
@@ -111,7 +113,10 @@ function AccountTablePage() {
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
-                <IconButton aria-label="search" sx={{ color: isSearchFocused ? 'primary.main' : 'inherit' }}>
+                <IconButton
+                  aria-label="search"
+                  sx={{ color: isSearchFocused ? "primary.main" : "inherit" }}
+                >
                   <FontAwesomeIcon icon={faSearch} />
                 </IconButton>
               </InputAdornment>
@@ -131,20 +136,58 @@ function AccountTablePage() {
         }}
       >
         <Table aria-label="simple table" stickyHeader>
-          <TableHead sx={{ backgroundColor: 'primary.main', color: 'white'}}> 
+          <TableHead sx={{ backgroundColor: "primary.main", color: "white" }}>
             <TableRow>
-              <TableCell sx={{ backgroundColor: 'primary.main', color: 'white' }}>Fullname</TableCell>
-              <TableCell sx={{ backgroundColor: 'primary.main', color: 'white' }} align="right">Phone</TableCell>
-              <TableCell sx={{ backgroundColor: 'primary.main', color: 'white' }} align="right">Email</TableCell>
-              <TableCell sx={{ backgroundColor: 'primary.main', color: 'white' }} align="right">Address</TableCell>
-              <TableCell sx={{ backgroundColor: 'primary.main', color: 'white' }} align="right">Creat At</TableCell>
-              <TableCell sx={{ backgroundColor: 'primary.main', color: 'white' }} align="center">Action</TableCell>
+              <TableCell
+                sx={{
+                  backgroundColor: "primary.main",
+                  color: "white",
+                  width: "25%",
+                }}
+              >
+                Fullname
+              </TableCell>
+              <TableCell
+                sx={{
+                  backgroundColor: "primary.main",
+                  color: "white",
+                  width: "22%",
+                }}
+                align="left"
+              >
+                Email
+              </TableCell>
+              <TableCell
+                sx={{ backgroundColor: "primary.main", color: "white" }}
+                align="left"
+              >
+                Phone
+              </TableCell>
+              <TableCell
+                sx={{ backgroundColor: "primary.main", color: "white" }}
+                align="left"
+                width="20%"
+              >
+                Address
+              </TableCell>
+              <TableCell
+                sx={{ backgroundColor: "primary.main", color: "white" }}
+                align="left"
+              >
+                Created At
+              </TableCell>
+              <TableCell
+                sx={{ backgroundColor: "primary.main", color: "white" }}
+                align="center"
+              >
+                Action
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {filteredRows.map((row) => (
+            {rows.map((row) => (
               <TableRow
-                key={row.name}
+                key={row.id}
                 sx={{
                   "&:last-child td": { border: 0 },
                   cursor: "pointer",
@@ -152,13 +195,15 @@ function AccountTablePage() {
                 }}
                 onClick={() => handleClickOpen(row)}
               >
-                <TableCell align="left">
-                  {row.name}
+                <TableCell align="left" sx={{ width: "20%" }}>
+                  {row.userName}
                 </TableCell>
-                <TableCell align="right">{row.calories}</TableCell>
-                <TableCell align="right">{row.fat}</TableCell>
-                <TableCell align="right">{row.carbs}</TableCell>
-                <TableCell align="right">{row.protein}</TableCell>
+                <TableCell align="left" sx={{ width: "20%" }}>
+                  {row.email}
+                </TableCell>
+                <TableCell align="left">{row.phone}</TableCell>
+                <TableCell align="left">{row.address}</TableCell>
+                <TableCell align="left">{row.createdAt}</TableCell>
                 <TableCell align="center">
                   <IconButton
                     aria-label="edit"
@@ -187,8 +232,25 @@ function AccountTablePage() {
         </Table>
       </TableContainer>
 
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>{editMode ? "Edit Row" : "Row Details"}</DialogTitle>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        sx={{
+          textAlign: "center",
+        }}
+      >
+        <DialogTitle>
+          <Typography
+            sx={{
+              fontSize: "1.8rem",
+              fontWeight: "600",
+              lineHeight: "1.5",
+              color: "primary.main",
+            }}
+          >
+            {editMode ? "Edit Row" : "Row Details"}
+          </Typography>
+        </DialogTitle>
         <DialogContent>
           {selectedRow && (
             <>
@@ -199,50 +261,89 @@ function AccountTablePage() {
                     label="Name"
                     type="text"
                     fullWidth
-                    defaultValue={selectedRow.name}
+                    defaultValue={selectedRow.userName}
                   />
                   <TextField
                     margin="dense"
-                    label="Calories"
-                    type="number"
+                    label="Phone"
+                    type="text"
                     fullWidth
-                    defaultValue={selectedRow.calories}
+                    defaultValue={selectedRow.phone}
                   />
                   <TextField
                     margin="dense"
-                    label="Fat"
-                    type="number"
+                    label="Email"
+                    type="text"
                     fullWidth
-                    defaultValue={selectedRow.fat}
+                    disabled
+                    defaultValue={selectedRow.email}
                   />
                   <TextField
                     margin="dense"
-                    label="Carbs"
-                    type="number"
+                    label="Address"
+                    type="text"
                     fullWidth
-                    defaultValue={selectedRow.carbs}
+                    defaultValue={selectedRow.address}
                   />
                   <TextField
                     margin="dense"
-                    label="Protein"
-                    type="number"
+                    label="Created At"
+                    type="text"
                     fullWidth
-                    defaultValue={selectedRow.protein}
+                    disabled
+                    defaultValue={selectedRow.createdAt}
                   />
                 </>
               ) : (
                 <>
-                  <DialogContentText>Name: {selectedRow.name}</DialogContentText>
-                  <DialogContentText>
-                    Calories: {selectedRow.calories}
-                  </DialogContentText>
-                  <DialogContentText>Fat: {selectedRow.fat}</DialogContentText>
-                  <DialogContentText>
-                    Carbs: {selectedRow.carbs}
-                  </DialogContentText>
-                  <DialogContentText>
-                    Protein: {selectedRow.protein}
-                  </DialogContentText>
+                  <TextField
+                    margin="dense"
+                    label="Name"
+                    type="text"
+                    fullWidth
+                    disabled
+                    defaultValue={selectedRow.userName}
+                  />
+                  <TextField
+                    margin="dense"
+                    label="Phone"
+                    type="text"
+                    fullWidth
+                    disabled
+                    defaultValue={selectedRow.phone}
+                  />
+                  <TextField
+                    margin="dense"
+                    label="Email"
+                    type="text"
+                    fullWidth
+                    disabled
+                    defaultValue={selectedRow.email}
+                  />
+                  <TextField
+                    margin="dense"
+                    label="Address"
+                    type="text"
+                    fullWidth
+                    disabled
+                    defaultValue={selectedRow.address}
+                  />
+                  <TextField
+                    margin="dense"
+                    label="Created At"
+                    type="text"
+                    fullWidth
+                    disabled
+                    defaultValue={selectedRow.createdAt}
+                  />
+                  <TextField
+                    margin="dense"
+                    label="Deleted"
+                    type="text"
+                    fullWidth
+                    disabled
+                    defaultValue={selectedRow.isDeleted}
+                  />
                 </>
               )}
             </>
@@ -264,7 +365,7 @@ function AccountTablePage() {
       <Dialog
         open={deleteDialogOpen}
         onClose={handleDeleteDialogClose}
-        sx={{ textAlign: "center"}}
+        sx={{ textAlign: "center" }}
       >
         <DialogTitle>Confirm Delete</DialogTitle>
         <DialogContent>
@@ -273,7 +374,11 @@ function AccountTablePage() {
           </DialogContentText>
         </DialogContent>
         <DialogActions sx={{ justifyContent: "center" }}>
-          <Button onClick={handleDeleteDialogClose} variant="contained" color="error">
+          <Button
+            onClick={handleDeleteDialogClose}
+            variant="contained"
+            color="error"
+          >
             Cancel
           </Button>
           <Button onClick={handleDelete} variant="contained" color="primary">
