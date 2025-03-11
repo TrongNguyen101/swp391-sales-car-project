@@ -104,5 +104,13 @@ namespace WebAPI.DAO
                 return true;
             }
         }
+
+        public async Task<List<Users>> GetAllUsersAsync()
+        {
+            using (var context = new VinfastContext())
+            {
+                return await context.Users.ToListAsync();
+            }
+        }
     }
 }

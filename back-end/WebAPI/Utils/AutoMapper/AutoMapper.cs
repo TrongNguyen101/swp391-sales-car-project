@@ -18,7 +18,7 @@ namespace WebAPI.Utils.AutoMapper
             return new UserDTO
             {
                 UserId = user.Id,
-                UserName = user.UserName,
+                UserName = FormatFullname(user.UserName),
                 Address = user.Address,
                 Phone = user.Phone,
                 Email = user.Email,
@@ -221,5 +221,28 @@ namespace WebAPI.Utils.AutoMapper
             return cartItems.Select(cartItem => ToCartItemDTO(cartItem)).ToList();
         }
 
+        public static List<UserDTO> ToUserDTOList(List<Users> users)
+        {
+            return users.Select(user => ToUserDTO(user)).ToList();
+        }
+
+        private static string FormatFullname(string fullname)
+        {
+            if (string.IsNullOrWhiteSpace(fullname))
+            {
+                return fullname;
+            }
+
+            var words = fullname.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            for (int i = 0; i < words.Length; i++)
+            {
+                if (words[i].Length > 0)
+                {
+                    words[i] = char.ToUpper(words[i][0]) + words[i].Substring(1).ToLower();
+                }
+            }
+
+            return string.Join(' ', words);
+        }
     }
 }
