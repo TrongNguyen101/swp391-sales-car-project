@@ -103,7 +103,7 @@ function AccountTablePage() {
         <TextField
           label="Search"
           variant="outlined"
-          sx={{ width: 250 }}
+          sx={{ width: 300 }}
           value={searchQuery}
           onChange={handleSearchChange}
           onFocus={() => setIsSearchFocused(true)}
