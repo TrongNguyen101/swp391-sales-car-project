@@ -16,7 +16,7 @@ namespace WebAPI.DTO
 
         [Required]
         [Range(0, double.MaxValue, ErrorMessage = "Price must be a positive value")]
-        public decimal Price { get; set; }
+        public double Price { get; set; }
 
         [Required]
         [Range(1, int.MaxValue, ErrorMessage = "Quantity must be at least 1")]
@@ -28,6 +28,6 @@ namespace WebAPI.DTO
         [Required]
         public Guid UserId { get; set; }
 
-        public decimal TotalPrice => Price * Quantity;
+        public double TotalPrice { get; set; }
     }
 }

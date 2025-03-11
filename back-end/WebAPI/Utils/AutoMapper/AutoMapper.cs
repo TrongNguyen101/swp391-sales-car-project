@@ -212,6 +212,7 @@ namespace WebAPI.Utils.AutoMapper
                 Price = cartItem.Price,
                 Quantity = cartItem.Quantity,
                 ImageUrl = cartItem.ImageUrl,
+                TotalPrice = cartItem.Price * cartItem.Quantity,
                 UserId = cartItem.UserId
             };
         }
@@ -221,5 +222,18 @@ namespace WebAPI.Utils.AutoMapper
             return cartItems.Select(cartItem => ToCartItemDTO(cartItem)).ToList();
         }
 
+        public static CartItem ToCartItem(CartItemDTO cartItemDTO)
+        {
+            return new CartItem
+            {
+                Id = cartItemDTO.Id,
+                ProductId = cartItemDTO.ProductId,
+                ProductName = cartItemDTO.ProductName,
+                Price = cartItemDTO.Price,
+                Quantity = cartItemDTO.Quantity,
+                ImageUrl = cartItemDTO.ImageUrl,
+                UserId = cartItemDTO.UserId
+            };
+        }
     }
 }

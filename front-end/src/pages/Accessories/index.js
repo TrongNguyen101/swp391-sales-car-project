@@ -106,6 +106,8 @@ function AccessoriesPage() {
             Product Vinfast's Accessories
           </Typography>
         </div>
+
+        {/* container sidebar and list accessories */}
         <div className={cx("container__list-accessories")}>
           <div className={cx("container__sidebar")}>
             {/* Pass callback to Sidebar */}
@@ -120,7 +122,6 @@ function AccessoriesPage() {
                   className={cx("search")}
                 />
               </div>
-              <div className={cx("")}></div>
               <Button
                 variant="outlined"
                 sx={{
@@ -134,6 +135,11 @@ function AccessoriesPage() {
               >
                 <span className={cx("container__accessories--cart")}>
                   <FontAwesomeIcon icon={faCartShopping} />
+                </span>
+                <span>
+                  <Typography sx={{ fontWeight: 900, fontSize: "24px" }}>
+                    0
+                  </Typography>
                 </span>
               </Button>
             </div>
