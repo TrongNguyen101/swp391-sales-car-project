@@ -17,6 +17,7 @@ import {
   TextField,
   InputAdornment,
   Typography,
+  Box,
 } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash, faSearch } from "@fortawesome/free-solid-svg-icons";
@@ -293,6 +294,14 @@ function AccountTablePage() {
                     disabled
                     defaultValue={selectedRow.createdAt}
                   />
+                  <TextField
+                    margin="dense"
+                    label="Deleted"
+                    type="text"
+                    fullWidth
+                    disabled
+                    defaultValue={selectedRow.isDeleted}
+                  />
                 </>
               ) : (
                 <>
@@ -351,11 +360,16 @@ function AccountTablePage() {
         </DialogContent>
         <DialogActions>
           {editMode ? (
-            <Button onClick={handleSave} color="primary">
-              Save
-            </Button>
+            <Box display="flex" justifyContent="center" width="100%" gap={2}>
+              <Button onClick={handleSave} color="primary" variant="contained">
+                Save
+              </Button>
+              <Button onClick={handleSave} color="error" variant="contained">
+                Cancel
+              </Button>
+            </Box>
           ) : (
-            <Button onClick={handleClose} color="primary">
+            <Button onClick={handleClose} color="primary" variant="contained">
               Close
             </Button>
           )}
