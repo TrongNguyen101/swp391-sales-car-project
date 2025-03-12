@@ -18,6 +18,10 @@ import {
   InputAdornment,
   Typography,
   Box,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faSearch, faTrash } from "@fortawesome/free-solid-svg-icons";
@@ -33,13 +37,20 @@ function CarsTable() {
   const [rowToDelete, setRowToDelete] = useState(null);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
 
+  // Add more car state
+  const [selectedCar, setSelectedCar] = useState("");
+  const [quantity, setQuantity] = useState(0);
+  const [openAddMoreCarDialog, setOpenAddMoreCarDialog] = useState(false);
+  const [errorSelectedCarId, setErrorSelectedCarId] = useState(null);
+  const [errorQuantity, setErrorQuantity] = useState(null);
+
   const fetchData = async () => {
     try {
       const response = await adminCarServices.adminGetAllCars();
       if (response.statusCode !== 200) {
         setRows([]);
       } else {
-        console.log(response.data);
+        console.log("all car:", response.data);
         setRows(response.data);
       }
     } catch (error) {
@@ -63,10 +74,51 @@ function CarsTable() {
     setEditMode(true);
   };
 
-  const handleCreateNewClickOpen = () => {
-    setOpen(true);
-    setEditMode(true);
+  // Add new car button
+  
+
+
+
+  // Add more car button
+  const handleAddMoreCarClickOpen = () => {
+    setOpenAddMoreCarDialog(true);
   };
+  const handleAddCarDialogClose = () => {
+    setOpenAddMoreCarDialog(false);
+  };
+
+  const fetchAddMoreCar = async (car, quantity) => {
+    try {
+      const carId = car.id;
+      const response = await adminCarServices.adminAddMoreCar({
+        carId,
+        quantity
+      });
+      if (response.statusCode === 200) {
+        fetchData();
+        setOpenAddMoreCarDialog(false);
+      } else {
+        console.error("Failed to add more car:", response.message);
+      }
+    } catch (error) {
+      console.error("Failed to add more car:", error);
+    }
+  };
+
+  const handleAddMoreCar = async () => {
+    const car = rows.find((car) => car.model === selectedCar);
+    if (!car) {
+      setErrorSelectedCarId("Please select a car");
+    }
+    if (quantity <= 0) {
+      setErrorQuantity("Quantity must be greater than 0");
+    }
+    if (car && quantity > 0) {
+      fetchAddMoreCar(car, quantity);
+    }
+  };
+
+  //------------------------------------------------------------------------------------------------------------
 
   const handleClose = () => {
     setOpen(false);
@@ -120,13 +172,22 @@ function CarsTable() {
         }}
       >
         <Box display="flex" justifyContent="space-between" width="100%" gap={2}>
-          <Button
-            onClick={handleCreateNewClickOpen}
-            color="warning"
-            variant="contained"
-          >
-            Create new car
-          </Button>
+          <Box display="flex" gap={2}>
+            <Button
+              // onClick={handleCreateNewClickOpen}
+              color="primary"
+              variant="contained"
+            >
+              Create new car
+            </Button>
+            <Button
+              onClick={handleAddMoreCarClickOpen}
+              color="warning"
+              variant="contained"
+            >
+              Add Car
+            </Button>
+          </Box>
           <TextField
             label="Search car name"
             variant="outlined"
@@ -140,7 +201,9 @@ function CarsTable() {
                 <InputAdornment position="end">
                   <IconButton
                     aria-label="search"
-                    sx={{ color: isSearchFocused ? "primary.main" : "inherit" }}
+                    sx={{
+                      color: isSearchFocused ? "primary.main" : "inherit",
+                    }}
                   >
                     <FontAwesomeIcon icon={faSearch} />
                   </IconButton>
@@ -412,13 +475,7 @@ function CarsTable() {
       </Dialog>
 
       {/* Create new dialog ----------------------------------------------------------------------------------------- */}
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        sx={{
-          textAlign: "center",
-        }}
-      >
+      <Dialog open={openAddMoreCarDialog}>
         <DialogTitle>
           <Typography
             sx={{
@@ -426,142 +483,74 @@ function CarsTable() {
               fontWeight: "600",
               lineHeight: "1.5",
               color: "primary.main",
+              textAlign: "center",
             }}
           >
-            {editMode ? "Edit Row" : "Row Details"}
+            Add more car
           </Typography>
         </DialogTitle>
-        {/* Form edit and show information */}
+        {/* Form add information */}
         <DialogContent>
-          {selectedRow && (
-            <>
-              {editMode ? (
-                <>
-                  <TextField
-                    margin="dense"
-                    label="User ID"
-                    type="text"
-                    fullWidth
-                    disabled
-                    defaultValue={selectedRow.userId}
-                  />
-                  <TextField
-                    margin="dense"
-                    label="Name"
-                    type="text"
-                    fullWidth
-                    defaultValue={selectedRow.userName}
-                  />
-                  <TextField
-                    margin="dense"
-                    label="Phone"
-                    type="text"
-                    fullWidth
-                    defaultValue={selectedRow.phone}
-                  />
-                  <TextField
-                    margin="dense"
-                    label="Email"
-                    type="text"
-                    fullWidth
-                    disabled
-                    defaultValue={selectedRow.email}
-                  />
-                  <TextField
-                    margin="dense"
-                    label="Address"
-                    type="text"
-                    fullWidth
-                    defaultValue={selectedRow.address}
-                  />
-                  <TextField
-                    margin="dense"
-                    label="Created At"
-                    type="text"
-                    fullWidth
-                    disabled
-                    defaultValue={selectedRow.createdAt}
-                  />
-                  <TextField
-                    margin="dense"
-                    label="Deleted"
-                    type="text"
-                    fullWidth
-                    disabled
-                    defaultValue={selectedRow.isDeleted}
-                  />
-                </>
-              ) : (
-                <>
-                  <TextField
-                    margin="dense"
-                    label="Name"
-                    type="text"
-                    fullWidth
-                    disabled
-                    defaultValue={selectedRow.userName}
-                  />
-                  <TextField
-                    margin="dense"
-                    label="Phone"
-                    type="text"
-                    fullWidth
-                    disabled
-                    defaultValue={selectedRow.phone}
-                  />
-                  <TextField
-                    margin="dense"
-                    label="Email"
-                    type="text"
-                    fullWidth
-                    disabled
-                    defaultValue={selectedRow.email}
-                  />
-                  <TextField
-                    margin="dense"
-                    label="Address"
-                    type="text"
-                    fullWidth
-                    disabled
-                    defaultValue={selectedRow.address}
-                  />
-                  <TextField
-                    margin="dense"
-                    label="Created At"
-                    type="text"
-                    fullWidth
-                    disabled
-                    defaultValue={selectedRow.createdAt}
-                  />
-                  <TextField
-                    margin="dense"
-                    label="Deleted"
-                    type="text"
-                    fullWidth
-                    disabled
-                    defaultValue={selectedRow.isDeleted}
-                  />
-                </>
-              )}
-            </>
-          )}
+          <FormControl variant="outlined" sx={{ width: 300, marginTop: "5px" }}>
+            {/* Car Selection */}
+            <InputLabel id="car-select-label">Select Car</InputLabel>
+            <Select
+              labelId="car-select-label"
+              value={selectedCar}
+              onChange={(e) => {
+                setSelectedCar(e.target.value);
+                setErrorSelectedCarId("");
+              }}
+              label="Select Car"
+            >
+              {rows.map((car) => (
+                <MenuItem key={car.id} value={car.model}>
+                  {car.model}
+                </MenuItem>
+              ))}
+            </Select>
+            {errorSelectedCarId && (
+              <Typography sx={{ color: "red" }}>
+                {errorSelectedCarId}
+              </Typography>
+            )}
+            {/* Quantity Input */}
+            <TextField
+              margin="dense"
+              label="Quantity"
+              type="number"
+              fullWidth
+              value={quantity}
+              onChange={(e) => {
+                setQuantity(e.target.value);
+                setErrorQuantity("");
+              }}
+              sx={{ marginTop: "20px" }}
+            />
+            {errorQuantity && (
+              <Typography sx={{ color: "red" }}>{errorQuantity}</Typography>
+            )}
+          </FormControl>
         </DialogContent>
+
         {/* Button submit and cancel */}
         <DialogActions>
-          {editMode ? (
-            <Box display="flex" justifyContent="center" width="100%" gap={2}>
-              <Button onClick={handleSave} color="primary" variant="contained">
-                Save
-              </Button>
-              <Button onClick={handleSave} color="error" variant="contained">
-                Cancel
-              </Button>
-            </Box>
-          ) : (
-            <Button onClick={handleClose} color="primary" variant="contained">
-              Close
+          <Box display="flex" justifyContent="center" width="100%" gap={2}>
+            <Button
+              onClick={handleAddMoreCar}
+              color="primary"
+              variant="contained"
+            >
+              Save
             </Button>
-          )}
+            <Button
+              onClick={handleAddCarDialogClose}
+              color="error"
+              variant="contained"
+            >
+              Cancel
+            </Button>
+          </Box>
         </DialogActions>
       </Dialog>
 
@@ -590,5 +579,4 @@ function CarsTable() {
     </>
   );
 }
-
 export default CarsTable;

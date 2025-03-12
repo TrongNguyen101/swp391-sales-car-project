@@ -16,7 +16,7 @@ export const getCarById = async (id) => {
   } catch (error) {
     return error.response;
   }
-}
+};
 
 export const getCarColorById = async (carId) => {
   try {
@@ -25,7 +25,7 @@ export const getCarColorById = async (carId) => {
   } catch (error) {
     return error.response;
   }
-}
+};
 
 export const adminDeleteCar = async (adminCarId) => {
   try {
@@ -34,5 +34,25 @@ export const adminDeleteCar = async (adminCarId) => {
   } catch (error) {
     return error.response;
   }
-}
+};
 
+export const adminAddMoreCar = async (carId) => {
+  try {
+    const id = carId.carId;
+    const quantity = carId.quantity;
+    const token = localStorage.getItem("Bearer");
+    const response = await request.put(
+      `/api/AdminCars/adminAddMoreCar/${id}`,
+      { id, quantity },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    return error.response;
+  }
+};

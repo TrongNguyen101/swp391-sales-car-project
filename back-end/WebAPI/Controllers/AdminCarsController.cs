@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using WebAPI.DAO;
 using WebAPI.DTO;
 using WebAPI.Utils.AutoMapper;
+using WebAPI.Utils.JwtTokenHelper;
+using WebAPI.Utils.ResponseHelper;
 
 namespace WebAPI.Controllers
 {
@@ -136,6 +138,83 @@ namespace WebAPI.Controllers
                 adminCar.IsDeleted = true;
                 Console.WriteLine(adminCar);
                 if (await CarsDAO.GetInstance().DeleteCarById(adminCar))
+
+                {
+                    return Ok(new DataResponse
+                    {
+                        StatusCode = 200,
+                        Message = "Car deleted successfully",
+                        Success = true
+                    });
+                }
+                else
+                {
+                    return BadRequest(new DataResponse
+                    {
+                        StatusCode = 400,
+                        Message = "Delete car failed",
+                        Success = false
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return BadRequest(new DataResponse
+                {
+                    StatusCode = 400,
+                    Message = "Internal server error. Please contact support.",
+                    Success = false
+                });
+            }
+        }
+
+        [HttpPut("adminAddMoreCar/{id}")]
+        public async Task<IActionResult> AdminAddMoreCar(int id, [FromBody]  AdminAddMoreCar adminAddMoreCar)
+        {
+            try
+            {
+                #region Authentication, Authorization
+                // Get token
+                var authorizationHeader = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
+
+                // Check token
+                if (authorizationHeader == null || !authorizationHeader.StartsWith("Bearer "))
+                {
+                    return Unauthorized(ResponseHelper.Response(401, "Authentication token is missing or invalid", false, null));
+                }
+                // Format token
+                var token = authorizationHeader.Split(" ")[1];
+                // Get claims
+                var claims = JwtTokenHelper.GetUserClaims(token);
+                // Verify token
+                if (claims == null)
+                {
+                    return Unauthorized(ResponseHelper.Response(401, "Authentication token is invalid", false, null));
+                }
+                // Check role
+                if (claims.TryGetValue("role", out var roleId) && roleId.ToString() != "1")
+                {
+                    return Unauthorized(ResponseHelper.Response(401, "Unauthorized access denied", false, null));
+                }
+                #endregion
+
+                var adminCar = await CarsDAO.GetInstance().GetCarById(id);
+
+                if (adminCar == null)
+                {
+                    return NotFound(new DataResponse
+                    {
+                        StatusCode = 404,
+                        Message = "Car not found",
+                        Success = false
+                    });
+                }
+
+                adminCar.Quantity = adminCar.Quantity + adminAddMoreCar.Quantity;
+
+                Console.WriteLine(adminCar);
+                if (await CarsDAO.GetInstance().AdminAddMoreCar(adminCar))
 
                 {
                     return Ok(new DataResponse

@@ -68,5 +68,24 @@ namespace WebAPI.DAO
                 return false;
             }
         }
+
+        public async Task<bool> AdminAddMoreCar(Cars car)
+        {
+            try
+            {
+                using (var context = new VinfastContext())
+                {
+                    context.Attach(car);
+                    context.Entry(car).Property(c => c.Quantity).IsModified = true;
+                    await context.SaveChangesAsync();
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return false;
+            }
+        }
     }
 }

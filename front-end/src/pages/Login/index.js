@@ -108,7 +108,9 @@ function LoginPage() {
     if (passwordError) {
       setErrorPassword(passwordError);
     }
-    if (!emailError && !passwordError) fetchLogin();
+    if (!emailError && !passwordError) {
+      fetchLogin();
+    }
   };
 
   const handleForgotPasswordSubmit = () => {
@@ -137,7 +139,7 @@ function LoginPage() {
     }
   };
 
-  const handleCloseDialog = ( ) => {
+  const handleCloseDialog = () => {
     setOpenDialog(false);
     navigate(navigateTo);
     setNavigateTo("");
@@ -453,13 +455,21 @@ function LoginPage() {
         aria-labelledby="forgot-password-dialog-title"
         aria-describedby="forgot-password-dialog-description"
       >
-        <DialogTitle id="forgot-password-dialog-title" sx={{ textAlign: "center" }}>
+        <DialogTitle
+          id="forgot-password-dialog-title"
+          sx={{ textAlign: "center" }}
+        >
           Reset Password
         </DialogTitle>
         <DialogContent sx={{ width: "400px" }}>
           <DialogContentText
             id="forgot-password-dialog-description"
-            sx={{ fontSize: "1.2rem", fontWeight: "300", marginBottom: "15px", textAlign: "center" }}
+            sx={{
+              fontSize: "1.2rem",
+              fontWeight: "300",
+              marginBottom: "15px",
+              textAlign: "center",
+            }}
           >
             Please enter new password.
           </DialogContentText>
