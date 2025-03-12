@@ -11,6 +11,7 @@ import DepositPaymentResponsePage from "../pages/DepositPaymentResponse";
 import TestDriveRegistration from "../pages/TestDriveRegistration";
 import { DashboardLayout } from "../layouts";
 import AccountTablePage from "../pages/AccountTable";
+import CarsTablePage from "../pages/CarsTable";
 
 const publicRoutes = [
   { path: "/", page: HomePage },
@@ -28,6 +29,11 @@ const publicRoutes = [
   {
     path: "/dashboard/account",
     page: AccountTablePage,
+    layout: DashboardLayout,
+  },
+  {
+    path: "/dashboard/cars",
+    page: CarsTablePage,
     layout: DashboardLayout,
   },
 ];

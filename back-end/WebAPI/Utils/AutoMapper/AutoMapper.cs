@@ -91,6 +91,24 @@ namespace WebAPI.Utils.AutoMapper
             };
         }
 
+        public static AdminCarDTO ToAdminCarDTO(Cars car)
+        {
+            return new AdminCarDTO
+            {
+                Id = car.Id,
+                Model = car.Name,
+                Seat = car.Seats,
+                Image = car.Image,
+                SpecImage = car.SpecImage,
+                BannerImage = car.ImageBanner,
+                PriceBatteryOwn = car.PriceBatteryOwn,
+                PriceBatteryRental = car.PriceBatteryRental,
+                PriceDeposite = car.PriceDeposite,
+                Quantity = car.Quantity,
+                IsDeleted = car.IsDeleted
+            };
+        }
+
         public static CarDetailDTO ToCarDetailDTO(Cars car)
         {
             var carPrice = FormatPrice(car.PriceBatteryRental);
@@ -114,11 +132,17 @@ namespace WebAPI.Utils.AutoMapper
             return cars.Select(car => ToCarDTO(car)).ToList();
         }
 
+        public static List<AdminCarDTO> ToAdminCarDTOList(List<Cars> cars)
+        {
+            return cars.Select(car => ToAdminCarDTO(car)).ToList();
+        }
+
         private static string FormatPrice(double price)
         {
             return price.ToString("N0", new CultureInfo("en-US")).Replace(",", ".");
         }
 
+        // Mapping car color of User
         public static CarColorDTO ToCarColorDTO(CarColor carColor)
         {
             return new CarColorDTO
@@ -128,9 +152,29 @@ namespace WebAPI.Utils.AutoMapper
                 ColorImage = carColor.ColorImage
             };
         }
+        // Mapping  list car colors of User
         public static List<CarColorDTO> ToCarColorDTOList(List<CarColor> carColors)
         {
             return carColors.Select(carColor => ToCarColorDTO(carColor)).ToList();
+        }
+
+        // Mapping car color of Admin
+        public static AdminCarColorDTO ToAdminCarColorDTO(CarColor carColor)
+        {
+            return new AdminCarColorDTO
+            {
+                ColorId = carColor.ColorId,
+                ColorName = carColor.ColorName,
+                ColorImage = carColor.ColorImage,
+                IsDeleted = carColor.IsDeleted,
+                CarId = carColor.CarId
+            };
+        }
+
+        // Mapping list car colors of Admin
+        public static List<AdminCarColorDTO> ToAdminCarColorDTOList(List<CarColor> carColors)
+        {
+            return carColors.Select(carColor => ToAdminCarColorDTO(carColor)).ToList();
         }
 
         public static CategoryDTO ToCategoryDTO(Category category)

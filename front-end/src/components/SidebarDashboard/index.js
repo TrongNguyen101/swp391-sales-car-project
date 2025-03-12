@@ -169,7 +169,7 @@ function SidebarDashboard() {
         </ListItem>
         <ListItem
           button={true}
-          onClick={handleNavigation("/car-management")}
+          onClick={handleNavigation("/dashboard/cars")}
           sx={{
             cursor: "pointer",
             padding: "8px 35px",
