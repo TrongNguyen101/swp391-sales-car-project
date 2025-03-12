@@ -20,7 +20,7 @@ import {
   Box,
 } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit, faTrash, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faSearch } from "@fortawesome/free-solid-svg-icons";
 import * as AdminServices from "../../services/AdminServices";
 
 function AccountTablePage() {
@@ -83,11 +83,6 @@ function AccountTablePage() {
     setRowToDelete(null);
   };
 
-  const handleDeleteClickOpen = (row) => {
-    setRowToDelete(row);
-    setDeleteDialogOpen(true);
-  };
-
   const handleDeleteDialogClose = () => {
     setDeleteDialogOpen(false);
     setRowToDelete(null);
@@ -104,7 +99,7 @@ function AccountTablePage() {
         }}
       >
         <TextField
-          label="Search"
+          label="Search email"
           variant="outlined"
           sx={{ width: 300 }}
           value={searchQuery}
@@ -216,16 +211,6 @@ function AccountTablePage() {
                   >
                     <FontAwesomeIcon icon={faEdit} />
                   </IconButton>
-                  <IconButton
-                    aria-label="delete"
-                    color="error"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleDeleteClickOpen(row);
-                    }}
-                  >
-                    <FontAwesomeIcon icon={faTrash} />
-                  </IconButton>
                 </TableCell>
               </TableRow>
             ))}
@@ -257,6 +242,14 @@ function AccountTablePage() {
             <>
               {editMode ? (
                 <>
+                  <TextField
+                    margin="dense"
+                    label="User ID"
+                    type="text"
+                    fullWidth
+                    disabled
+                    defaultValue={selectedRow.userId}
+                  />
                   <TextField
                     margin="dense"
                     label="Name"

@@ -66,5 +66,63 @@ namespace WebAPI.Controllers
                 });
             }
         }
+
+        [HttpPut("Edit")]
+        public async Task<IActionResult> EditUser(UserDTO userData)
+        {
+            try
+            {
+                var user = UsersDAO.GetInstance().FindUserById(userData.UserId);
+                if(user == null)
+                {
+                    return NotFound(new DataResponse
+                    {
+                        StatusCode = 404,
+                        Message = "User not found",
+                        Success = false
+                    });
+                }
+                return Ok(new DataResponse
+                {
+                    StatusCode = 200,
+                    Message = "Edit user successfully",
+                    Success = true
+                });
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new DataResponse
+                {
+                    StatusCode = 400,
+                    Success = false,
+                    Message = e.Message
+                });
+            }
+        }
+
+        [HttpGet("CountUser")]
+        public async Task<IActionResult> CountUser()
+        {
+            try
+            {
+                var userCount = await UsersDAO.GetInstance().CountUsersAsync();
+                return Ok(new DataResponse
+                {
+                    StatusCode = 200,
+                    Message = "Count user successfully",
+                    Success = true,
+                    Data = userCount
+                });
+            }
+            catch (Exception)
+            {
+                return BadRequest(new DataResponse
+                {
+                    StatusCode = 400,
+                    Success = false,
+                    Message = "Error"
+                });
+            }
+        }
     }
 }
