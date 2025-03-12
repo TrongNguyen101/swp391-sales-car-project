@@ -117,5 +117,4 @@ export const postResetPassword = async (email, newPassword, rePassword, OTPCode)
   } catch (error) {
     return error.response;
   }
-
 };

@@ -226,7 +226,6 @@ namespace WebAPI.Utils.AutoMapper
         {
             return new CartItem
             {
-                Id = cartItemDTO.Id,
                 ProductId = cartItemDTO.ProductId,
                 ProductName = cartItemDTO.ProductName,
                 Price = cartItemDTO.Price,

@@ -26,7 +26,7 @@ namespace WebAPI.DAO
             return instance;
         }
 
-        public async Task<List<CartItem>> GetAllCart()
+        public async Task<List<CartItem>> GetAllCartItems()
         {
             using (var context = new VinfastContext())
             {
@@ -47,7 +47,7 @@ namespace WebAPI.DAO
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Add cart item falid:" + ex.Message);
+                Console.WriteLine("Add cart item falid:" + ex);
 
                 return false;
             }

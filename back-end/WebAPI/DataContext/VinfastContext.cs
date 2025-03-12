@@ -445,6 +445,20 @@ namespace WebAPI.DataContext
                     LastChange = new DateTime(2023, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                     RoleId = 2
                 }
+                ,
+                new Users
+                {
+                    Id = new Guid("5168db79-a770-472d-82ed-061cba60f1e1"),
+                    UserName = "Le Khanh Bang",
+                    Address = "456 User St",
+                    Phone = "0987654321",
+                    Email = "Bangle15092002@gmail.com",
+                    Password = EncyptHelper.Sha256Encrypt("User@12345"), // Note: In a real application, store hashed passwords
+                    CreatedAt = new DateTime(2023, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                    IsDeleted = false,
+                    LastChange = new DateTime(2023, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                    RoleId = 2
+                }
             );
 
             // Seed the database with initial data

@@ -132,14 +132,10 @@ function AccessoriesPage() {
                     color: "white",
                   },
                 }}
+                onClick={() => navigate("/cart")}
               >
                 <span className={cx("container__accessories--cart")}>
                   <FontAwesomeIcon icon={faCartShopping} />
-                </span>
-                <span>
-                  <Typography sx={{ fontWeight: 900, fontSize: "24px" }}>
-                    0
-                  </Typography>
                 </span>
               </Button>
             </div>
