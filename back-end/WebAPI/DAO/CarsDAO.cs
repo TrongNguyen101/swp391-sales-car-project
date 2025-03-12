@@ -49,5 +49,24 @@ namespace WebAPI.DAO
                 return await context.CarColor.Where(CarColor => CarColor.CarId == carId).ToListAsync();
             }
         }
+
+        public async Task<bool> DeleteCarById(Cars car)
+        {
+            try
+            {
+                using (var context = new VinfastContext())
+                {
+                    context.Attach(car);
+                    context.Entry(car).Property(c => c.IsDeleted).IsModified = true;
+                    await context.SaveChangesAsync();
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return false;
+            }
+        }
     }
 }

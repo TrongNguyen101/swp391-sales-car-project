@@ -18,12 +18,12 @@ namespace WebAPI.Utils.AutoMapper
             return new UserDTO
             {
                 UserId = user.Id,
-                UserName = user.UserName,
+                UserName = FormatFullname(user.UserName),
                 Address = user.Address,
                 Phone = user.Phone,
                 Email = user.Email,
-                CreatedAt = user.CreatedAt,
-                IsDeleted = user.IsDeleted,
+                CreatedAt = FormatDateTime(user.CreatedAt),
+                IsDeleted = FormatBooleanToString(user.IsDeleted),
                 LastChange = user.LastChange,
                 RoleId = user.RoleId
             };
@@ -43,8 +43,7 @@ namespace WebAPI.Utils.AutoMapper
                 Address = userDTO.Address,
                 Phone = userDTO.Phone,
                 Email = userDTO.Email,
-                CreatedAt = userDTO.CreatedAt,
-                IsDeleted = userDTO.IsDeleted,
+                IsDeleted = FormatStringToBoolean(userDTO.IsDeleted),
                 LastChange = userDTO.LastChange,
                 RoleId = userDTO.RoleId
             };
@@ -92,6 +91,24 @@ namespace WebAPI.Utils.AutoMapper
             };
         }
 
+        public static AdminCarDTO ToAdminCarDTO(Cars car)
+        {
+            return new AdminCarDTO
+            {
+                Id = car.Id,
+                Model = car.Name,
+                Seat = car.Seats,
+                Image = car.Image,
+                SpecImage = car.SpecImage,
+                BannerImage = car.ImageBanner,
+                PriceBatteryOwn = car.PriceBatteryOwn,
+                PriceBatteryRental = car.PriceBatteryRental,
+                PriceDeposite = car.PriceDeposite,
+                Quantity = car.Quantity,
+                IsDeleted = car.IsDeleted
+            };
+        }
+
         public static CarDetailDTO ToCarDetailDTO(Cars car)
         {
             var carPrice = FormatPrice(car.PriceBatteryRental);
@@ -115,11 +132,17 @@ namespace WebAPI.Utils.AutoMapper
             return cars.Select(car => ToCarDTO(car)).ToList();
         }
 
+        public static List<AdminCarDTO> ToAdminCarDTOList(List<Cars> cars)
+        {
+            return cars.Select(car => ToAdminCarDTO(car)).ToList();
+        }
+
         private static string FormatPrice(double price)
         {
             return price.ToString("N0", new CultureInfo("en-US")).Replace(",", ".");
         }
 
+        // Mapping car color of User
         public static CarColorDTO ToCarColorDTO(CarColor carColor)
         {
             return new CarColorDTO
@@ -129,9 +152,29 @@ namespace WebAPI.Utils.AutoMapper
                 ColorImage = carColor.ColorImage
             };
         }
+        // Mapping  list car colors of User
         public static List<CarColorDTO> ToCarColorDTOList(List<CarColor> carColors)
         {
             return carColors.Select(carColor => ToCarColorDTO(carColor)).ToList();
+        }
+
+        // Mapping car color of Admin
+        public static AdminCarColorDTO ToAdminCarColorDTO(CarColor carColor)
+        {
+            return new AdminCarColorDTO
+            {
+                ColorId = carColor.ColorId,
+                ColorName = carColor.ColorName,
+                ColorImage = carColor.ColorImage,
+                IsDeleted = carColor.IsDeleted,
+                CarId = carColor.CarId
+            };
+        }
+
+        // Mapping list car colors of Admin
+        public static List<AdminCarColorDTO> ToAdminCarColorDTOList(List<CarColor> carColors)
+        {
+            return carColors.Select(carColor => ToAdminCarColorDTO(carColor)).ToList();
         }
 
         public static CategoryDTO ToCategoryDTO(Category category)
@@ -221,7 +264,51 @@ namespace WebAPI.Utils.AutoMapper
         {
             return cartItems.Select(cartItem => ToCartItemDTO(cartItem)).ToList();
         }
+      
+        public static List<UserDTO> ToUserDTOList(List<Users> users)
+        {
+            return users.Select(user => ToUserDTO(user)).ToList();
+        }
 
+        private static string FormatFullname(string fullname)
+        {
+            if (string.IsNullOrWhiteSpace(fullname))
+            {
+                return fullname;
+            }
+
+            var words = fullname.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            for (int i = 0; i < words.Length; i++)
+            {
+                if (words[i].Length > 0)
+                {
+                    words[i] = char.ToUpper(words[i][0]) + words[i].Substring(1).ToLower();
+                }
+            }
+
+            return string.Join(' ', words);
+        }
+
+        private static string FormatBooleanToString(bool isDeleted)
+        {
+            return isDeleted ? "True" : "False";
+        }
+        private static bool FormatStringToBoolean(string isDeleted)
+        {
+            if (isDeleted == "True")
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        private static string FormatDateTime(DateTime dateTime)
+        {
+            return dateTime.ToString("dd-MM-yyyy HH:mm");
+        }
+      
         public static CartItem ToCartItem(CartItemDTO cartItemDTO)
         {
             return new CartItem

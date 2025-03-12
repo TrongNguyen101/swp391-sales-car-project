@@ -2,7 +2,6 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.DAO;
 using WebAPI.DTO;
-using WebAPI.Models;
 using WebAPI.Utils.AutoMapper;
 
 namespace WebAPI.Controllers

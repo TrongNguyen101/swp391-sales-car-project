@@ -8,9 +8,12 @@ import RegisterPage from "../pages/Register";
 import CarDetailPage from "../pages/CarDetail";
 import DepositPaymentPage from "../pages/DepositPayment";
 import DepositPaymentResponsePage from "../pages/DepositPaymentResponse";
-import DashBoardPage from "../pages/DashBoard";
 import TestDriveRegistration from "../pages/TestDriveRegistration";
+import { DashboardLayout } from "../layouts";
+import AccountTablePage from "../pages/AccountTable";
+import CarsTablePage from "../pages/CarsTable";
 import CartPage from "../pages/Cart";
+
 
 const publicRoutes = [
   { path: "/", page: HomePage },
@@ -24,9 +27,18 @@ const publicRoutes = [
   { path: "/register", page: RegisterPage, layout: null },
   { path: "/deposit/:carId", page: DepositPaymentPage },
   { path: "/deposit-response", page: DepositPaymentResponsePage },
-  { path: "/dashboard", page: DashBoardPage },
   { path: "/testdrivegistration", page: TestDriveRegistration },
   { path: "/reset-password", page: TestDriveRegistration },
+  {
+    path: "/dashboard/account",
+    page: AccountTablePage,
+    layout: DashboardLayout,
+  },
+  {
+    path: "/dashboard/cars",
+    page: CarsTablePage,
+    layout: DashboardLayout,
+  },
 ];
 
 export { publicRoutes };

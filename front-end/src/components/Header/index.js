@@ -86,7 +86,7 @@ function HeaderComponent() {
   };
 
   const handleToDashboard = () => {
-    navigate("/dashboard");
+    navigate("/dashboard/account");
   };
   const handleToTestDrive = () => {
     navigate("/testdrivegistration");

@@ -48,6 +48,14 @@ namespace WebAPI.DAO
             }
         }
 
+        public async Task<Users?> FindUserById(Guid userId)
+        {
+            using (var context = new VinfastContext())
+            {
+                return await context.Users.Where(u => u.Id == userId).FirstOrDefaultAsync();
+            }
+        }
+
         /// <summary>
         /// Adds a new user to the database.
         /// </summary>
@@ -102,6 +110,22 @@ namespace WebAPI.DAO
                 context.SaveChanges();
 
                 return true;
+            }
+        }
+
+        public async Task<List<Users>> GetAllUsersAsync()
+        {
+            using (var context = new VinfastContext())
+            {
+                return await context.Users.Where(user => user.RoleId == 2).ToListAsync();
+            }
+        }
+
+        public async Task<int> CountUsersAsync()
+        {
+            using (var context = new VinfastContext())
+            {
+                return await context.Users.Where(user => user.RoleId == 2 && user.IsDeleted == false).CountAsync();
             }
         }
     }
