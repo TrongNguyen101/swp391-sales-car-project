@@ -12,6 +12,8 @@ import TestDriveRegistration from "../pages/TestDriveRegistration";
 import { DashboardLayout } from "../layouts";
 import AccountTablePage from "../pages/AccountTable";
 import CarsTablePage from "../pages/CarsTable";
+import CartPage from "../pages/Cart";
+
 
 const publicRoutes = [
   { path: "/", page: HomePage },
@@ -20,6 +22,7 @@ const publicRoutes = [
   { path: "/cars/:carId", page: CarDetailPage },
   { path: "/accessories", page: AccessoriesPage },
   { path: "/accessories/:accessoryId", page: AccessoryDetailPage },
+  { path: "/cart", page: CartPage },
   { path: "/login", page: LoginPage, layout: null },
   { path: "/register", page: RegisterPage, layout: null },
   { path: "/deposit/:carId", page: DepositPaymentPage },

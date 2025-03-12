@@ -255,6 +255,7 @@ namespace WebAPI.Utils.AutoMapper
                 Price = cartItem.Price,
                 Quantity = cartItem.Quantity,
                 ImageUrl = cartItem.ImageUrl,
+                TotalPrice = cartItem.Price * cartItem.Quantity,
                 UserId = cartItem.UserId
             };
         }
@@ -263,7 +264,7 @@ namespace WebAPI.Utils.AutoMapper
         {
             return cartItems.Select(cartItem => ToCartItemDTO(cartItem)).ToList();
         }
-
+      
         public static List<UserDTO> ToUserDTOList(List<Users> users)
         {
             return users.Select(user => ToUserDTO(user)).ToList();
@@ -306,6 +307,19 @@ namespace WebAPI.Utils.AutoMapper
         private static string FormatDateTime(DateTime dateTime)
         {
             return dateTime.ToString("dd-MM-yyyy HH:mm");
+        }
+      
+        public static CartItem ToCartItem(CartItemDTO cartItemDTO)
+        {
+            return new CartItem
+            {
+                ProductId = cartItemDTO.ProductId,
+                ProductName = cartItemDTO.ProductName,
+                Price = cartItemDTO.Price,
+                Quantity = cartItemDTO.Quantity,
+                ImageUrl = cartItemDTO.ImageUrl,
+                UserId = cartItemDTO.UserId
+            };
         }
     }
 }

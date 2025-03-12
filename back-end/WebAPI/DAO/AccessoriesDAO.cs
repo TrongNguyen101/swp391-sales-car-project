@@ -57,5 +57,15 @@ namespace WebAPI.DAO
                 return await context.AccessoryImages.Where(image => image.AccessoryId == accessoryId).ToListAsync();
             }
         }
+
+        public async Task<Accessory> UpdateAccessory(Accessory accessory)
+        {
+            using (var context = new VinfastContext())
+            {
+                context.Accessories.Update(accessory);
+                await context.SaveChangesAsync();
+                return accessory;
+            }
+        }
     }
 }
