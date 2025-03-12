@@ -10,6 +10,7 @@ import DepositPaymentPage from "../pages/DepositPayment";
 import DepositPaymentResponsePage from "../pages/DepositPaymentResponse";
 import DashBoardPage from "../pages/DashBoard";
 import TestDriveRegistration from "../pages/TestDriveRegistration";
+import CartPage from "../pages/Cart";
 
 const publicRoutes = [
   { path: "/", page: HomePage },
@@ -18,6 +19,7 @@ const publicRoutes = [
   { path: "/cars/:carId", page: CarDetailPage },
   { path: "/accessories", page: AccessoriesPage },
   { path: "/accessories/:accessoryId", page: AccessoryDetailPage },
+  { path: "/cart", page: CartPage },
   { path: "/login", page: LoginPage, layout: null },
   { path: "/register", page: RegisterPage, layout: null },
   { path: "/deposit/:carId", page: DepositPaymentPage },
@@ -25,7 +27,6 @@ const publicRoutes = [
   { path: "/dashboard", page: DashBoardPage },
   { path: "/testdrivegistration", page: TestDriveRegistration },
   { path: "/reset-password", page: TestDriveRegistration },
-
 ];
 
 export { publicRoutes };

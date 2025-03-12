@@ -106,6 +106,8 @@ function AccessoriesPage() {
             Product Vinfast's Accessories
           </Typography>
         </div>
+
+        {/* container sidebar and list accessories */}
         <div className={cx("container__list-accessories")}>
           <div className={cx("container__sidebar")}>
             {/* Pass callback to Sidebar */}
@@ -120,7 +122,6 @@ function AccessoriesPage() {
                   className={cx("search")}
                 />
               </div>
-              <div className={cx("")}></div>
               <Button
                 variant="outlined"
                 sx={{
@@ -131,6 +132,7 @@ function AccessoriesPage() {
                     color: "white",
                   },
                 }}
+                onClick={() => navigate("/cart")}
               >
                 <span className={cx("container__accessories--cart")}>
                   <FontAwesomeIcon icon={faCartShopping} />

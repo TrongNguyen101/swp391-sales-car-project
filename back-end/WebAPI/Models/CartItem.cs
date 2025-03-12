@@ -22,9 +22,8 @@ namespace WebAPI.Models
         public string ProductName { get; set; } = string.Empty;
 
         [Required]
-        [Column(TypeName = "decimal(18,2)")]
         [Range(0, double.MaxValue, ErrorMessage = "Price must be a positive value")]
-        public decimal Price { get; set; }
+        public double Price { get; set; }
 
         [Required]
         [Range(1, int.MaxValue, ErrorMessage = "Quantity must be at least 1")]

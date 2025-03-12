@@ -8,16 +8,16 @@ namespace WebAPI.Utils.JwtTokenHelper
 {
     public class JwtTokenHelper
     {
-        
-    /// <summary>
-    /// Generates a JSON Web Token (JWT) for the specified user.
-    /// </summary>
-    /// <param name="user">The user for whom the JWT is being generated.</param>
-    /// <returns>A JWT as a string.</returns>
-    /// <remarks>
-    /// The JWT is generated using the HS256 algorithm and includes the user's ID, name, email, role, 
-    /// issuer, audience, and an expiration time set to one hour from the current time.
-    /// </remarks>
+
+        /// <summary>
+        /// Generates a JSON Web Token (JWT) for the specified user.
+        /// </summary>
+        /// <param name="user">The user for whom the JWT is being generated.</param>
+        /// <returns>A JWT as a string.</returns>
+        /// <remarks>
+        /// The JWT is generated using the HS256 algorithm and includes the user's ID, name, email, role, 
+        /// issuer, audience, and an expiration time set to one hour from the current time.
+        /// </remarks>
         public static string GenerateJwtToken(UserDTO user)
         {
             var configuration = new ConfigurationBuilder()
@@ -71,7 +71,7 @@ namespace WebAPI.Utils.JwtTokenHelper
             var hash = hmacsha256.ComputeHash(Encoding.UTF8.GetBytes(message));
             return EncoderHelper.Base64Url.Encode(hash.ToString());
         }
-        
+
         /// <summary>
         /// Verifies the signature of the specified JWT.
         /// </summary>
@@ -83,7 +83,7 @@ namespace WebAPI.Utils.JwtTokenHelper
             .SetBasePath(Directory.GetCurrentDirectory())
             .AddJsonFile("appsettings.json")
             .Build();
-            if(token == null)
+            if (token == null)
             {
                 return false;
             }
@@ -119,6 +119,26 @@ namespace WebAPI.Utils.JwtTokenHelper
             }
 
             return null;
+        }
+
+        public static Dictionary<string, object>? GetUserClaims(dynamic token)
+        {
+            // Split the token into its parts
+            var parts = token?.ToString()?.Split('.');
+            // If the token does not have three parts, it is invalid
+            if (parts == null || parts.Length < 2) return null;
+            // Check if the token is valid
+            if (VerifyJwtToken(token) == false) return null;
+            // Decode the payload
+            try
+            {
+                var payloadJson = Base64Url.Decode(parts[1]);
+                return JsonSerializer.Deserialize<Dictionary<string, object>>(payloadJson);
+            }
+            catch
+            {
+                return null;
+            }
         }
 
     }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebAPI.DataContext;
 
@@ -11,9 +12,11 @@ using WebAPI.DataContext;
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(VinfastContext))]
-    partial class VinfastContextModelSnapshot : ModelSnapshot
+    [Migration("20250310210108_UpdateDb_V5.1_Edit_price_property")]
+    partial class UpdateDb_V51_Edit_price_property
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1089,19 +1092,6 @@ namespace WebAPI.Migrations
                             Phone = "0987654321",
                             RoleId = 2,
                             UserName = "User A"
-                        },
-                        new
-                        {
-                            Id = new Guid("5168db79-a770-472d-82ed-061cba60f1e1"),
-                            Address = "456 User St",
-                            CreatedAt = new DateTime(2023, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Email = "Bangle15092002@gmail.com",
-                            IsDeleted = false,
-                            LastChange = new DateTime(2023, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Password = "e7f5c00bfc7067a49da98fa9b1eacd8d428a4632197edaa84c9dacd40ca35050",
-                            Phone = "0987654321",
-                            RoleId = 2,
-                            UserName = "Le Khanh Bang"
                         });
                 });
 
