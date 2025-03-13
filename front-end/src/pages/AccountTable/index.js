@@ -41,7 +41,7 @@ function AccountTablePage() {
   const [errorFullname, setErrorFullname] = useState("");
   const [errorPhone, setErrorPhone] = useState("");
   const token = localStorage.getItem("Bearer");
-  const decodedPayload = DecodedPayload.decodePayload(token);
+  const decodedPayload = DecodedPayload.decodePayload(token); 
   const navigate = useNavigate(); 
 
   if(decodedPayload === null) {
