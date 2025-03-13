@@ -23,6 +23,8 @@ import { faEdit, faSearch } from "@fortawesome/free-solid-svg-icons";
 import * as AdminServices from "../../services/AdminServices";
 import * as SearchValidate from "../../validation/SearchValidation";
 import * as UpdateDataValidate from "../../validation/UserUpdateValidation";
+import * as DecodedPayload from "../../lib/DecodePayload";
+import { useNavigate } from "react-router-dom";
 
 function AccountTablePage() {
   const [rows, setRows] = useState([]);
@@ -38,6 +40,15 @@ function AccountTablePage() {
   const [errorSearch, setErrorSearch] = useState("");
   const [errorFullname, setErrorFullname] = useState("");
   const [errorPhone, setErrorPhone] = useState("");
+  const token = localStorage.getItem("Bearer");
+  const decodedPayload = DecodedPayload.decodePayload(token);
+  const navigate = useNavigate(); 
+
+  if(decodedPayload === null) {
+    navigate("/login");
+  }else if(decodedPayload.role !== 1) {
+    navigate("/");
+  }
 
   const fetchData = async () => {
     try {
