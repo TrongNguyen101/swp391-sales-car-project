@@ -40,6 +40,10 @@ namespace WebAPI.Models
         [Required]
         public bool IsDeleted { get; set; }
 
+        [Column("Is Showed")]
+        [Required]
+        public bool IsShowed { get; set; }
+
         [Column("Category ID")]
         [Required]
         public int CategoryId { get; set; }

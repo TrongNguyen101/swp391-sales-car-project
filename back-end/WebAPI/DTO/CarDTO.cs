@@ -7,5 +7,6 @@ namespace WebAPI.DTO
         public string? Price { get; set; }
         public int Seat { get; set; }
         public string? Image { get; set; }
+        public bool IsShowed { get; set; }
     }
 }

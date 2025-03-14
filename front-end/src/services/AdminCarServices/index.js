@@ -56,3 +56,41 @@ export const adminAddMoreCar = async (carId) => {
     return error.response;
   }
 };
+
+export const adminCreateCar = async (carData) => {
+  try {
+    const token = localStorage.getItem("Bearer");
+    const response = await request.post(
+      `/api/AdminCars/adminCreateCar`,
+      carData,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    return error.response;
+  }
+};
+
+export const adminUpdateCar = async (carData) => {
+  try {
+    const token = localStorage.getItem("Bearer");
+    const response = await request.put(
+      `/api/AdminCars/adminUpdateCar/${carData.carId}`,
+      carData,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    return error.response;
+  }
+};

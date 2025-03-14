@@ -42,6 +42,15 @@ namespace WebAPI.DAO
             }
         }
 
+        public async Task<Cars> GetCarByName(string name)
+        {
+            using (var context = new VinfastContext())
+            {
+                return await context.Cars.FirstOrDefaultAsync(c => c.Name == name);
+            }
+        }
+
+
         public async Task<List<CarColor>> GetCarColorsByCarId(int carId)
         {
             using (var context = new VinfastContext())
@@ -77,6 +86,40 @@ namespace WebAPI.DAO
                 {
                     context.Attach(car);
                     context.Entry(car).Property(c => c.Quantity).IsModified = true;
+                    await context.SaveChangesAsync();
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return false;
+            }
+        }
+        public async Task<bool> CreateCar(Cars car)
+        {
+            try
+            {
+                using (var context = new VinfastContext())
+                {
+                    await context.Cars.AddAsync(car);
+                    await context.SaveChangesAsync();
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return false;
+            }
+        }
+        public async Task<bool> UpdateCar(Cars car)
+        {
+            try
+            {
+                using (var context = new VinfastContext())
+                {
+                    context.Cars.Update(car);
                     await context.SaveChangesAsync();
                     return true;
                 }

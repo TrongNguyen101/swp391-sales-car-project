@@ -4,26 +4,21 @@ namespace WebAPI.DTO
 {
     public class AdminCarDTO
     {
-        [Required]
         public int Id { get; set; }
 
-        [Required]
         [StringLength(100)]
         public string? Model { get; set; }
 
         [Required]
-        [Range(4, 7)]
+        [Range(4, 9, ErrorMessage = "Seat must be between 4 and 9")]
         public int Seat { get; set; }
 
-        [Required]
         [StringLength(50)]
         public string? Image { get; set; }
 
-        [Required]
         [StringLength(50)]
         public string? SpecImage { get; set; }
 
-        [Required]
         [StringLength(50)]
         public string? BannerImage { get; set; }
 
@@ -44,5 +39,6 @@ namespace WebAPI.DTO
         public int Quantity { get; set; }
 
         public bool IsDeleted { get; set; }
+        public bool IsShowed { get; set; }
     }
 }

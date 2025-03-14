@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace WebAPI.DTO
 {
-    public class AdminAddMoreCar
+    public class AdminAddMoreCarDTO
     {
         public int CardId { get; set; }
         public int Quantity { get; set; }

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Table,
   TableBody,
@@ -24,14 +25,21 @@ import {
   MenuItem,
 } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit, faSearch, faTrash } from "@fortawesome/free-solid-svg-icons";
-import * as adminCarServices from "../../services/AdminCarServices";
+import {
+  faEdit,
+  faEye,
+  faEyeSlash,
+  faSearch,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
+import * as adminCarServices from "../../../services/AdminCarServices";
 
 function CarsTable() {
+  const navigate = useNavigate();
+
   const [rows, setRows] = useState([]);
   const [open, setOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
-  const [editMode, setEditMode] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [rowToDelete, setRowToDelete] = useState(null);
@@ -64,20 +72,16 @@ function CarsTable() {
 
   const handleClickOpen = (row) => {
     setSelectedRow(row);
-    setOpen(true);
-    setEditMode(false);
   };
 
-  const handleEditClickOpen = (row) => {
-    setSelectedRow(row);
-    setOpen(true);
-    setEditMode(true);
+  const handleGoToEditCarPage = (row) => {
+    navigate(`/dashboard/edit-car/${row.id}`);
   };
 
-  // Add new car button
-  
-
-
+  // Link to create new car page
+  const handleGoToCreateNewCarPage = () => {
+    navigate("/dashboard/create-new-car");
+  };
 
   // Add more car button
   const handleAddMoreCarClickOpen = () => {
@@ -92,7 +96,7 @@ function CarsTable() {
       const carId = car.id;
       const response = await adminCarServices.adminAddMoreCar({
         carId,
-        quantity
+        quantity,
       });
       if (response.statusCode === 200) {
         fetchData();
@@ -120,21 +124,11 @@ function CarsTable() {
 
   //------------------------------------------------------------------------------------------------------------
 
-  const handleClose = () => {
-    setOpen(false);
-    setSelectedRow(null);
-    setEditMode(false);
-  };
-
-  const handleSave = () => {
-    // Implement save logic here
-    handleClose();
-  };
-
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
   };
 
+  // Delete car
   const handleDelete = async () => {
     try {
       const response = await adminCarServices.adminDeleteCar(rowToDelete.id);
@@ -163,6 +157,7 @@ function CarsTable() {
 
   return (
     <>
+      {/* Navigation ----------------------------------------------------------------------------------------------------------------- */}
       <div
         style={{
           display: "flex",
@@ -174,7 +169,7 @@ function CarsTable() {
         <Box display="flex" justifyContent="space-between" width="100%" gap={2}>
           <Box display="flex" gap={2}>
             <Button
-              // onClick={handleCreateNewClickOpen}
+              onClick={handleGoToCreateNewCarPage}
               color="primary"
               variant="contained"
             >
@@ -213,6 +208,8 @@ function CarsTable() {
           />
         </Box>
       </div>
+
+      {/* Table show list product---------------------------------------------------------------------------------------------------- */}
       <TableContainer
         component={Paper}
         sx={{
@@ -240,7 +237,16 @@ function CarsTable() {
                 sx={{
                   backgroundColor: "primary.main",
                   color: "white",
-                  width: "22%",
+                  width: "2%",
+                }}
+              >
+                Status
+              </TableCell>
+              <TableCell
+                sx={{
+                  backgroundColor: "primary.main",
+                  color: "white",
+                  width: "15%",
                 }}
                 align="right"
               >
@@ -287,19 +293,30 @@ function CarsTable() {
                 <TableCell align="left" sx={{ width: "15%" }}>
                   {row.model}
                 </TableCell>
-                <TableCell align="right" sx={{ width: "20%" }}>
+                <TableCell align="center" sx={{ width: "2%" }}>
+                  {row.isShowed ? (
+                    <FontAwesomeIcon icon={faEye} />
+                  ) : (
+                    <FontAwesomeIcon color="red" icon={faEyeSlash} />
+                  )}
+                </TableCell>
+                <TableCell align="right" sx={{ width: "15%" }}>
                   {row.priceBatteryRental}
                 </TableCell>
                 <TableCell align="right">{row.priceBatteryOwn}</TableCell>
                 <TableCell align="right">{row.priceDeposite}</TableCell>
                 <TableCell align="right">{row.quantity}</TableCell>
+
+                {/* Action for each row data ------------ */}
+
                 <TableCell align="center">
+                  {/* Edit Button */}
                   <IconButton
                     aria-label="edit"
                     color="success"
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleEditClickOpen(row);
+                      handleGoToEditCarPage(row);
                     }}
                   >
                     <FontAwesomeIcon icon={faEdit} />
@@ -320,161 +337,8 @@ function CarsTable() {
           </TableBody>
         </Table>
       </TableContainer>
-      {/* Edit and detail dialog -----------------------------------------------------------------------------------------  */}
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        sx={{
-          textAlign: "center",
-        }}
-      >
-        <DialogTitle>
-          <Typography
-            sx={{
-              fontSize: "1.8rem",
-              fontWeight: "600",
-              lineHeight: "1.5",
-              color: "primary.main",
-            }}
-          >
-            {editMode ? "Edit Row" : "Row Details"}
-          </Typography>
-        </DialogTitle>
-        {/* Form edit and show information */}
-        <DialogContent>
-          {selectedRow && (
-            <>
-              {editMode ? (
-                <>
-                  <TextField
-                    margin="dense"
-                    label="User ID"
-                    type="text"
-                    fullWidth
-                    disabled
-                    defaultValue={selectedRow.userId}
-                  />
-                  <TextField
-                    margin="dense"
-                    label="Name"
-                    type="text"
-                    fullWidth
-                    defaultValue={selectedRow.userName}
-                  />
-                  <TextField
-                    margin="dense"
-                    label="Phone"
-                    type="text"
-                    fullWidth
-                    defaultValue={selectedRow.phone}
-                  />
-                  <TextField
-                    margin="dense"
-                    label="Email"
-                    type="text"
-                    fullWidth
-                    disabled
-                    defaultValue={selectedRow.email}
-                  />
-                  <TextField
-                    margin="dense"
-                    label="Address"
-                    type="text"
-                    fullWidth
-                    defaultValue={selectedRow.address}
-                  />
-                  <TextField
-                    margin="dense"
-                    label="Created At"
-                    type="text"
-                    fullWidth
-                    disabled
-                    defaultValue={selectedRow.createdAt}
-                  />
-                  <TextField
-                    margin="dense"
-                    label="Deleted"
-                    type="text"
-                    fullWidth
-                    disabled
-                    defaultValue={selectedRow.isDeleted}
-                  />
-                </>
-              ) : (
-                <>
-                  <TextField
-                    margin="dense"
-                    label="Name"
-                    type="text"
-                    fullWidth
-                    disabled
-                    defaultValue={selectedRow.userName}
-                  />
-                  <TextField
-                    margin="dense"
-                    label="Phone"
-                    type="text"
-                    fullWidth
-                    disabled
-                    defaultValue={selectedRow.phone}
-                  />
-                  <TextField
-                    margin="dense"
-                    label="Email"
-                    type="text"
-                    fullWidth
-                    disabled
-                    defaultValue={selectedRow.email}
-                  />
-                  <TextField
-                    margin="dense"
-                    label="Address"
-                    type="text"
-                    fullWidth
-                    disabled
-                    defaultValue={selectedRow.address}
-                  />
-                  <TextField
-                    margin="dense"
-                    label="Created At"
-                    type="text"
-                    fullWidth
-                    disabled
-                    defaultValue={selectedRow.createdAt}
-                  />
-                  <TextField
-                    margin="dense"
-                    label="Deleted"
-                    type="text"
-                    fullWidth
-                    disabled
-                    defaultValue={selectedRow.isDeleted}
-                  />
-                </>
-              )}
-            </>
-          )}
-        </DialogContent>
-        {/* Button submit and cancel */}
-        <DialogActions>
-          {editMode ? (
-            <Box display="flex" justifyContent="center" width="100%" gap={2}>
-              <Button onClick={handleSave} color="primary" variant="contained">
-                Save
-              </Button>
-              <Button onClick={handleSave} color="error" variant="contained">
-                Cancel
-              </Button>
-            </Box>
-          ) : (
-            <Button onClick={handleClose} color="primary" variant="contained">
-              Close
-            </Button>
-          )}
-        </DialogActions>
-      </Dialog>
 
-      {/* Create new dialog ----------------------------------------------------------------------------------------- */}
+      {/* Add more Car dialog ----------------------------------------------------------------------------------------- */}
       <Dialog open={openAddMoreCarDialog}>
         <DialogTitle>
           <Typography

@@ -87,7 +87,8 @@ namespace WebAPI.Utils.AutoMapper
                 Name = car.Name,
                 Price = carPrice,
                 Seat = car.Seats,
-                Image = car.Image
+                Image = car.Image,
+                IsShowed = car.IsShowed
             };
         }
 
@@ -105,7 +106,8 @@ namespace WebAPI.Utils.AutoMapper
                 PriceBatteryRental = car.PriceBatteryRental,
                 PriceDeposite = car.PriceDeposite,
                 Quantity = car.Quantity,
-                IsDeleted = car.IsDeleted
+                IsDeleted = car.IsDeleted,
+                IsShowed = car.IsShowed
             };
         }
 
@@ -264,7 +266,7 @@ namespace WebAPI.Utils.AutoMapper
         {
             return cartItems.Select(cartItem => ToCartItemDTO(cartItem)).ToList();
         }
-      
+
         public static List<UserDTO> ToUserDTOList(List<Users> users)
         {
             return users.Select(user => ToUserDTO(user)).ToList();
@@ -308,7 +310,7 @@ namespace WebAPI.Utils.AutoMapper
         {
             return dateTime.ToString("dd-MM-yyyy HH:mm");
         }
-      
+
         public static CartItem ToCartItem(CartItemDTO cartItemDTO)
         {
             return new CartItem

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebAPI.DataContext;
 
@@ -11,9 +12,11 @@ using WebAPI.DataContext;
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(VinfastContext))]
-    partial class VinfastContextModelSnapshot : ModelSnapshot
+    [Migration("20250313153311_Add_Property_Car_And_Accessory")]
+    partial class Add_Property_Car_And_Accessory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -114,7 +117,7 @@ namespace WebAPI.Migrations
                             Dimensions = "30x20x10 cm",
                             Image = "Sac_tai_nha.png",
                             IsDeleted = false,
-                            IsShowed = true,
+                            IsShowed = false,
                             Material = "Plastic",
                             Name = "VinFast Home Charger",
                             Origin = "Vietnam",
@@ -132,7 +135,7 @@ namespace WebAPI.Migrations
                             Dimensions = "50x40x5 cm",
                             Image = "VF3_tham_nhua.png",
                             IsDeleted = false,
-                            IsShowed = true,
+                            IsShowed = false,
                             Material = "Rubber",
                             Name = "Thảm nhựa VF3",
                             Origin = "Vietnam",
@@ -150,7 +153,7 @@ namespace WebAPI.Migrations
                             Dimensions = "10x5x5 cm",
                             Image = "VF3_Camera_lui.png",
                             IsDeleted = false,
-                            IsShowed = true,
+                            IsShowed = false,
                             Material = "Metal",
                             Name = "Camera Lùi VF3",
                             Origin = "Japan",
@@ -168,7 +171,7 @@ namespace WebAPI.Migrations
                             Dimensions = "50x40x5 cm",
                             Image = "VF5_tham_nhua.png",
                             IsDeleted = false,
-                            IsShowed = true,
+                            IsShowed = false,
                             Material = "Rubber",
                             Name = "Thảm nhựa VF5",
                             Origin = "Vietnam",
@@ -186,7 +189,7 @@ namespace WebAPI.Migrations
                             Dimensions = "100x50x0.1 cm",
                             Image = "VF5_Goi_dan_phim_cach_nhiet.png",
                             IsDeleted = false,
-                            IsShowed = true,
+                            IsShowed = false,
                             Material = "Film",
                             Name = "Gói Dán Film Cách Nhiệt VinFast VF5",
                             Origin = "Vietnam",
@@ -204,7 +207,7 @@ namespace WebAPI.Migrations
                             Dimensions = "100x80x5 cm",
                             Image = "VF5_Tham_cop.png",
                             IsDeleted = false,
-                            IsShowed = true,
+                            IsShowed = false,
                             Material = "Rubber",
                             Name = "Thảm cốp 3D VF5",
                             Origin = "Vietnam",
@@ -222,7 +225,7 @@ namespace WebAPI.Migrations
                             Dimensions = "100x50x0.1 cm",
                             Image = "VF6_Goi_dan_phim_cach_nhiet.png",
                             IsDeleted = false,
-                            IsShowed = true,
+                            IsShowed = false,
                             Material = "Film",
                             Name = "Gói dán film cách nhiệt VF6",
                             Origin = "Vietnam",
@@ -240,7 +243,7 @@ namespace WebAPI.Migrations
                             Dimensions = "50x40x5 cm",
                             Image = "VF6_tham_nhua.png",
                             IsDeleted = false,
-                            IsShowed = true,
+                            IsShowed = false,
                             Material = "Rubber",
                             Name = "Thảm nhựa 3D VF6",
                             Origin = "Vietnam",
@@ -258,7 +261,7 @@ namespace WebAPI.Migrations
                             Dimensions = "100x80x5 cm",
                             Image = "VF6_Tham_cop.png",
                             IsDeleted = false,
-                            IsShowed = true,
+                            IsShowed = false,
                             Material = "Rubber",
                             Name = "Thảm cốp 3D VF6",
                             Origin = "Vietnam",
@@ -745,7 +748,7 @@ namespace WebAPI.Migrations
                             Image = "vinfast-vf3.png",
                             ImageBanner = "vinfast-banner.png",
                             IsDeleted = false,
-                            IsShowed = true,
+                            IsShowed = false,
                             Name = "Vinfast VF3",
                             PriceBatteryOwn = 322000000.0,
                             PriceBatteryRental = 240000000.0,
@@ -760,7 +763,7 @@ namespace WebAPI.Migrations
                             Image = "vinfast-vf5.png",
                             ImageBanner = "vinfast-banner.png",
                             IsDeleted = false,
-                            IsShowed = true,
+                            IsShowed = false,
                             Name = "Vinfast VF5",
                             PriceBatteryOwn = 540000000.0,
                             PriceBatteryRental = 460000000.0,
@@ -775,7 +778,7 @@ namespace WebAPI.Migrations
                             Image = "vinfast-vf6.png",
                             ImageBanner = "vinfast-banner.png",
                             IsDeleted = false,
-                            IsShowed = true,
+                            IsShowed = false,
                             Name = "Vinfast VF6",
                             PriceBatteryOwn = 765000000.0,
                             PriceBatteryRental = 675000000.0,
@@ -790,7 +793,7 @@ namespace WebAPI.Migrations
                             Image = "vinfast-vf7.png",
                             ImageBanner = "vinfast-banner.png",
                             IsDeleted = false,
-                            IsShowed = true,
+                            IsShowed = false,
                             Name = "Vinfast VF7",
                             PriceBatteryOwn = 999000000.0,
                             PriceBatteryRental = 850000000.0,
@@ -805,7 +808,7 @@ namespace WebAPI.Migrations
                             Image = "vinfast-vf8.png",
                             ImageBanner = "vinfast-banner.png",
                             IsDeleted = false,
-                            IsShowed = true,
+                            IsShowed = false,
                             Name = "Vinfast VF8",
                             PriceBatteryOwn = 1359000000.0,
                             PriceBatteryRental = 1170000000.0,
@@ -820,7 +823,7 @@ namespace WebAPI.Migrations
                             Image = "vinfast-vf9.png",
                             ImageBanner = "vinfast-banner.png",
                             IsDeleted = false,
-                            IsShowed = true,
+                            IsShowed = false,
                             Name = "Vinfast VF9",
                             PriceBatteryOwn = 2129000000.0,
                             PriceBatteryRental = 1604000000.0,

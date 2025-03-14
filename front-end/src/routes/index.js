@@ -11,9 +11,13 @@ import DepositPaymentResponsePage from "../pages/DepositPaymentResponse";
 import TestDriveRegistration from "../pages/TestDriveRegistration";
 import { DashboardLayout } from "../layouts";
 import AccountTablePage from "../pages/AccountTable";
-import CarsTablePage from "../pages/CarsTable";
 import CartPage from "../pages/Cart";
 
+// Admin Manage Product
+import CarsTablePage from "../pages/AdminManageProduct/CarsTable";
+import CreateCarPage from "../pages/AdminManageProduct/CreateCar";
+import AddCarImagePage from "../pages/AdminManageProduct/AddCarImage";
+import UpdateCarPage from "../pages/AdminManageProduct/UpdateCar";
 
 const publicRoutes = [
   { path: "/", page: HomePage },
@@ -37,6 +41,21 @@ const publicRoutes = [
   {
     path: "/dashboard/cars",
     page: CarsTablePage,
+    layout: DashboardLayout,
+  },
+  {
+    path: "/dashboard/create-new-car",
+    page: CreateCarPage,
+    layout: DashboardLayout,
+  },
+  {
+    path: "/dashboard/add-car-image",
+    page: AddCarImagePage,
+    layout: DashboardLayout,
+  },
+  {
+    path: "/dashboard/edit-car/:carId",
+    page: UpdateCarPage,
     layout: DashboardLayout,
   },
 ];
