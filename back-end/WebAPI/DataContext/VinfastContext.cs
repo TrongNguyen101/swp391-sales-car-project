@@ -855,6 +855,49 @@ namespace WebAPI.DataContext
                       .HasForeignKey(cartItem => cartItem.ProductId)
                       .IsRequired();
             });
+
+            modelBuilder.Entity<Invoice>(entity =>
+            {
+                entity.HasMany(i => i.InvoiceItems)
+                      .WithOne(ii => ii.Invoice)
+                      .HasForeignKey(ii => ii.InvoiceId)
+                      .OnDelete(DeleteBehavior.Cascade)
+                      .IsRequired();
+            });
+            modelBuilder.Entity<Invoice>(entity =>
+            {
+                entity.HasOne(i => i.User)
+                      .WithMany(u => u.Invoices)
+                      .HasForeignKey(i => i.UserId)
+                      .OnDelete(DeleteBehavior.Cascade)
+                      .IsRequired();
+            });
+
+            modelBuilder.Entity<Cars>(entity =>
+            {
+                entity.HasMany(car => car.InvoiceItems)
+                      .WithOne(invoice => invoice.Car)
+                      .HasForeignKey(car => car.CarId)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
+
+
+            modelBuilder.Entity<Accessory>(entity =>
+            {
+                entity.HasMany(a => a.InvoiceItems)
+                      .WithOne(invoice => invoice.Accessory)
+                      .HasForeignKey(a => a.AccessoryId)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<Invoice>(entity =>
+            {
+                entity.HasMany(a => a.Payments)
+                      .WithOne(pay => pay.Invoice)
+                      .HasForeignKey(a => a.InvoiceId)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
+
         }
     }
 }

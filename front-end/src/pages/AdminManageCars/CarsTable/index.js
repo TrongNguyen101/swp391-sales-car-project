@@ -161,6 +161,11 @@ function CarsTable() {
     setRowToDelete(null);
   };
 
+  // format the price
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat("vi-VN").format(price);
+  };
+
   return (
     <>
       {/* Navigation ----------------------------------------------------------------------------------------------------------------- */}
@@ -307,10 +312,14 @@ function CarsTable() {
                   )}
                 </TableCell>
                 <TableCell align="right" sx={{ width: "15%" }}>
-                  {row.priceBatteryRental}
+                  {formatPrice(row.priceBatteryRental)}
                 </TableCell>
-                <TableCell align="right">{row.priceBatteryOwn}</TableCell>
-                <TableCell align="right">{row.priceDeposite}</TableCell>
+                <TableCell align="right">
+                  {formatPrice(row.priceBatteryOwn)}
+                </TableCell>
+                <TableCell align="right">
+                  {formatPrice(row.priceDeposite)}
+                </TableCell>
                 <TableCell align="right">{row.quantity}</TableCell>
 
                 {/* Action for each row data ------------ */}

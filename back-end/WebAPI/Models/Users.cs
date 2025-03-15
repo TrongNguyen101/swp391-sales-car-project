@@ -31,5 +31,6 @@ namespace WebAPI.Models
         public Roles? Role { get; set; }
         public ICollection<CarDeposit>? CarDeposits { get; set; } = new List<CarDeposit>();
         public ICollection<CartItem>? CartItems { get; set; } = new List<CartItem>();
+        public ICollection<Invoice>? Invoices { get; set; } = new List<Invoice>();
     }
 }

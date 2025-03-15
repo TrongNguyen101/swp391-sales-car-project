@@ -135,10 +135,58 @@ namespace WebAPI.Controllers
         /// </summary>
         /// <param name="itemId"></param>
         /// <returns>Return status code</returns>
-        [HttpDelete]
-        public IActionResult RemoveItemFromCart(int itemId)
+        [HttpDelete("delete/{cartItemId}")]
+        public async Task<ActionResult> RemoveItemFromCart(int cartItemId)
         {
-            return Ok();
+            try
+            {
+                #region Authentication, Authorization
+                // Get token
+                var authorizationHeader = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
+
+                // Check token
+                if (authorizationHeader == null || !authorizationHeader.StartsWith("Bearer "))
+                {
+                    return Unauthorized(ResponseHelper.Response(401, "Authentication token is missing or invalid", false, null));
+                }
+                // Format token
+                var token = authorizationHeader.Split(" ")[1];
+                // Get claims
+                var claims = JwtTokenHelper.GetUserClaims(token);
+                // Verify token
+                if (claims == null)
+                {
+                    return Unauthorized(ResponseHelper.Response(401, "Authentication token is invalid", false, null));
+                }
+                // Check role
+                if (claims.TryGetValue("role", out var roleId) && roleId.ToString() != "2")
+                {
+                    return Unauthorized(ResponseHelper.Response(401, "Unauthorized access denied", false, null));
+                }
+                #endregion
+
+                var cartItemExist = await CartDAO.GetInstance().GetCartItemById(cartItemId);
+
+                if (cartItemExist == null)
+                {
+                    return NotFound(ResponseHelper.Response(404, "Cart item not found", false, null));
+                }
+
+                // If cart item exist, delete cart item
+                if (await CartDAO.GetInstance().DeleteCartItem(cartItemExist))
+                {
+                    return Ok(ResponseHelper.Response(200, "Deleted cart item successfully", true, null));
+                }
+                else
+                {
+                    return BadRequest(ResponseHelper.Response(400, "Error: can't delete cart item", false, null));
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Delete cart item failed: " + ex);
+                return BadRequest(ResponseHelper.Response(404, "Internal server error. Please contact support.", false, null));
+            }
         }
 
         /// <summary>

@@ -73,7 +73,7 @@ namespace WebAPI.Controllers
             try
             {
                 var user = UsersDAO.GetInstance().FindUserById(userData.UserId);
-                if(user == null)
+                if (user == null)
                 {
                     return NotFound(new DataResponse
                     {
