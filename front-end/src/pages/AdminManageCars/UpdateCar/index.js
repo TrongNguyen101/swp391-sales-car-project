@@ -1,7 +1,6 @@
 import { useParams } from "react-router-dom";
-
-import * as adminCarServices from "../../../services/AdminCarServices";
 import { useEffect, useState } from "react";
+
 import {
   Box,
   Button,
@@ -14,6 +13,8 @@ import {
 } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+
+import * as adminCarServices from "../../../services/AdminCarServices";
 
 function UpdateCarPage() {
   //state of the values of the form
@@ -57,6 +58,7 @@ function UpdateCarPage() {
     fetchCarDetails(carId);
   }, [carId]);
 
+  // Function to update car
   const fetchUpdateCar = async () => {
     const carData = {
       carId,
@@ -80,14 +82,14 @@ function UpdateCarPage() {
       alert("Error updating car: " + error.message);
     }
   };
-
+  // Function to handle form submit
   const handleFormSubmit = (event) => {
     event.preventDefault();
 
     let isValid = true;
 
-    if (!seat || seat <= 0 || seat > 9) {
-      setErrorSeats("Seats must be greater than 0, less than 10");
+    if (!seat || seat <= 3 || seat > 9) {
+      setErrorSeats("Seats must be greater than 3, less than 10");
       isValid = false;
     }
 

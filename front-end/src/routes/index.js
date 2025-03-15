@@ -13,11 +13,16 @@ import { DashboardLayout } from "../layouts";
 import AccountTablePage from "../pages/AccountTable";
 import CartPage from "../pages/Cart";
 
-// Admin Manage Product
-import CarsTablePage from "../pages/AdminManageProduct/CarsTable";
-import CreateCarPage from "../pages/AdminManageProduct/CreateCar";
-import AddCarImagePage from "../pages/AdminManageProduct/AddCarImage";
-import UpdateCarPage from "../pages/AdminManageProduct/UpdateCar";
+// Admin Manage Cars
+import CarsTablePage from "../pages/AdminManageCars/CarsTable";
+import CreateCarPage from "../pages/AdminManageCars/CreateCar";
+import AddCarImagePage from "../pages/AdminManageCars/AddCarImage";
+import UpdateCarPage from "../pages/AdminManageCars/UpdateCar";
+import AdminDetailCarPage from "../pages/AdminManageCars/AdminDetailCar";
+
+// Admin Manage Accessories
+import AccessoriesTablePage from "../pages/AdminManageAccessories/AccessoriesTable";
+import CreateAccessoryPage from "../pages/AdminManageAccessories/CreateAccessory";
 
 const publicRoutes = [
   { path: "/", page: HomePage },
@@ -56,6 +61,23 @@ const publicRoutes = [
   {
     path: "/dashboard/edit-car/:carId",
     page: UpdateCarPage,
+    layout: DashboardLayout,
+  },
+  {
+    path: "/dashboard/detail-car/:carId",
+    page: AdminDetailCarPage,
+    layout: DashboardLayout,
+  },
+
+  // Admin Manage Accessories routes
+  {
+    path: "/dashboard/accessories",
+    page: AccessoriesTablePage,
+    layout: DashboardLayout,
+  },
+  {
+    path: "/dashboard/create-new-accessory",
+    page: CreateAccessoryPage,
     layout: DashboardLayout,
   },
 ];

@@ -58,13 +58,46 @@ namespace WebAPI.DAO
             }
         }
 
-        public async Task<Accessory> UpdateAccessory(Accessory accessory)
+        public async Task<bool> UpdateAccessory(Accessory accessory)
+        {
+            try
+            {
+                using (var context = new VinfastContext())
+                {
+                    context.Accessories.Update(accessory);
+                    await context.SaveChangesAsync();
+                    return true;
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public async Task<Accessory> GetAccessoryByName(string name)
         {
             using (var context = new VinfastContext())
             {
-                context.Accessories.Update(accessory);
-                await context.SaveChangesAsync();
-                return accessory;
+                return await context.Accessories.FirstOrDefaultAsync(c => c.Name == name);
+            }
+        }
+
+        public async Task<bool> CreateAccessory(Accessory accessory)
+        {
+            try
+            {
+                using (var context = new VinfastContext())
+                {
+                    await context.Accessories.AddAsync(accessory);
+                    await context.SaveChangesAsync();
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return false;
             }
         }
     }

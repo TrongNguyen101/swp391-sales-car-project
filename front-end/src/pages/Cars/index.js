@@ -31,8 +31,11 @@ function CarsPage() {
 
   const handleClickCard = (carId) => () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
+    console.log(carId);
     navigate(`/cars/${carId}`);
   };
+
+  console.log(cars);
 
   return (
     <div className={cx("container")}>
@@ -58,7 +61,7 @@ function CarsPage() {
               <div
                 className={cx("car-card")}
                 key={index}
-                onClick={() => handleClickCard(car.Id)}
+                onClick={handleClickCard(car.Id)}
               >
                 <div className={cx("card-image")}>
                   <img

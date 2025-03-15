@@ -94,3 +94,18 @@ export const adminUpdateCar = async (carData) => {
     return error.response;
   }
 };
+
+export const uploadCardImageOfCar = async (carId, formData) => {
+  try {
+    const endpoint = `/api/AdminCars/adminUpdateCardImageCar/${carId}`;
+    const token = localStorage.getItem("Bearer");
+    const response = await request.put(endpoint, formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    return error.response;
+  }
+};

@@ -35,15 +35,19 @@ import {
 import * as adminCarServices from "../../../services/AdminCarServices";
 
 function CarsTable() {
+  // variable to navigate to another page
   const navigate = useNavigate();
 
+  // State for the table
   const [rows, setRows] = useState([]);
-  const [open, setOpen] = useState(false);
-  const [selectedRow, setSelectedRow] = useState(null);
+
+  // Search state
   const [searchQuery, setSearchQuery] = useState("");
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
+
+  // Delete car state
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [rowToDelete, setRowToDelete] = useState(null);
-  const [isSearchFocused, setIsSearchFocused] = useState(false);
 
   // Add more car state
   const [selectedCar, setSelectedCar] = useState("");
@@ -52,6 +56,7 @@ function CarsTable() {
   const [errorSelectedCarId, setErrorSelectedCarId] = useState(null);
   const [errorQuantity, setErrorQuantity] = useState(null);
 
+  // Fetch data from server
   const fetchData = async () => {
     try {
       const response = await adminCarServices.adminGetAllCars();
@@ -70,8 +75,8 @@ function CarsTable() {
     fetchData();
   }, []);
 
-  const handleClickOpen = (row) => {
-    setSelectedRow(row);
+  const handleGoToDetailPage = (row) => {
+    navigate(`/dashboard/detail-car/${row.id}`);
   };
 
   const handleGoToEditCarPage = (row) => {
@@ -91,6 +96,7 @@ function CarsTable() {
     setOpenAddMoreCarDialog(false);
   };
 
+  // Add more car function
   const fetchAddMoreCar = async (car, quantity) => {
     try {
       const carId = car.id;
@@ -108,7 +114,7 @@ function CarsTable() {
       console.error("Failed to add more car:", error);
     }
   };
-
+  // Add more car button
   const handleAddMoreCar = async () => {
     const car = rows.find((car) => car.model === selectedCar);
     if (!car) {
@@ -288,7 +294,7 @@ function CarsTable() {
                   cursor: "pointer",
                   "&:hover": { backgroundColor: "#f5f5f5" },
                 }}
-                onClick={() => handleClickOpen(row)}
+                onClick={() => handleGoToDetailPage(row)}
               >
                 <TableCell align="left" sx={{ width: "15%" }}>
                   {row.model}

@@ -205,6 +205,7 @@ namespace WebAPI.Utils.AutoMapper
                 Quantity = accessory.Quantity,
                 Description = accessory.Description,
                 IsDeleted = accessory.IsDeleted,
+                IsShowed = accessory.IsShowed,
                 CategoryId = accessory.CategoryId,
                 Origin = accessory.Origin,
                 Dimensions = accessory.Dimensions,
@@ -323,5 +324,7 @@ namespace WebAPI.Utils.AutoMapper
                 UserId = cartItemDTO.UserId
             };
         }
+
+        
     }
 }

@@ -17,7 +17,6 @@ namespace WebAPI.Models
         public string? Name { get; set; }
 
         [Column("Accessory Image")]
-        [Required]
         [StringLength(255)]
         public string? Image { get; set; }
 

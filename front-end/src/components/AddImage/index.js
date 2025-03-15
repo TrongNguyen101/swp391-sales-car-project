@@ -3,16 +3,17 @@ import { useState } from "react";
 
 // Third-party modules
 import { useDropzone } from "react-dropzone";
-import { Box, Typography, Alert, IconButton } from "@mui/material";
+import { Box, Typography, Alert, IconButton, Button } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 
 const ImageUploadComponent = ({
+  propFontSize = "16px",
   title = "Upload images",
   allowedTypes = ["image/jpeg", "image/png", "image/jpg"],
   maxSize = 5 * 1024 * 1024, // Default 5MB
-  previewWidthSize = 100,
-  previewHeightSize = 100,
+  previewWidthSize = "10px",
+  previewHeightSize = "10px",
   onUpload = () => {},
   multiple = true, // Adjust the number of images that can be uploaded
 }) => {
@@ -75,32 +76,30 @@ const ImageUploadComponent = ({
 
   return (
     <Box
-      {...getRootProps()}
       sx={{
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        p: 4,
-        border: "2px dashed",
         borderRadius: "8px",
-        cursor: "pointer",
         textAlign: "center",
-        width: "100%",
-        height: "100%",
       }}
     >
       <input {...getInputProps()} />
-      <Typography variant="h6">{title}</Typography>
-
-      {/* Image previews */}
-      {previews.length > 0 && (
-        <Box mt={2} sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
+      {previews.length > 0 ? (
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
           {previews.map(({ url }, index) => (
             <Box key={index} position="relative">
               <img
                 src={url}
                 alt={`Preview ${index + 1}`}
                 style={{
+                  border: "2px dashed",
                   objectFit: "cover",
                   width: previewWidthSize,
                   height: previewHeightSize,
@@ -108,18 +107,11 @@ const ImageUploadComponent = ({
                 }}
               />
               <IconButton
-                size="small"
+                color="error"
+                size="large"
                 onClick={(e) => {
                   e.stopPropagation();
                   handleRemoveImage(index);
-                }}
-                sx={{
-                  position: "absolute",
-                  top: 0,
-                  right: 0,
-                  background: "rgba(0,0,0,0.5)",
-                  color: "white",
-                  "&:hover": { background: "rgba(0,0,0,0.8)" },
                 }}
               >
                 <FontAwesomeIcon icon={faTrash} />
@@ -127,6 +119,24 @@ const ImageUploadComponent = ({
             </Box>
           ))}
         </Box>
+      ) : (
+        <Typography
+          {...getRootProps()}
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontSize: propFontSize,
+            cursor: "pointer",
+            border: "2px dashed",
+            width: previewWidthSize,
+            height: previewHeightSize,
+            borderRadius: "8px",
+          }}
+          variant="h6"
+        >
+          {title}
+        </Typography>
       )}
 
       {/* Error message */}
