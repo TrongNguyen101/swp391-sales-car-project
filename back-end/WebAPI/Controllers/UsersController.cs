@@ -11,6 +11,44 @@ namespace WebAPI.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
+
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult> GetUserById(Guid id)
+        {
+            try
+            {
+                var user = await UsersDAO.GetInstance().FindUserById(id);
+                if (user == null)
+                {
+                    return NotFound(new DataResponse
+                    {
+                        StatusCode = 404,
+                        Message = "User not found",
+                        Success = false
+                    });
+                }
+                var userDTO = AutoMapper.ToUserDTO(user);
+                return Ok(new DataResponse
+                {
+                    StatusCode = 200,
+                    Message = "Get user by id successfully",
+                    Success = true,
+                    Data = userDTO
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new DataResponse
+                {
+                    StatusCode = 400,
+                    Message = ex.Message,
+                    Success = false
+                });
+            }
+        }
+
+
         [HttpGet]
         public async Task<IActionResult> GetAllUser()
         {

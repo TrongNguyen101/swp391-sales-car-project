@@ -53,20 +53,24 @@ function CartPage() {
     }
   };
 
+// eslint-disable-next-line
+const fetchUser = async () =>{
+  try {
+    const token = localStorage.getItem("Bearer");
+    const decoded = DecodePayload.decodePayload(token);
+    console.log(decoded.sub);
+    const response = await adminServices.getUserById(decoded.sub);
+    console.log(response.data);
+  } catch (error) {
+    console.error("Failed to fetch user:", error);
+  }
+};
+
   useEffect(() => {
     fetchCartItems();
     // eslint-disable-next-line
   }, []);
 
-  const fetchUser = useCallback(async () => {
-    if (!token) return;
-    try {
-      const response = await adminServices.getUserById(token);
-      console.log("UserData: ", response);
-    } catch (error) {
-      console.error("Failed to get user:", error);
-    }
-  }, [token]);
 
   useEffect(() => {
     if (token) {
