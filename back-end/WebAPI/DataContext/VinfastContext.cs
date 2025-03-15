@@ -335,7 +335,8 @@ namespace WebAPI.DataContext
                    Quantity = 10,
                    PriceBatteryRental = 240000000,
                    PriceBatteryOwn = 322000000,
-                   PriceDeposite = 15000000
+                   PriceDeposite = 15000000,
+                   IsShowed = true
                },
                new Cars
                {
@@ -348,7 +349,8 @@ namespace WebAPI.DataContext
                    Quantity = 10,
                    PriceBatteryRental = 460000000,
                    PriceBatteryOwn = 540000000,
-                   PriceDeposite = 20000000
+                   PriceDeposite = 20000000,
+                   IsShowed = true
                },
                new Cars
                {
@@ -361,7 +363,8 @@ namespace WebAPI.DataContext
                    Quantity = 10,
                    PriceBatteryRental = 675000000,
                    PriceBatteryOwn = 765000000,
-                   PriceDeposite = 30000000
+                   PriceDeposite = 30000000,
+                   IsShowed = true
                },
                new Cars
                {
@@ -374,7 +377,8 @@ namespace WebAPI.DataContext
                    Quantity = 10,
                    PriceBatteryRental = 850000000,
                    PriceBatteryOwn = 999000000,
-                   PriceDeposite = 50000000
+                   PriceDeposite = 50000000,
+                   IsShowed = true
                },
                new Cars
                {
@@ -387,7 +391,8 @@ namespace WebAPI.DataContext
                    Quantity = 10,
                    PriceBatteryRental = 1170000000,
                    PriceBatteryOwn = 1359000000,
-                   PriceDeposite = 50000000
+                   PriceDeposite = 50000000,
+                   IsShowed = true
                },
                new Cars
                {
@@ -400,7 +405,8 @@ namespace WebAPI.DataContext
                    Quantity = 10,
                    PriceBatteryRental = 1604000000,
                    PriceBatteryOwn = 2129000000,
-                   PriceDeposite = 50000000
+                   PriceDeposite = 50000000,
+                   IsShowed = true
                }
             );
             // Seed the database with initial data
@@ -551,6 +557,7 @@ namespace WebAPI.DataContext
                         Image = "Sac_tai_nha.png",
                         CategoryId = 5,
                         IsDeleted = false,
+                        IsShowed = true,
                         Origin = "Vietnam",
                         Dimensions = "30x20x10 cm",
                         Weight = 2.5,
@@ -568,6 +575,7 @@ namespace WebAPI.DataContext
                         Image = "VF3_tham_nhua.png",
                         CategoryId = 5,
                         IsDeleted = false,
+                        IsShowed = true,
                         Origin = "Vietnam",
                         Dimensions = "50x40x5 cm",
                         Weight = 1.2,
@@ -585,6 +593,7 @@ namespace WebAPI.DataContext
                         Image = "VF3_Camera_lui.png",
                         CategoryId = 5,
                         IsDeleted = false,
+                        IsShowed = true,
                         Origin = "Japan",
                         Dimensions = "10x5x5 cm",
                         Weight = 0.3,
@@ -602,6 +611,7 @@ namespace WebAPI.DataContext
                         Image = "VF5_tham_nhua.png",
                         CategoryId = 6,
                         IsDeleted = false,
+                        IsShowed = true,
                         Origin = "Vietnam",
                         Dimensions = "50x40x5 cm",
                         Weight = 1.2,
@@ -619,6 +629,7 @@ namespace WebAPI.DataContext
                         Image = "VF5_Goi_dan_phim_cach_nhiet.png",
                         CategoryId = 6,
                         IsDeleted = false,
+                        IsShowed = true,
                         Origin = "Vietnam",
                         Dimensions = "100x50x0.1 cm",
                         Weight = 0.5,
@@ -636,6 +647,7 @@ namespace WebAPI.DataContext
                         Image = "VF5_Tham_cop.png",
                         CategoryId = 6,
                         IsDeleted = false,
+                        IsShowed = true,
                         Origin = "Vietnam",
                         Dimensions = "100x80x5 cm",
                         Weight = 2.0,
@@ -653,6 +665,7 @@ namespace WebAPI.DataContext
                         Image = "VF6_Goi_dan_phim_cach_nhiet.png",
                         CategoryId = 7,
                         IsDeleted = false,
+                        IsShowed = true,
                         Origin = "Vietnam",
                         Dimensions = "100x50x0.1 cm",
                         Weight = 0.5,
@@ -670,6 +683,7 @@ namespace WebAPI.DataContext
                         Image = "VF6_tham_nhua.png",
                         CategoryId = 7,
                         IsDeleted = false,
+                        IsShowed = true,
                         Origin = "Vietnam",
                         Dimensions = "50x40x5 cm",
                         Weight = 1.2,
@@ -687,6 +701,7 @@ namespace WebAPI.DataContext
                         Image = "VF6_Tham_cop.png",
                         CategoryId = 7,
                         IsDeleted = false,
+                        IsShowed = true,
                         Origin = "Vietnam",
                         Dimensions = "100x80x5 cm",
                         Weight = 2.0,
@@ -840,6 +855,49 @@ namespace WebAPI.DataContext
                       .HasForeignKey(cartItem => cartItem.ProductId)
                       .IsRequired();
             });
+
+            modelBuilder.Entity<Invoice>(entity =>
+            {
+                entity.HasMany(i => i.InvoiceItems)
+                      .WithOne(ii => ii.Invoice)
+                      .HasForeignKey(ii => ii.InvoiceId)
+                      .OnDelete(DeleteBehavior.Cascade)
+                      .IsRequired();
+            });
+            modelBuilder.Entity<Invoice>(entity =>
+            {
+                entity.HasOne(i => i.User)
+                      .WithMany(u => u.Invoices)
+                      .HasForeignKey(i => i.UserId)
+                      .OnDelete(DeleteBehavior.Cascade)
+                      .IsRequired();
+            });
+
+            modelBuilder.Entity<Cars>(entity =>
+            {
+                entity.HasMany(car => car.InvoiceItems)
+                      .WithOne(invoice => invoice.Car)
+                      .HasForeignKey(car => car.CarId)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
+
+
+            modelBuilder.Entity<Accessory>(entity =>
+            {
+                entity.HasMany(a => a.InvoiceItems)
+                      .WithOne(invoice => invoice.Accessory)
+                      .HasForeignKey(a => a.AccessoryId)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<Invoice>(entity =>
+            {
+                entity.HasMany(a => a.Payments)
+                      .WithOne(pay => pay.Invoice)
+                      .HasForeignKey(a => a.InvoiceId)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
+
         }
     }
 }

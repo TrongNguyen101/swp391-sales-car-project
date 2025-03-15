@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import classNames from "classnames/bind";
 import {
@@ -6,14 +7,17 @@ import {
   Dialog,
   DialogActions,
   DialogTitle,
+  Icon,
+  IconButton,
   Typography,
 } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 
 import styles from "./Cart.module.scss";
+import * as adminServices from "../../services/AdminServices";
 import * as cartService from "../../services/CartService";
-import { useNavigate, useLocation } from "react-router-dom";
+import * as DecodePayload from "../../lib/DecodePayload";
 
 const cx = classNames.bind(styles);
 
@@ -23,6 +27,8 @@ function CartPage() {
   const [cartItems, setCartItems] = useState([]);
   const [message, setMessage] = useState("");
   const [openDialog, setOpenDialog] = useState(false);
+
+  const [isOrder, setIsOrder] = useState(false);
 
   const token = localStorage.getItem("Bearer");
   const isLoggedIn = Boolean(token);
@@ -39,6 +45,7 @@ function CartPage() {
         setCartItems([]);
       } else {
         console.log(response.data);
+        localStorage.setItem("cartItems", JSON.stringify(response.data));
         setCartItems(response.data);
       }
     } catch (error) {
@@ -50,6 +57,48 @@ function CartPage() {
     fetchCartItems();
     // eslint-disable-next-line
   }, []);
+
+  const fetchUser = useCallback(async () => {
+    if (!token) return;
+    try {
+      const response = await adminServices.getUserById(token);
+      console.log("UserData: ", response);
+    } catch (error) {
+      console.error("Failed to get user:", error);
+    }
+  }, [token]);
+
+  useEffect(() => {
+    if (token) {
+      fetchUser();
+    }
+  }, [fetchUser, token]);
+
+  useEffect(() => {
+    const savedCart = localStorage.getItem("cartItems");
+
+    if (savedCart) {
+      setCartItems(JSON.parse(savedCart));
+    }
+
+    fetchCartItems();
+    // eslint-disable-next-line
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("cartItems", JSON.stringify(cartItems));
+  }, [cartItems]);
+
+  const saveCartItems = useCallback(async () => {
+    if (!token || cartItems.length === 0) return;
+    try {
+      const response = await cartService.updateCartItems(token, cartItems);
+      setMessage(response.message);
+      console.log("Cart saved to server!");
+    } catch (error) {
+      console.error("Failed to save cart:", error);
+    }
+  }, [cartItems, token]);
 
   //  Increase quantity
   const handleIncreaseQuantity = (index) => {
@@ -66,39 +115,42 @@ function CartPage() {
     }
   };
 
-  // Save cart items
-  const saveCartItems = async (token, cartItems) => {
-    try {
-      const response = await cartService.updateCartItems(token, cartItems);
-      console.log("aaaa", response);
-      return response.message;
-    } catch (error) {
-      console.log("Error saving cart items:", error.message);
-      return error.message;
-    }
-  };
-
   useEffect(() => {
-    console.log("cartItems: ", cartItems);
-    saveCartItems(token, cartItems);
-
     const handleBeforeUnload = async (event) => {
-      await saveCartItems(token, cartItems);
+      await saveCartItems();
     };
 
     window.addEventListener("beforeunload", handleBeforeUnload);
-
     return () => {
-      saveCartItems(token, cartItems);
+      saveCartItems();
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.pathname]);
+  }, [saveCartItems]);
+
+  useEffect(() => {
+    return () => {
+      saveCartItems();
+    };
+  }, [location.pathname, saveCartItems]);
+
+  const handleDeleteCartItem = async (cartItemId) => {
+    try {
+      const response = await cartService.deleteCartItem(cartItemId);
+      if (response.statusCode !== 200) {
+        console.log("Failed to delete item from cart:");
+      } else {
+        console.log("Item deleted from cart successfully!");
+        fetchCartItems();
+      }
+    } catch (error) {
+      console.error("Failed to delete item from cart:", error);
+    }
+  };
 
   const handleSubmit = () => {
-    const response = saveCartItems(token, cartItems);
-    setMessage(response);
-    setOpenDialog(true);
+    setIsOrder(true);
+    const decoded = DecodePayload.decodePayload(token);
+    console.log(decoded);
   };
 
   const handleCloseDialog = () => {
@@ -148,7 +200,11 @@ function CartPage() {
                 <div className={cx("content__cartItem--infor")}>
                   <div className={cx("content__cartItem--infor__top")}>
                     <Typography>Code: {cartItem.id}</Typography>
-                    <FontAwesomeIcon icon={faTrash} />
+                    <IconButton
+                      onClick={(e) => handleDeleteCartItem(cartItem.id)}
+                    >
+                      <FontAwesomeIcon icon={faTrash} />
+                    </IconButton>
                   </div>
                   <Typography
                     sx={{
@@ -166,7 +222,7 @@ function CartPage() {
                       paddingBottom: "10px",
                     }}
                   >
-                    {cartItem.price} VND
+                    {formatPrice(cartItem.price)} VND
                   </Typography>
                   <div className={cx("content__cartItem--infor__bottom")}>
                     <div
@@ -243,17 +299,7 @@ function CartPage() {
                   variant="contained"
                   sx={{ width: "100%" }}
                 >
-                  Submit
-                </Button>
-              </div>
-              <div className={cx("content__button")}>
-                <Button
-                  // onClick={handleResetPasswordClose}
-                  color="error"
-                  variant="outlined"
-                  sx={{ width: "100%" }}
-                >
-                  Cancel
+                  Order
                 </Button>
               </div>
             </div>

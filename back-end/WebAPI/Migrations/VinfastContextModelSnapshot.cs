@@ -52,7 +52,6 @@ namespace WebAPI.Migrations
                         .HasColumnName("Dimensions");
 
                     b.Property<string>("Image")
-                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)")
                         .HasColumnName("Accessory Image");
@@ -60,6 +59,10 @@ namespace WebAPI.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit")
                         .HasColumnName("Is Deleted");
+
+                    b.Property<bool>("IsShowed")
+                        .HasColumnType("bit")
+                        .HasColumnName("Is Showed");
 
                     b.Property<string>("Material")
                         .HasMaxLength(255)
@@ -110,6 +113,7 @@ namespace WebAPI.Migrations
                             Dimensions = "30x20x10 cm",
                             Image = "Sac_tai_nha.png",
                             IsDeleted = false,
+                            IsShowed = true,
                             Material = "Plastic",
                             Name = "VinFast Home Charger",
                             Origin = "Vietnam",
@@ -127,6 +131,7 @@ namespace WebAPI.Migrations
                             Dimensions = "50x40x5 cm",
                             Image = "VF3_tham_nhua.png",
                             IsDeleted = false,
+                            IsShowed = true,
                             Material = "Rubber",
                             Name = "Thảm nhựa VF3",
                             Origin = "Vietnam",
@@ -144,6 +149,7 @@ namespace WebAPI.Migrations
                             Dimensions = "10x5x5 cm",
                             Image = "VF3_Camera_lui.png",
                             IsDeleted = false,
+                            IsShowed = true,
                             Material = "Metal",
                             Name = "Camera Lùi VF3",
                             Origin = "Japan",
@@ -161,6 +167,7 @@ namespace WebAPI.Migrations
                             Dimensions = "50x40x5 cm",
                             Image = "VF5_tham_nhua.png",
                             IsDeleted = false,
+                            IsShowed = true,
                             Material = "Rubber",
                             Name = "Thảm nhựa VF5",
                             Origin = "Vietnam",
@@ -178,6 +185,7 @@ namespace WebAPI.Migrations
                             Dimensions = "100x50x0.1 cm",
                             Image = "VF5_Goi_dan_phim_cach_nhiet.png",
                             IsDeleted = false,
+                            IsShowed = true,
                             Material = "Film",
                             Name = "Gói Dán Film Cách Nhiệt VinFast VF5",
                             Origin = "Vietnam",
@@ -195,6 +203,7 @@ namespace WebAPI.Migrations
                             Dimensions = "100x80x5 cm",
                             Image = "VF5_Tham_cop.png",
                             IsDeleted = false,
+                            IsShowed = true,
                             Material = "Rubber",
                             Name = "Thảm cốp 3D VF5",
                             Origin = "Vietnam",
@@ -212,6 +221,7 @@ namespace WebAPI.Migrations
                             Dimensions = "100x50x0.1 cm",
                             Image = "VF6_Goi_dan_phim_cach_nhiet.png",
                             IsDeleted = false,
+                            IsShowed = true,
                             Material = "Film",
                             Name = "Gói dán film cách nhiệt VF6",
                             Origin = "Vietnam",
@@ -229,6 +239,7 @@ namespace WebAPI.Migrations
                             Dimensions = "50x40x5 cm",
                             Image = "VF6_tham_nhua.png",
                             IsDeleted = false,
+                            IsShowed = true,
                             Material = "Rubber",
                             Name = "Thảm nhựa 3D VF6",
                             Origin = "Vietnam",
@@ -246,6 +257,7 @@ namespace WebAPI.Migrations
                             Dimensions = "100x80x5 cm",
                             Image = "VF6_Tham_cop.png",
                             IsDeleted = false,
+                            IsShowed = true,
                             Material = "Rubber",
                             Name = "Thảm cốp 3D VF6",
                             Origin = "Vietnam",
@@ -689,6 +701,10 @@ namespace WebAPI.Migrations
                         .HasColumnType("bit")
                         .HasColumnName("Is Deleted");
 
+                    b.Property<bool>("IsShowed")
+                        .HasColumnType("bit")
+                        .HasColumnName("Is Show");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("Car Name");
@@ -728,6 +744,7 @@ namespace WebAPI.Migrations
                             Image = "vinfast-vf3.png",
                             ImageBanner = "vinfast-banner.png",
                             IsDeleted = false,
+                            IsShowed = true,
                             Name = "Vinfast VF3",
                             PriceBatteryOwn = 322000000.0,
                             PriceBatteryRental = 240000000.0,
@@ -742,6 +759,7 @@ namespace WebAPI.Migrations
                             Image = "vinfast-vf5.png",
                             ImageBanner = "vinfast-banner.png",
                             IsDeleted = false,
+                            IsShowed = true,
                             Name = "Vinfast VF5",
                             PriceBatteryOwn = 540000000.0,
                             PriceBatteryRental = 460000000.0,
@@ -756,6 +774,7 @@ namespace WebAPI.Migrations
                             Image = "vinfast-vf6.png",
                             ImageBanner = "vinfast-banner.png",
                             IsDeleted = false,
+                            IsShowed = true,
                             Name = "Vinfast VF6",
                             PriceBatteryOwn = 765000000.0,
                             PriceBatteryRental = 675000000.0,
@@ -770,6 +789,7 @@ namespace WebAPI.Migrations
                             Image = "vinfast-vf7.png",
                             ImageBanner = "vinfast-banner.png",
                             IsDeleted = false,
+                            IsShowed = true,
                             Name = "Vinfast VF7",
                             PriceBatteryOwn = 999000000.0,
                             PriceBatteryRental = 850000000.0,
@@ -784,6 +804,7 @@ namespace WebAPI.Migrations
                             Image = "vinfast-vf8.png",
                             ImageBanner = "vinfast-banner.png",
                             IsDeleted = false,
+                            IsShowed = true,
                             Name = "Vinfast VF8",
                             PriceBatteryOwn = 1359000000.0,
                             PriceBatteryRental = 1170000000.0,
@@ -798,6 +819,7 @@ namespace WebAPI.Migrations
                             Image = "vinfast-vf9.png",
                             ImageBanner = "vinfast-banner.png",
                             IsDeleted = false,
+                            IsShowed = true,
                             Name = "Vinfast VF9",
                             PriceBatteryOwn = 2129000000.0,
                             PriceBatteryRental = 1604000000.0,
@@ -942,6 +964,158 @@ namespace WebAPI.Migrations
                             Name = "Accessories of VF9",
                             ParentsId = 3
                         });
+                });
+
+            modelBuilder.Entity("WebAPI.Models.Invoice", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("Invoice ID");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CustomerName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("Customer Name");
+
+                    b.Property<DateTime>("DateCreate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("Date Create");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Email");
+
+                    b.Property<bool>("IsPaid")
+                        .HasColumnType("bit")
+                        .HasColumnName("Is Paid");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)")
+                        .HasColumnName("Status");
+
+                    b.Property<double>("TotalAmount")
+                        .HasColumnType("float")
+                        .HasColumnName("Total Amount");
+
+                    b.Property<string>("TypeOfProduct")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("Type of Product");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("User ID");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Invoice");
+                });
+
+            modelBuilder.Entity("WebAPI.Models.InvoiceItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("Item ID");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AccessoryId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CarId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("InvoiceId")
+                        .HasColumnType("int")
+                        .HasColumnName("Invoice ID");
+
+                    b.Property<string>("ProductName")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)")
+                        .HasColumnName("Product Name");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int")
+                        .HasColumnName("Quantity");
+
+                    b.Property<double>("UnitPrice")
+                        .HasColumnType("float")
+                        .HasColumnName("Unit Price");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccessoryId");
+
+                    b.HasIndex("CarId");
+
+                    b.HasIndex("InvoiceId");
+
+                    b.ToTable("InvoiceItem");
+                });
+
+            modelBuilder.Entity("WebAPI.Models.Payment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("Payment ID");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<double>("AmountPaid")
+                        .HasColumnType("float")
+                        .HasColumnName("Amount Paid");
+
+                    b.Property<int>("InvoiceId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsSuccess")
+                        .HasColumnType("bit")
+                        .HasColumnName("Is Success");
+
+                    b.Property<DateTime>("PaymentDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("Payment Date");
+
+                    b.Property<string>("PaymentMethod")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("Payment Method");
+
+                    b.Property<string>("VNPayPaymentUrl")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)")
+                        .HasColumnName("VNPay Payment URL");
+
+                    b.Property<string>("VNPayResponseCode")
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)")
+                        .HasColumnName("VNPay Response Code");
+
+                    b.Property<string>("VNPayTransactionId")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("VNPay Transaction ID");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("InvoiceId");
+
+                    b.ToTable("Payment");
                 });
 
             modelBuilder.Entity("WebAPI.Models.Roles", b =>
@@ -1176,6 +1350,55 @@ namespace WebAPI.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("WebAPI.Models.Invoice", b =>
+                {
+                    b.HasOne("WebAPI.Models.Users", "User")
+                        .WithMany("Invoices")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("WebAPI.Models.InvoiceItem", b =>
+                {
+                    b.HasOne("WebAPI.Models.Accessory", "Accessory")
+                        .WithMany("InvoiceItems")
+                        .HasForeignKey("AccessoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WebAPI.Models.Cars", "Car")
+                        .WithMany("InvoiceItems")
+                        .HasForeignKey("CarId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WebAPI.Models.Invoice", "Invoice")
+                        .WithMany("InvoiceItems")
+                        .HasForeignKey("InvoiceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Accessory");
+
+                    b.Navigation("Car");
+
+                    b.Navigation("Invoice");
+                });
+
+            modelBuilder.Entity("WebAPI.Models.Payment", b =>
+                {
+                    b.HasOne("WebAPI.Models.Invoice", "Invoice")
+                        .WithMany("Payments")
+                        .HasForeignKey("InvoiceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Invoice");
+                });
+
             modelBuilder.Entity("WebAPI.Models.TestDriveRegistration", b =>
                 {
                     b.HasOne("WebAPI.Models.Cars", "Car")
@@ -1203,6 +1426,8 @@ namespace WebAPI.Migrations
                     b.Navigation("AccessoryImages");
 
                     b.Navigation("CartItems");
+
+                    b.Navigation("InvoiceItems");
                 });
 
             modelBuilder.Entity("WebAPI.Models.Cars", b =>
@@ -1210,11 +1435,20 @@ namespace WebAPI.Migrations
                     b.Navigation("CarColors");
 
                     b.Navigation("CarDeposits");
+
+                    b.Navigation("InvoiceItems");
                 });
 
             modelBuilder.Entity("WebAPI.Models.Category", b =>
                 {
                     b.Navigation("Accessories");
+                });
+
+            modelBuilder.Entity("WebAPI.Models.Invoice", b =>
+                {
+                    b.Navigation("InvoiceItems");
+
+                    b.Navigation("Payments");
                 });
 
             modelBuilder.Entity("WebAPI.Models.Roles", b =>
@@ -1227,6 +1461,8 @@ namespace WebAPI.Migrations
                     b.Navigation("CarDeposits");
 
                     b.Navigation("CartItems");
+
+                    b.Navigation("Invoices");
                 });
 #pragma warning restore 612, 618
         }

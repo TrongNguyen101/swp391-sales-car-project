@@ -18,6 +18,7 @@ function CarsPage() {
         setCars([]);
       } else {
         setCars(JSON.parse(response.data));
+        console.log(JSON.parse(response.data));
       }
     } catch (error) {
       setCars([]);
@@ -30,8 +31,11 @@ function CarsPage() {
 
   const handleClickCard = (carId) => () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
+    console.log(carId);
     navigate(`/cars/${carId}`);
   };
+
+  console.log(cars);
 
   return (
     <div className={cx("container")}>
@@ -51,39 +55,41 @@ function CarsPage() {
           </Typography>
         </div>
         <div className={cx("list-cars")}>
-          {cars.map((car, index) => (
-            <div
-              className={cx("car-card")}
-              key={index}
-              onClick={handleClickCard(car.Id)}
-            >
-              <div className={cx("card-image")}>
-                <img
-                  src={`https://localhost:7005/api/Images/Car/${car.Image}`}
-                  alt={car.Name}
-                />
-              </div>
-              <div className={cx("card-title")}>
-                <Typography
-                  sx={{
-                    fontSize: "1.5rem",
-                    fontWeight: "500",
-                    color: "#333",
-                  }}
-                >
-                  {car.Name}
-                </Typography>
-              </div>
-              <div className={cx("card-info")}>
-                <div className={cx("price")}>
-                  <Typography>Price: {car.Price} vnd</Typography>
+          {cars
+            .filter((car) => car.IsShowed)
+            .map((car, index) => (
+              <div
+                className={cx("car-card")}
+                key={index}
+                onClick={handleClickCard(car.Id)}
+              >
+                <div className={cx("card-image")}>
+                  <img
+                    src={`https://localhost:7005/api/Images/Car/${car.Image}`}
+                    alt={car.Name}
+                  />
                 </div>
-                <div className={cx("seat")}>
-                  <Typography>Seats: {car.Seat}</Typography>
+                <div className={cx("card-title")}>
+                  <Typography
+                    sx={{
+                      fontSize: "1.5rem",
+                      fontWeight: "500",
+                      color: "#333",
+                    }}
+                  >
+                    {car.Name}
+                  </Typography>
+                </div>
+                <div className={cx("card-info")}>
+                  <div className={cx("price")}>
+                    <Typography>Price: {car.Price} vnd</Typography>
+                  </div>
+                  <div className={cx("seat")}>
+                    <Typography>Seats: {car.Seat}</Typography>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
         </div>
       </div>
       <div className={cx("block-subcribe")}>

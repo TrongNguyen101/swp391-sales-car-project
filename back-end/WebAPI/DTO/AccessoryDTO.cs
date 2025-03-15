@@ -9,6 +9,7 @@ namespace WebAPI.DTO
         public int Quantity { get; set; }
         public string? Description { get; set; }
         public bool IsDeleted { get; set; }
+        public bool IsShowed { get; set; }
         public int CategoryId { get; set; }
         public string? Origin { get; set; }
         public string? Dimensions { get; set; }

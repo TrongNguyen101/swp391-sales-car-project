@@ -1,3 +1,4 @@
+import { decodePayload } from "../../lib/DecodePayload";
 import * as request from "../../utils/AdminRequest";
 
 export const getAllUsers = async () => {
@@ -24,14 +25,29 @@ export const countUsers = async () => {
   }
 };
 
+
+export const getUserById = async (token) => {
+  try {
+    const decoded = decodePayload.decodePayload(token);
+    const userId = decoded.sub;
+    const response = await request.get(`api/Users/${userId}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response;
+
 export const findUserByEmail = async (email) => {
   try {
     const response = await request.get(`api/Users/Search/${email}`);
     return response.data;
+
   } catch (error) {
     return error.response;
   }
 };
+
 
 export const UpdateUser = async (id, fullname, address, phone) => {
   try {
@@ -55,3 +71,4 @@ export const UpdateUser = async (id, fullname, address, phone) => {
     return error.response;
   }
 };
+

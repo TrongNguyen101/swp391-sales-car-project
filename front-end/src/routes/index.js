@@ -11,9 +11,18 @@ import DepositPaymentResponsePage from "../pages/DepositPaymentResponse";
 import TestDriveRegistration from "../pages/TestDriveRegistration";
 import { DashboardLayout } from "../layouts";
 import AccountTablePage from "../pages/AccountTable";
-import CarsTablePage from "../pages/CarsTable";
 import CartPage from "../pages/Cart";
 
+// Admin Manage Cars
+import CarsTablePage from "../pages/AdminManageCars/CarsTable";
+import CreateCarPage from "../pages/AdminManageCars/CreateCar";
+import AddCarImagePage from "../pages/AdminManageCars/AddCarImage";
+import UpdateCarPage from "../pages/AdminManageCars/UpdateCar";
+import AdminDetailCarPage from "../pages/AdminManageCars/AdminDetailCar";
+
+// Admin Manage Accessories
+import AccessoriesTablePage from "../pages/AdminManageAccessories/AccessoriesTable";
+import CreateAccessoryPage from "../pages/AdminManageAccessories/CreateAccessory";
 
 const publicRoutes = [
   { path: "/", page: HomePage },
@@ -37,6 +46,38 @@ const publicRoutes = [
   {
     path: "/dashboard/cars",
     page: CarsTablePage,
+    layout: DashboardLayout,
+  },
+  {
+    path: "/dashboard/create-new-car",
+    page: CreateCarPage,
+    layout: DashboardLayout,
+  },
+  {
+    path: "/dashboard/add-car-image",
+    page: AddCarImagePage,
+    layout: DashboardLayout,
+  },
+  {
+    path: "/dashboard/edit-car/:carId",
+    page: UpdateCarPage,
+    layout: DashboardLayout,
+  },
+  {
+    path: "/dashboard/detail-car/:carId",
+    page: AdminDetailCarPage,
+    layout: DashboardLayout,
+  },
+
+  // Admin Manage Accessories routes
+  {
+    path: "/dashboard/accessories",
+    page: AccessoriesTablePage,
+    layout: DashboardLayout,
+  },
+  {
+    path: "/dashboard/create-new-accessory",
+    page: CreateAccessoryPage,
     layout: DashboardLayout,
   },
 ];

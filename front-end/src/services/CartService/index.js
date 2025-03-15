@@ -58,10 +58,27 @@ export const updateCartItems = async (token, cartItems) => {
         },
       }
     );
-    console.log("infor at service: ", response.data.value);
     return response.data.value;
   } catch (error) {
     console.log("catch error at service: ", error.response.data.value);
     return error.response.data.value;
+  }
+};
+
+export const deleteCartItem = async (cartItemId) => {
+  try {
+    const token = localStorage.getItem("Bearer");
+    const response = await request.deletebyId(
+      `/api/Cart/delete/${cartItemId}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data.value;
+  } catch (error) {
+    return error.response;
   }
 };

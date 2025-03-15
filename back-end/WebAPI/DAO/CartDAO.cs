@@ -34,6 +34,15 @@ namespace WebAPI.DAO
             }
         }
 
+        public async Task<CartItem> GetCartItemById(int cartItemId)
+        {
+            using (var context = new VinfastContext())
+            {
+                return await context.CartItems.FindAsync(cartItemId);
+            }
+        }
+
+
         public async Task<bool> AddCartItem(CartItem cartItem)
         {
             try
@@ -68,6 +77,23 @@ namespace WebAPI.DAO
                 using (var context = new VinfastContext())
                 {
                     context.Entry(cartItem).State = EntityState.Modified;
+                    await context.SaveChangesAsync();
+                    return true;
+                }
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> DeleteCartItem(CartItem cartItem)
+        {
+            try
+            {
+                using (var context = new VinfastContext())
+                {
+                    context.CartItems.Remove(cartItem);
                     await context.SaveChangesAsync();
                     return true;
                 }

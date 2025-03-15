@@ -30,7 +30,10 @@ namespace WebAPI.Models
         public int Quantity { get; set; }
         [Column("Is Deleted")]
         public bool IsDeleted { get; set; }
+        [Column("Is Show")]
+        public bool IsShowed { get; set; }
         public ICollection<CarColor>? CarColors { get; set; } = new List<CarColor>();
         public ICollection<CarDeposit>? CarDeposits { get; set; } = new List<CarDeposit>();
+        public ICollection<InvoiceItem>? InvoiceItems { get; set; } = new List<InvoiceItem>();
     }
 }

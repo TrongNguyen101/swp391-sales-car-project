@@ -202,7 +202,7 @@ function SidebarDashboard() {
         </ListItem>
         <ListItem
           button={true}
-          onClick={handleNavigation("/accessories-management")}
+          onClick={handleNavigation("/dashboard/accessories")}
           sx={{
             cursor: "pointer",
             padding: "8px 35px",

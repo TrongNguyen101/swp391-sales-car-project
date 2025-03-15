@@ -17,7 +17,6 @@ namespace WebAPI.Models
         public string? Name { get; set; }
 
         [Column("Accessory Image")]
-        [Required]
         [StringLength(255)]
         public string? Image { get; set; }
 
@@ -39,6 +38,10 @@ namespace WebAPI.Models
         [Column("Is Deleted")]
         [Required]
         public bool IsDeleted { get; set; }
+
+        [Column("Is Showed")]
+        [Required]
+        public bool IsShowed { get; set; }
 
         [Column("Category ID")]
         [Required]
@@ -71,5 +74,6 @@ namespace WebAPI.Models
         public Category? Category { get; set; }
         public ICollection<AccessoryImage>? AccessoryImages { get; set; } = new List<AccessoryImage>();
         public ICollection<CartItem>? CartItems { get; set; } = new List<CartItem>();
+        public ICollection<InvoiceItem>? InvoiceItems { get; set; } = new List<InvoiceItem>();
     }
 }

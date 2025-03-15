@@ -99,6 +99,11 @@ function AccessoryDetailPage() {
     setOpenDialog(false);
   };
 
+  // format the price
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat("vi-VN").format(price);
+  };
+
   return (
     <div className={cx("wrapper")}>
       <div className={cx("wrapper__line")}></div>
@@ -174,7 +179,7 @@ function AccessoryDetailPage() {
                   {accessory.name}
                 </Typography>
                 <Typography className={cx("information__price")}>
-                  {accessory.price}
+                  {formatPrice(accessory.price)} VND
                 </Typography>
                 <div className={cx("information__description")}>
                   <Typography className={cx("information__description-title")}>
