@@ -11,7 +11,6 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  DialogContentText,
   DialogActions,
   Button,
   TextField,
@@ -22,6 +21,10 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faSearch } from "@fortawesome/free-solid-svg-icons";
 import * as AdminServices from "../../services/AdminServices";
+import * as SearchValidate from "../../validation/SearchValidation";
+import * as UpdateDataValidate from "../../validation/UserUpdateValidation";
+import * as DecodedPayload from "../../lib/DecodePayload";
+import { useNavigate } from "react-router-dom";
 
 function AccountTablePage() {
   const [rows, setRows] = useState([]);
@@ -29,9 +32,23 @@ function AccountTablePage() {
   const [selectedRow, setSelectedRow] = useState(null);
   const [editMode, setEditMode] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [rowToDelete, setRowToDelete] = useState(null);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const [userId, setUserId] = useState("");
+  const [fullname, setFullname] = useState("");
+  const [phone, setPhone] = useState("");
+  const [address, setAddress] = useState("");
+  const [errorSearch, setErrorSearch] = useState("");
+  const [errorFullname, setErrorFullname] = useState("");
+  const [errorPhone, setErrorPhone] = useState("");
+  const token = localStorage.getItem("Bearer");
+  const decodedPayload = DecodedPayload.decodePayload(token); 
+  const navigate = useNavigate(); 
+
+  if(decodedPayload === null) {
+    navigate("/login");
+  }else if(decodedPayload.role !== 1) {
+    navigate("/");
+  }
 
   const fetchData = async () => {
     try {
@@ -43,6 +60,38 @@ function AccountTablePage() {
       }
     } catch (error) {
       console.error("Failed to fetch users:", error);
+    }
+  };
+
+  const fetchSearchData = async () => {
+    try {
+      const response = await AdminServices.findUserByEmail(searchQuery);
+      if (response.statusCode !== 200) {
+        setErrorSearch(response.message);
+        setRows([]);
+      } else {
+        setRows([response.data]);
+      }
+    } catch (error) {
+      console.error("Failed to fetch users:", error);
+    }
+  };
+
+  const fetchUpdateData = async () => {
+    try {
+      const response = await AdminServices.UpdateUser(
+        userId,
+        fullname,
+        address,
+        phone
+      );
+      if (response.statusCode !== 200) {
+        console.error("Failed to update user:", response.message);
+      } else {
+        console.log("User updated successfully");
+      }
+    } catch (error) {
+      console.error("Failed to update user:", error);
     }
   };
 
@@ -60,32 +109,51 @@ function AccountTablePage() {
     setSelectedRow(row);
     setOpen(true);
     setEditMode(true);
+    setUserId(row.userId);
+    setFullname(row.userName);
+    setPhone(row.phone);
+    setAddress(row.address);
   };
 
   const handleClose = () => {
     setOpen(false);
     setSelectedRow(null);
     setEditMode(false);
+    setErrorFullname("");
+    setErrorPhone("");
   };
 
-  const handleSave = () => {
-    // Implement save logic here
-    handleClose();
+  const handleSave = async () => {
+    const fullnameError = UpdateDataValidate.validateFullname(fullname);
+    const phoneError = UpdateDataValidate.validatePhone(phone);
+    if (fullnameError) {
+      setErrorFullname(fullnameError);
+      return;
+    }
+    if (phoneError) {
+      setErrorPhone(phoneError);
+      return;
+    }
+    if (!errorFullname && !errorPhone) {
+      await fetchUpdateData();
+      fetchData();
+      setOpen(false);
+      setSelectedRow(null);
+      setEditMode(false);
+      setErrorFullname("");
+      setErrorPhone("");
+      return;
+    }
   };
 
-  const handleSearchChange = (event) => {
-    setSearchQuery(event.target.value);
-  };
-
-  const handleDelete = () => {
-    setRows(rows.filter((row) => row.id !== rowToDelete.id));
-    setDeleteDialogOpen(false);
-    setRowToDelete(null);
-  };
-
-  const handleDeleteDialogClose = () => {
-    setDeleteDialogOpen(false);
-    setRowToDelete(null);
+  const handleSearch = () => {
+    const searchValue = SearchValidate.SearchByEmailValidate(searchQuery);
+    if (searchValue) {
+      setErrorSearch(searchValue);
+      return;
+    } else {
+      fetchSearchData();
+    }
   };
 
   return (
@@ -98,27 +166,37 @@ function AccountTablePage() {
           margin: "0 auto",
         }}
       >
-        <TextField
-          label="Search email"
-          variant="outlined"
-          sx={{ width: 300 }}
-          value={searchQuery}
-          onChange={handleSearchChange}
-          onFocus={() => setIsSearchFocused(true)}
-          onBlur={() => setIsSearchFocused(false)}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="search"
-                  sx={{ color: isSearchFocused ? "primary.main" : "inherit" }}
-                >
-                  <FontAwesomeIcon icon={faSearch} />
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-        />
+        <Box sx={{ display: "flex", gap: 2, flexDirection: "column" }}>
+          <TextField
+            label="Search email"
+            variant="outlined"
+            sx={{ width: 300 }}
+            value={searchQuery}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+              fetchData();
+              setErrorSearch("");
+            }}
+            onFocus={() => setIsSearchFocused(true)}
+            onBlur={() => setIsSearchFocused(false)}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="search"
+                    onClick={handleSearch}
+                    sx={{ color: isSearchFocused ? "primary.main" : "inherit" }}
+                  >
+                    <FontAwesomeIcon icon={faSearch} />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+          {errorSearch && (
+            <Typography sx={{ color: "red" }}>{errorSearch}</Typography>
+          )}
+        </Box>
       </div>
       <TableContainer
         component={Paper}
@@ -248,22 +326,41 @@ function AccountTablePage() {
                     type="text"
                     fullWidth
                     disabled
-                    defaultValue={selectedRow.userId}
+                    value={userId}
+                    onChange={(e) => setUserId(e.target.value)}
                   />
                   <TextField
                     margin="dense"
                     label="Name"
                     type="text"
                     fullWidth
-                    defaultValue={selectedRow.userName}
+                    value={fullname}
+                    onChange={(e) => {
+                      setErrorFullname("");
+                      setFullname(e.target.value);
+                    }}
                   />
+                  {errorFullname && (
+                    <Typography sx={{ color: "red", textAlign: "start" }}>
+                      {errorFullname}
+                    </Typography>
+                  )}
                   <TextField
                     margin="dense"
                     label="Phone"
                     type="text"
                     fullWidth
-                    defaultValue={selectedRow.phone}
+                    value={phone}
+                    onChange={(e) => {
+                      setPhone(e.target.value);
+                      setErrorPhone("");
+                    }}
                   />
+                  {errorPhone && (
+                    <Typography sx={{ color: "red", textAlign: "start" }}>
+                      {errorPhone}
+                    </Typography>
+                  )}
                   <TextField
                     margin="dense"
                     label="Email"
@@ -277,7 +374,8 @@ function AccountTablePage() {
                     label="Address"
                     type="text"
                     fullWidth
-                    defaultValue={selectedRow.address}
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
                   />
                   <TextField
                     margin="dense"
@@ -286,14 +384,6 @@ function AccountTablePage() {
                     fullWidth
                     disabled
                     defaultValue={selectedRow.createdAt}
-                  />
-                  <TextField
-                    margin="dense"
-                    label="Deleted"
-                    type="text"
-                    fullWidth
-                    disabled
-                    defaultValue={selectedRow.isDeleted}
                   />
                 </>
               ) : (
@@ -338,14 +428,6 @@ function AccountTablePage() {
                     disabled
                     defaultValue={selectedRow.createdAt}
                   />
-                  <TextField
-                    margin="dense"
-                    label="Deleted"
-                    type="text"
-                    fullWidth
-                    disabled
-                    defaultValue={selectedRow.isDeleted}
-                  />
                 </>
               )}
             </>
@@ -357,7 +439,7 @@ function AccountTablePage() {
               <Button onClick={handleSave} color="primary" variant="contained">
                 Save
               </Button>
-              <Button onClick={handleSave} color="error" variant="contained">
+              <Button onClick={handleClose} color="error" variant="contained">
                 Cancel
               </Button>
             </Box>
@@ -366,31 +448,6 @@ function AccountTablePage() {
               Close
             </Button>
           )}
-        </DialogActions>
-      </Dialog>
-
-      <Dialog
-        open={deleteDialogOpen}
-        onClose={handleDeleteDialogClose}
-        sx={{ textAlign: "center" }}
-      >
-        <DialogTitle>Confirm Delete</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Are you sure you want to delete this row?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions sx={{ justifyContent: "center" }}>
-          <Button
-            onClick={handleDeleteDialogClose}
-            variant="contained"
-            color="error"
-          >
-            Cancel
-          </Button>
-          <Button onClick={handleDelete} variant="contained" color="primary">
-            Confirm
-          </Button>
         </DialogActions>
       </Dialog>
     </>

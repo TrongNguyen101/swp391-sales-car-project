@@ -73,12 +73,23 @@ namespace WebAPI.DAO
         /// Updates an existing user in the database.
         /// </summary>
         /// <param name="user">The user to update.</param>
-        public void UpdateUser(Users user)
+        public async Task UpdateUser(Users user)
         {
-            using (var context = new VinfastContext())
+            try
             {
-                context.Users.Update(user);
-                context.SaveChanges();
+                using (var context = new VinfastContext())
+                {
+                    context.Attach(user);
+                    context.Entry(user).Property(user => user.UserName).IsModified = true;
+                    context.Entry(user).Property(user => user.Phone).IsModified = true;
+                    context.Entry(user).Property(user => user.Address).IsModified = true;
+                    context.Entry(user).Property(user => user.LastChange).IsModified = true;
+                    await context.SaveChangesAsync();
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
             }
         }
 
@@ -126,6 +137,14 @@ namespace WebAPI.DAO
             using (var context = new VinfastContext())
             {
                 return await context.Users.Where(user => user.RoleId == 2 && user.IsDeleted == false).CountAsync();
+            }
+        }
+
+        public async Task<Users> SearchUsersAsync(string email)
+        {
+            using (var context = new VinfastContext())
+            {
+                return await context.Users.Where(user => user.Email.Contains(email) && user.RoleId == 2).FirstOrDefaultAsync();
             }
         }
     }
