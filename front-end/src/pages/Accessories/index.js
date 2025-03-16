@@ -88,6 +88,11 @@ function AccessoriesPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCategoryId]);
 
+   // format the price
+   const formatPrice = (price) => {
+    return new Intl.NumberFormat("vi-VN").format(price);
+  };
+
   return (
     <div className={cx("wrapper")}>
       <div className={cx("wrapper__line")}></div>
@@ -141,6 +146,7 @@ function AccessoriesPage() {
             </div>
             <div className={cx("container__accessories--list")}>
               {accessories.map((accessory, index) => (
+                // card accessory
                 <div
                   className={cx("container__accessory-card")}
                   key={index}
@@ -166,7 +172,7 @@ function AccessoriesPage() {
                     </div>
                     <div className={cx("card-info")}>
                       <div className={cx("price")}>
-                        <Typography>Price: {accessory.price} VND</Typography>
+                        <Typography>Price: {formatPrice(accessory.price)} VND</Typography>
                       </div>
                     </div>
                   </div>

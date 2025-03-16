@@ -26,11 +26,11 @@ namespace WebAPI.DAO
             return instance;
         }
 
-        public async Task<List<CartItem>> GetAllCartItems()
+        public async Task<List<CartItem>> GetAllCartItemsByIdUser(Guid userId)
         {
             using (var context = new VinfastContext())
             {
-                return await context.CartItems.ToListAsync();
+                return await context.CartItems.Where(x => x.UserId == userId).ToListAsync();
             }
         }
 

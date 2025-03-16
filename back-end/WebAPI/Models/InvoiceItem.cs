@@ -13,7 +13,7 @@ namespace WebAPI.Models
 
         [Required]
         [Column("Invoice ID")]
-        public int InvoiceId { get; set; }
+        public string? InvoiceId { get; set; }
 
         [Required]
         [StringLength(150)]
@@ -31,12 +31,11 @@ namespace WebAPI.Models
         // Navigation Property
         public Invoice? Invoice { get; set; }
 
-        [ForeignKey("CarId")]
-        public int CarId { get; set; }
+        public int? CarId { get; set; }
 
         public Cars? Car { get; set; }
 
-        public int AccessoryId { get; set; }
+        public int? AccessoryId { get; set; }
 
         public Accessory? Accessory { get; set; }
     }

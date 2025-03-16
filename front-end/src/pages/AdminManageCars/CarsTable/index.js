@@ -305,8 +305,10 @@ function CarsTable() {
                   {row.model}
                 </TableCell>
                 <TableCell align="center" sx={{ width: "2%" }}>
-                  {row.isShowed ? (
-                    <FontAwesomeIcon icon={faEye} />
+                  {row.isDeleted ? (
+                    <Typography color="error">Deleted</Typography>
+                  ) : row.isShowed ? (
+                    <FontAwesomeIcon color="green" icon={faEye} />
                   ) : (
                     <FontAwesomeIcon color="red" icon={faEyeSlash} />
                   )}
@@ -326,26 +328,32 @@ function CarsTable() {
 
                 <TableCell align="center">
                   {/* Edit Button */}
-                  <IconButton
-                    aria-label="edit"
-                    color="success"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleGoToEditCarPage(row);
-                    }}
-                  >
-                    <FontAwesomeIcon icon={faEdit} />
-                  </IconButton>
-                  <IconButton
-                    aria-label="edit"
-                    color="error"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleDeleteDialogOpen(row);
-                    }}
-                  >
-                    <FontAwesomeIcon icon={faTrash} />
-                  </IconButton>
+                  {row.isDeleted ? (
+                    <Typography color="error">Deleted</Typography>
+                  ) : (
+                    <Box>
+                      <IconButton
+                        aria-label="edit"
+                        color="success"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleGoToEditCarPage(row);
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faEdit} />
+                      </IconButton>
+                      <IconButton
+                        aria-label="edit"
+                        color="error"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDeleteDialogOpen(row);
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faTrash} />
+                      </IconButton>
+                    </Box>
+                  )}
                 </TableCell>
               </TableRow>
             ))}

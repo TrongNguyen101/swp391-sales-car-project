@@ -7,9 +7,8 @@ namespace WebAPI.Models
     public class Invoice
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("Invoice ID")]
-        public int Id { get; set; }
+        public string? Id { get; set; }
 
         [Required]
         [StringLength(100)]
@@ -23,12 +22,17 @@ namespace WebAPI.Models
         [Required]
         [StringLength(100)]
         [Column("Customer Name")]
-        public string CustomerName { get; set; }
+        public string? CustomerName { get; set; }
+
+        [Required]
+        [StringLength(100)]
+        [Column("Phone")]
+        public string? Phone { get; set; }
 
         [Required]
         [EmailAddress]
         [Column("Email")]
-        public string Email { get; set; }
+        public string? Email { get; set; }
 
         [Column("Date Create")]
         public DateTime DateCreate { get; set; }

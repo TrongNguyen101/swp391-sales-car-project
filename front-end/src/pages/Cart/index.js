@@ -7,7 +7,6 @@ import {
   Dialog,
   DialogActions,
   DialogTitle,
-  Icon,
   IconButton,
   Typography,
 } from "@mui/material";
@@ -15,7 +14,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 
 import styles from "./Cart.module.scss";
-import * as adminServices from "../../services/AdminServices";
 import * as cartService from "../../services/CartService";
 import * as DecodePayload from "../../lib/DecodePayload";
 
@@ -28,7 +26,7 @@ function CartPage() {
   const [message, setMessage] = useState("");
   const [openDialog, setOpenDialog] = useState(false);
 
-  const [isOrder, setIsOrder] = useState(false);
+
 
   const token = localStorage.getItem("Bearer");
   const isLoggedIn = Boolean(token);
@@ -36,7 +34,8 @@ function CartPage() {
   // Fetch cart items
   const fetchCartItems = async () => {
     if (!isLoggedIn) {
-      navigate("/login");
+      setMessage("Please login to view your cart");
+      setOpenDialog(true);
       return;
     }
     try {
@@ -53,18 +52,6 @@ function CartPage() {
     }
   };
 
-// eslint-disable-next-line
-const fetchUser = async () =>{
-  try {
-    const token = localStorage.getItem("Bearer");
-    const decoded = DecodePayload.decodePayload(token);
-    console.log(decoded.sub);
-    const response = await adminServices.getUserById(decoded.sub);
-    console.log(response.data);
-  } catch (error) {
-    console.error("Failed to fetch user:", error);
-  }
-};
 
   useEffect(() => {
     fetchCartItems();
@@ -72,11 +59,6 @@ const fetchUser = async () =>{
   }, []);
 
 
-  useEffect(() => {
-    if (token) {
-      fetchUser();
-    }
-  }, [fetchUser, token]);
 
   useEffect(() => {
     const savedCart = localStorage.getItem("cartItems");
@@ -96,8 +78,7 @@ const fetchUser = async () =>{
   const saveCartItems = useCallback(async () => {
     if (!token || cartItems.length === 0) return;
     try {
-      const response = await cartService.updateCartItems(token, cartItems);
-      setMessage(response.message);
+      await cartService.updateCartItems(token, cartItems);
       console.log("Cart saved to server!");
     } catch (error) {
       console.error("Failed to save cart:", error);
@@ -152,14 +133,16 @@ const fetchUser = async () =>{
   };
 
   const handleSubmit = () => {
-    setIsOrder(true);
     const decoded = DecodePayload.decodePayload(token);
+    navigate(`/invoice/${decoded.sub}`);
     console.log(decoded);
   };
 
   const handleCloseDialog = () => {
+    navigate("/login");
     setOpenDialog(false);
   };
+
 
   const formatPrice = (price) => {
     return new Intl.NumberFormat("vi-VN").format(price);
@@ -168,14 +151,22 @@ const fetchUser = async () =>{
   return (
     <div className={cx("wrapper")}>
       {cartItems.length === 0 ? (
-        // UI cart empty
         <div className={cx("container")}>
-          <div className={cx("content__empty")}>
-            <Typography>Your Cart is empty</Typography>
+          <div className={cx("container__left")}>
+            <div className={cx("content__top")}>
+              <Typography
+                sx={{
+                  fontWeight: "700",
+                  fontSize: "32px",
+                }}
+              >
+                Your Cart is empty
+              </Typography>
+            </div>
           </div>
         </div>
       ) : (
-        // UI cart not empty
+
         <div className={cx("container")}>
           <div className={cx("container__left")}>
             <div className={cx("content__top")}>
@@ -295,6 +286,7 @@ const fetchUser = async () =>{
                   )}{" "}
                   VND
                 </Typography>
+
               </div>
               <div className={cx("content__button")}>
                 <Button
@@ -303,45 +295,42 @@ const fetchUser = async () =>{
                   variant="contained"
                   sx={{ width: "100%" }}
                 >
-                  Order
+                  Go to checkout
                 </Button>
               </div>
             </div>
           </div>
-          {/* Show adding accessory to cart successfully dialog */}
-          <Dialog
-            open={openDialog}
-            keepMounted
-            onClose={handleCloseDialog}
-            aria-labelledby="alert-dialog-slide-title"
-            aria-describedby="alert-dialog-slide-description"
-            sx={{
-              "& .MuiDialog-paper": { width: "440px", paddingBottom: "10px" },
-            }}
+        </div>)}
+      <Dialog
+        open={openDialog}
+        keepMounted
+        aria-labelledby="alert-dialog-slide-title"
+        aria-describedby="alert-dialog-slide-description"
+        sx={{
+          "& .MuiDialog-paper": { width: "440px", paddingBottom: "10px" },
+        }}
+      >
+        <DialogTitle
+          id="alert-dialog-slide-title"
+          sx={{
+            textAlign: "center",
+            fontSize: "1.6rem",
+            fontWeight: "500",
+            lineHeight: "1.5",
+          }}
+        >
+          {message}
+        </DialogTitle>
+        <DialogActions sx={{ justifyContent: "center" }}>
+          <Button
+            variant="contained"
+            onClick={handleCloseDialog}
+            color="primary"
           >
-            <DialogTitle
-              id="alert-dialog-slide-title"
-              sx={{
-                textAlign: "center",
-                fontSize: "1.6rem",
-                fontWeight: "500",
-                lineHeight: "1.5",
-              }}
-            >
-              {message}
-            </DialogTitle>
-            <DialogActions sx={{ justifyContent: "center" }}>
-              <Button
-                variant="contained"
-                onClick={handleCloseDialog}
-                color="primary"
-              >
-                OK
-              </Button>
-            </DialogActions>
-          </Dialog>
-        </div>
-      )}
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }
