@@ -86,6 +86,73 @@ namespace WebAPI.Controllers
             }
         }
 
+        [HttpPost("ConfirmPassword")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ConfirmPassword([FromBody] LoginRequestDTO LoginRequest)
+        {
+            try
+            {
+                var userDAO = await UsersDAO.GetInstance().findUserByEmail(LoginRequest.Email);
+                if (userDAO == null)
+                {
+                    return NotFound(new DataResponse
+                    {
+                        StatusCode = 404,
+                        Success = false,
+                        Message = "Email or password is incorrect",
+                    });
+                }
+                if (userDAO.Password != EncyptHelper.Sha256Encrypt(LoginRequest.Password))
+                {
+                    return Unauthorized(new DataResponse
+                    {
+                        StatusCode = 401,
+                        Success = false,
+                        Message = "Password is incorrect",
+                    });
+                }
+                // please code again just for runnning
+                string storedOtp = await _cache.StringGetAsync(LoginRequest.Email);
+
+                if (!string.IsNullOrEmpty(storedOtp))
+                {
+                    await _cache.KeyDeleteAsync(LoginRequest.Email); // Delete existing OTP before sending a new one
+                }
+
+                var otpCode = GenerateOTP();
+                await _cache.StringSetAsync(LoginRequest.Email, otpCode, TimeSpan.FromMinutes(5));
+                bool isSentEmail = await SendEmail(LoginRequest.Email, otpCode);
+                if (isSentEmail)
+                {
+                    return Ok(new DataResponse
+                    {
+                        StatusCode = 200,
+                        Success = true,
+                        Message = "Send OTP successfully",
+                    });
+                }
+                else
+                {
+                    return BadRequest(new DataResponse
+                    {
+                        StatusCode = 400,
+                        Success = false,
+                        Message = "Recent password is incorrect",
+                    });
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return BadRequest(new DataResponse
+                {
+                    StatusCode = 400,
+                    Success = false,
+                    Message = "Internal server error. Please contact support for changing password.",
+                });
+            }
+        }
+
         /// <summary>
         /// Authenticates a user based on the provided login credentials.
         /// </summary>

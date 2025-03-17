@@ -1,11 +1,20 @@
-import { Typography } from "@mui/material";
+import React from 'react';
+import Sidebar from '../../components/SidebarUser';
+import PersonalInfo from '../../components/PersonalInfor';
+import classNames from 'classnames/bind';
+import styles from './Profile.module.scss';
 
-function ProfilePage() {
+const cx = classNames.bind(styles);
+
+const Profile = () => {
   return (
-    <div>
-      <Typography>Profile page</Typography>
+    <div className={cx("wrapper")}>
+      <div className={cx('conatiner')}>
+        <Sidebar />
+        <PersonalInfo />
+      </div>
     </div>
   );
-}
+};
 
-export default ProfilePage;
+export default Profile;
