@@ -42,6 +42,9 @@ namespace WebAPI.DataContext
         public DbSet<AccessoryImage> AccessoryImages { get; set; }
         public DbSet<CartItem> CartItems { get; set; }
 
+        public DbSet<Invoice> Invoices { get; set; }
+        public DbSet<InvoiceItem> InvoiceItems { get; set; }
+
 
         /// <summary>
         /// Configures the database context options.

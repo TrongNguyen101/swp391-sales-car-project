@@ -27,3 +27,22 @@ export const adminCreateAccessory = async (accessoryData) => {
     return error.response;
   }
 };
+
+export const adminDeleteAccessory = async (adminAccesoryId) => {
+  try {
+    const response = await request.deletebyId(`/api/AdminAccessories/delete/${adminAccesoryId}`);
+    return response.data;
+  } catch (error) {
+    return error.response;
+  }
+};
+
+
+export const getAccessoryById = async (id) => {
+  try {
+    const response = await request.get(`/api/AdminAccessories/${id}`);
+    return response.data;
+  } catch (error) {
+    return error.response;
+  }
+};

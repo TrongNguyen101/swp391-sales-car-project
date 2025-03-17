@@ -58,6 +58,9 @@ function AccessoriesTable() {
     useState(null);
   const [errorQuantity, setErrorQuantity] = useState(null);
 
+  // State information
+  const [message, setMessage] = useState("");
+
   // Fetch data from server
   const fetchData = async () => {
     try {
@@ -77,8 +80,8 @@ function AccessoriesTable() {
     fetchData();
   }, []);
 
-  const handleGoToDetailPage = (row) => {
-    navigate(`/dashboard/detail-accessory/${row.id}`);
+  const handleGoToAccessoryDetailPage = (row) => {
+    navigate(`/dashboard/accessory-detail/${row.id}`);
   };
 
   const handleGoToEditaccessoryPage = (row) => {
@@ -139,16 +142,18 @@ function AccessoriesTable() {
   };
 
   // Delete accessory
-  const handleDelete = async () => {
+  const handleDeleteAccessory = async () => {
     try {
-      //   const response = await adminAccessoryServices.adminDeleteAccessory(
-      //     rowToDelete.id
-      //   );
-      //   if (response.statusCode === 200) {
-      //     fetchData();
-      //   } else {
-      //     console.error("Failed to delete accessory:", response.message);
-      //   }
+      const response = await adminAccessoryServices.adminDeleteAccessory(
+        rowToDelete.id
+      );
+      if (response.statusCode === 200) {
+        fetchData();
+        setMessage("Delete accessory successfully");
+        setDeleteDialogOpen(true);
+      } else {
+        console.error("Failed to delete accessory:", response.message);
+      }
     } catch (error) {
       console.error("catch error of deleting accessory:", error);
     } finally {
@@ -305,14 +310,16 @@ function AccessoriesTable() {
                   cursor: "pointer",
                   "&:hover": { backgroundColor: "#f5f5f5" },
                 }}
-                onClick={() => handleGoToDetailPage(row)}
+                onClick={() => handleGoToAccessoryDetailPage(row)}
               >
                 <TableCell align="left" sx={{ width: "20%" }}>
                   {row.name}
                 </TableCell>
                 <TableCell align="center" sx={{ width: "2%" }}>
-                  {row.isShowed ? (
-                    <FontAwesomeIcon color="Green" icon={faEye} />
+                  {row.isDeleted ? (
+                    <Typography color="error">Deleted</Typography>
+                  ) : row.isShowed ? (
+                    <FontAwesomeIcon color="green" icon={faEye} />
                   ) : (
                     <FontAwesomeIcon color="red" icon={faEyeSlash} />
                   )}
@@ -328,26 +335,32 @@ function AccessoriesTable() {
 
                 <TableCell align="center">
                   {/* Edit Button */}
-                  <IconButton
-                    aria-label="edit"
-                    color="success"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleGoToEditaccessoryPage(row);
-                    }}
-                  >
-                    <FontAwesomeIcon icon={faEdit} />
-                  </IconButton>
-                  <IconButton
-                    aria-label="edit"
-                    color="error"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleDeleteDialogOpen(row);
-                    }}
-                  >
-                    <FontAwesomeIcon icon={faTrash} />
-                  </IconButton>
+                  {row.isDeleted ? (
+                    <Typography color="error">Deleted</Typography>
+                  ) : (
+                    <Box>
+                      <IconButton
+                        aria-label="edit"
+                        color="success"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleGoToEditaccessoryPage(row);
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faEdit} />
+                      </IconButton>
+                      <IconButton
+                        aria-label="edit"
+                        color="error"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDeleteDialogOpen(row);
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faTrash} />
+                      </IconButton>
+                    </Box>
+                  )}
                 </TableCell>
               </TableRow>
             ))}
@@ -454,7 +467,11 @@ function AccessoriesTable() {
           >
             Cancel
           </Button>
-          <Button onClick={handleDelete} variant="contained" color="primary">
+          <Button
+            onClick={handleDeleteAccessory}
+            variant="contained"
+            color="primary"
+          >
             Confirm
           </Button>
         </DialogActions>

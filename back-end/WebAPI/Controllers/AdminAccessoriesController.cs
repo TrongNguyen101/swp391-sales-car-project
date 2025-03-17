@@ -131,55 +131,55 @@ namespace WebAPI.Controllers
         //     }
         // }
 
-        [HttpPut("delete/{adminAccessoryId}")]
-        // public async Task<IActionResult> AdminDeleteByAccessoryId(int adminAccessoryId)
-        // {
-        //     try
-        //     {
-        //         var adminAccessory = await AccessoriesDAO.GetInstance().GetAccessoryById(adminAccessoryId);
-        //         if (adminAccessory == null)
-        //         {
-        //             return NotFound(new DataResponse
-        //             {
-        //                 StatusCode = 404,
-        //                 Message = "Accessory not found",
-        //                 Success = false
-        //             });
-        //         }
+        [HttpDelete("delete/{adminAccessoryId}")]
+        public async Task<IActionResult> AdminDeleteByAccessoryId(int adminAccessoryId)
+        {
+            try
+            {
+                var adminAccessory = await AccessoriesDAO.GetInstance().GetAccessoryById(adminAccessoryId);
+                if (adminAccessory == null)
+                {
+                    return NotFound(new DataResponse
+                    {
+                        StatusCode = 404,
+                        Message = "Accessory not found",
+                        Success = false
+                    });
+                }
 
-        //         adminAccessory.IsDeleted = true;
-        //         Console.WriteLine(adminAccessory);
-        //         if (await AccessoriesDAO.GetInstance().DeleteAccessoryById(adminAccessory))
+                adminAccessory.IsDeleted = true;
+                Console.WriteLine(adminAccessory);
+                if (await AccessoriesDAO.GetInstance().UpdateAccessory(adminAccessory))
 
-        //         {
-        //             return Ok(new DataResponse
-        //             {
-        //                 StatusCode = 200,
-        //                 Message = "Accessory deleted successfully",
-        //                 Success = true
-        //             });
-        //         }
-        //         else
-        //         {
-        //             return BadRequest(new DataResponse
-        //             {
-        //                 StatusCode = 400,
-        //                 Message = "Delete accessory failed",
-        //                 Success = false
-        //             });
-        //         }
-        //     }
-        //     catch (Exception ex)
-        //     {
-        //         Console.WriteLine(ex.Message);
-        //         return BadRequest(new DataResponse
-        //         {
-        //             StatusCode = 400,
-        //             Message = "Internal server error. Please contact support.",
-        //             Success = false
-        //         });
-        //     }
-        // }
+                {
+                    return Ok(new DataResponse
+                    {
+                        StatusCode = 200,
+                        Message = "Accessory deleted successfully",
+                        Success = true
+                    });
+                }
+                else
+                {
+                    return BadRequest(new DataResponse
+                    {
+                        StatusCode = 400,
+                        Message = "Delete accessory failed",
+                        Success = false
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return BadRequest(new DataResponse
+                {
+                    StatusCode = 500,
+                    Message = "Internal server error. Please contact support.",
+                    Success = false
+                });
+            }
+        }
 
         [HttpPut("adminAddMoreAccessory/{id}")]
         // public async Task<IActionResult> AdminAddMoreAccessory(int id, [FromBody] AdminAddMoreAccessoryDTO adminAddMoreAccessoryDTO)

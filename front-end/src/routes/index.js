@@ -23,6 +23,8 @@ import AdminDetailCarPage from "../pages/AdminManageCars/AdminDetailCar";
 // Admin Manage Accessories
 import AccessoriesTablePage from "../pages/AdminManageAccessories/AccessoriesTable";
 import CreateAccessoryPage from "../pages/AdminManageAccessories/CreateAccessory";
+import AdminAccessoryDetailPage from "../pages/AdminManageAccessories/AdminAccessoryDetail";
+import InvoicePage from "../pages/Invoice";
 
 const publicRoutes = [
   { path: "/", page: HomePage },
@@ -38,6 +40,10 @@ const publicRoutes = [
   { path: "/deposit-response", page: DepositPaymentResponsePage },
   { path: "/testdrivegistration", page: TestDriveRegistration },
   { path: "/reset-password", page: TestDriveRegistration },
+
+  { path: "/invoice/:userId", page: InvoicePage },
+
+
   {
     path: "/dashboard/account",
     page: AccountTablePage,
@@ -78,6 +84,11 @@ const publicRoutes = [
   {
     path: "/dashboard/create-new-accessory",
     page: CreateAccessoryPage,
+    layout: DashboardLayout,
+  },
+  {
+    path: "/dashboard/accessory-detail/:accessoryId",
+    page: AdminAccessoryDetailPage,
     layout: DashboardLayout,
   },
 ];

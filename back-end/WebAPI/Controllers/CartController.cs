@@ -18,7 +18,40 @@ namespace WebAPI.Controllers
         {
             try
             {
-                var carts = await CartDAO.GetInstance().GetAllCartItems();
+
+                #region Authentication, Authorization and validation
+                // Get token
+                var authorizationHeader = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
+
+                // Check token
+                if (authorizationHeader == null || !authorizationHeader.StartsWith("Bearer "))
+                {
+                    return Unauthorized(ResponseHelper.Response(401, "Authentication token is missing or invalid", false, null));
+                }
+                // Format token
+                var token = authorizationHeader.Split(" ")[1];
+                // Get claims
+                var claims = JwtTokenHelper.GetUserClaims(token);
+                // Verify token
+                if (claims == null)
+                {
+                    return Unauthorized(ResponseHelper.Response(401, "Authentication token is invalid", false, null));
+                }
+                // Check role
+                if (claims.TryGetValue("role", out var roleId) && roleId.ToString() != "2")
+                {
+                    return Unauthorized(ResponseHelper.Response(401, "Unauthorized access denied", false, null));
+                }
+                // Check model state
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ResponseHelper.Response(400, "The model state is invalid", false, null));
+                }
+                #endregion
+
+                Guid.TryParse(claims["sub"].ToString(), out Guid userId);
+
+                var carts = await CartDAO.GetInstance().GetAllCartItemsByIdUser(userId);
                 if (carts.Count == 0)
                 {
                     return NotFound(ResponseHelper.Response(404, "No cart item found", false, null));

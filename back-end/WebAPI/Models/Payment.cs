@@ -13,7 +13,7 @@ namespace WebAPI.Models
         public int Id { get; set; }
 
         [Required]
-        public int InvoiceId { get; set; } // Foreign Key
+        public string? InvoiceId { get; set; } // Foreign Key
 
         [Required]
         [Column("Amount Paid")]

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace WebAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class Add_Invoice_InvoiceItem_Payment : Migration
+    public partial class Invoice_Payment_InvoiceItem : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,11 +15,11 @@ namespace WebAPI.Migrations
                 name: "Invoice",
                 columns: table => new
                 {
-                    InvoiceID = table.Column<int>(name: "Invoice ID", type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    InvoiceID = table.Column<string>(name: "Invoice ID", type: "nvarchar(450)", nullable: false),
                     TypeofProduct = table.Column<string>(name: "Type of Product", type: "nvarchar(100)", maxLength: 100, nullable: false),
                     UserID = table.Column<Guid>(name: "User ID", type: "uniqueidentifier", nullable: false),
                     CustomerName = table.Column<string>(name: "Customer Name", type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Phone = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DateCreate = table.Column<DateTime>(name: "Date Create", type: "datetime2", nullable: false),
                     TotalAmount = table.Column<double>(name: "Total Amount", type: "float", nullable: false),
@@ -43,7 +43,7 @@ namespace WebAPI.Migrations
                 {
                     ItemID = table.Column<int>(name: "Item ID", type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    InvoiceID = table.Column<int>(name: "Invoice ID", type: "int", nullable: false),
+                    InvoiceID = table.Column<string>(name: "Invoice ID", type: "nvarchar(450)", nullable: false),
                     ProductName = table.Column<string>(name: "Product Name", type: "nvarchar(150)", maxLength: 150, nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     UnitPrice = table.Column<double>(name: "Unit Price", type: "float", nullable: false),
@@ -79,7 +79,7 @@ namespace WebAPI.Migrations
                 {
                     PaymentID = table.Column<int>(name: "Payment ID", type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    InvoiceId = table.Column<int>(type: "int", nullable: false),
+                    InvoiceId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     AmountPaid = table.Column<double>(name: "Amount Paid", type: "float", nullable: false),
                     PaymentDate = table.Column<DateTime>(name: "Payment Date", type: "datetime2", nullable: false),
                     PaymentMethod = table.Column<string>(name: "Payment Method", type: "nvarchar(50)", maxLength: 50, nullable: false),

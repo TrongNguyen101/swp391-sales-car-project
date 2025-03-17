@@ -12,8 +12,8 @@ using WebAPI.DataContext;
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(VinfastContext))]
-    [Migration("20250315091002_Add_Invoice_InvoiceItem_Payment")]
-    partial class Add_Invoice_InvoiceItem_Payment
+    [Migration("20250316180952_Invoice_Payment_InvoiceItem")]
+    partial class Invoice_Payment_InvoiceItem
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -971,12 +971,9 @@ namespace WebAPI.Migrations
 
             modelBuilder.Entity("WebAPI.Models.Invoice", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)")
                         .HasColumnName("Invoice ID");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("CustomerName")
                         .IsRequired()
@@ -996,6 +993,12 @@ namespace WebAPI.Migrations
                     b.Property<bool>("IsPaid")
                         .HasColumnType("bit")
                         .HasColumnName("Is Paid");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("Phone");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -1039,8 +1042,9 @@ namespace WebAPI.Migrations
                     b.Property<int>("CarId")
                         .HasColumnType("int");
 
-                    b.Property<int>("InvoiceId")
-                        .HasColumnType("int")
+                    b.Property<string>("InvoiceId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)")
                         .HasColumnName("Invoice ID");
 
                     b.Property<string>("ProductName")
@@ -1081,8 +1085,9 @@ namespace WebAPI.Migrations
                         .HasColumnType("float")
                         .HasColumnName("Amount Paid");
 
-                    b.Property<int>("InvoiceId")
-                        .HasColumnType("int");
+                    b.Property<string>("InvoiceId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<bool>("IsSuccess")
                         .HasColumnType("bit")
