@@ -40,6 +40,7 @@ function CarsTable() {
 
   // State for the table
   const [rows, setRows] = useState([]);
+  const [searchRows, setSearchRows] = useState([]);
 
   // Search state
   const [searchQuery, setSearchQuery] = useState("");
@@ -56,6 +57,9 @@ function CarsTable() {
   const [errorSelectedCarId, setErrorSelectedCarId] = useState(null);
   const [errorQuantity, setErrorQuantity] = useState(null);
 
+  const [searchValue, setSearchValue] = useState("");
+
+
   // Fetch data from server
   const fetchData = async () => {
     try {
@@ -65,6 +69,7 @@ function CarsTable() {
       } else {
         console.log("all car:", response.data);
         setRows(response.data);
+        setSearchRows(response.data);
       }
     } catch (error) {
       console.error("Failed to fetch users:", error);
@@ -96,6 +101,11 @@ function CarsTable() {
     setOpenAddMoreCarDialog(false);
   };
 
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      handleSearch();
+    }
+  };
   // Add more car function
   const fetchAddMoreCar = async (car, quantity) => {
     try {
@@ -131,7 +141,7 @@ function CarsTable() {
   //------------------------------------------------------------------------------------------------------------
 
   const handleSearchChange = (event) => {
-    setSearchQuery(event.target.value);
+    setSearchValue(event.target.value);
   };
 
   // Delete car
@@ -159,6 +169,17 @@ function CarsTable() {
   const handleDeleteDialogClose = () => {
     setDeleteDialogOpen(false);
     setRowToDelete(null);
+  };
+
+  const handleSearch = () => {
+    if (searchValue.trim()) {
+      const filteredCars = rows.filter((car) =>
+        car.model.toLowerCase().includes(searchValue.toLowerCase())
+      );
+      setSearchRows(filteredCars);
+    } else {
+      setSearchRows(rows); // Nếu input trống, hiển thị tất cả xe
+    }
   };
 
   // format the price
@@ -195,13 +216,15 @@ function CarsTable() {
             </Button>
           </Box>
           <TextField
-            label="Search car name"
+            type="text"
+            label="Search Car name"
             variant="outlined"
             sx={{ width: 300 }}
-            value={searchQuery}
-            onChange={handleSearchChange}
+            value={searchValue}
             onFocus={() => setIsSearchFocused(true)}
             onBlur={() => setIsSearchFocused(false)}
+            onChange={handleSearchChange}
+            onKeyPress={handleKeyPress}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
@@ -210,6 +233,7 @@ function CarsTable() {
                     sx={{
                       color: isSearchFocused ? "primary.main" : "inherit",
                     }}
+                    onClick={handleSearch}
                   >
                     <FontAwesomeIcon icon={faSearch} />
                   </IconButton>
@@ -291,7 +315,7 @@ function CarsTable() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row) => (
+            {searchRows.map((row) => (
               <TableRow
                 key={row.Id}
                 sx={{

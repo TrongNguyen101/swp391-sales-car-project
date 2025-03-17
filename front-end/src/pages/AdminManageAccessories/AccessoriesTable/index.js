@@ -42,7 +42,6 @@ function AccessoriesTable() {
   const [rows, setRows] = useState([]);
 
   // Search state
-  const [searchQuery, setSearchQuery] = useState("");
   const [isSearchFocused, setIsSearchFocused] = useState(false);
 
   // Delete accessory state
@@ -58,6 +57,10 @@ function AccessoriesTable() {
     useState(null);
   const [errorQuantity, setErrorQuantity] = useState(null);
 
+  const [searchValue, setSearchValue] = useState("");
+  const [searchRows, setSearchRows] = useState([]);
+
+
   // State information
   const [message, setMessage] = useState("");
 
@@ -70,6 +73,7 @@ function AccessoriesTable() {
       } else {
         console.log("all accessories:", response.data);
         setRows(response.data);
+        setSearchRows(response.data);
       }
     } catch (error) {
       console.error("Failed to fetch users:", error);
@@ -137,10 +141,6 @@ function AccessoriesTable() {
 
   //------------------------------------------------------------------------------------------------------------
 
-  const handleSearchChange = (event) => {
-    setSearchQuery(event.target.value);
-  };
-
   // Delete accessory
   const handleDeleteAccessory = async () => {
     try {
@@ -172,6 +172,26 @@ function AccessoriesTable() {
     setRowToDelete(null);
   };
 
+  const handleSearchChange = (event) => {
+    setSearchValue(event.target.value);
+  };
+  const handleSearch = () => {
+    if (searchValue.trim()) {
+      const filteredAccessory = rows.filter((car) =>
+        car.name.toLowerCase().includes(searchValue.toLowerCase())
+      );
+      setSearchRows(filteredAccessory);
+    } else {
+      setSearchRows(rows); // Nếu input trống, hiển thị tất cả xe
+    }
+  };
+
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      handleSearch();
+    }
+  };
+
   // format the price
   const formatPrice = (price) => {
     return new Intl.NumberFormat("vi-VN").format(price);
@@ -197,22 +217,17 @@ function AccessoriesTable() {
             >
               Create new accessory
             </Button>
-            <Button
-              onClick={handleAddMoreaccessoryClickOpen}
-              color="warning"
-              variant="contained"
-            >
-              Add accessory
-            </Button>
           </Box>
           <TextField
+            type="text"
             label="Search accessory name"
             variant="outlined"
             sx={{ width: 300 }}
-            value={searchQuery}
-            onChange={handleSearchChange}
+            value={searchValue}
             onFocus={() => setIsSearchFocused(true)}
             onBlur={() => setIsSearchFocused(false)}
+            onChange={handleSearchChange}
+            onKeyPress={handleKeyPress}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
@@ -221,6 +236,7 @@ function AccessoriesTable() {
                     sx={{
                       color: isSearchFocused ? "primary.main" : "inherit",
                     }}
+                    onClick={handleSearch}
                   >
                     <FontAwesomeIcon icon={faSearch} />
                   </IconButton>
@@ -302,7 +318,7 @@ function AccessoriesTable() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row) => (
+            {searchRows.map((row) => (
               <TableRow
                 key={row.Id}
                 sx={{
