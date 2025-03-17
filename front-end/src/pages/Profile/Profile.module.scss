@@ -1,0 +1,16 @@
+.wrapper {
+  width: 100%;
+}
+
+.conatiner {
+  display: flex;
+  padding: 20px;
+  width: var(--default-width);
+  margin: 0 auto;
+}
+
+@media only screen and (max-width: 100em) {
+  .conatiner {
+    width: 1400px;
+  }
+}

@@ -28,6 +28,26 @@ export const postLogin = async (email, password) => {
   }
 };
 
+export const confirmPassword = async (email, password) => {
+  try {
+    const response = await request.post(
+      "api/Auth/ConfirmPassword",
+      {
+        email: email,
+        password: password,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response;
+  } catch (error) {
+    return error.response;
+  }
+};
+
 /**
  * Registers a new user with the provided details.
  *

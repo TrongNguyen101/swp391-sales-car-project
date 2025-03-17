@@ -139,6 +139,45 @@ namespace WebAPI.Controllers
             }
         }
 
+        [HttpPut("Edit/{userId}")]
+        public async Task<IActionResult> EditUser(Guid userId, [FromBody] UserDTO userData)
+        {
+            try
+            {
+                var user = await UsersDAO.GetInstance().FindUserById(userId);
+                if (user == null)
+                {
+                    return NotFound(new DataResponse
+                    {
+                        StatusCode = 404,
+                        Message = "User not found",
+                        Success = false
+                    });
+                }
+                user.UserName = userData.UserName;
+                user.Address = userData.Address;
+                user.Phone = userData.Phone;
+                user.LastChange = DateTime.Now;
+                await UsersDAO.GetInstance().UpdateUser(user);
+                return Ok(new DataResponse
+                {
+                    StatusCode = 200,
+                    Message = "Edit user successfully",
+                    Success = true
+                });
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new DataResponse
+                {
+                    StatusCode = 400,
+                    Success = false,
+                    Message = e.Message
+                });
+            }
+        }
+        
+
         [HttpGet("CountUser")]
         public async Task<IActionResult> CountUser()
         {

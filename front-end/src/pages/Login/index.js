@@ -40,6 +40,7 @@ function LoginPage() {
   const [forgotPasswordEmail, setForgotPasswordEmail] = useState("");
   const [errorForgotPasswordEmail, setErrorForgotPasswordEmail] = useState("");
   const [otpDialogOpen, setOtpDialogOpen] = useState(false);
+  // update new password
   const [newPasswordDialogOpen, setNewPasswordDialogOpen] = useState(false);
   const [otpValue, setOtpValue] = useState(new Array(6).fill(""));
   const [errorOtp, setErrorOtp] = useState("");
