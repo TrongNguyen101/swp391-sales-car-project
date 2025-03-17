@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Button, Typography } from "@mui/material";
 import classNames from "classnames/bind";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
+import { faCartShopping, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
 import styles from "./Accessories.module.scss";
 import Sidebar from "../../components/Sidebar";
@@ -49,6 +49,8 @@ function AccessoriesPage() {
   const navigate = useNavigate();
   const [accessories, setAccessories] = useState([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState(null); // Add state for selected category ID
+  const [searchValue, setSearchValue] = useState("");
+  const [searchRows, setSearchRows] = useState([]);
 
   const handleClickCard = (accessoryId) => () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -65,6 +67,8 @@ function AccessoriesPage() {
           setAccessories([]);
         } else {
           setAccessories(response.data);
+          setSearchRows(response.data);
+
         }
       } catch (error) {
         setAccessories([]);
@@ -76,6 +80,8 @@ function AccessoriesPage() {
           setAccessories([]);
         } else {
           setAccessories(response.data);
+          setSearchRows(response.data);
+
         }
       } catch (error) {
         setAccessories([]);
@@ -83,13 +89,36 @@ function AccessoriesPage() {
     }
   };
 
+
+
   useEffect(() => {
     fetchAccessories(selectedCategoryId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCategoryId]);
 
-   // format the price
-   const formatPrice = (price) => {
+  const handleSearch = () => {
+    if (searchValue.trim()) {
+      const filteredAccessory = accessories.filter((accessory) =>
+        accessory.name.toLowerCase().includes(searchValue.toLowerCase())
+      );
+      setSearchRows(filteredAccessory);
+    } else {
+      setSearchRows(accessories); // Nếu input trống, hiển thị tất cả xe
+    }
+  };
+
+  const handleSearchChange = (event) => {
+    setSearchValue(event.target.value);
+  };
+
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      handleSearch();
+    }
+  };
+
+  // format the price
+  const formatPrice = (price) => {
     return new Intl.NumberFormat("vi-VN").format(price);
   };
 
@@ -123,9 +152,13 @@ function AccessoriesPage() {
               <div className={cx("container__accessories--search")}>
                 <input
                   type="text"
-                  placeholder="Search..."
+                  placeholder="Search name of accessory..."
                   className={cx("search")}
+                  value={searchValue}
+                  onChange={handleSearchChange}
+                  onKeyPress={handleKeyPress}
                 />
+                <Button onClick={handleSearch}><FontAwesomeIcon icon={faMagnifyingGlass} /></Button>
               </div>
               <Button
                 variant="outlined"
@@ -145,7 +178,7 @@ function AccessoriesPage() {
               </Button>
             </div>
             <div className={cx("container__accessories--list")}>
-              {accessories.map((accessory, index) => (
+              {searchRows.map((accessory, index) => (
                 // card accessory
                 <div
                   className={cx("container__accessory-card")}
