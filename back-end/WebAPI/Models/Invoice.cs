@@ -34,12 +34,20 @@ namespace WebAPI.Models
         [Column("Email")]
         public string? Email { get; set; }
 
-        [Column("Date Create")]
-        public DateTime DateCreate { get; set; }
+        [Required]
+        [Column("Address")]
+        public string? Address { get; set; }
+
+        [Column("Pay Date")]
+        public DateTime PayDate { get; set; }
 
         [Required]
         [Column("Total Amount")]
         public double TotalAmount { get; set; }
+
+        [Required]
+        [Column("Invoice Informatiom")]
+        public string? InvoiceInformation { get; set; }
 
         [Column("Is Paid")]
         public bool IsPaid { get; set; } = false;
@@ -48,6 +56,10 @@ namespace WebAPI.Models
         [StringLength(20)]
         [Column("Status")]
         public string Status { get; set; } = "Pending"; // "Pending", "Completed", "Canceled"
+
+        [Required]
+        [Column("VNPay Transaction No")]
+        public string? VNPTransactionNo { get; set; }
 
         // Navigation Properties
         public Users? User { get; set; }

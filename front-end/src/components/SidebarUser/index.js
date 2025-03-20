@@ -6,12 +6,14 @@ import { Typography, Avatar, Button, ListItem, Box } from '@mui/material';
 
 import styles from './SidebarUser.module.scss';
 import * as DecodePayload from '../../lib/DecodePayload';
+import { useNavigate } from 'react-router-dom';
 
 const cx = classNames.bind(styles);
 const API_URL = "https://localhost:7005/api/Users";
 
 const Sidebar = () => {
   const [userData, setUserData] = useState({});
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -44,6 +46,10 @@ const Sidebar = () => {
     fetchUserData();
   }, []);
 
+  const handleNavigation = (path) => () => {
+    navigate(path);
+  };
+
   return (
     <div className={cx('sidebar')}>
       <div className={cx('user-welcome')}>
@@ -57,7 +63,7 @@ const Sidebar = () => {
       </div>
       <div className={cx('category')}><Typography>VEHICLE INFORMATION:</Typography></div>
       <ListItem
-        button={true}
+        button="true"
         //onClick={handleNavigation("/dashboard/account")}
         sx={{
           cursor: "pointer",
@@ -71,7 +77,7 @@ const Sidebar = () => {
       ><Typography>My Car</Typography></ListItem>
       <div className={cx('category')}><Typography>ORDERS & SERVICES:</Typography></div>
       <ListItem
-        button={true}
+        button="true"
         //onClick={handleNavigation("/dashboard/account")}
         sx={{
           cursor: "pointer",
@@ -85,8 +91,8 @@ const Sidebar = () => {
       ><Typography>Transaction History</Typography></ListItem>
 
       <ListItem
-        button={true}
-        //onClick={handleNavigation("/dashboard/account")}
+        button="true"
+        onClick={handleNavigation("/invoice-history")}
         sx={{
           cursor: "pointer",
           padding: "8px 35px",
@@ -101,8 +107,8 @@ const Sidebar = () => {
 
       <div className={cx('category')}><Typography>ACCOUNT:</Typography></div>
       <ListItem
-        button={true}
-        //onClick={handleNavigation("/dashboard/account")}
+        button="true"
+        onClick={handleNavigation("/profile")}
         sx={{
           cursor: "pointer",
           padding: "8px 35px",
@@ -113,9 +119,9 @@ const Sidebar = () => {
           },
         }}
       ><Typography>Personal Information</Typography></ListItem>
-      <Box sx={{padding: "10px"}}>
+      <Box sx={{ padding: "10px" }}>
         <Button variant="outlined" color="error" fullWidth>
-          <Typography  >Log Out</Typography>
+          <Typography>Log Out</Typography>
         </Button>
       </Box>
     </div>

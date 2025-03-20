@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import axios from 'axios';
 import classNames from 'classnames/bind';
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, Box, Typography } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, Typography } from '@mui/material';
 
 import * as DecodePayload from '../../lib/DecodePayload'; // Import DecodePayload module
 import * as AuthValidator from "../../validation/AuthValidation";
@@ -83,6 +83,7 @@ const PersonalInfo = () => {
 
   useEffect(() => {
     fetchUserData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleClickOpen = () => {
@@ -155,9 +156,6 @@ const PersonalInfo = () => {
     setShowReNewPassword(!showReNewPassword);
   };
 
-  const handleOpenChangePasswordDialog = () => {
-    setNewPasswordDialogOpen(true);
-  };
   const handleResetPasswordClose = () => {
     setNewPasswordDialogOpen(false);
   };
@@ -328,7 +326,7 @@ const PersonalInfo = () => {
 
 
   return (
-    <Box sx={{ width: '100%', paddingLeft: '20px' }}>
+    <div className={cx('container__personal-info')}>
       <div className={cx('personal-info')}>
         <div className={cx('title')}>
           <Typography sx={{ fontSize: '1.5rem', fontWeight: '500' }}>
@@ -648,7 +646,7 @@ const PersonalInfo = () => {
           </Button>
         </DialogActions>
       </Dialog>
-    </Box>
+    </div>
   );
 };
 

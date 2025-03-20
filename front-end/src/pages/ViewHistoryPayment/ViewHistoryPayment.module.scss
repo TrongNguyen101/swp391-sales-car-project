@@ -3,15 +3,23 @@
 }
 
 .conatiner {
-  width: var(--default-width);
   display: flex;
+  width: var(--default-width);
   margin: 0 auto;
   justify-content: space-between;
 }
 
+.conatiner_table {
+  width: 1310px;
+  padding-left: 30px;
+}
 @media only screen and (max-width: 100em) {
   .conatiner {
     width: 1400px;
   }
-  
+
+  .conatiner_table {
+    width: 1100px;
+    padding-left: 30px;
+  }
 }

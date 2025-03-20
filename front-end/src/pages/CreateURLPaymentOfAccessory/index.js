@@ -7,14 +7,15 @@ import classNames from "classnames/bind";
 import * as cartService from "../../services/CartService";
 import * as DecodePayload from "../../lib/DecodePayload";
 import * as adminServices from "../../services/AdminServices";
-import * as invoiceServices from "../../services/InvoiceServices";
+import * as DepositService from "../../services/DepositService";
 
-import styles from "./Invoice.module.scss";
+
+import styles from "./CreateURLPaymentOfAccessory.module.scss";
 
 
 const cx = classNames.bind(styles);
 
-function InvoicePage() {
+function CreateURLPaymentOfAccessory() {
   const navigate = useNavigate();
   const [cartItems, setCartItems] = useState([]);
 
@@ -72,33 +73,18 @@ function InvoicePage() {
   };
 
   useEffect(() => {
+    const savedCart = localStorage.getItem("cartItems");
+    if (savedCart) {
+      setCartItems(JSON.parse(savedCart));
+    }
     fetchCartItems();
     fetchUser();
     // eslint-disable-next-line
   }, []);
 
 
-  useEffect(() => {
-    const savedCart = localStorage.getItem("cartItems");
-
-    if (savedCart) {
-      setCartItems(JSON.parse(savedCart));
-    }
-
-    fetchCartItems();
-    // eslint-disable-next-line
-  }, []);
-
-
-
-
-
-
-
 
   const handleOrderSubmit = (event) => {
-    const decoded = DecodePayload.decodePayload(token);
-    console.log(decoded);
     event.preventDefault();
 
     let isValid = true;
@@ -108,7 +94,7 @@ function InvoicePage() {
       isValid = false;
     }
 
-    if (!email || !/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
+    if (!email || !/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
       setErrorEmail("Valid Email is required");
       isValid = false;
     }
@@ -124,30 +110,37 @@ function InvoicePage() {
     }
 
     if (isValid) {
-      fetchCreateInvoice();
+      fetchCreateURLPaymentOfAccessory();
     }
   };
 
 
-  const fetchCreateInvoice = async () => {
+  const fetchCreateURLPaymentOfAccessory = async () => {
     try {
-      const invoiceData = {
-        customerName,
-        email,
-        phone,
-        address,
-        typeofProduct: "accessory",
-      };
-      console.log(invoiceData);
-      const response = await invoiceServices.createInvoice(
-        invoiceData
+      const Amount = cartItems.reduce(
+        (sum, item) => (sum += item.price * item.quantity),
+        0
       );
+      console.log(Amount);
+      const amountString = formatPrice(Amount);
+      console.log(amountString);
+      const paymentInformation = {
+        OrderInfo: "Accessory",
+        Amount: amountString
+      }
+
+      const response = await DepositService.createPaymentURL(
+        paymentInformation
+      );
+
       if (response.statusCode === 200) {
-        setMessage(response.message);
-        setOpenDialog(true);
-      } else {
-        setMessage(response.data.value.message);
-        setOpenErrorDialog(true);
+        console.log(response.data);
+        localStorage.setItem("customerName", customerName);
+        localStorage.setItem("phone", phone);
+        localStorage.setItem("email", email);
+        localStorage.setItem("address", address);
+        localStorage.setItem("typeofProduct", "accessory");
+        window.location.href = response.data;
       }
     } catch (error) {
       setMessage("Error creating accessory");
@@ -421,4 +414,4 @@ function InvoicePage() {
   );
 }
 
-export default InvoicePage;
+export default CreateURLPaymentOfAccessory;

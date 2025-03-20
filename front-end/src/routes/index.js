@@ -6,12 +6,15 @@ import AccessoriesPage from "../pages/Accessories";
 import AccessoryDetailPage from "../pages/AccessoryDetail";
 import RegisterPage from "../pages/Register";
 import CarDetailPage from "../pages/CarDetail";
-import DepositPaymentPage from "../pages/DepositPayment";
-import DepositPaymentResponsePage from "../pages/DepositPaymentResponse";
+import CreateURLPaymentOfDepositPage from "../pages/CreateURLPaymentOfDeposit";
+import DepositPaymentResponsePage from "../pages/PaymentResponse";
 import TestDriveRegistration from "../pages/TestDriveRegistration";
 import { DashboardLayout } from "../layouts";
 import AccountTablePage from "../pages/AccountTable";
 import CartPage from "../pages/Cart";
+
+// Invoice
+import ViewHistoryPaymentPage from "../pages/ViewHistoryPayment";
 
 // Admin Manage Cars
 import CarsTablePage from "../pages/AdminManageCars/CarsTable";
@@ -24,7 +27,7 @@ import AdminDetailCarPage from "../pages/AdminManageCars/AdminDetailCar";
 import AccessoriesTablePage from "../pages/AdminManageAccessories/AccessoriesTable";
 import CreateAccessoryPage from "../pages/AdminManageAccessories/CreateAccessory";
 import AdminAccessoryDetailPage from "../pages/AdminManageAccessories/AdminAccessoryDetail";
-import InvoicePage from "../pages/Invoice";
+import CreateURLPaymentOfAccessoryPage from "../pages/CreateURLPaymentOfAccessory";
 
 const publicRoutes = [
   { path: "/", page: HomePage },
@@ -36,13 +39,13 @@ const publicRoutes = [
   { path: "/cart", page: CartPage },
   { path: "/login", page: LoginPage, layout: null },
   { path: "/register", page: RegisterPage, layout: null },
-  { path: "/deposit/:carId", page: DepositPaymentPage },
+  { path: "/deposit/:carId", page: CreateURLPaymentOfDepositPage },
   { path: "/deposit-response", page: DepositPaymentResponsePage },
   { path: "/testdrivegistration", page: TestDriveRegistration },
   { path: "/reset-password", page: TestDriveRegistration },
 
-  { path: "/invoice/:userId", page: InvoicePage },
-
+  { path: "/invoice/:userId", page: CreateURLPaymentOfAccessoryPage },
+  { path: "/invoice-history", page: ViewHistoryPaymentPage },
 
   {
     path: "/dashboard/account",

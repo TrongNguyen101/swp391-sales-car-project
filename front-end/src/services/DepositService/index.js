@@ -1,14 +1,13 @@
 import * as request from "../../utils/DepositPayment";
 
-export const postDeposit = async (amount, orderInfo) => {
+// Create payment for deposit car
+export const createPaymentURL = async (depositInfo) => {
   const token = localStorage.getItem("Bearer");
   try {
+    // call API to create payment for deposit car
     const response = await request.post(
       "/api/Payment/CreatePaymentUrl",
-      {
-        amount: amount,
-        orderInfo: orderInfo,
-      },
+      depositInfo,
       {
         headers: {
           "Content-Type": "application/json",
@@ -22,16 +21,19 @@ export const postDeposit = async (amount, orderInfo) => {
   }
 };
 
-export const getDeposit = async (queryParams) => {
+// Create invoice for deposit
+export const createInvoice = async (invoiceData) => {
   try {
-    const response = await request.get(
-      "/api/Payment/PaymentResponse",
+    const token = localStorage.getItem("Bearer");
+
+    const response = await request.post(
+      "/api/Payment/createInvoice",
+      invoiceData,
       {
-        params: queryParams,
-      },
-      {
+        params: invoiceData.queryParams,
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
       }
     );

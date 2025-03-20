@@ -58,5 +58,25 @@ namespace WebAPI.DAO
             }
         }
 
+        // Get invoice by VNPTranscationNo to check transaction existed
+        public async Task<Invoice> GetInvoiceByVNPayTranscationNo(string vnpTranscationNo)
+        {
+            if (string.IsNullOrWhiteSpace(vnpTranscationNo))
+            {
+                return null;
+            }
+            using (var context = new VinfastContext())
+            {
+                return await context.Invoices.FirstOrDefaultAsync(i => i.VNPTransactionNo == vnpTranscationNo);
+            }
+        }
+
+        public async Task<List<Invoice>> GetAllInvoices()
+        {
+            using (var context = new VinfastContext())
+            {
+                return await context.Invoices.ToListAsync();
+            }
+        }
     }
 }

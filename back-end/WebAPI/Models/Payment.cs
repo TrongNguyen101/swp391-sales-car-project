@@ -39,8 +39,8 @@ namespace WebAPI.Models
         public string? VNPayResponseCode { get; set; }  // VNPay Response Code
 
         [StringLength(255)]
-        [Column("VNPay Payment URL")]
-        public string? VNPayPaymentUrl { get; set; }    // VNPay Payment URL
+        [Column("VNPay Order Information")]
+        public string? VNPayOrderInfor { get; set; }    // VNPay Payment URL
 
         [Required]
         [Column("Is Success")]

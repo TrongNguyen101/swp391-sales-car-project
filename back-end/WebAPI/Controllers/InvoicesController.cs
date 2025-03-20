@@ -5,6 +5,7 @@ using WebAPI.Models;
 using WebAPI.Utils.AutoMapper;
 using WebAPI.Utils.JwtTokenHelper;
 using WebAPI.Utils.ResponseHelper;
+using WebAPI.Utils.VnpayPayment;
 
 namespace WebAPI.Controllers
 {
@@ -13,10 +14,50 @@ namespace WebAPI.Controllers
     public class InvoicesController : ControllerBase
     {
 
+        private readonly VnpayPayment vnpayPayment;
 
-        public InvoicesController()
+
+        public InvoicesController(IConfiguration configuration)
         {
+            vnpayPayment = new VnpayPayment(configuration);
         }
+
+        [HttpGet]
+        public async Task<ActionResult> GetAllAccessories()
+        {
+            try
+            {
+                var invoices = await InvoicesDAO.GetInstance().GetAllInvoices();
+                if (!invoices.Any())
+                {
+                    return NotFound(new DataResponse
+                    {
+                        StatusCode = 404,
+                        Message = "No accessory found",
+                        Success = false
+                    });
+                }
+                var invoiceDTOs = AutoMapper.ToInvoiceDTOList(invoices);
+
+                return Ok(new DataResponse
+                {
+                    StatusCode = 200,
+                    Message = "Get all invoices successfully",
+                    Success = true,
+                    Data = invoiceDTOs
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new DataResponse
+                {
+                    StatusCode = 400,
+                    Message = ex.Message,
+                    Success = false
+                });
+            }
+        }
+
 
         [HttpPost("createInvoice")]
         public async Task<IActionResult> CreateInvoice([FromBody] InvoiceDTO invoiceDTO)
@@ -24,62 +65,58 @@ namespace WebAPI.Controllers
             try
             {
                 #region Authentication, Authorization
-                // Get token
+                // Retrieve the authorization token from the request headers
                 var authorizationHeader = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
 
-                // Check token
+                // Check if the token is present and valid
                 if (authorizationHeader == null || !authorizationHeader.StartsWith("Bearer "))
                 {
                     return Unauthorized(ResponseHelper.Response(401, "Authentication token is missing or invalid", false, null));
                 }
-                // Format token
+                // Extract the token from the header
                 var token = authorizationHeader.Split(" ")[1];
-                // Get claims
+                // Get the claims from the token
                 var claims = JwtTokenHelper.GetUserClaims(token);
-                // Verify token
+                // Verify the claims (i.e., validate the token)
                 if (claims == null)
                 {
                     return Unauthorized(ResponseHelper.Response(401, "Authentication token is invalid", false, null));
                 }
-                // Check role
+                // Check user role (only allow role '2' to proceed)
                 if (claims.TryGetValue("role", out var roleId) && roleId.ToString() != "2")
                 {
                     return Unauthorized(ResponseHelper.Response(401, "Unauthorized access denied", false, null));
                 }
                 #endregion
 
-                string invoiceId = $"{invoiceDTO.TypeOfProduct}-{DateTime.UtcNow:yyyyMMddHHmmss}-{Guid.NewGuid().ToString("N").Substring(0, 6)}";
-
+                // Extract the user ID from the token claims
                 Guid.TryParse(claims["sub"].ToString(), out Guid userId);
 
-                var carts = await CartDAO.GetInstance().GetAllCartItemsByIdUser(userId);
-                if (carts.Count == 0)
-                {
-                    return NotFound(ResponseHelper.Response(404, "No cart item found", false, null));
-                }
-                var totalPrice = carts.Sum(item => item.Price * item.Quantity);
-
-                var invoice = new Invoice
-                {
-                    Id = invoiceId,
-                    TypeOfProduct = invoiceDTO.TypeOfProduct,
-                    UserId = userId,
-                    CustomerName = invoiceDTO.CustomerName,
-                    Phone = invoiceDTO.Phone,
-                    Email = invoiceDTO.Email,
-                    DateCreate = DateTime.UtcNow,
-                    TotalAmount = totalPrice,
-                    IsPaid = false,
-                    Status = "Pending"
-                };
-
-
-
+                // Initialize a list to store invoice items and an invoice object
                 var invoiceItems = new List<InvoiceItem>();
-                foreach (var cartItem in carts)
-                {
+                var invoice = new Invoice();
+                string invoiceId;
 
-                    if (invoiceDTO.TypeOfProduct == "accessory")
+
+                // Check if the product type is "accessory" and process the cart items
+                if (invoiceDTO.TypeOfProduct == "accessory")
+                {
+                    // Retrieve all cart items for the user
+                    var carts = await CartDAO.GetInstance().GetAllCartItemsByIdUser(userId);
+                    // If no cart items are found, return a 404 Not Found response
+                    if (carts.Count == 0)
+                    {
+                        return NotFound(ResponseHelper.Response(404, "No cart item found", false, null));
+                    }
+                    // Calculate the total price of all items in the cart
+                    var totalPrice = 0.0;
+                    totalPrice = carts.Sum(item => item.Price * item.Quantity);
+
+                    // Generate a unique invoice ID using the product type, timestamp, and GUID
+                    invoiceId = $"{"Accessory"}-{DateTime.UtcNow:yyyyMMddHHmmss}-{Guid.NewGuid().ToString("N").Substring(0, 6)}";
+
+                    // Add each cart item to the invoice items list
+                    foreach (var cartItem in carts)
                     {
                         invoiceItems.Add(new InvoiceItem
                         {
@@ -88,46 +125,126 @@ namespace WebAPI.Controllers
                             Quantity = cartItem.Quantity,
                             UnitPrice = cartItem.Price,
                             AccessoryId = cartItem.ProductId
+                        });
+                    }
 
+                    // Set the invoice details for an accessory product type
+                    invoice.Id = invoiceId;
+                    invoice.TypeOfProduct = "accessory";
+                    invoice.UserId = userId;
+                    invoice.CustomerName = invoiceDTO.CustomerName;
+                    invoice.Phone = invoiceDTO.Phone;
+                    invoice.Email = invoiceDTO.Email;
+                    invoice.PayDate = DateTime.UtcNow;
+                    invoice.TotalAmount = totalPrice;
+                    invoice.IsPaid = false;
+                    invoice.Status = "Pending";
+                    invoice.InvoiceInformation = "payment for accessory";
+
+                    var depositInfo = new DepositInfo
+                    {
+                        Amount = AutoMapper.FormatPrice(totalPrice),
+                        OrderInfo = $"{invoiceId}_{invoiceDTO.CustomerName}-{invoiceDTO.InvoiceInformation}"
+                    };
+
+                    // Attempt to save the invoice and invoice items to the database
+                    if (await InvoicesDAO.GetInstance().CreateInvoiceAsync(invoice, invoiceItems))
+                    {
+                        //lam tiep payment tai day 
+                        var paymentUrl = vnpayPayment.CreatePaymentUrl(depositInfo);
+
+                        // If successful, return a response with the payment URL
+                        return Ok(new DataResponse
+                        {
+                            StatusCode = 200,
+                            Message = "Create invoice successfully fordwad to payment",
+                            Success = true,
+                            Data = paymentUrl
                         });
                     }
                     else
                     {
-                        invoiceItems.Add(new InvoiceItem
+                        // If creation fails, return a failure response
+                        return BadRequest(new DataResponse
                         {
-                            InvoiceId = invoiceId,
-                            ProductName = cartItem.ProductName,
-                            Quantity = cartItem.Quantity,
-                            UnitPrice = cartItem.Price,
-                            CarId = cartItem.ProductId
+                            StatusCode = 400,
+                            Message = "Create invoice failed, please try again",
+                            Success = false
                         });
                     }
-
                 }
-
-
-                if (await InvoicesDAO.GetInstance().CreateInvoiceAsync(invoice, invoiceItems))
+                else
                 {
-                    return Ok(new DataResponse
+                    // Retrieve car information if the product type is not "accessory"
+                    var car = await CarsDAO.GetInstance().GetCarByName(invoiceDTO.TypeOfProduct);
+                    if (car == null)
                     {
-                        StatusCode = 200,
-                        Message = "Create invoice successfully",
-                        Success = true,
-                        Data = invoiceId
-                    });
-                }
-                {
-                    return Ok(new DataResponse
-                    {
-                        StatusCode = 200,
-                        Message = "Create invoice failed",
-                        Success = true
-                    });
-                }
+                        return NotFound(ResponseHelper.Response(404, "Car not found", false, null));
+                    }
+                    var carDTO = AutoMapper.ToCarDetailDTO(car);
+                    Console.WriteLine(car);
 
+                    // Generate a unique invoice ID using the product type, timestamp, and GUID
+                    invoiceId = $"{"CarDeposit"}-{DateTime.UtcNow:yyyyMMddHHmmss}-{Guid.NewGuid().ToString("N").Substring(0, 6)}";
+
+                    // Add the car as an invoice item
+                    invoiceItems.Add(new InvoiceItem
+                    {
+                        InvoiceId = invoiceId,
+                        ProductName = invoiceDTO.TypeOfProduct,
+                        Quantity = 1,
+                        UnitPrice = AutoMapper.ParsePrice(invoiceDTO.TotalAmount),
+                        CarId = carDTO.Id,
+                    });
+
+                    // Set the invoice details for a car product type
+                    invoice.Id = invoiceId;
+                    invoice.TypeOfProduct = "carDeposit";
+                    invoice.UserId = userId;
+                    invoice.CustomerName = invoiceDTO.CustomerName;
+                    invoice.Phone = invoiceDTO.Phone;
+                    invoice.Email = invoiceDTO.Email;
+                    invoice.PayDate = DateTime.UtcNow;
+                    invoice.TotalAmount = AutoMapper.ParsePrice(invoiceDTO.TotalAmount);
+                    invoice.IsPaid = false;
+                    invoice.Status = "Pending";
+                    invoice.InvoiceInformation = invoiceDTO.InvoiceInformation;
+
+                    var depositInfo = new DepositInfo
+                    {
+                        Amount = invoiceDTO.TotalAmount,
+                        OrderInfo = $"{invoiceId}_{invoiceDTO.CustomerName}-{invoiceDTO.InvoiceInformation}"
+                    };
+
+                    // Attempt to save the invoice and invoice items to the database
+                    if (await InvoicesDAO.GetInstance().CreateInvoiceAsync(invoice, invoiceItems))
+                    {
+                        var paymentUrl = vnpayPayment.CreatePaymentUrl(depositInfo);
+
+                        // If successful, return a response with the payment URL
+                        return Ok(new DataResponse
+                        {
+                            StatusCode = 200,
+                            Message = "Create invoice successfully fordwad to payment",
+                            Success = true,
+                            Data = paymentUrl
+                        });
+                    }
+                    else
+                    {
+                        // If creation fails, return a failure response
+                        return BadRequest(new DataResponse
+                        {
+                            StatusCode = 400,
+                            Message = "Create invoice failed, please try again",
+                            Success = false
+                        });
+                    }
+                }
             }
             catch (Exception ex)
             {
+                // Handle any exceptions that occur and log the error message
                 Console.WriteLine(ex.Message);
                 return BadRequest(new DataResponse
                 {

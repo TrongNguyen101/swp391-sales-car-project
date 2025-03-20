@@ -185,7 +185,7 @@ function CartPage() {
               </div>
             </div>
             {cartItems.map((cartItem, index) => (
-              <div className={cx("content__cartItems")}>
+              <div className={cx("content__cartItems")} key={cartItem.id}>
                 <div className={cx("content__cartItem--image")}>
                   <img
                     src={`https://localhost:7005/api/Images/Accessory/${cartItem.imageUrl}`}

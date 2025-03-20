@@ -1,7 +1,11 @@
+.container__personal-info {
+  width: 1310px;
+  padding-left: 30px;
+}
 .personal-info {
     padding: 20px;
     background-color: #fff;
-    border-radius: 8px;
+    border-radius: 5px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
   
@@ -288,3 +292,11 @@ a {
     margin: 5px;
   }
 }
+
+@media only screen and (max-width: 100em) {
+  .container__personal-info {
+    width: 1110px;
+    padding-left: 30px;
+  }
+}
+

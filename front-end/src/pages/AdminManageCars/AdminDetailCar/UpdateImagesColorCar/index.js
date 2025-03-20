@@ -2,19 +2,53 @@ import { Box, Button, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import ImageUploadComponent from "../../../../components/AddImage";
 import ListColorImageCarComponent from "../ListColorImageCar";
+import * as adminCarServices from "../../../../services/AdminCarServices";
 
-function UpdateImagessColorCar({ carId }) {
+function UpdateImagessColorCar({ carId, setMessage = () => { }, setInforDialogOpen = () => { }, fetchCarDetails = () => { } }) {
   const [color, setColor] = useState("");
-  const [newColerImages, setNewColerImages] = useState([]);
+  const [colorBigImage, setColorBigImages] = useState([]);
+  const [colorSmallImage, setColorSmallImages] = useState([]);
   const [errorColor, setErrorColor] = useState("");
+  // const CarId = car.id;
 
-  const handleUploadColor = (files) => {
-    const formattedFiles = files.map((file) => ({
-      file,
-      url: URL.createObjectURL(file.file), // Tạo URL để hiển thị ảnh
-    }));
-    setNewColerImages(formattedFiles);
-  };
+  const handleUploadBigImage = (files) => setColorBigImages(files);
+  const handleUploadSmallImage = (files) => setColorSmallImages(files);
+
+   // handle the save of the image
+      const handleSaveColorImage = async () => {
+          if (!colorBigImage.length || !colorBigImage[0].file || !colorSmallImage.length || !colorSmallImage[0].file) {
+              setMessage("Please select an image to upload");
+              setInforDialogOpen(true);
+          } else {
+              try {
+                  const formData = new FormData();
+                  formData.append("colorBigImage", colorBigImage[0].file);
+                  formData.append("colorSmallImage", colorSmallImage[0].file);
+                  formData.append("color", color);
+                  formData.append("carId", carId);
+  
+                  const response = await adminCarServices.uploadColorImageOfCar(
+                      formData
+                  );
+  
+                  if (response.statusCode !== 200) {
+                      setMessage("Failed to upload image");
+                      setInforDialogOpen(true);
+                  } else {
+                      setMessage("Image uploaded successfully");
+                      fetchCarDetails(carId);
+                      setInforDialogOpen(true);
+                      console.log(response.data);
+                      console.log("gooo:" )
+                  }
+              } catch (error) {
+                  setMessage(error);
+                  setInforDialogOpen(true);
+              }
+          }
+      };
+
+
 
   return (
     <>
@@ -40,7 +74,7 @@ function UpdateImagessColorCar({ carId }) {
             title="Drag & drop an image here, or click to select main image of car"
             allowedTypes={["image/jpeg", "image/png"]}
             maxSize={10 * 1024 * 1024} // 10MB
-            onUpload={handleUploadColor}
+            onUpload={handleUploadBigImage}
             multiple={false}
             previewWidthSize="700px"
             previewHeightSize="400px"
@@ -52,7 +86,7 @@ function UpdateImagessColorCar({ carId }) {
               title="Drag & drop an image here, or click to select item image of car"
               allowedTypes={["image/jpeg", "image/png"]}
               maxSize={10 * 1024 * 1024} // 10MB
-              onUpload={handleUploadColor}
+              onUpload={handleUploadSmallImage}
               multiple={false}
               previewWidthSize="200px"
               previewHeightSize="115px"
@@ -75,7 +109,7 @@ function UpdateImagessColorCar({ carId }) {
             />
           </Box>
           <Box sx={{ width: "200px" }}>
-            <Button sx={{ width: "100%" }} variant="contained">
+            <Button sx={{ width: "100%" }} variant="contained" onClick={handleSaveColorImage}>
               Save Image
             </Button>
           </Box>

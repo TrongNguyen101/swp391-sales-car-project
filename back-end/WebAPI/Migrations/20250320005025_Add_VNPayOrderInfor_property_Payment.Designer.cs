@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebAPI.DataContext;
 
@@ -11,9 +12,11 @@ using WebAPI.DataContext;
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(VinfastContext))]
-    partial class VinfastContextModelSnapshot : ModelSnapshot
+    [Migration("20250320005025_Add_VNPayOrderInfor_property_Payment")]
+    partial class Add_VNPayOrderInfor_property_Payment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -972,16 +975,15 @@ namespace WebAPI.Migrations
                         .HasColumnType("nvarchar(450)")
                         .HasColumnName("Invoice ID");
 
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("Address");
-
                     b.Property<string>("CustomerName")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)")
                         .HasColumnName("Customer Name");
+
+                    b.Property<DateTime>("DateCreate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("Date Create");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -996,10 +998,6 @@ namespace WebAPI.Migrations
                     b.Property<bool>("IsPaid")
                         .HasColumnType("bit")
                         .HasColumnName("Is Paid");
-
-                    b.Property<DateTime>("PayDate")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("Pay Date");
 
                     b.Property<string>("Phone")
                         .IsRequired()
@@ -1026,11 +1024,6 @@ namespace WebAPI.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("User ID");
-
-                    b.Property<string>("VNPTransactionNo")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("VNPay Transaction No");
 
                     b.HasKey("Id");
 
