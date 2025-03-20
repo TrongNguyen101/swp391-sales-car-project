@@ -139,11 +139,6 @@ namespace WebAPI.Utils.AutoMapper
             return cars.Select(car => ToAdminCarDTO(car)).ToList();
         }
 
-        private static string FormatPrice(double price)
-        {
-            return price.ToString("N0", new CultureInfo("en-US")).Replace(",", ".");
-        }
-
         // Mapping car color of User
         public static CarColorDTO ToCarColorDTO(CarColor carColor)
         {
@@ -273,6 +268,77 @@ namespace WebAPI.Utils.AutoMapper
             return users.Select(user => ToUserDTO(user)).ToList();
         }
 
+        public static CartItem ToCartItem(CartItemDTO cartItemDTO)
+        {
+            return new CartItem
+            {
+                ProductId = cartItemDTO.ProductId,
+                ProductName = cartItemDTO.ProductName,
+                Price = cartItemDTO.Price,
+                Quantity = cartItemDTO.Quantity,
+                ImageUrl = cartItemDTO.ImageUrl,
+                UserId = cartItemDTO.UserId
+            };
+        }
+
+        // Convert the PaymentDTO to Payment entity
+        public static Payment ToPayment(PaymentDTO paymentDTO)
+        {
+            return new Payment
+            {
+                Id = paymentDTO.Id,
+                InvoiceId = paymentDTO.InvoiceId,
+                AmountPaid = ParsePrice(paymentDTO.AmountPaid),
+                PaymentDate = paymentDTO.PaymentDate,
+                PaymentMethod = paymentDTO.PaymentMethod,
+                VNPayTransactionId = paymentDTO.VNPayTransactionId,
+                VNPayResponseCode = paymentDTO.VNPayResponseCode,
+                VNPayOrderInfor = paymentDTO.VNPayOrderInfor,
+                IsSuccess = paymentDTO.IsSuccess
+            };
+        }
+
+        // Convert the Payment entity to PaymentDTO
+        public static PaymentDTO ToPaymentDTO(Payment payment)
+        {
+            return new PaymentDTO
+            {
+                Id = payment.Id,
+                InvoiceId = payment.InvoiceId,
+                AmountPaid = FormatPrice(payment.AmountPaid),
+                PaymentDate = payment.PaymentDate,
+                PaymentMethod = payment.PaymentMethod,
+                VNPayTransactionId = payment.VNPayTransactionId,
+                VNPayResponseCode = payment.VNPayResponseCode,
+                VNPayOrderInfor = payment.VNPayOrderInfor,
+                IsSuccess = payment.IsSuccess
+            };
+        }
+
+        public static InvoiceDTO ToInvoiceDTO(Invoice invoice)
+        {
+            return new InvoiceDTO
+            {
+                Id = invoice.Id,
+                TypeOfProduct = invoice.TypeOfProduct,
+                CustomerName = invoice.CustomerName,
+                Email = invoice.Email,
+                Phone = invoice.Phone,
+                PayDate = FormatDateTime(invoice.PayDate),
+                Address = invoice.Address,
+                TotalAmount = FormatPrice(invoice.TotalAmount),
+                InvoiceInformation = invoice.InvoiceInformation,
+                IsPaid = invoice.IsPaid,
+                Status = invoice.Status
+            };
+        }
+
+        public static List<InvoiceDTO> ToInvoiceDTOList(List<Invoice> invoices)
+        {
+            return invoices.Select(invoice => ToInvoiceDTO(invoice)).ToList();
+        }
+
+        
         private static string FormatFullname(string fullname)
         {
             if (string.IsNullOrWhiteSpace(fullname))
@@ -290,6 +356,20 @@ namespace WebAPI.Utils.AutoMapper
             }
 
             return string.Join(' ', words);
+        }
+
+        public static string FormatPrice(double price)
+        {
+            return price.ToString("N0", new CultureInfo("en-US")).Replace(",", ".");
+        }
+
+        public static double ParsePrice(string price)
+        {
+            // Replace the period (.) with a comma (,) to match the US culture format
+            string formattedPrice = price.Replace(".", ",");
+
+            // Parse the price using the correct culture (en-US)
+            return double.Parse(formattedPrice, NumberStyles.AllowThousands, new CultureInfo("en-US"));
         }
 
         private static string FormatBooleanToString(bool isDeleted)
@@ -311,20 +391,6 @@ namespace WebAPI.Utils.AutoMapper
         {
             return dateTime.ToString("dd-MM-yyyy HH:mm");
         }
-
-        public static CartItem ToCartItem(CartItemDTO cartItemDTO)
-        {
-            return new CartItem
-            {
-                ProductId = cartItemDTO.ProductId,
-                ProductName = cartItemDTO.ProductName,
-                Price = cartItemDTO.Price,
-                Quantity = cartItemDTO.Quantity,
-                ImageUrl = cartItemDTO.ImageUrl,
-                UserId = cartItemDTO.UserId
-            };
-        }
-
         
     }
 }

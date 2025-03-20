@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import classNames from "classnames/bind";
-import styles from "./DepositPayment.module.scss";
+import styles from "./CreateURLPaymentOfDeposit.module.scss";
 import {
   Button,
   Dialog,
@@ -22,10 +22,12 @@ import {
 import * as DepositService from "../../services/DepositService";
 import * as CarService from "../../services/CarService";
 import * as DecodePayload from "../../lib/DecodePayload";
+import * as adminServices from "../../services/AdminServices";
+
 
 const cx = classNames.bind(styles);
 
-const DepositPaymentPage = () => {
+const CreateURLPaymentOfDepositPage = () => {
   const { carId } = useParams();
   const navigate = useNavigate();
   const [car, setCar] = useState({});
@@ -37,6 +39,7 @@ const DepositPaymentPage = () => {
   const [inputFullname, setInputFullname] = useState("");
   const [inputPhone, setInputPhone] = useState("");
   const [inputEmail, setInputEmail] = useState("");
+  const [address, setAddress] = useState("");
   const [colorToImageUrl, setColorToImageUrl] = useState("");
   const [remainingAmount, setRemainingAmount] = useState(0);
 
@@ -108,41 +111,69 @@ const DepositPaymentPage = () => {
     }
   };
 
+  const fetchUser = async () => {
+    try {
+      const token = localStorage.getItem("Bearer");
+      const decoded = DecodePayload.decodePayload(token);
+      const response = await adminServices.getUserById(decoded.sub);
+      setInputFullname(decoded.name);
+      setInputPhone(decoded.phone);
+      setInputEmail(decoded.email);
+      setAddress(response.data.address);
+      console.log(response.data);
+    } catch (error) {
+      console.error("Failed to fetch user:", error);
+    }
+  };
+
   useEffect(() => {
     toTop();
     const token = localStorage.getItem("Bearer");
     if (!token) {
       navigate("/login");
     } else {
-      const decoded = DecodePayload.decodePayload(token);
-      setInputFullname(decoded.name);
-      setInputPhone(decoded.phone);
-      setInputEmail(decoded.email);
       fetchCarDetails(carId);
       fetchCarColors(carId);
       setColorToImageUrl(defualtColor.ColorImage);
       fetchRemainingAmount(carId);
+      fetchUser();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [carId]);
 
+  // Handle submit payment
   const handlePayment = async () => {
+    // Check if user has selected color
     if (!selectedColor) {
       setDialogMessage("Please select color for your car");
       setDialogOpen(true);
       return;
     }
     try {
-      const response = await DepositService.postDeposit(
-        car.PriceDeposite,
-        orderInfo
+      // Prepare invoice data
+      const paymentInformation = {
+        OrderInfo: orderInfo,
+        Amount: car.PriceDeposite,
+      };
+      // Call API to create invoice for deposit payment
+      const response = await DepositService.createPaymentURL(
+        paymentInformation
       );
+      // If response status code is 200, save the remaining amount and redirect to payment page
       if (response.statusCode === 200) {
+        localStorage.setItem("customerName", inputFullname);
+        localStorage.setItem("email", inputEmail);
+        localStorage.setItem("phone", inputPhone);
+        localStorage.setItem("address", address);
+        localStorage.setItem("typeofProduct", carId);
         localStorage.setItem("productVersion", selectedVersion);
-        localStorage.setItem("remainingAmountRent", remainingAmount.remainingAmountBatteryRent);
-        localStorage.setItem("remainingAmountOwn", remainingAmount.remainingAmountBatteryOwn);
-        localStorage.setItem("priceBatteryRent", car.PriceBatteryRental);
-        localStorage.setItem("priceBatteryOwn", car.PriceBatteryOwn);
+        localStorage.setItem("amount", car.PriceDeposite);
+        if (selectedVersion === "Battery Rental") {
+          localStorage.setItem("productRemainingAnount", remainingAmount.remainingAmountBatteryRent); 
+        } else {
+          localStorage.setItem("productRemainingAnount", remainingAmount.remainingAmountBatteryOwn);
+        }
+        console.log(response.data);
         window.location.href = response.data;
       } else {
         setDialogMessage(response.data.message);
@@ -154,6 +185,7 @@ const DepositPaymentPage = () => {
     }
   };
 
+  // Handle choosing color before payment
   const handleColorChange = (event) => {
     const selectColor = event.target.value;
     setSelectedColor(selectColor);
@@ -163,7 +195,7 @@ const DepositPaymentPage = () => {
       }
     });
   };
-
+  // Handle choosing version battery before payment
   const handleVersionChange = (event) => {
     setSelectedVersion(event.target.value);
   };
@@ -191,7 +223,6 @@ const DepositPaymentPage = () => {
               <TextField
                 label="Fullname"
                 variant="outlined"
-                disabled
                 value={inputFullname}
                 onChange={(e) => setInputFullname(e.target.value)}
               />
@@ -376,4 +407,4 @@ const DepositPaymentPage = () => {
   );
 };
 
-export default DepositPaymentPage;
+export default CreateURLPaymentOfDepositPage;

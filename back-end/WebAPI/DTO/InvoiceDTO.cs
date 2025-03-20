@@ -15,10 +15,15 @@ namespace WebAPI.DTO
 
         public string? Phone { get; set; }
 
-        public DateTime DateCreate { get; set; }
+        public string? Address { get; set; }
 
-        [Range(0, double.MaxValue, ErrorMessage = "Total amount must be a positive value")]
-        public decimal TotalAmount { get; set; }
+        public string? PayDate { get; set; }
+
+        public string? TotalAmount { get; set; }
+
+        public string? InvoiceInformation { get; set; }
+
+        public string? VNPTransactionNo { get; set; }
 
         public bool IsPaid { get; set; } = false;
 

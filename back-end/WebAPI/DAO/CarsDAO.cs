@@ -44,6 +44,11 @@ namespace WebAPI.DAO
 
         public async Task<Cars> GetCarByName(string name)
         {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                return null;
+            }
+
             using (var context = new VinfastContext())
             {
                 return await context.Cars.FirstOrDefaultAsync(c => c.Name == name);
@@ -120,6 +125,24 @@ namespace WebAPI.DAO
                 using (var context = new VinfastContext())
                 {
                     context.Cars.Update(car);
+                    await context.SaveChangesAsync();
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return false;
+            }
+        }
+
+        public async Task<bool> CreateCarColor(CarColor carColor)
+        {
+            try
+            {
+                using (var context = new VinfastContext())
+                {
+                    await context.CarColor.AddAsync(carColor);
                     await context.SaveChangesAsync();
                     return true;
                 }

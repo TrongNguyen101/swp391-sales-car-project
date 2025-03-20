@@ -1,19 +1,8 @@
 import * as request from "../../utils/CarRequest";
 
-
-export const createInvoice = async (invoiceData) => {
+export const adminGetAllInvoices = async () => {
   try {
-    const token = localStorage.getItem("Bearer");
-    const response = await request.post(
-      `/api/Invoices/createInvoice`,
-      invoiceData,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    const response = await request.get("/api/Invoices");
     return response.data;
   } catch (error) {
     return error.response;

@@ -42,7 +42,6 @@ namespace WebAPI.Utils.VnpayPayment
 
             return $"{VnpayUrl}?{queryString}&vnp_SecureHash={vnp_SecureHash}";
         }
-
         public string ComputeHMACSHA512(string data, string key)
         {
             using (var hmac = new HMACSHA512(Encoding.UTF8.GetBytes(key)))

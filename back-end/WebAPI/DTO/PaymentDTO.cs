@@ -5,17 +5,15 @@ namespace WebAPI.DTO
 {
     public class PaymentDTO
     {
-        [Required]
         public int Id { get; set; }
 
         [Required]
-        public int InvoiceId { get; set; } // Foreign Key
+        public string? InvoiceId { get; set; } // Foreign Key
 
         [Required]
         [Range(0, double.MaxValue, ErrorMessage = "Amount paid must be a positive value")]
-        public double AmountPaid { get; set; }
+        public string AmountPaid { get; set; }
 
-        [Required]
         public DateTime PaymentDate { get; set; } = DateTime.UtcNow;
 
         [StringLength(50)]
@@ -29,7 +27,7 @@ namespace WebAPI.DTO
         public string? VNPayResponseCode { get; set; }  // VNPay Response Code
 
         [StringLength(255)]
-        public string? VNPayPaymentUrl { get; set; }    // VNPay Payment URL
+        public string? VNPayOrderInfor { get; set; }    // VNPay Payment URL
 
         public bool IsSuccess { get; set; } = false;   // Is the transaction successful?
     }
