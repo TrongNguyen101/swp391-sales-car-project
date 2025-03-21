@@ -7,11 +7,15 @@ const cx = classNames.bind(styles);
 
 function DashboardLayout({ children }) {
   return (
-    <div className={cx("container")}>
-      <SidebarDashboard />
-      <div className={cx("content")}>
-        <Overview />
-        {children}
+    <div className={cx("warpper_dashboard")}>
+      <div className={cx("container_dashboard")}>
+        <div className={cx("container_dashboard--Sidebar")}>
+          <SidebarDashboard />
+        </div>
+        <div className={cx("container_dashboard--Content")}>
+          <Overview />
+          {children}
+        </div>
       </div>
     </div>
   );

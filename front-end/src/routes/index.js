@@ -15,6 +15,7 @@ import CartPage from "../pages/Cart";
 
 // Invoice
 import ViewHistoryPaymentPage from "../pages/ViewHistoryPayment";
+import AdminManageDepositTransactionsPage from "../pages/AdminManageDepositTransactions";
 
 // Admin Manage Cars
 import CarsTablePage from "../pages/AdminManageCars/CarsTable";
@@ -94,6 +95,9 @@ const publicRoutes = [
     page: AdminAccessoryDetailPage,
     layout: DashboardLayout,
   },
+
+  // Admin Manage Invoices routes
+  { path: "/dashboard/deposit-transactions-history", page: AdminManageDepositTransactionsPage, layout: DashboardLayout },
 ];
 
 export { publicRoutes };

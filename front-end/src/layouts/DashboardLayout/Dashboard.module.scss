@@ -1,16 +1,22 @@
-.container {
+.warpper_dashboard {
   width: 100%;
-  height: 100%;
+  display: flex;
+}
+
+.container_dashboard {
+  width: var(--default-width);
+  margin: 0 auto;
   display: flex;
   justify-content: center;
-  align-items: center;
   gap: 20px;
 }
 
-.content {
-  width: 1600px;
-  padding: 20px;
-  padding-top: 30px;
+.container_dashboard--Sidebar {
+  width: 300px;
+}
+
+.container_dashboard--Content {
+  width: 1310px;
   display: flex;
   flex-direction: column;
   gap: 20px;

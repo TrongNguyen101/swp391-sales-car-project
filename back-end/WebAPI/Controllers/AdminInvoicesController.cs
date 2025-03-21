@@ -11,13 +11,13 @@ namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class InvoicesController : ControllerBase
+    public class AdminInvoicesController : ControllerBase
     {
 
         private readonly VnpayPayment vnpayPayment;
 
 
-        public InvoicesController(IConfiguration configuration)
+        public AdminInvoicesController(IConfiguration configuration)
         {
             vnpayPayment = new VnpayPayment(configuration);
         }
