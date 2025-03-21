@@ -11,29 +11,29 @@ namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AdminInvoicesController : ControllerBase
+    public class AdminTransactionsController : ControllerBase
     {
 
         private readonly VnpayPayment vnpayPayment;
 
 
-        public AdminInvoicesController(IConfiguration configuration)
+        public AdminTransactionsController(IConfiguration configuration)
         {
             vnpayPayment = new VnpayPayment(configuration);
         }
 
-        [HttpGet]
-        public async Task<ActionResult> GetAllInvoices()
+        [HttpGet("getAllDepositTransactions")]
+        public async Task<ActionResult> GetAllDepositTransactions()
         {
             try
             {
-                var invoices = await InvoicesDAO.GetInstance().GetAllInvoices();
+                var invoices = await TransactionsDAO.GetInstance().GetAllDepositTransactions();
                 if (!invoices.Any())
                 {
                     return NotFound(new DataResponse
                     {
                         StatusCode = 404,
-                        Message = "No accessory found",
+                        Message = "No deposit transactions found",
                         Success = false
                     });
                 }
@@ -42,7 +42,43 @@ namespace WebAPI.Controllers
                 return Ok(new DataResponse
                 {
                     StatusCode = 200,
-                    Message = "Get all invoices successfully",
+                    Message = "Successfully retrieved all deposit transactions.",
+                    Success = true,
+                    Data = invoiceDTOs
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new DataResponse
+                {
+                    StatusCode = 400,
+                    Message = ex.Message,
+                    Success = false
+                });
+            }
+        }
+
+        [HttpGet("getAllAccessoryTransactions")]
+        public async Task<ActionResult> GetAllDepositAccessoryTransactions()
+        {
+            try
+            {
+                var invoices = await TransactionsDAO.GetInstance().GetAllAccessoryTransactions();
+                if (!invoices.Any())
+                {
+                    return NotFound(new DataResponse
+                    {
+                        StatusCode = 404,
+                        Message = "No accessory transaction found",
+                        Success = false
+                    });
+                }
+                var invoiceDTOs = AutoMapper.ToInvoiceDTOList(invoices);
+
+                return Ok(new DataResponse
+                {
+                    StatusCode = 200,
+                    Message = "Successfully retrieved all accessoryies transactions.",
                     Success = true,
                     Data = invoiceDTOs
                 });
@@ -148,7 +184,7 @@ namespace WebAPI.Controllers
                     };
 
                     // Attempt to save the invoice and invoice items to the database
-                    if (await InvoicesDAO.GetInstance().CreateInvoiceAsync(invoice, invoiceItems))
+                    if (await TransactionsDAO.GetInstance().CreateInvoiceAsync(invoice, invoiceItems))
                     {
                         //lam tiep payment tai day 
                         var paymentUrl = vnpayPayment.CreatePaymentUrl(depositInfo);
@@ -217,7 +253,7 @@ namespace WebAPI.Controllers
                     };
 
                     // Attempt to save the invoice and invoice items to the database
-                    if (await InvoicesDAO.GetInstance().CreateInvoiceAsync(invoice, invoiceItems))
+                    if (await TransactionsDAO.GetInstance().CreateInvoiceAsync(invoice, invoiceItems))
                     {
                         var paymentUrl = vnpayPayment.CreatePaymentUrl(depositInfo);
 

@@ -15,7 +15,7 @@ const ViewHistoryPaymentPage = () => {
     // Fetch data from server
     const fetchData = async () => {
         try {
-            const response = await invoiceService.adminGetAllInvoices();
+            const response = await invoiceService.adminGetAllDepositTransactions();
             if (response.statusCode !== 200) {
                 setRows([]);
             } else {

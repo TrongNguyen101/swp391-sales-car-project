@@ -27,7 +27,7 @@ namespace WebAPI.Controllers
         {
             try
             {
-                var invoices = await InvoicesDAO.GetInstance().GetAllInvoices();
+                var invoices = await TransactionsDAO.GetInstance().GetAllDepositTransactions();
                 if (!invoices.Any())
                 {
                     return NotFound(new DataResponse
@@ -148,7 +148,7 @@ namespace WebAPI.Controllers
                     };
 
                     // Attempt to save the invoice and invoice items to the database
-                    if (await InvoicesDAO.GetInstance().CreateInvoiceAsync(invoice, invoiceItems))
+                    if (await TransactionsDAO.GetInstance().CreateInvoiceAsync(invoice, invoiceItems))
                     {
                         //lam tiep payment tai day 
                         var paymentUrl = vnpayPayment.CreatePaymentUrl(depositInfo);
@@ -217,7 +217,7 @@ namespace WebAPI.Controllers
                     };
 
                     // Attempt to save the invoice and invoice items to the database
-                    if (await InvoicesDAO.GetInstance().CreateInvoiceAsync(invoice, invoiceItems))
+                    if (await TransactionsDAO.GetInstance().CreateInvoiceAsync(invoice, invoiceItems))
                     {
                         var paymentUrl = vnpayPayment.CreatePaymentUrl(depositInfo);
 

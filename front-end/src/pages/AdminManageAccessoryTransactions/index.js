@@ -2,18 +2,18 @@ import React, { useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 
-import styles from './AdminManageDepositTransactions.module.scss';
+import styles from './AdminManageAccessoryTransactions.module.scss';
 import * as invoiceService from "../../services/InvoiceServices";
 
 const cx = classNames.bind(styles);
 
-const AdminManageDepositTransactionsPage = () => {
+const AdminManageAccessoryTransactionsPage = () => {
     const [rows, setRows] = useState([]);
 
     // Fetch data from server
     const fetchData = async () => {
         try {
-            const response = await invoiceService.adminGetAllDepositTransactions();
+            const response = await invoiceService.getAllAccessoryTransactions();
             if (response.statusCode !== 200) {
                 setRows([]);
             } else {
@@ -31,7 +31,7 @@ const AdminManageDepositTransactionsPage = () => {
     return (
         <div className={cx('conatiner')}>
             <Typography variant="h4" align="center" gutterBottom sx={{ fontWeight: "500", paddingBottom: "20px" }}>
-                Deposit Transactions
+                Accessory Transactions
             </Typography>
             <div className={cx('conatiner_table')}>
                 <TableContainer
@@ -130,4 +130,4 @@ const AdminManageDepositTransactionsPage = () => {
     );
 };
 
-export default AdminManageDepositTransactionsPage;
+export default AdminManageAccessoryTransactionsPage;

@@ -34,15 +34,15 @@ function Overview() {
 
   return (
     <Box className={cx("dashboard-container")}>
-      <Typography variant="h4" gutterBottom sx={{ color: "#3c3c3c", paddingTop: "20px" }}>
+      <Typography variant="h4" gutterBottom sx={{ color: "#3c3c3c", paddingTop: "20px", fontWeight: "bold" }}>
         Welcome to the Dashboard
       </Typography>
       <Grid2
+        className={cx("dashboard-container__grid2")}
         container
         spacing={3}
-        sx={{ display: "flex", justifyContent: "space-between", width: "1310px", padding: "20px" }}
       >
-        <Grid2 item xs={12} md={4} sx={{ width: "33%" }}>
+        <Grid2 item xs={12} md={4} sx={{ width: "30%" }}>
           <Paper
             className={cx("dashboard-card")}
             elevation={4}

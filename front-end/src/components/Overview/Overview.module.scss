@@ -1,7 +1,15 @@
 .dashboard-container {
     padding: 20px;
   }
+
+.dashboard-container__grid2 {
+  display: flex;
+  justify-content: space-between;
+  width: 1270px;
+  padding: 20px;
+}
   
+
   .dashboard-card {
     margin-top: 30px;
     display: flex;
@@ -19,4 +27,10 @@
   
   .dashboard-card .MuiTypography-body1 {
     margin-top: 5px;
+  }
+
+  @media only screen and (max-width: 100em) {
+    .dashboard-container__grid2 {
+      width: 1070px;
+    }
   }

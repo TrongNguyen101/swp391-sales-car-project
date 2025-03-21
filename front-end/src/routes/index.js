@@ -13,9 +13,11 @@ import { DashboardLayout } from "../layouts";
 import AccountTablePage from "../pages/AccountTable";
 import CartPage from "../pages/Cart";
 
-// Invoice
+// Transaction
 import ViewHistoryPaymentPage from "../pages/ViewHistoryPayment";
 import AdminManageDepositTransactionsPage from "../pages/AdminManageDepositTransactions";
+import AdminManageAccessoryTransactionsPage from "../pages/AdminManageAccessoryTransactions";
+
 
 // Admin Manage Cars
 import CarsTablePage from "../pages/AdminManageCars/CarsTable";
@@ -46,7 +48,7 @@ const publicRoutes = [
   { path: "/reset-password", page: TestDriveRegistration },
 
   { path: "/invoice/:userId", page: CreateURLPaymentOfAccessoryPage },
-  { path: "/invoice-history", page: ViewHistoryPaymentPage },
+  { path: "/deposit-transaction-history", page: ViewHistoryPaymentPage },
 
   {
     path: "/dashboard/account",
@@ -96,8 +98,13 @@ const publicRoutes = [
     layout: DashboardLayout,
   },
 
-  // Admin Manage Invoices routes
+  // Admin manage deposit transaction routes
   { path: "/dashboard/deposit-transactions-history", page: AdminManageDepositTransactionsPage, layout: DashboardLayout },
+
+  // Admin manage accessory routes
+  { path: "/dashboard/accessory-transactions-history", page: AdminManageAccessoryTransactionsPage, layout: DashboardLayout },
+
+  
 ];
 
 export { publicRoutes };

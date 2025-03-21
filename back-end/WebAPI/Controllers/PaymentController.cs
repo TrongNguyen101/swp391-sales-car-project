@@ -117,7 +117,7 @@ namespace WebAPI.Controllers
 
             };
 
-            if ( await InvoicesDAO.GetInstance().GetInvoiceByVNPayTranscationNo(paymentResponseDTO.VNPayTransactionNo) != null)
+            if ( await TransactionsDAO.GetInstance().GetInvoiceByVNPayTranscationNo(paymentResponseDTO.VNPayTransactionNo) != null)
             {
                 return BadRequest(new DataResponse
                 {
@@ -185,7 +185,7 @@ namespace WebAPI.Controllers
                     var invoiceAccessory = AutoMapper.ToInvoiceDTO(invoice);
 
                     // Attempt to save the invoice and invoice items to the database
-                    if (await InvoicesDAO.GetInstance().CreateInvoiceAsync(invoice, invoiceItems))
+                    if (await TransactionsDAO.GetInstance().CreateInvoiceAsync(invoice, invoiceItems))
                     {
                         //lam tiep payment tai day 
 
@@ -253,7 +253,7 @@ namespace WebAPI.Controllers
                     var invoiceCar = AutoMapper.ToInvoiceDTO(invoice);
 
                     // Attempt to save the invoice and invoice items to the database
-                    if (await InvoicesDAO.GetInstance().CreateInvoiceAsync(invoice, invoiceItems))
+                    if (await TransactionsDAO.GetInstance().CreateInvoiceAsync(invoice, invoiceItems))
                     {
                         // If successful, return a response with the invoice details
                         return Ok(new DataResponse

@@ -8,7 +8,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  Drawer,
   List,
   ListItem,
   ListItemIcon,
@@ -268,7 +267,7 @@ function SidebarDashboard() {
         </ListItem>
         <ListItem
           button="true"
-          onClick={handleNavigation("/accessories-management")}
+          onClick={handleNavigation("/dashboard/accessory-transactions-history")}
           sx={{
             cursor: "pointer",
             padding: "8px 35px",
