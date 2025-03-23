@@ -38,8 +38,9 @@ function SidebarDashboard() {
       sx={{
         width: "100%",
         padding: "40px 0",
-        border: "1px solid #e0e0e0",
-        backgroundColor: "#f9f9f9",
+        //border: "1px solid #e0e0e0",
+        //backgroundColor: "#f9f9f9",
+        //minHeight: "100vh",
       }}
     >
       <div className={cx("dashboard-logo")} onClick={handleNavigation("/")}>
@@ -267,7 +268,9 @@ function SidebarDashboard() {
         </ListItem>
         <ListItem
           button="true"
-          onClick={handleNavigation("/dashboard/accessory-transactions-history")}
+          onClick={handleNavigation(
+            "/dashboard/accessory-transactions-history"
+          )}
           sx={{
             cursor: "pointer",
             padding: "8px 35px",
@@ -300,7 +303,7 @@ function SidebarDashboard() {
         </ListItem>
         <ListItem
           button="true"
-          onClick={handleNavigation("/accessories-management")}
+          onClick={handleNavigation("/dashboard/test-driven-register")}
           sx={{
             cursor: "pointer",
             padding: "8px 35px",
@@ -337,7 +340,7 @@ function SidebarDashboard() {
           logout
         </Button>
       </div>
-    </Box >
+    </Box>
   );
 }
 

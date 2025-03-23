@@ -12,42 +12,45 @@ import * as adminCarServices from "../../../../services/AdminCarServices";
 
 import { useState } from "react";
 
-function UpdateBannerImageCarComponent({
+function UpdateSpecificationImageCarComponent({
   car,
   setMessage = () => {},
   setInforDialogOpen = () => {},
   fetchCarDetails = () => {},
 }) {
-  const [bannerImage, setBannerImages] = useState([]);
+  const [speImage, setSpeImages] = useState([]);
 
   // state of the dialog to show the user
   const [
-    openDialogAtUpdateBannerCarComponent,
-    setOpenDialogAtUpdateBannerCarComponent,
+    openDialogAtUpdateSpeCarComponent,
+    setOpenDialogAtUpdateSpeCarComponent,
   ] = useState(false);
   const [
-    messageAtUpdateBannerImageCarComponent,
-    setMessageAtUpdateBannerImageCarComponent,
+    messageAtUpdateSpeImageCarComponent,
+    setMessageAtUpdateSpeImageCarComponent,
   ] = useState("");
 
   // This function call back to ImageUploadComponent to get file image
-  const handleUploadBanner = (files) => setBannerImages(files);
+  const handleUploadSpe = (files) => setSpeImages(files);
 
   // handle the save of the image
-  const handleSaveBannerImage = async () => {
-    if (car.bannerImage) {
-      setMessage("The banner image already exists. Please delete it first.");
+  const handleSaveSpeImage = async () => {
+    if (car.image) {
+      setMessage(
+        "The specification image already exists. Please delete it first."
+      );
       setInforDialogOpen(true);
       return;
     } else {
+      if (!speImage.length || !speImage[0].file) {
+        setMessage("Please select an image to upload");
+        setInforDialogOpen(true);
+        return;
+      }
+
       try {
-        if (!bannerImage.length || !bannerImage[0].file) {
-          setMessage("Please select an image to upload");
-          setInforDialogOpen(true);
-          return;
-        }
         const formData = new FormData();
-        formData.append("bannerImage", bannerImage[0].file);
+        formData.append("specificationsImage", speImage[0].file);
 
         const response = await adminCarServices.uploadImageOfCar(
           car.id,
@@ -59,7 +62,7 @@ function UpdateBannerImageCarComponent({
           setInforDialogOpen(true);
         } else {
           setMessage("Image uploaded successfully");
-          setBannerImages([]);
+          setSpeImages([]);
           fetchCarDetails();
           setInforDialogOpen(true);
         }
@@ -70,33 +73,33 @@ function UpdateBannerImageCarComponent({
     }
   };
 
-  const handleOpenConfirmDeleteBannerImageDialog = () => {
-    if (!car.bannerImage) {
+  const handleOpenConfirmDeleteSpeImageDialog = () => {
+    if (!car.specImage) {
       setMessage("No image to delete.");
       setInforDialogOpen(true);
       return;
     }
-    setMessageAtUpdateBannerImageCarComponent(
-      "Are you sure you want to delete the banner image?"
+    setMessageAtUpdateSpeImageCarComponent(
+      "Are you sure you want to delete the specification image?"
     );
-    setOpenDialogAtUpdateBannerCarComponent(true);
+    setOpenDialogAtUpdateSpeCarComponent(true);
   };
 
-  const handleDeleteBannerImageOfCar = async () => {
+  const handleDeleteSpeImageOfCar = async () => {
     try {
-      const typeOfImage = "bannerImage";
+      const typeOfImage = "specificationsImage";
       const response = await adminCarServices.deleteImageOfCar(
         car.id,
         typeOfImage
       );
       if (response.statusCode !== 200) {
-        setOpenDialogAtUpdateBannerCarComponent(false);
+        setOpenDialogAtUpdateSpeCarComponent(false);
         setMessage("The attempt to delete the image failed.");
         setInforDialogOpen(true);
       } else {
         fetchCarDetails();
-        setMessage("The banner image was deleted successfully.");
-        setOpenDialogAtUpdateBannerCarComponent(false);
+        setMessage("The specification image was deleted successfully.");
+        setOpenDialogAtUpdateSpeCarComponent(false);
         setInforDialogOpen(true);
       }
     } catch (error) {
@@ -105,18 +108,18 @@ function UpdateBannerImageCarComponent({
     }
   };
 
-  const handleCloseConfirmDeleteBannerImageDialog = () => {
-    setOpenDialogAtUpdateBannerCarComponent(false);
+  const handleCloseConfirmDeleteSpeImageDialog = () => {
+    setOpenDialogAtUpdateSpeCarComponent(false);
   };
 
   return (
     <Box
       sx={{
-        backgroundColor: "#f9f9f9",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        padding: "20px 0",
+        backgroundColor: "#f9f9f9",
+        padding: "20px",
       }}
     >
       <Typography
@@ -127,33 +130,33 @@ function UpdateBannerImageCarComponent({
           padding: "20px",
         }}
       >
-        Banner Image
+        Specification Image
       </Typography>
-      {/* image banner area */}
+      {/* image specification area */}
       <Box
         sx={{
           display: "flex",
-          justifyContent: "left",
+          justifyContent: "center",
           padding: "40px",
           width: "100%",
           height: "100%",
         }}
       >
-        {/* review banner image area */}
-        <Box sx={{ width: "100%", height: "100%" }}>
-          {car.bannerImage ? (
+        {/* review Specificationimage area */}
+        <Box sx={{ width: "1200px" }}>
+          {car.specImage ? (
             <img
-              src={`https://localhost:7005/api/Images/Banner/${car.bannerImage}`}
+              src={`https://localhost:7005/api/Images/Spec/${car.specImage}`}
               alt={car.model}
             />
           ) : (
             <ImageUploadComponent
-              title="Drag & drop an image here, or click to select banner image of car"
+              title="Drag & drop an image here, or click to select specification image of car"
               allowedTypes={["image/jpeg", "image/png"]}
               maxSize={10 * 1024 * 1024} // 10MB
-              onUpload={handleUploadBanner}
+              onUpload={handleUploadSpe}
               multiple={false}
-              previewWidthSize="100%"
+              previewWidthSize="1200px"
               previewHeightSize="100%"
             />
           )}
@@ -161,27 +164,29 @@ function UpdateBannerImageCarComponent({
         {/* Detail information of car area */}
       </Box>
       {/* Action delete or upload image */}
-      <Box sx={{ padding: "5px 20px" }}>
+      <Box sx={{ padding: "5px 20px", width: "600px" }}>
         {/* Action delete and update image */}
         <Box
           sx={{ display: "flex", justifyContent: "left", marginTop: "20px" }}
         >
-          <Button variant="contained" onClick={handleSaveBannerImage}>
-            {car.bannerImage ? "Update Banner Image" : "Add Banner Image"}
+          <Button variant="contained" onClick={handleSaveSpeImage}>
+            {car.image
+              ? "Update Specification Image"
+              : "Add Specification Image"}
           </Button>
           <Button
-            onClick={handleOpenConfirmDeleteBannerImageDialog}
+            onClick={handleOpenConfirmDeleteSpeImageDialog}
             variant="outlined"
             color="error"
             sx={{ marginLeft: "10px" }}
           >
-            Delete Banner Image
+            Delete Specification Image
           </Button>
         </Box>
       </Box>
-      {/* Show comfirm delete banner image dialog */}
+      {/* Show comfirm delete specification image dialog */}
       <Dialog
-        open={openDialogAtUpdateBannerCarComponent}
+        open={openDialogAtUpdateSpeCarComponent}
         keepMounted
         aria-labelledby="alert-dialog-slide-title"
         aria-describedby="alert-dialog-slide-description"
@@ -197,19 +202,19 @@ function UpdateBannerImageCarComponent({
             padding: "20px",
           }}
         >
-          {messageAtUpdateBannerImageCarComponent}
+          {messageAtUpdateSpeImageCarComponent}
         </DialogTitle>
         <DialogActions sx={{ justifyContent: "center", paddingBottom: "20px" }}>
           <Button
             variant="outlined"
-            onClick={handleCloseConfirmDeleteBannerImageDialog}
+            onClick={handleCloseConfirmDeleteSpeImageDialog}
             color="error"
           >
             Cancel
           </Button>
           <Button
             variant="contained"
-            onClick={handleDeleteBannerImageOfCar}
+            onClick={handleDeleteSpeImageOfCar}
             color="primary"
           >
             Ok
@@ -220,4 +225,4 @@ function UpdateBannerImageCarComponent({
   );
 }
 
-export default UpdateBannerImageCarComponent;
+export default UpdateSpecificationImageCarComponent;

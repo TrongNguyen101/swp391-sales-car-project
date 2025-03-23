@@ -95,10 +95,10 @@ export const adminUpdateCar = async (carData) => {
   }
 };
 
-export const uploadCardImageOfCar = async (carId, formData) => {
+// upload image services
+export const uploadImageOfCar = async (carId, formData) => {
   try {
-    console.log(carId);
-    const endpoint = `/api/AdminCars/adminUpdateCardImageCar/${carId}`;
+    const endpoint = `/api/AdminCars/adminUpdateImageCar/${carId}`;
     const token = localStorage.getItem("Bearer");
     const response = await request.put(endpoint, formData, {
       headers: {
@@ -111,11 +111,45 @@ export const uploadCardImageOfCar = async (carId, formData) => {
   }
 };
 
+export const deleteImageOfCar = async (adminCarId, typeOfImage) => {
+  try {
+    const token = localStorage.getItem("Bearer");
+    const response = await request.put(
+      `/api/AdminCars/adminDeleteCardImageOfCar/${adminCarId}/${typeOfImage}`,
+      {},
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    return error.response;
+  }
+};
+
+// color image services
 export const uploadColorImageOfCar = async (formData) => {
   try {
     const endpoint = "api/AdminCars/adminUpdateColorImageCar";
     const token = localStorage.getItem("Bearer");
     const response = await request.post(endpoint, formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    return error.response;
+  }
+};
+export const deleteColorImageOfCar = async (idImageColor) => {
+  try {
+    const endpoint = `api/AdminCars/adminDeleteColorImageCar/${idImageColor}`;
+    const token = localStorage.getItem("Bearer");
+    const response = await request.deleteId(endpoint, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

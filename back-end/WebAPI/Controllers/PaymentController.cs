@@ -7,7 +7,6 @@ using WebAPI.Utils.VnpayPayment;
 using System.Globalization;
 using WebAPI.Models;
 using Microsoft.Extensions.Primitives;
-using NetTopologySuite.IO;
 using WebAPI.Utils.ResponseHelper;
 using WebAPI.Utils.AutoMapper;
 

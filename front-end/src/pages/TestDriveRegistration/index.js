@@ -1,16 +1,20 @@
-import React, { useState } from 'react';
-import styles from './TestDrive.module.scss'; // import style module
+import React, { useEffect, useState } from "react";
+import styles from "./TestDrive.module.scss"; // import style module
 import { postTestDriveRegistration } from "../../services/TestDriveRegistrationService"; // Import hàm API
+
+import * as adminCarServices from "../../services/AdminCarServices";
 
 const VinFastLogo = "/logoJPG-removebg-preview.png";
 
 const TestDriveRegistration = () => {
+  const [listCar, setListCar] = useState([]);
+
   const [formData, setFormData] = useState({
-    fullName: '',
-    phone: '',
-    email: '',
-    carId: '',
-    description: '',
+    fullName: "",
+    phone: "",
+    email: "",
+    carId: "",
+    description: "",
     subscribe: false,
     termsAccepted: false,
   });
@@ -19,12 +23,31 @@ const TestDriveRegistration = () => {
     const { name, value, type, checked } = e.target;
     setFormData({
       ...formData,
-      [name]: type === 'checkbox' ? checked : value,
+      [name]: type === "checkbox" ? checked : value,
     });
   };
 
+  // Fetch data from server
+  const fetchData = async () => {
+    try {
+      const response = await adminCarServices.adminGetAllCars();
+      if (response.statusCode !== 200) {
+        setListCar([]);
+      } else {
+        console.log("all car:", response.data);
+        setListCar(response.data);
+      }
+    } catch (error) {
+      console.error("Failed to fetch users:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   const isFormValid = () => {
-    const { fullName, phone, email, carId, termsAccepted,} = formData;
+    const { fullName, phone, email, carId, termsAccepted } = formData;
     return fullName && phone && email && carId && termsAccepted;
   };
 
@@ -58,16 +81,21 @@ const TestDriveRegistration = () => {
     <div className={styles["testdrive-container"]}>
       {/* Cột bên trái hiển thị logo */}
       <div className={styles["left-section"]}>
-        <img src={VinFastLogo} alt="VinFast Logo" className={styles["vinfast-logo"]} />
+        <img
+          src={VinFastLogo}
+          alt="VinFast Logo"
+          className={styles["vinfast-logo"]}
+        />
       </div>
 
       {/* Cột bên phải chứa form */}
       <div className={styles["right-section"]}>
         <h2 className={styles["form-title"]}>Test Drive Registration</h2>
         <p className={styles["subtitle"]}>
-          Fill in your information to receive a great test drive experience with VinFast.
+          Fill in your information to receive a great test drive experience with
+          VinFast.
         </p>
-        
+
         <form onSubmit={handleSubmit} className={styles["testdrive-form"]}>
           <div className={styles["form-group"]}>
             <label htmlFor="fullName">
@@ -123,13 +151,11 @@ const TestDriveRegistration = () => {
               onChange={handleChange}
               required
             >
-              <option value="">Select Car Model</option>
-              <option value="1">VF 3</option>
-              <option value="2">VF 5</option>
-              <option value="3">VF 6</option>
-              <option value="4">VF 7</option>
-              <option value="5">VF 8</option>
-              <option value="6">VF 9</option>
+              {listCar.map((car) => (
+                <option key={car.id} value={car.id}>
+                  {car.model}
+                </option>
+              ))}
             </select>
           </div>
 

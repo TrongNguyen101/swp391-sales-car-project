@@ -1,5 +1,5 @@
 // Built-in modules
-import { useState } from "react";
+import { use, useEffect, useState } from "react";
 
 // Third-party modules
 import { useDropzone } from "react-dropzone";
@@ -16,6 +16,7 @@ const ImageUploadComponent = ({
   previewHeightSize = "10px",
   onUpload = () => {},
   multiple = true, // Adjust the number of images that can be uploaded
+  requestFecthColorOfCar,
 }) => {
   // State
   const [previews, setPreviews] = useState([]);
@@ -73,6 +74,10 @@ const ImageUploadComponent = ({
     onDrop: handleDrop,
     multiple: multiple, // Allow selecting multiple or single image
   });
+
+  useEffect(() => {
+    setPreviews([]);
+  }, [requestFecthColorOfCar]);
 
   return (
     <Box

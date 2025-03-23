@@ -8,9 +8,13 @@ const cx = classnames.bind(styles);
 function DefaultLayout({ children }) {
   return (
     <div className={cx("container")}>
-      <HeaderComponent />
+      <div className={cx("header")}>
+        <HeaderComponent />
+      </div>
       <div className={cx("content")}>{children}</div>
-      <FooterComponent />
+      <div className={cx("footer")}>
+        <FooterComponent />
+      </div>
     </div>
   );
 }

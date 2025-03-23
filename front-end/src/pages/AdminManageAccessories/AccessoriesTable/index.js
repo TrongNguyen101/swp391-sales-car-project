@@ -60,7 +60,6 @@ function AccessoriesTable() {
   const [searchValue, setSearchValue] = useState("");
   const [searchRows, setSearchRows] = useState([]);
 
-
   // State information
   const [message, setMessage] = useState("");
 
@@ -187,7 +186,7 @@ function AccessoriesTable() {
   };
 
   const handleKeyPress = (event) => {
-    if (event.key === 'Enter') {
+    if (event.key === "Enter") {
       handleSearch();
     }
   };
@@ -199,6 +198,14 @@ function AccessoriesTable() {
 
   return (
     <>
+      <Typography
+        variant="h4"
+        align="left"
+        gutterBottom
+        sx={{ fontWeight: "500", paddingBottom: "20px", paddingLeft: "45px" }}
+      >
+        Accessories Management
+      </Typography>
       {/* Navigation ----------------------------------------------------------------------------------------------------------------- */}
       <div
         style={{
@@ -257,6 +264,7 @@ function AccessoriesTable() {
           justifyContent: "center",
           maxHeight: 400,
           overflow: "auto",
+          marginTop: "10px",
         }}
       >
         <Table aria-label="simple table" stickyHeader>

@@ -224,7 +224,9 @@ namespace WebAPI.Utils.AutoMapper
                 Phone = testDriveDTO.Phone,
                 Email = testDriveDTO.Email,
                 CarId = testDriveDTO.CarId,
-                Description = testDriveDTO.Description
+                Description = testDriveDTO.Description,
+                CarName = testDriveDTO.CarName,
+                Status = "Pending"
             };
         }
 
@@ -338,7 +340,7 @@ namespace WebAPI.Utils.AutoMapper
             return invoices.Select(invoice => ToInvoiceDTO(invoice)).ToList();
         }
 
-        
+
         private static string FormatFullname(string fullname)
         {
             if (string.IsNullOrWhiteSpace(fullname))
@@ -391,6 +393,6 @@ namespace WebAPI.Utils.AutoMapper
         {
             return dateTime.ToString("dd-MM-yyyy HH:mm");
         }
-        
+
     }
 }

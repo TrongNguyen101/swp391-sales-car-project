@@ -59,7 +59,6 @@ function CarsTable() {
 
   const [searchValue, setSearchValue] = useState("");
 
-
   // Fetch data from server
   const fetchData = async () => {
     try {
@@ -102,7 +101,7 @@ function CarsTable() {
   };
 
   const handleKeyPress = (event) => {
-    if (event.key === 'Enter') {
+    if (event.key === "Enter") {
       handleSearch();
     }
   };
@@ -188,14 +187,12 @@ function CarsTable() {
   };
 
   return (
-    <>
+    <Box sx={{ width: "100%", paddingBottom: "40px" }}>
       {/* Navigation ----------------------------------------------------------------------------------------------------------------- */}
-      <div
+      <Box
         style={{
-          display: "flex",
-          justifyContent: "flex-end",
-          width: "91%",
-          margin: "0 auto",
+          width: "100%",
+          padding: "0 40px 10px 40px",
         }}
       >
         <Box display="flex" justifyContent="space-between" width="100%" gap={2}>
@@ -242,148 +239,147 @@ function CarsTable() {
             }}
           />
         </Box>
-      </div>
+      </Box>
 
       {/* Table show list product---------------------------------------------------------------------------------------------------- */}
-      <TableContainer
-        component={Paper}
-        sx={{
-          width: "91%",
-          margin: "0 auto",
-          display: "flex",
-          justifyContent: "center",
-          maxHeight: 400,
-          overflow: "auto",
-        }}
-      >
-        <Table aria-label="simple table" stickyHeader>
-          <TableHead sx={{ backgroundColor: "primary.main", color: "white" }}>
-            <TableRow>
-              <TableCell
-                sx={{
-                  backgroundColor: "primary.main",
-                  color: "white",
-                  width: "15%",
-                }}
-              >
-                Model
-              </TableCell>
-              <TableCell
-                sx={{
-                  backgroundColor: "primary.main",
-                  color: "white",
-                  width: "2%",
-                }}
-              >
-                Status
-              </TableCell>
-              <TableCell
-                sx={{
-                  backgroundColor: "primary.main",
-                  color: "white",
-                  width: "15%",
-                }}
-                align="right"
-              >
-                Price battery rental
-              </TableCell>
-              <TableCell
-                sx={{ backgroundColor: "primary.main", color: "white" }}
-                align="right"
-              >
-                Price battery own
-              </TableCell>
-              <TableCell
-                sx={{ backgroundColor: "primary.main", color: "white" }}
-                align="right"
-                width="20%"
-              >
-                Price deposite
-              </TableCell>
-              <TableCell
-                sx={{ backgroundColor: "primary.main", color: "white" }}
-                align="right"
-              >
-                Quantity
-              </TableCell>
-              <TableCell
-                sx={{ backgroundColor: "primary.main", color: "white" }}
-                align="center"
-              >
-                Action
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {searchRows.map((row) => (
-              <TableRow
-                key={row.Id}
-                sx={{
-                  "&:last-child td": { border: 0 },
-                  cursor: "pointer",
-                  "&:hover": { backgroundColor: "#f5f5f5" },
-                }}
-                onClick={() => handleGoToDetailPage(row)}
-              >
-                <TableCell align="left" sx={{ width: "15%" }}>
-                  {row.model}
+      <Box sx={{ width: "100%", padding: "0 40px" }}>
+        <TableContainer
+          component={Paper}
+          sx={{
+            width: "100%",
+            maxHeight: 400,
+            overflow: "auto",
+          }}
+        >
+          <Table aria-label="simple table" stickyHeader>
+            <TableHead sx={{ backgroundColor: "primary.main", color: "white" }}>
+              <TableRow>
+                <TableCell
+                  sx={{
+                    backgroundColor: "primary.main",
+                    color: "white",
+                    width: "15%",
+                  }}
+                >
+                  Model
                 </TableCell>
-                <TableCell align="center" sx={{ width: "2%" }}>
-                  {row.isDeleted ? (
-                    <Typography color="error">Deleted</Typography>
-                  ) : row.isShowed ? (
-                    <FontAwesomeIcon color="green" icon={faEye} />
-                  ) : (
-                    <FontAwesomeIcon color="red" icon={faEyeSlash} />
-                  )}
+                <TableCell
+                  sx={{
+                    backgroundColor: "primary.main",
+                    color: "white",
+                    width: "2%",
+                  }}
+                >
+                  Status
                 </TableCell>
-                <TableCell align="right" sx={{ width: "15%" }}>
-                  {formatPrice(row.priceBatteryRental)}
+                <TableCell
+                  sx={{
+                    backgroundColor: "primary.main",
+                    color: "white",
+                    width: "15%",
+                  }}
+                  align="right"
+                >
+                  Price battery rental
                 </TableCell>
-                <TableCell align="right">
-                  {formatPrice(row.priceBatteryOwn)}
+                <TableCell
+                  sx={{ backgroundColor: "primary.main", color: "white" }}
+                  align="right"
+                >
+                  Price battery own
                 </TableCell>
-                <TableCell align="right">
-                  {formatPrice(row.priceDeposite)}
+                <TableCell
+                  sx={{ backgroundColor: "primary.main", color: "white" }}
+                  align="right"
+                  width="20%"
+                >
+                  Price deposite
                 </TableCell>
-                <TableCell align="right">{row.quantity}</TableCell>
-
-                {/* Action for each row data ------------ */}
-
-                <TableCell align="center">
-                  {/* Edit Button */}
-                  {row.isDeleted ? (
-                    <Typography color="error">Deleted</Typography>
-                  ) : (
-                    <Box>
-                      <IconButton
-                        aria-label="edit"
-                        color="success"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleGoToEditCarPage(row);
-                        }}
-                      >
-                        <FontAwesomeIcon icon={faEdit} />
-                      </IconButton>
-                      <IconButton
-                        aria-label="edit"
-                        color="error"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDeleteDialogOpen(row);
-                        }}
-                      >
-                        <FontAwesomeIcon icon={faTrash} />
-                      </IconButton>
-                    </Box>
-                  )}
+                <TableCell
+                  sx={{ backgroundColor: "primary.main", color: "white" }}
+                  align="right"
+                >
+                  Quantity
+                </TableCell>
+                <TableCell
+                  sx={{ backgroundColor: "primary.main", color: "white" }}
+                  align="center"
+                >
+                  Action
                 </TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {searchRows.map((row) => (
+                <TableRow
+                  key={row.Id}
+                  sx={{
+                    "&:last-child td": { border: 0 },
+                    cursor: "pointer",
+                    "&:hover": { backgroundColor: "#f5f5f5" },
+                  }}
+                  onClick={() => handleGoToDetailPage(row)}
+                >
+                  <TableCell align="left" sx={{ width: "15%" }}>
+                    {row.model}
+                  </TableCell>
+                  <TableCell align="center" sx={{ width: "2%" }}>
+                    {row.isDeleted ? (
+                      <Typography color="error">Deleted</Typography>
+                    ) : row.isShowed ? (
+                      <FontAwesomeIcon color="green" icon={faEye} />
+                    ) : (
+                      <FontAwesomeIcon color="red" icon={faEyeSlash} />
+                    )}
+                  </TableCell>
+                  <TableCell align="right" sx={{ width: "15%" }}>
+                    {formatPrice(row.priceBatteryRental)}
+                  </TableCell>
+                  <TableCell align="right">
+                    {formatPrice(row.priceBatteryOwn)}
+                  </TableCell>
+                  <TableCell align="right">
+                    {formatPrice(row.priceDeposite)}
+                  </TableCell>
+                  <TableCell align="right">{row.quantity}</TableCell>
+
+                  {/* Action for each row data ------------ */}
+
+                  <TableCell align="center">
+                    {/* Edit Button */}
+                    {row.isDeleted ? (
+                      <Typography color="error">Deleted</Typography>
+                    ) : (
+                      <Box>
+                        <IconButton
+                          aria-label="edit"
+                          color="success"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleGoToEditCarPage(row);
+                          }}
+                        >
+                          <FontAwesomeIcon icon={faEdit} />
+                        </IconButton>
+                        <IconButton
+                          aria-label="edit"
+                          color="error"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteDialogOpen(row);
+                          }}
+                        >
+                          <FontAwesomeIcon icon={faTrash} />
+                        </IconButton>
+                      </Box>
+                    )}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Box>
 
       {/* Add more Car dialog ----------------------------------------------------------------------------------------- */}
       <Dialog open={openAddMoreCarDialog}>
@@ -487,7 +483,7 @@ function CarsTable() {
           </Button>
         </DialogActions>
       </Dialog>
-    </>
+    </Box>
   );
 }
 export default CarsTable;

@@ -153,5 +153,29 @@ namespace WebAPI.DAO
                 return false;
             }
         }
+        public async Task<bool> DeleteColorImageOfCar(CarColor carColor)
+        {
+            try
+            {
+                using (var context = new VinfastContext())
+                {
+                    context.CarColor.Remove(carColor);
+                    await context.SaveChangesAsync();
+                    return true;
+                }
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public async Task<CarColor> GetColorImageOfCarById(int carColorId)
+        {
+            using (var context = new VinfastContext())
+            {
+                return await context.CarColor.FindAsync(carColorId);
+            }
+        }
     }
 }

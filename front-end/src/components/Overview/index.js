@@ -34,15 +34,15 @@ function Overview() {
 
   return (
     <Box className={cx("dashboard-container")}>
-      <Typography variant="h4" gutterBottom sx={{ color: "#3c3c3c", paddingTop: "20px", fontWeight: "bold" }}>
+      <Typography
+        variant="h4"
+        gutterBottom
+        sx={{ color: "#3c3c3c", paddingTop: "20px", fontWeight: "bold" }}
+      >
         Welcome to the Dashboard
       </Typography>
-      <Grid2
-        className={cx("dashboard-container__grid2")}
-        container
-        spacing={3}
-      >
-        <Grid2 item xs={12} md={4} sx={{ width: "30%" }}>
+      <Grid2 className={cx("dashboard-container__grid2")} container spacing={3}>
+        <Grid2 xs={12} md={4} sx={{ width: "30%" }}>
           <Paper
             className={cx("dashboard-card")}
             elevation={4}
@@ -57,7 +57,7 @@ function Overview() {
             </Typography>
           </Paper>
         </Grid2>
-        <Grid2 item xs={12} md={4} sx={{ width: "30%" }}>
+        <Grid2 xs={12} md={4} sx={{ width: "30%" }}>
           <Paper
             className={cx("dashboard-card")}
             elevation={3}
@@ -68,7 +68,7 @@ function Overview() {
             <Typography variant="body1">View total orders</Typography>
           </Paper>
         </Grid2>
-        <Grid2 item xs={12} md={4} sx={{ width: "30%" }}>
+        <Grid2 xs={12} md={4} sx={{ width: "30%" }}>
           <Paper
             className={cx("dashboard-card")}
             elevation={3}
