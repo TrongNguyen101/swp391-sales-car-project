@@ -4,14 +4,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace WebAPI.DAO
 {
-    public class InvoicesDAO
+    public class TransactionsDAO
     {
-        private static InvoicesDAO instance;
+        private static TransactionsDAO instance;
         private static readonly object lockIntance = new object();
 
-        private InvoicesDAO() { }
+        private TransactionsDAO() { }
 
-        public static InvoicesDAO GetInstance()
+        public static TransactionsDAO GetInstance()
         {
             if (instance == null)
             {
@@ -19,7 +19,7 @@ namespace WebAPI.DAO
                 {
                     if (instance == null)
                     {
-                        instance = new InvoicesDAO();
+                        instance = new TransactionsDAO();
                     }
                 }
             }
@@ -71,11 +71,23 @@ namespace WebAPI.DAO
             }
         }
 
-        public async Task<List<Invoice>> GetAllInvoices()
+        public async Task<List<Invoice>> GetAllDepositTransactions()
         {
             using (var context = new VinfastContext())
             {
-                return await context.Invoices.ToListAsync();
+                return await context.Invoices
+                                    .Where(i => i.TypeOfProduct != "accessory")
+                                    .ToListAsync();
+            }
+        }
+
+        public async Task<List<Invoice>> GetAllAccessoryTransactions()
+        {
+            using (var context = new VinfastContext())
+            {
+                return await context.Invoices
+                                    .Where(i => i.TypeOfProduct == "accessory")
+                                    .ToListAsync();
             }
         }
     }

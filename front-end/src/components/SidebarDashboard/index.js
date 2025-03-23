@@ -8,16 +8,16 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  Drawer,
   List,
   ListItem,
   ListItemIcon,
   Typography,
   Button,
+  Box,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import classNames from "classnames/bind";
-import styles from "./Dashboard.module.scss";
+import styles from "./SidebarDashboard.module.scss";
 
 const cx = classNames.bind(styles);
 
@@ -34,13 +34,13 @@ function SidebarDashboard() {
   };
 
   return (
-    <Drawer
-      variant="permanent"
-      anchor="left"
+    <Box
       sx={{
-        width: 300,
-        flexShrink: 0,
-        "& .MuiDrawer-paper": { width: 300, boxSizing: "border-box" },
+        width: "100%",
+        padding: "40px 0",
+        //border: "1px solid #e0e0e0",
+        //backgroundColor: "#f9f9f9",
+        //minHeight: "100vh",
       }}
     >
       <div className={cx("dashboard-logo")} onClick={handleNavigation("/")}>
@@ -135,7 +135,7 @@ function SidebarDashboard() {
         }}
       >
         <ListItem
-          button={true}
+          button="true"
           onClick={handleNavigation("/dashboard/account")}
           sx={{
             cursor: "pointer",
@@ -168,7 +168,7 @@ function SidebarDashboard() {
           </Typography>
         </ListItem>
         <ListItem
-          button={true}
+          button="true"
           onClick={handleNavigation("/dashboard/cars")}
           sx={{
             cursor: "pointer",
@@ -201,7 +201,7 @@ function SidebarDashboard() {
           </Typography>
         </ListItem>
         <ListItem
-          button={true}
+          button="true"
           onClick={handleNavigation("/dashboard/accessories")}
           sx={{
             cursor: "pointer",
@@ -234,8 +234,8 @@ function SidebarDashboard() {
           </Typography>
         </ListItem>
         <ListItem
-          button={true}
-          onClick={handleNavigation("/accessories-management")}
+          button="true"
+          onClick={handleNavigation("/dashboard/deposit-transactions-history")}
           sx={{
             cursor: "pointer",
             padding: "8px 35px",
@@ -267,8 +267,10 @@ function SidebarDashboard() {
           </Typography>
         </ListItem>
         <ListItem
-          button={true}
-          onClick={handleNavigation("/accessories-management")}
+          button="true"
+          onClick={handleNavigation(
+            "/dashboard/accessory-transactions-history"
+          )}
           sx={{
             cursor: "pointer",
             padding: "8px 35px",
@@ -300,8 +302,8 @@ function SidebarDashboard() {
           </Typography>
         </ListItem>
         <ListItem
-          button={true}
-          onClick={handleNavigation("/accessories-management")}
+          button="true"
+          onClick={handleNavigation("/dashboard/test-driven-register")}
           sx={{
             cursor: "pointer",
             padding: "8px 35px",
@@ -338,7 +340,7 @@ function SidebarDashboard() {
           logout
         </Button>
       </div>
-    </Drawer>
+    </Box>
   );
 }
 

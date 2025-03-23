@@ -22,7 +22,7 @@ function DepositPaymentResponsePage() {
     navigate("/");
   };
   const handleToOrderInfor = () => {
-    navigate("/invoice-history");
+    navigate("/deposit-transaction-history");
   };
 
 

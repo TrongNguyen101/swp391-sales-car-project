@@ -1,35 +1,25 @@
-.container {
+.warpper_dashboard {
   width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 20px;
 }
 
-.content {
-  width: 1600px;
-  padding: 20px;
-  padding-top: 30px;
+.container_dashboard {
+  display: flex;
+  justify-content: left;
+}
+
+.container_dashboard--Sidebar {
+  position: fixed;
+  width: 300px;
+  flex-shrink: 0;
+  min-height: 100vh;
+  background-color: #f9f9f9;
+  border: 1px solid #e0e0e0;
+}
+
+.container_dashboard--Content {
+  margin-left: 300px;
+  flex-grow: 1;
   display: flex;
   flex-direction: column;
-  gap: 20px;
 }
 
-@media only screen and (max-width: 100em) {
-  .container {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-  }
-  .content {
-    width: 1400px;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-}

@@ -26,8 +26,6 @@ function CartPage() {
   const [message, setMessage] = useState("");
   const [openDialog, setOpenDialog] = useState(false);
 
-
-
   const token = localStorage.getItem("Bearer");
   const isLoggedIn = Boolean(token);
 
@@ -52,13 +50,10 @@ function CartPage() {
     }
   };
 
-
   useEffect(() => {
     fetchCartItems();
     // eslint-disable-next-line
   }, []);
-
-
 
   useEffect(() => {
     const savedCart = localStorage.getItem("cartItems");
@@ -143,7 +138,6 @@ function CartPage() {
     setOpenDialog(false);
   };
 
-
   const formatPrice = (price) => {
     return new Intl.NumberFormat("vi-VN").format(price);
   };
@@ -151,22 +145,17 @@ function CartPage() {
   return (
     <div className={cx("wrapper")}>
       {cartItems.length === 0 ? (
-        <div className={cx("container")}>
-          <div className={cx("container__left")}>
-            <div className={cx("content__top")}>
-              <Typography
-                sx={{
-                  fontWeight: "700",
-                  fontSize: "32px",
-                }}
-              >
-                Your Cart is empty
-              </Typography>
-            </div>
-          </div>
+        <div className={cx("container_cart-empty")}>
+          <Typography
+            sx={{
+              fontWeight: "700",
+              fontSize: "32px",
+            }}
+          >
+            Your Cart is empty
+          </Typography>
         </div>
       ) : (
-
         <div className={cx("container")}>
           <div className={cx("container__left")}>
             <div className={cx("content__top")}>
@@ -286,7 +275,6 @@ function CartPage() {
                   )}{" "}
                   VND
                 </Typography>
-
               </div>
               <div className={cx("content__button")}>
                 <Button
@@ -300,7 +288,8 @@ function CartPage() {
               </div>
             </div>
           </div>
-        </div>)}
+        </div>
+      )}
       <Dialog
         open={openDialog}
         keepMounted

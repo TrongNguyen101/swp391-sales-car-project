@@ -200,18 +200,6 @@ function AccessoryDetailPage() {
                       </span>
                     </Button>
                   </div>
-                  <Button
-                    variant="outlined"
-                    sx={{
-                      width: "160px",
-                      "&:hover": {
-                        backgroundColor: "var(--primary-color)",
-                        color: "white",
-                      },
-                    }}
-                  >
-                    <span className={cx("button_buy-now")}>Buy now</span>
-                  </Button>
                 </div>
               </div>
             </section>

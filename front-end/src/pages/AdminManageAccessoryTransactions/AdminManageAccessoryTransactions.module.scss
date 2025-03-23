@@ -1,0 +1,20 @@
+  .conatiner {
+    width: 1310px;
+    padding: 20px 40px;
+  }
+  
+  .conatiner_table {
+    width: 1270px;
+  }
+
+  @media only screen and (max-width: 100em) {
+    .conatiner {
+      width: 1110px;
+      padding: 20px 40px;
+    }
+  
+    .conatiner_table {
+      width: 1070px;
+    }
+  }
+  

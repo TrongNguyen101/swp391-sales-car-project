@@ -61,13 +61,13 @@ const Sidebar = () => {
           <Typography>Hello</Typography>
         </div>
       </div>
-      <div className={cx('category')}><Typography>VEHICLE INFORMATION:</Typography></div>
+      <div className={cx('category')}><Typography>VEHICLE INFORMATION</Typography></div>
       <ListItem
         button="true"
         //onClick={handleNavigation("/dashboard/account")}
         sx={{
           cursor: "pointer",
-          padding: "8px 35px",
+          padding: "8px 15px",
           "&:hover": {
             "& .MuiListItemIcon-root, & .MuiTypography-root": {
               color: "primary.main",
@@ -75,27 +75,29 @@ const Sidebar = () => {
           },
         }}
       ><Typography>My Car</Typography></ListItem>
-      <div className={cx('category')}><Typography>ORDERS & SERVICES:</Typography></div>
+      <div className={cx('category')}><Typography>ORDERS & SERVICES</Typography></div>
       <ListItem
         button="true"
-        //onClick={handleNavigation("/dashboard/account")}
+        onClick={handleNavigation("/deposit-transaction-history")}
         sx={{
           cursor: "pointer",
-          padding: "8px 35px",
+          padding: "8px 15px",
           "&:hover": {
             "& .MuiListItemIcon-root, & .MuiTypography-root": {
               color: "primary.main",
             },
           },
         }}
-      ><Typography>Transaction History</Typography></ListItem>
+      >
+        <Typography>Deposit Transaction History</Typography>
+      </ListItem>
 
       <ListItem
         button="true"
-        onClick={handleNavigation("/invoice-history")}
+        //onClick={handleNavigation("")}
         sx={{
           cursor: "pointer",
-          padding: "8px 35px",
+          padding: "8px 15px",
           "&:hover": {
             "& .MuiListItemIcon-root, & .MuiTypography-root": {
               color: "primary.main",
@@ -104,14 +106,13 @@ const Sidebar = () => {
         }}
       ><Typography>Orders History</Typography></ListItem>
 
-
-      <div className={cx('category')}><Typography>ACCOUNT:</Typography></div>
+      <div className={cx('category')}><Typography>ACCOUNT</Typography></div>
       <ListItem
         button="true"
         onClick={handleNavigation("/profile")}
         sx={{
           cursor: "pointer",
-          padding: "8px 35px",
+          padding: "8px 15px",
           "&:hover": {
             "& .MuiListItemIcon-root, & .MuiTypography-root": {
               color: "primary.main",

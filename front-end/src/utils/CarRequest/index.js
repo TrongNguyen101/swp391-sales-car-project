@@ -19,3 +19,8 @@ export const put = async (path, data, config) => {
   const response = await request.put(path, data, config);
   return response;
 };
+
+export const deleteId = async (path, data, config) => {
+  const response = await request.delete(path, data, config);
+  return response;
+};

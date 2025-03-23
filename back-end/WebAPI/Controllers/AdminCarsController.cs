@@ -13,7 +13,9 @@ namespace WebAPI.Controllers
     public class AdminCarsController : ControllerBase
     {
 
-        private readonly string _uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "Images/CarImages");
+        private readonly string _uploadPathforCardImageCar = Path.Combine(Directory.GetCurrentDirectory(), "Images/CarImages");
+        private readonly string _uploadPathforSpecImageCar = Path.Combine(Directory.GetCurrentDirectory(), "Images/CarSpec");
+        private readonly string _uploadPathforBannerImageCar = Path.Combine(Directory.GetCurrentDirectory(), "Images/CarBanner");
         private readonly string _uploadPathforBigColorImageCar = Path.Combine(Directory.GetCurrentDirectory(), "Images/CarColorDetail");
         private readonly string _uploadPathforSmallColorImageCar = Path.Combine(Directory.GetCurrentDirectory(), "Images/CarColor");
 
@@ -21,11 +23,17 @@ namespace WebAPI.Controllers
 
         public AdminCarsController()
         {
-            if (!Directory.Exists(_uploadPath))
-                Directory.CreateDirectory(_uploadPath);
+            if (!Directory.Exists(_uploadPathforCardImageCar))
+                Directory.CreateDirectory(_uploadPathforCardImageCar);
+            if (!Directory.Exists(_uploadPathforSpecImageCar))
+                Directory.CreateDirectory(_uploadPathforSpecImageCar);
+            if (!Directory.Exists(_uploadPathforBigColorImageCar))
+                Directory.CreateDirectory(_uploadPathforBigColorImageCar);
+            if (!Directory.Exists(_uploadPathforSmallColorImageCar))
+                Directory.CreateDirectory(_uploadPathforSmallColorImageCar);
         }
 
-        private static readonly string[] AllowedExtensions = { ".jpg", ".jpeg", ".png", ".gif" };
+        private static readonly string[] _allowedExtensions = { ".jpg", ".jpeg", ".png", ".gif" };
         private const long MaxFileSize = 5 * 1024 * 1024; // 5MB
 
         [HttpGet]
@@ -435,8 +443,8 @@ namespace WebAPI.Controllers
             }
         }
 
-        [HttpPut("adminUpdateCardImageCar/{id}")]
-        public async Task<IActionResult> AdminUpdateImageCar(int id, IFormFile cardImage)
+        [HttpPut("adminDeleteCardImageOfCar/{id}/{typeOfImage}")]
+        public async Task<IActionResult> AdminDeleteCardImageOfCar(int id, string typeOfImage)
         {
             try
             {
@@ -476,18 +484,35 @@ namespace WebAPI.Controllers
                         Success = false
                     });
                 }
-
-
-                car.Image = await SaveFileAsync(cardImage);
-
+                // Delete image of car
+                if (typeOfImage == "specificationsImage")
+                {
+                    car.SpecImage = null;
+                }
+                else if (typeOfImage == "cardImage")
+                {
+                    car.Image = null;
+                }
+                else if (typeOfImage == "bannerImage")
+                {
+                    car.ImageBanner = null;
+                }
+                else
+                {
+                    return BadRequest(new DataResponse
+                    {
+                        StatusCode = 400,
+                        Message = "Invalid type of image",
+                        Success = false
+                    });
+                }
 
                 if (await CarsDAO.GetInstance().UpdateCar(car))
-
                 {
                     return Ok(new DataResponse
                     {
                         StatusCode = 200,
-                        Message = "Update Car successfully",
+                        Message = "Delete card image of car successfully",
                         Success = true
                     });
                 }
@@ -496,7 +521,7 @@ namespace WebAPI.Controllers
                     return BadRequest(new DataResponse
                     {
                         StatusCode = 400,
-                        Message = "Update Car failed",
+                        Message = "Delete card image of car failed",
                         Success = false
                     });
                 }
@@ -506,16 +531,16 @@ namespace WebAPI.Controllers
                 Console.WriteLine(ex.Message);
                 return BadRequest(new DataResponse
                 {
-                    StatusCode = 500,
-                    Message = "Internal server error. Please contact support.",
+                    StatusCode = 400,
+                    Message = "Delete card image of car failed. Internal server error. Please contact support.",
                     Success = false
                 });
             }
         }
 
 
-        [HttpPut("adminUpdatespecificationsImageCar/{id}")]
-        public async Task<IActionResult> AdminUpdatespecificationsImageCar(int id, IFormFile specificationsImage)
+        [HttpPut("adminUpdateImageCar/{id}")]
+        public async Task<IActionResult> AdminUpdateImageCar(int id, IFormFile? cardImage, IFormFile? specificationsImage, IFormFile? bannerImage)
         {
             try
             {
@@ -556,86 +581,20 @@ namespace WebAPI.Controllers
                     });
                 }
 
-
-                car.SpecImage = await SaveFileAsync(specificationsImage);
-
-
-                if (await CarsDAO.GetInstance().UpdateCar(car))
-
+                if (cardImage != null)
                 {
-                    return Ok(new DataResponse
-                    {
-                        StatusCode = 200,
-                        Message = "Update Car successfully",
-                        Success = true
-                    });
-                }
-                else
-                {
-                    return BadRequest(new DataResponse
-                    {
-                        StatusCode = 400,
-                        Message = "Update Car failed",
-                        Success = false
-                    });
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return BadRequest(new DataResponse
-                {
-                    StatusCode = 500,
-                    Message = "Internal server error. Please contact support.",
-                    Success = false
-                });
-            }
-        }
-
-        [HttpPut("adminUpdateBannerImageCar/{id}")]
-        public async Task<IActionResult> AdminUpdateBannerImageCar(int id, IFormFile specificationsImage)
-        {
-            try
-            {
-                #region Authentication, Authorization
-                // Get token
-                var authorizationHeader = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
-
-                // Check token
-                if (authorizationHeader == null || !authorizationHeader.StartsWith("Bearer "))
-                {
-                    return Unauthorized(ResponseHelper.Response(401, "Authentication token is missing or invalid", false, null));
-                }
-                // Format token
-                var token = authorizationHeader.Split(" ")[1];
-                // Get claims
-                var claims = JwtTokenHelper.GetUserClaims(token);
-                // Verify token
-                if (claims == null)
-                {
-                    return Unauthorized(ResponseHelper.Response(401, "Authentication token is invalid", false, null));
-                }
-                // Check role
-                if (claims.TryGetValue("role", out var roleId) && roleId.ToString() != "1")
-                {
-                    return Unauthorized(ResponseHelper.Response(401, "Unauthorized access denied", false, null));
-                }
-                #endregion
-
-                var car = await CarsDAO.GetInstance().GetCarById(id);
-
-                if (car == null)
-                {
-                    return NotFound(new DataResponse
-                    {
-                        StatusCode = 404,
-                        Message = "Car not found",
-                        Success = false
-                    });
+                    car.Image = await SaveImageFileAsync(cardImage, _uploadPathforCardImageCar);
                 }
 
+                if (specificationsImage != null)
+                {
+                    car.SpecImage = await SaveImageFileAsync(specificationsImage, _uploadPathforSpecImageCar);
+                }
 
-                car.SpecImage = await SaveFileAsync(specificationsImage);
+                if (bannerImage != null)
+                {
+                    car.ImageBanner = await SaveImageFileAsync(bannerImage, _uploadPathforBannerImageCar);
+                }
 
 
                 if (await CarsDAO.GetInstance().UpdateCar(car))
@@ -714,21 +673,35 @@ namespace WebAPI.Controllers
                         Success = false
                     });
                 }
-
-                string imageName = $"{color}-{DateTime.UtcNow:yyyyMMddHHmmss}-{Guid.NewGuid().ToString("N").Substring(0, 6)}";
-
-                var colorImageCar = new CarColor
+                // check file type
+                var extension = Path.GetExtension(colorBigImage.FileName).ToLowerInvariant();
+                var extension2 = Path.GetExtension(colorSmallImage.FileName).ToLowerInvariant();
+                if (!_allowedExtensions.Contains(extension) || !_allowedExtensions.Contains(extension2))
                 {
-                    ColorImage = imageName,
-                    CarId = carId,
-                    ColorName = color,
-                    IsDeleted = false,
-                };
+                    return BadRequest(new DataResponse
+                    {
+                        StatusCode = 400,
+                        Message = "Invalid file type",
+                        Success = false
+                    });
+                }
 
+                // create new image name
+                string imageName = $"{color}-{DateTime.UtcNow:yyyyMMddHHmmss}-{Guid.NewGuid().ToString("N").Substring(0, 6)}";
+                imageName = $"{imageName}{extension}";
+
+                // save new object color image to database
+                // check file save success
                 if (await SaveColorImageCarAsync(colorBigImage, colorSmallImage, imageName))
                 {
+                    var colorImageCar = new CarColor
+                    {
+                        ColorImage = imageName,
+                        CarId = carId,
+                        ColorName = color,
+                        IsDeleted = false,
+                    };
                     if (await CarsDAO.GetInstance().CreateCarColor(colorImageCar))
-
                     {
                         return Ok(new DataResponse
                         {
@@ -769,17 +742,18 @@ namespace WebAPI.Controllers
             }
         }
 
-        private async Task<string> SaveFileAsync(IFormFile file)
+        private async Task<string> SaveImageFileAsync(IFormFile file, string uploadFilePath)
         {
             var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
-            if (!AllowedExtensions.Contains(extension))
+            if (!_allowedExtensions.Contains(extension))
                 throw new Exception("Invalid file type");
 
             if (file.Length > MaxFileSize)
                 throw new Exception("File size exceeds limit");
 
-            var fileName = $"{Guid.NewGuid()}{extension}";
-            var filePath = Path.Combine(_uploadPath, fileName);
+            var originalFileName = Path.GetFileNameWithoutExtension(file.FileName);
+            var fileName = $"{originalFileName}{Guid.NewGuid().ToString("N").Substring(0, 6)}{extension}";
+            var filePath = Path.Combine(uploadFilePath, fileName);
 
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
@@ -791,15 +765,6 @@ namespace WebAPI.Controllers
 
         private async Task<bool> SaveColorImageCarAsync(IFormFile bigColorImageCar, IFormFile smallColorImageCar, string fileName)
         {
-            var extension = Path.GetExtension(bigColorImageCar.FileName).ToLowerInvariant();
-            var extension2 = Path.GetExtension(smallColorImageCar.FileName).ToLowerInvariant();
-
-            if (!AllowedExtensions.Contains(extension))
-                throw new Exception("Invalid file type");
-
-            if (!AllowedExtensions.Contains(extension2))
-                throw new Exception("Invalid file type");
-
             if (bigColorImageCar.Length > MaxFileSize)
                 throw new Exception("File size exceeds limit");
             if (smallColorImageCar.Length > MaxFileSize)
@@ -809,7 +774,6 @@ namespace WebAPI.Controllers
 
             var bigFilePath = Path.Combine(_uploadPathforBigColorImageCar, fileName);
             var smallFilePath = Path.Combine(_uploadPathforSmallColorImageCar, fileName);
-
 
             using (var stream = new FileStream(bigFilePath, FileMode.Create))
             {
@@ -822,5 +786,60 @@ namespace WebAPI.Controllers
 
             return true;
         }
+
+        [HttpDelete("adminDeleteColorImageCar/{idImageColor}")]
+        public async Task<ActionResult> AdminDeleteColorImageCar(int idImageColor)
+        {
+            try
+            {
+                #region Authentication, Authorization
+                // Get token
+                var authorizationHeader = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
+
+                // Check token
+                if (authorizationHeader == null || !authorizationHeader.StartsWith("Bearer "))
+                {
+                    return Unauthorized(ResponseHelper.Response(401, "Authentication token is missing or invalid", false, null));
+                }
+                // Format token
+                var token = authorizationHeader.Split(" ")[1];
+                // Get claims
+                var claims = JwtTokenHelper.GetUserClaims(token);
+                // Verify token
+                if (claims == null)
+                {
+                    return Unauthorized(ResponseHelper.Response(401, "Authentication token is invalid", false, null));
+                }
+                // Check role
+                if (claims.TryGetValue("role", out var roleId) && roleId.ToString() != "1")
+                {
+                    return Unauthorized(ResponseHelper.Response(401, "Unauthorized access denied", false, null));
+                }
+                #endregion
+
+                var imageColorOfCar = await CarsDAO.GetInstance().GetColorImageOfCarById(idImageColor);
+
+                if (imageColorOfCar == null)
+                {
+                    return NotFound(ResponseHelper.Response(404, "Image color of car is not found", false, null));
+                }
+
+                // If image color of car existed, delete image color of car
+                if (await CarsDAO.GetInstance().DeleteColorImageOfCar(imageColorOfCar))
+                {
+                    return Ok(ResponseHelper.Response(200, "Deleted color image of car successfully", true, null));
+                }
+                else
+                {
+                    return BadRequest(ResponseHelper.Response(400, "Error: can't delete color image of car", false, null));
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Delete image color of car failed: " + ex);
+                return BadRequest(ResponseHelper.Response(404, "Internal server error. Please contact support.", false, null));
+            }
+        }
+
     }
 }
