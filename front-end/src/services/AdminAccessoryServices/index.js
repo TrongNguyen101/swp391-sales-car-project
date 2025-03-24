@@ -28,6 +28,23 @@ export const adminCreateAccessory = async (accessoryData) => {
   }
 };
 
+// upload image services
+export const adminUpdateAccessory = async (adminAccessoryId, formData) => {
+  try {
+    const endpoint = `/api/AdminAccessories/adminUpdateAccessory/${adminAccessoryId}`;
+    const token = localStorage.getItem("Bearer");
+    const response = await request.put(endpoint, formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    return error.response;
+  }
+};
+
+
 export const adminDeleteAccessory = async (adminAccesoryId) => {
   try {
     const response = await request.deletebyId(`/api/AdminAccessories/delete/${adminAccesoryId}`);

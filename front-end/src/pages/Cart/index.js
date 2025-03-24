@@ -45,10 +45,9 @@ function CartPage() {
       const response = await cartService.getAllCartItems(token);
       if (response.statusCode !== 200) {
         setCartItems([]);
-        setMessage("Failed to load cart items.");
-        setOpenDialog(true);
       } else {
         setCartItems(response.data);
+        console.log(response.data);
         localStorage.setItem("cartItems", JSON.stringify(response.data));
       }
     } catch (error) {

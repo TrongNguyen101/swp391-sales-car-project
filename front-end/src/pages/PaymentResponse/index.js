@@ -39,10 +39,12 @@ function DepositPaymentResponsePage() {
       }
       //call API to get status of payment response
       const response = await DepositService.createInvoice(invoiceData);
-      if (response.statusCode !== 200) {
+      if (response.value.statusCode !== 200) {
+        console.log("response: ", response.value);
         setMessage("Seems there was an issue or incomplete payment. Don’t worry! We’ll contact you soon. For support, call 1900 23 23 89.");
       } else {
-        setInvoiceStatus(response.data.isPaid);
+        console.log("ketqua tra ve: ", response);
+        setInvoiceStatus(response);
         setMessage("Congratulations! Your payment is successful. We’ll contact you soon to complete the process. For support, call 1900 23 23 89.");
       }
     } catch (error) {

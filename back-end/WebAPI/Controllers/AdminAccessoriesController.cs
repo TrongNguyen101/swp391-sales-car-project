@@ -96,42 +96,6 @@ namespace WebAPI.Controllers
             }
         }
 
-        [HttpGet("Color/{adminAccessoryId}")]
-        // public async Task<IActionResult> AdminGetColorByAccessoryId(int adminAccessoryId)
-        // {
-        //     try
-        //     {
-        //         // Admin gets all accessory colors by accessory id
-        //         var adminAccessoryColors = await AccessoriesDAO.GetInstance().GetAccessoryColorsByAccessoryId(adminAccessoryId);
-        //         if (adminAccessoryColors == null || adminAccessoryColors.Count == 0)
-        //         {
-        //             return NotFound(new DataResponse
-        //             {
-        //                 StatusCode = 404,
-        //                 Message = "No color found",
-        //                 Success = false
-        //             });
-        //         }
-        //         // Convert list of AccessoryColor to list of AdminAccessoryColorDTO
-        //         var adminAccessoryColorDTOs = AutoMapper.ToAdminAccessoryColorDTOList(adminAccessoryColors);
-        //         return Ok(new DataResponse
-        //         {
-        //             StatusCode = 200,
-        //             Message = "Get all colors by accessory id successfully",
-        //             Success = true,
-        //             Data = adminAccessoryColorDTOs
-        //         });
-        //     }
-        //     catch (Exception ex)
-        //     {
-        //         return BadRequest(new DataResponse
-        //         {
-        //             StatusCode = 400,
-        //             Message = ex.Message,
-        //             Success = false
-        //         });
-        //     }
-        // }
 
         [HttpDelete("delete/{adminAccessoryId}")]
         public async Task<IActionResult> AdminDeleteByAccessoryId(int adminAccessoryId)
@@ -182,83 +146,6 @@ namespace WebAPI.Controllers
                 });
             }
         }
-
-        [HttpPut("adminAddMoreAccessory/{id}")]
-        // public async Task<IActionResult> AdminAddMoreAccessory(int id, [FromBody] AdminAddMoreAccessoryDTO adminAddMoreAccessoryDTO)
-        // {
-        //     try
-        //     {
-        //         #region Authentication, Authorization
-        //         // Get token
-        //         var authorizationHeader = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
-
-        //         // Check token
-        //         if (authorizationHeader == null || !authorizationHeader.StartsWith("Bearer "))
-        //         {
-        //             return Unauthorized(ResponseHelper.Response(401, "Authentication token is missing or invalid", false, null));
-        //         }
-        //         // Format token
-        //         var token = authorizationHeader.Split(" ")[1];
-        //         // Get claims
-        //         var claims = JwtTokenHelper.GetUserClaims(token);
-        //         // Verify token
-        //         if (claims == null)
-        //         {
-        //             return Unauthorized(ResponseHelper.Response(401, "Authentication token is invalid", false, null));
-        //         }
-        //         // Check role
-        //         if (claims.TryGetValue("role", out var roleId) && roleId.ToString() != "1")
-        //         {
-        //             return Unauthorized(ResponseHelper.Response(401, "Unauthorized access denied", false, null));
-        //         }
-        //         #endregion
-
-        //         var adminAccessory = await AccessoriesDAO.GetInstance().GetAccessoryById(id);
-
-        //         if (adminAccessory == null)
-        //         {
-        //             return NotFound(new DataResponse
-        //             {
-        //                 StatusCode = 404,
-        //                 Message = "Accessory not found",
-        //                 Success = false
-        //             });
-        //         }
-
-        //         adminAccessory.Quantity = adminAccessory.Quantity + adminAddMoreAccessoryDTO.Quantity;
-
-        //         Console.WriteLine(adminAccessory);
-        //         if (await AccessoriesDAO.GetInstance().AdminAddMoreAccessory(adminAccessory))
-
-        //         {
-        //             return Ok(new DataResponse
-        //             {
-        //                 StatusCode = 200,
-        //                 Message = "Accessory deleted successfully",
-        //                 Success = true
-        //             });
-        //         }
-        //         else
-        //         {
-        //             return BadRequest(new DataResponse
-        //             {
-        //                 StatusCode = 400,
-        //                 Message = "Delete accessory failed",
-        //                 Success = false
-        //             });
-        //         }
-        //     }
-        //     catch (Exception ex)
-        //     {
-        //         Console.WriteLine(ex.Message);
-        //         return BadRequest(new DataResponse
-        //         {
-        //             StatusCode = 400,
-        //             Message = "Internal server error. Please contact support.",
-        //             Success = false
-        //         });
-        //     }
-        // }
 
         [HttpPost("adminCreateAccessory")]
         public async Task<IActionResult> AdminCreateAccessory([FromBody] AccessoryDTO accessoryData)
@@ -314,9 +201,22 @@ namespace WebAPI.Controllers
                     Color = accessoryData.Color,
                     Warranty = accessoryData.Warranty
                 };
-                if (await AccessoriesDAO.GetInstance().CreateAccessory(newAccessory))
 
+                var accesssoryJustCreate = await AccessoriesDAO.GetInstance().CreateAccessory(newAccessory);
+
+                if (accesssoryJustCreate != null)
                 {
+
+                    var importHistory = new ImportExportHistory
+                    {
+                        AccessoryId = accesssoryJustCreate.Id,
+                        Quantity = accesssoryJustCreate.Quantity,
+                        Type = "import",
+                        TransactionDate = DateTime.Now,
+                        Note = "Create new accessory",
+                        ProductName = accesssoryJustCreate.Name
+                    };
+                    await TransactionsDAO.GetInstance().CreateImportExportHistory(importHistory);
                     return Ok(new DataResponse
                     {
                         StatusCode = 200,
@@ -347,94 +247,106 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut("adminUpdateAccessory/{id}")]
-        // public async Task<IActionResult> AdminUpdateAccessory(int id, [FromBody] AdminAccessoryDTO adminAccessoryDTO)
-        // {
-        //     try
-        //     {
-        //         #region Authentication, Authorization
-        //         // Get token
-        //         var authorizationHeader = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
+        public async Task<IActionResult> AdminUpdateAccessory(int id, [FromBody] AccessoryDTO adminAccessoryDTO)
+        {
+            try
+            {
+                #region Authentication, Authorization
+                // Get token
+                var authorizationHeader = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
 
-        //         // Check token
-        //         if (authorizationHeader == null || !authorizationHeader.StartsWith("Bearer "))
-        //         {
-        //             return Unauthorized(ResponseHelper.Response(401, "Authentication token is missing or invalid", false, null));
-        //         }
-        //         // Format token
-        //         var token = authorizationHeader.Split(" ")[1];
-        //         // Get claims
-        //         var claims = JwtTokenHelper.GetUserClaims(token);
-        //         // Verify token
-        //         if (claims == null)
-        //         {
-        //             return Unauthorized(ResponseHelper.Response(401, "Authentication token is invalid", false, null));
-        //         }
-        //         // Check role
-        //         if (claims.TryGetValue("role", out var roleId) && roleId.ToString() != "1")
-        //         {
-        //             return Unauthorized(ResponseHelper.Response(401, "Unauthorized access denied", false, null));
-        //         }
-        //         #endregion
+                // Check token
+                if (authorizationHeader == null || !authorizationHeader.StartsWith("Bearer "))
+                {
+                    return Unauthorized(ResponseHelper.Response(401, "Authentication token is missing or invalid", false, null));
+                }
+                // Format token
+                var token = authorizationHeader.Split(" ")[1];
+                // Get claims
+                var claims = JwtTokenHelper.GetUserClaims(token);
+                // Verify token
+                if (claims == null)
+                {
+                    return Unauthorized(ResponseHelper.Response(401, "Authentication token is invalid", false, null));
+                }
+                // Check role
+                if (claims.TryGetValue("role", out var roleId) && roleId.ToString() != "1")
+                {
+                    return Unauthorized(ResponseHelper.Response(401, "Unauthorized access denied", false, null));
+                }
+                #endregion
 
-        //         var accessory = await AccessoriesDAO.GetInstance().GetAccessoryById(id);
+                var accessory = await AccessoriesDAO.GetInstance().GetAccessoryById(id);
 
-        //         if (accessory == null)
-        //         {
-        //             return NotFound(new DataResponse
-        //             {
-        //                 StatusCode = 404,
-        //                 Message = "Accessory not found",
-        //                 Success = false
-        //             });
-        //         }
+                if (accessory == null)
+                {
+                    return NotFound(new DataResponse
+                    {
+                        StatusCode = 404,
+                        Message = "Accessory not found",
+                        Success = false
+                    });
+                }
 
-        //         accessory.Name = adminAccessoryDTO.Model;
-        //         accessory.Seats = adminAccessoryDTO.Seat;
-        //         accessory.Quantity = adminAccessoryDTO.Quantity;
+                accessory.Name = adminAccessoryDTO.Name;
+                accessory.Image = accessory.Image;
+                accessory.Price = adminAccessoryDTO.Price;
+                accessory.Quantity += adminAccessoryDTO.Quantity;
+                accessory.Description = adminAccessoryDTO.Description;
+                accessory.CategoryId = adminAccessoryDTO.CategoryId;
+                accessory.Origin = adminAccessoryDTO.Origin;
+                accessory.Dimensions = adminAccessoryDTO.Dimensions;
+                accessory.Weight = adminAccessoryDTO.Weight;
+                accessory.Material = adminAccessoryDTO.Material;
+                accessory.Color = adminAccessoryDTO.Color;
+                accessory.Warranty = adminAccessoryDTO.Warranty;
 
-        //         accessory.Image = adminAccessoryDTO.Image;
-        //         accessory.SpecImage = adminAccessoryDTO.SpecImage;
-        //         accessory.ImageBanner = adminAccessoryDTO.BannerImage;
+                accessory.IsDeleted = accessory.IsDeleted;
+                accessory.IsShowed = accessory.IsShowed;
 
-        //         accessory.PriceBatteryOwn = adminAccessoryDTO.PriceBatteryOwn;
-        //         accessory.PriceBatteryRental = adminAccessoryDTO.PriceBatteryRental;
-        //         accessory.PriceDeposite = adminAccessoryDTO.PriceDeposite;
-
-        //         accessory.IsDeleted = adminAccessoryDTO.IsDeleted;
-        //         accessory.IsShowed = adminAccessoryDTO.IsShowed;
-
-        //         if (await AccessoriesDAO.GetInstance().UpdateAccessory(accessory))
-
-        //         {
-        //             return Ok(new DataResponse
-        //             {
-        //                 StatusCode = 200,
-        //                 Message = "Update Accessory successfully",
-        //                 Success = true
-        //             });
-        //         }
-        //         else
-        //         {
-        //             return BadRequest(new DataResponse
-        //             {
-        //                 StatusCode = 400,
-        //                 Message = "Update Accessory failed",
-        //                 Success = false
-        //             });
-        //         }
-        //     }
-        //     catch (Exception ex)
-        //     {
-        //         Console.WriteLine(ex.Message);
-        //         return BadRequest(new DataResponse
-        //         {
-        //             StatusCode = 400,
-        //             Message = "Internal server error. Please contact support.",
-        //             Success = false
-        //         });
-        //     }
-        // }
-
+                if (await AccessoriesDAO.GetInstance().UpdateAccessory(accessory))
+                {
+                    if (adminAccessoryDTO.Quantity > 0)
+                    {
+                        var importHistory = new ImportExportHistory
+                        {
+                            AccessoryId = id,
+                            Quantity = adminAccessoryDTO.Quantity,
+                            Type = "import",
+                            TransactionDate = DateTime.Now,
+                            Note = "Import accessory",
+                            ProductName = adminAccessoryDTO.Name
+                        };
+                        await TransactionsDAO.GetInstance().CreateImportExportHistory(importHistory);
+                    }
+                    return Ok(new DataResponse
+                    {
+                        StatusCode = 200,
+                        Message = "Update Accessory successfully",
+                        Success = true
+                    });
+                }
+                else
+                {
+                    return BadRequest(new DataResponse
+                    {
+                        StatusCode = 400,
+                        Message = "Update Accessory failed",
+                        Success = false
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return BadRequest(new DataResponse
+                {
+                    StatusCode = 400,
+                    Message = "Internal server error. Please contact support.",
+                    Success = false
+                });
+            }
+        }
 
 
         [HttpPut("adminUpdateImageAccessory/{adminAccessoryId}")]
