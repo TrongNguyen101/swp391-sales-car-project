@@ -60,7 +60,6 @@ export const updateCartItems = async (token, cartItems) => {
     );
     return response.data.value;
   } catch (error) {
-    console.log("catch error at service: ", error.response.data.value);
     return error.response.data.value;
   }
 };
@@ -82,3 +81,13 @@ export const deleteCartItem = async (cartItemId) => {
     return error.response;
   }
 };
+
+export const getAllProductsIsOutOfStock = async (userId) => {
+  try {
+    const response = await request.get(`/api/Cart/getListProductsOutOfStock/${userId}`);
+    return response.data.value;
+  } catch (error) {
+    return error.response;
+  }
+};
+

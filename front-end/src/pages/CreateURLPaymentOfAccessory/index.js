@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { Box, Button, Dialog, DialogActions, DialogTitle, TextField, Typography } from "@mui/material";
 import classNames from "classnames/bind";
 
 import * as cartService from "../../services/CartService";
-import * as DecodePayload from "../../lib/DecodePayload";
 import * as adminServices from "../../services/AdminServices";
 import * as DepositService from "../../services/DepositService";
 
@@ -17,6 +16,7 @@ const cx = classNames.bind(styles);
 
 function CreateURLPaymentOfAccessory() {
   const navigate = useNavigate();
+  const { userId} = useParams();
   const [cartItems, setCartItems] = useState([]);
 
   const [message, setMessage] = useState("");
@@ -59,9 +59,9 @@ function CreateURLPaymentOfAccessory() {
   // eslint-disable-next-line
   const fetchUser = async () => {
     try {
-      const token = localStorage.getItem("Bearer");
-      const decoded = DecodePayload.decodePayload(token);
-      const response = await adminServices.getUserById(decoded.sub);
+      // const token = localStorage.getItem("Bearer");
+      // const decoded = DecodePayload.decodePayload(token);
+      const response = await adminServices.getUserById(userId);
       setCustomerName(response.data.userName);
       setEmail(response.data.email);
       setPhone(response.data.phone);

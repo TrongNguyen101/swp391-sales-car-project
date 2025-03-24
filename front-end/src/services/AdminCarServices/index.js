@@ -115,7 +115,7 @@ export const deleteImageOfCar = async (adminCarId, typeOfImage) => {
   try {
     const token = localStorage.getItem("Bearer");
     const response = await request.put(
-      `/api/AdminCars/adminDeleteCardImageOfCar/${adminCarId}/${typeOfImage}`,
+      `/api/AdminCars/adminDeleteImageOfCar/${adminCarId}/${typeOfImage}`,
       {},
       {
         headers: {

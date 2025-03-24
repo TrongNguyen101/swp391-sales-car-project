@@ -13,15 +13,17 @@ namespace WebAPI.Controllers
     public class AdminAccessoriesController : ControllerBase
     {
 
-        private readonly string _uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "Images/AccessoryImages");
+        private readonly string _uploadPathforCardImageAccessories = Path.Combine(Directory.GetCurrentDirectory(), "Images/AccessoryImage");
+
+
 
         public AdminAccessoriesController()
         {
-            if (!Directory.Exists(_uploadPath))
-                Directory.CreateDirectory(_uploadPath);
+            if (!Directory.Exists(_uploadPathforCardImageAccessories))
+                Directory.CreateDirectory(_uploadPathforCardImageAccessories);
         }
 
-        private static readonly string[] AllowedExtensions = { ".jpg", ".jpeg", ".png", ".gif" };
+        private static readonly string[] _allowedExtensions = { ".jpg", ".jpeg", ".png", ".gif" };
         private const long MaxFileSize = 5 * 1024 * 1024; // 5MB
 
         [HttpGet]
@@ -433,8 +435,10 @@ namespace WebAPI.Controllers
         //     }
         // }
 
-        [HttpPut("adminUpdateAccessorydImageAccessory/{id}")]
-        public async Task<IActionResult> AdminUpdateImageAccessory(int id, IFormFile accessorydImage)
+
+
+        [HttpPut("adminUpdateImageAccessory/{adminAccessoryId}")]
+        public async Task<IActionResult> AdminUpdateImageCar(int adminAccessoryId, IFormFile? cardImage)
         {
             try
             {
@@ -463,7 +467,7 @@ namespace WebAPI.Controllers
                 }
                 #endregion
 
-                var accessory = await AccessoriesDAO.GetInstance().GetAccessoryById(id);
+                var accessory = await AccessoriesDAO.GetInstance().GetAccessoryById(adminAccessoryId);
 
                 if (accessory == null)
                 {
@@ -475,9 +479,10 @@ namespace WebAPI.Controllers
                     });
                 }
 
-
-                accessory.Image = await SaveFileAsync(accessorydImage);
-
+                if (cardImage != null)
+                {
+                    accessory.Image = await SaveImageFileAsync(cardImage, _uploadPathforCardImageAccessories);
+                }
 
                 if (await AccessoriesDAO.GetInstance().UpdateAccessory(accessory))
 
@@ -485,7 +490,7 @@ namespace WebAPI.Controllers
                     return Ok(new DataResponse
                     {
                         StatusCode = 200,
-                        Message = "Update Accessory successfully",
+                        Message = "Updating card image of accessory successfully",
                         Success = true
                     });
                 }
@@ -494,7 +499,7 @@ namespace WebAPI.Controllers
                     return BadRequest(new DataResponse
                     {
                         StatusCode = 400,
-                        Message = "Update Accessory failed",
+                        Message = "Updating card image of accessory failed",
                         Success = false
                     });
                 }
@@ -511,18 +516,258 @@ namespace WebAPI.Controllers
             }
         }
 
+        [HttpPut("adminDeleteImageOfAccessory/{adminAccessoryId}/{typeOfImage}")]
+        public async Task<IActionResult> AdminDeleteCardImageOfCar(int adminAccessoryId, string typeOfImage)
+        {
+            try
+            {
+                #region Authentication, Authorization
+                // Get token
+                var authorizationHeader = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
 
-        private async Task<string> SaveFileAsync(IFormFile file)
+                // Check token
+                if (authorizationHeader == null || !authorizationHeader.StartsWith("Bearer "))
+                {
+                    return Unauthorized(ResponseHelper.Response(401, "Authentication token is missing or invalid", false, null));
+                }
+                // Format token
+                var token = authorizationHeader.Split(" ")[1];
+                // Get claims
+                var claims = JwtTokenHelper.GetUserClaims(token);
+                // Verify token
+                if (claims == null)
+                {
+                    return Unauthorized(ResponseHelper.Response(401, "Authentication token is invalid", false, null));
+                }
+                // Check role
+                if (claims.TryGetValue("role", out var roleId) && roleId.ToString() != "1")
+                {
+                    return Unauthorized(ResponseHelper.Response(401, "Unauthorized access denied", false, null));
+                }
+                #endregion
+
+                var accessory = await AccessoriesDAO.GetInstance().GetAccessoryById(adminAccessoryId);
+
+                if (accessory == null)
+                {
+                    return NotFound(new DataResponse
+                    {
+                        StatusCode = 404,
+                        Message = "Accessory is not found",
+                        Success = false
+                    });
+                }
+                // Delete image of car
+                if (typeOfImage == "cardImage")
+                {
+                    accessory.Image = null;
+                }
+                else
+                {
+                    return BadRequest(new DataResponse
+                    {
+                        StatusCode = 400,
+                        Message = "Invalid type of image",
+                        Success = false
+                    });
+                }
+
+                if (await AccessoriesDAO.GetInstance().UpdateAccessory(accessory))
+                {
+                    return Ok(new DataResponse
+                    {
+                        StatusCode = 200,
+                        Message = "The card image of accessory have deleted successfully",
+                        Success = true
+                    });
+                }
+                else
+                {
+                    return BadRequest(new DataResponse
+                    {
+                        StatusCode = 400,
+                        Message = "Deleting card image of accessory failed",
+                        Success = false
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return BadRequest(new DataResponse
+                {
+                    StatusCode = 400,
+                    Message = "Delete card image of accessory failed. Internal server error. Please contact support.",
+                    Success = false
+                });
+            }
+        }
+
+        [HttpPost("adminUpdateDetailImageAccessory")]
+        public async Task<IActionResult> AdminUpdateDetailImageAccessory([FromForm] IFormFile detailImage,
+                                                                  [FromForm] string color,
+                                                                  [FromForm] int accessoryId)
+        {
+            try
+            {
+                #region Authentication, Authorization
+                // Get token
+                var authorizationHeader = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
+
+                // Check token
+                if (authorizationHeader == null || !authorizationHeader.StartsWith("Bearer "))
+                {
+                    return Unauthorized(ResponseHelper.Response(401, "Authentication token is missing or invalid", false, null));
+                }
+                // Format token
+                var token = authorizationHeader.Split(" ")[1];
+                // Get claims
+                var claims = JwtTokenHelper.GetUserClaims(token);
+                // Verify token
+                if (claims == null)
+                {
+                    return Unauthorized(ResponseHelper.Response(401, "Authentication token is invalid", false, null));
+                }
+                // Check role
+                if (claims.TryGetValue("role", out var roleId) && roleId.ToString() != "1")
+                {
+                    return Unauthorized(ResponseHelper.Response(401, "Unauthorized access denied", false, null));
+                }
+                #endregion
+
+                var accessory = await AccessoriesDAO.GetInstance().GetAccessoryById(accessoryId);
+
+                if (accessory == null)
+                {
+                    return NotFound(new DataResponse
+                    {
+                        StatusCode = 404,
+                        Message = "Accessory is not found",
+                        Success = false
+                    });
+                }
+
+                // save image
+                string imageName = await SaveImageFileAsync(detailImage, _uploadPathforCardImageAccessories);
+
+                if (imageName == null)
+                {
+                    return BadRequest(new DataResponse
+                    {
+                        StatusCode = 400,
+                        Message = "Save image failed",
+                        Success = false
+                    });
+                }
+
+                // create new object color image to database
+                var detailImageAccessory = new AccessoryImage
+                {
+                    ColorImage = imageName,
+                    AccessoryId = accessoryId,
+                    ColorName = color,
+                    IsDeleted = false,
+
+                };
+
+                if (await AccessoriesDAO.GetInstance().CreateDetailImageAccessory(detailImageAccessory))
+                {
+                    return Ok(new DataResponse
+                    {
+                        StatusCode = 200,
+                        Message = "Create detail image accessory successfully",
+                        Success = true
+                    });
+                }
+                else
+                {
+                    return BadRequest(new DataResponse
+                    {
+                        StatusCode = 400,
+                        Message = "Create detail image accessory failed",
+                        Success = false
+                    });
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return BadRequest(new DataResponse
+                {
+                    StatusCode = 500,
+                    Message = "Internal server error. Please contact support.",
+                    Success = false
+                });
+            }
+        }
+
+        [HttpDelete("adminDeleteDetailImageAccessory/{idDetailImage}")]
+        public async Task<ActionResult> AdminDeleteColorImageCar(int idDetailImage)
+        {
+            try
+            {
+                #region Authentication, Authorization
+                // Get token
+                var authorizationHeader = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
+
+                // Check token
+                if (authorizationHeader == null || !authorizationHeader.StartsWith("Bearer "))
+                {
+                    return Unauthorized(ResponseHelper.Response(401, "Authentication token is missing or invalid", false, null));
+                }
+                // Format token
+                var token = authorizationHeader.Split(" ")[1];
+                // Get claims
+                var claims = JwtTokenHelper.GetUserClaims(token);
+                // Verify token
+                if (claims == null)
+                {
+                    return Unauthorized(ResponseHelper.Response(401, "Authentication token is invalid", false, null));
+                }
+                // Check role
+                if (claims.TryGetValue("role", out var roleId) && roleId.ToString() != "1")
+                {
+                    return Unauthorized(ResponseHelper.Response(401, "Unauthorized access denied", false, null));
+                }
+                #endregion
+
+                var imageDetail = await AccessoriesDAO.GetInstance().GetDetailImageAccessory(idDetailImage);
+
+                if (imageDetail == null)
+                {
+                    return NotFound(ResponseHelper.Response(404, "Image color of car is not found", false, null));
+                }
+
+                // If image color of car existed, delete image color of car
+                if (await AccessoriesDAO.GetInstance().DeleteDetailImageAccessory(imageDetail))
+                {
+                    return Ok(ResponseHelper.Response(200, "Delete dettails image of accessory successfully", true, null));
+                }
+                else
+                {
+                    return BadRequest(ResponseHelper.Response(400, "Error: can't delete dettails image of accessory", false, null));
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Delete dettails image of accessory failed: " + ex);
+                return BadRequest(ResponseHelper.Response(404, "Internal server error. Please contact support.", false, null));
+            }
+        }
+
+        private async Task<string> SaveImageFileAsync(IFormFile file, string uploadFilePath)
         {
             var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
-            if (!AllowedExtensions.Contains(extension))
+            if (!_allowedExtensions.Contains(extension))
                 throw new Exception("Invalid file type");
 
             if (file.Length > MaxFileSize)
                 throw new Exception("File size exceeds limit");
 
-            var fileName = $"{Guid.NewGuid()}{extension}";
-            var filePath = Path.Combine(_uploadPath, fileName);
+            var originalFileName = Path.GetFileNameWithoutExtension(file.FileName);
+            var fileName = $"{originalFileName}{Guid.NewGuid().ToString("N").Substring(0, 6)}{extension}";
+            var filePath = Path.Combine(uploadFilePath, fileName);
 
             using (var stream = new FileStream(filePath, FileMode.Create))
             {

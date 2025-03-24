@@ -443,7 +443,7 @@ namespace WebAPI.Controllers
             }
         }
 
-        [HttpPut("adminDeleteCardImageOfCar/{id}/{typeOfImage}")]
+        [HttpPut("adminDeleteImageOfCar/{id}/{typeOfImage}")]
         public async Task<IActionResult> AdminDeleteCardImageOfCar(int id, string typeOfImage)
         {
             try

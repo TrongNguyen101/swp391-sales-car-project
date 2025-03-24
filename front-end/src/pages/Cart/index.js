@@ -18,6 +18,13 @@ import * as cartService from "../../services/CartService";
 import * as DecodePayload from "../../lib/DecodePayload";
 
 const cx = classNames.bind(styles);
+function debounce(func, wait) {
+  let timeout;
+  return (...args) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func(...args), wait);
+  };
+}
 
 function CartPage() {
   const navigate = useNavigate();
@@ -25,11 +32,9 @@ function CartPage() {
   const [cartItems, setCartItems] = useState([]);
   const [message, setMessage] = useState("");
   const [openDialog, setOpenDialog] = useState(false);
-
   const token = localStorage.getItem("Bearer");
   const isLoggedIn = Boolean(token);
 
-  // Fetch cart items
   const fetchCartItems = async () => {
     if (!isLoggedIn) {
       setMessage("Please login to view your cart");
@@ -40,78 +45,64 @@ function CartPage() {
       const response = await cartService.getAllCartItems(token);
       if (response.statusCode !== 200) {
         setCartItems([]);
+        setMessage("Failed to load cart items.");
+        setOpenDialog(true);
       } else {
-        console.log(response.data);
-        localStorage.setItem("cartItems", JSON.stringify(response.data));
         setCartItems(response.data);
+        localStorage.setItem("cartItems", JSON.stringify(response.data));
       }
     } catch (error) {
       setCartItems([]);
+      setMessage("An error occurred while fetching your cart.");
+      setOpenDialog(true);
     }
   };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const saveCartItems = useCallback(
+    debounce(async (items) => {
+      if (!token || items.length === 0) return;
+      try {
+        const response = await cartService.updateCartItems(token, items);
+        if (response.statusCode !== 200) {
+          setMessage(response.message);
+          setOpenDialog(true);
+        }
+      } catch (error) {
+        setMessage("An error occurred while saving your cart.");
+        setOpenDialog(true);
+      }
+    }, 500),
+    [token]
+  );
 
   useEffect(() => {
     fetchCartItems();
-    // eslint-disable-next-line
-  }, []);
-
-  useEffect(() => {
-    const savedCart = localStorage.getItem("cartItems");
-
-    if (savedCart) {
-      setCartItems(JSON.parse(savedCart));
-    }
-
-    fetchCartItems();
-    // eslint-disable-next-line
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem("cartItems", JSON.stringify(cartItems));
-  }, [cartItems]);
-
-  const saveCartItems = useCallback(async () => {
-    if (!token || cartItems.length === 0) return;
-    try {
-      await cartService.updateCartItems(token, cartItems);
-      console.log("Cart saved to server!");
-    } catch (error) {
-      console.error("Failed to save cart:", error);
-    }
-  }, [cartItems, token]);
-
-  //  Increase quantity
-  const handleIncreaseQuantity = (index) => {
-    const newCartItems = [...cartItems];
-    newCartItems[index].quantity += 1;
-    setCartItems(newCartItems);
-  };
-  // Decrease quantity
-  const handleDecreaseQuantity = (index) => {
-    const newCartItems = [...cartItems];
-    if (newCartItems[index].quantity > 1) {
-      newCartItems[index].quantity -= 1;
-      setCartItems(newCartItems);
-    }
-  };
-
-  useEffect(() => {
-    const handleBeforeUnload = async (event) => {
-      await saveCartItems();
-    };
-
+    const handleBeforeUnload = () => saveCartItems(cartItems);
     window.addEventListener("beforeunload", handleBeforeUnload);
     return () => {
-      saveCartItems();
+      saveCartItems(cartItems);
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
-  }, [saveCartItems]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.pathname, saveCartItems]);
 
   useEffect(() => {
-    return () => {
-      saveCartItems();
-    };
-  }, [location.pathname, saveCartItems]);
+    saveCartItems(cartItems);
+  }, [cartItems, saveCartItems]);
+
+  const handleIncreaseQuantity = (index) => {
+    setCartItems((prev) =>
+      prev.map((item, i) => (i === index ? { ...item, quantity: item.quantity + 1 } : item))
+    );
+  };
+
+  const handleDecreaseQuantity = (index) => {
+    setCartItems((prev) =>
+      prev.map((item, i) =>
+        i === index && item.quantity > 1 ? { ...item, quantity: item.quantity - 1 } : item
+      )
+    );
+  };
 
   const handleDeleteCartItem = async (cartItemId) => {
     try {
@@ -134,6 +125,11 @@ function CartPage() {
   };
 
   const handleCloseDialog = () => {
+    if (isLoggedIn) {
+      fetchCartItems();
+      setOpenDialog(false);
+      return;
+    }
     navigate("/login");
     setOpenDialog(false);
   };

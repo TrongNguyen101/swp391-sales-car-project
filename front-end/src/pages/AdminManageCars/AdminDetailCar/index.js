@@ -17,14 +17,13 @@ import UpdateSpecificationImageCarComponent from "./UpdateSpecificationImageCar"
 import UpdateBannerImageCarComponent from "./UpdateBannerImageCar";
 
 function AdminDetailCarPage() {
-  //state of the values of the form
+  //state manage car for detail page
   const [car, setCar] = useState({});
 
   // state of the message to show the user
   const [message, setMessage] = useState("");
-
-  // state of the dialog to show the user
   const [inforDialogOpen, setInforDialogOpen] = useState(false);
+
   // get the carId from the url
   const { carId } = useParams();
 
@@ -35,6 +34,7 @@ function AdminDetailCarPage() {
       if (response.statusCode !== 200) {
         setMessage("Failed to fetch car details");
         setInforDialogOpen(true);
+        return;
       } else {
         setCar(response.data);
         console.log(response.data);
