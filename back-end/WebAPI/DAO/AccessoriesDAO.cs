@@ -100,5 +100,49 @@ namespace WebAPI.DAO
                 return false;
             }
         }
+
+        public async Task<AccessoryImage> GetDetailImageAccessory(int id)
+        {
+            using (var context = new VinfastContext())
+            {
+                return await context.AccessoryImages.FindAsync(id);
+            }
+        }
+
+        public async Task<bool> CreateDetailImageAccessory(AccessoryImage accessoryImage)
+        {
+            try
+            {
+                using (var context = new VinfastContext())
+                {
+                    await context.AccessoryImages.AddAsync(accessoryImage);
+                    await context.SaveChangesAsync();
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return false;
+            }
+        }
+
+        public async Task<bool> DeleteDetailImageAccessory(AccessoryImage accessoryImage)
+        {
+            try
+            {
+                using (var context = new VinfastContext())
+                {
+                    context.AccessoryImages.Remove(accessoryImage);
+                    await context.SaveChangesAsync();
+                    return true;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error: ", e);
+                return false;
+            }
+        }
     }
 }

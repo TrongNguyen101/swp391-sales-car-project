@@ -9,35 +9,31 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import ImageUploadComponent from "../../../../components/AddImage";
-import ListColorImageCarComponent from "../ListColorImageCar";
-import * as adminCarServices from "../../../../services/AdminCarServices";
+import * as adminAccessoryServices from "../../../../services/AdminAccessoryServices";
+import AccessoryGalleryComponent from "../AccessoryGallery";
 
-function UpdateImagessColorCar({
-  carId,
-  setMessage = () => {},
-  setInforDialogOpen = () => {},
-  fetchCarDetails = () => {},
+function UpdateImagesDetailOfAccessoriesComponent({
+  accessoryId,
+  setMessage = () => { },
+  setInforDialogOpen = () => { },
+  fetchCarDetails = () => { },
 }) {
   const [color, setColor] = useState("");
-  const [colorBigImage, setColorBigImages] = useState([]);
-  const [colorSmallImage, setColorSmallImages] = useState([]);
-  const [selectedIdImageColor, setSelectedIdImageColor] = useState([]);
+  const [detailImageOfAccessory, setDetailImageOfAccessory] = useState([]);
+  const [selectedIdImageDetail, setSelectedIdImageDetail] = useState();
   const [errorColor, setErrorColor] = useState("");
   const [openConfirmDeleteDialog, setOpenConfirmDeleteDialog] = useState(false);
-  const [requestFecthColorCar, setRequestFecthColorCar] = useState(false);
+  const [requestFecthDetailImageList, setRequestFecthDetailImageList] = useState(false);
 
-  const handleUploadBigImage = (files) => setColorBigImages(files);
-  const handleUploadSmallImage = (files) => setColorSmallImages(files);
-  const handleSelectImageToDelete = (idImageColor) =>
-    setSelectedIdImageColor(idImageColor);
+  const handleUploadDetailImage = (files) => setDetailImageOfAccessory(files);
+  const handleDeleteDetailImage = (idImageDetailAccessory) =>
+    setSelectedIdImageDetail(idImageDetailAccessory);
 
   // handle the save of the image
   const handleSaveColorImage = async () => {
     if (
-      !colorBigImage.length ||
-      !colorBigImage[0].file ||
-      !colorSmallImage.length ||
-      !colorSmallImage[0].file
+      !detailImageOfAccessory.length ||
+      !detailImageOfAccessory[0].file
     ) {
       setMessage("Please select an image to upload");
       setInforDialogOpen(true);
@@ -52,12 +48,11 @@ function UpdateImagessColorCar({
 
     try {
       const formData = new FormData();
-      formData.append("colorBigImage", colorBigImage[0].file);
-      formData.append("colorSmallImage", colorSmallImage[0].file);
+      formData.append("detailImage", detailImageOfAccessory[0].file);
       formData.append("color", color);
-      formData.append("carId", carId);
+      formData.append("accessoryId", accessoryId);
 
-      const response = await adminCarServices.uploadColorImageOfCar(formData);
+      const response = await adminAccessoryServices.uploadImageDetailOfAccessory(formData);
 
       if (response.statusCode !== 200) {
         setMessage("Failed to upload image");
@@ -66,9 +61,8 @@ function UpdateImagessColorCar({
         setMessage("Image uploaded successfully");
         setInforDialogOpen(true);
         //fetch color of car
-        setRequestFecthColorCar(!requestFecthColorCar);
-        setColorBigImages([]);
-        setColorSmallImages([]);
+        setRequestFecthDetailImageList(!requestFecthDetailImageList);
+        setDetailImageOfAccessory([]);
         setColor("");
       }
     } catch (error) {
@@ -79,12 +73,19 @@ function UpdateImagessColorCar({
 
   const handleDeleteColorImage = async () => {
     try {
-      const response = await adminCarServices.deleteColorImageOfCar(
-        selectedIdImageColor
+      if (!selectedIdImageDetail) {
+        setMessage("No image selected to delete");
+        setInforDialogOpen(true);
+        return;
+      }
+      const response = await adminAccessoryServices.deleteImageDetailOfAccessory(
+        selectedIdImageDetail
       );
       if (response.statusCode !== 200) {
+        setOpenConfirmDeleteDialog(false);
         setMessage("Failed to delete image");
         setInforDialogOpen(true);
+
       } else {
         fetchCarDetails();
         //hide confirm delete dialog
@@ -92,7 +93,7 @@ function UpdateImagessColorCar({
         //show deleting result dialog
         setInforDialogOpen(true);
         //fetch color of car
-        setRequestFecthColorCar(!requestFecthColorCar);
+        setRequestFecthDetailImageList(!requestFecthDetailImageList);
 
         setMessage("Image deleted successfully");
       }
@@ -103,7 +104,13 @@ function UpdateImagessColorCar({
 
   // Show comfirm delete image dialog
   const handleOpenConfirmDeleteDialog = () => {
-    setOpenConfirmDeleteDialog(true);
+    if (!selectedIdImageDetail) {
+      setMessage("No image selected to delete");
+      setInforDialogOpen(true);
+      return;
+    } else {
+      setOpenConfirmDeleteDialog(true);
+    }
   };
   // Close comfirm delete image dialog
   const handleCloseConfirmDeleteDialog = () => {
@@ -127,12 +134,11 @@ function UpdateImagessColorCar({
         }}
       >
         <Typography sx={{ fontWeight: "500", fontSize: "24px" }}>
-          List Color image of Car
+          List detail image of accessory
         </Typography>
-        <ListColorImageCarComponent
-          carId={carId}
-          selectedIdImageColor={handleSelectImageToDelete}
-          requestFecthColorOfCar={requestFecthColorCar}
+        <AccessoryGalleryComponent
+          handleDeleteDetailImage={handleDeleteDetailImage}
+          requestFecthDetailImageList={requestFecthDetailImageList}
         />
         <Box sx={{ width: "800px", marginTop: "20px" }}>
           <Button
@@ -169,35 +175,25 @@ function UpdateImagessColorCar({
         >
           <Box sx={{ width: "700px", paddingLeft: "60px" }}>
             <ImageUploadComponent
-              title="Drag & drop an image here, or click to select main image of car"
+              title="Drag & drop an image here, or click to select detail image of accessory"
               allowedTypes={["image/jpeg", "image/png"]}
               maxSize={10 * 1024 * 1024} // 10MB
-              onUpload={handleUploadBigImage}
+              onUpload={handleUploadDetailImage}
               multiple={false}
               previewWidthSize="700px"
               previewHeightSize="400px"
-              requestFecthColorOfCar={requestFecthColorCar}
+              requestFecthColorOfCar={requestFecthDetailImageList}
             />
           </Box>
           <Box sx={{ width: "200px", paddingRight: "60px" }}>
             <Box sx={{ width: "200px", height: "200px" }}>
-              <ImageUploadComponent
-                title="Drag & drop an image here, or click to select item image of car"
-                allowedTypes={["image/jpeg", "image/png"]}
-                maxSize={10 * 1024 * 1024} // 10MB
-                onUpload={handleUploadSmallImage}
-                multiple={false}
-                previewWidthSize="200px"
-                previewHeightSize="115px"
-                propFontSize="14px"
-                requestFecthColorOfCar={requestFecthColorCar}
-              />
+
             </Box>
             <Box sx={{ width: "200px" }}>
               <TextField
                 sx={{ width: "100%", marginBottom: "1em" }}
                 type="text"
-                label="Car Color"
+                label="Accessory Color"
                 spellCheck="false"
                 value={color}
                 onChange={(e) => {
@@ -261,4 +257,4 @@ function UpdateImagessColorCar({
   );
 }
 
-export default UpdateImagessColorCar;
+export default UpdateImagesDetailOfAccessoriesComponent;
