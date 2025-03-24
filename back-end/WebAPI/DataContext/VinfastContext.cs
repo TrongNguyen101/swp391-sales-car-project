@@ -46,6 +46,7 @@ namespace WebAPI.DataContext
         public DbSet<InvoiceItem> InvoiceItems { get; set; }
 
         public DbSet<Payment> Payments { get; set; }
+        public DbSet<ImportExportHistory> ImportExportHistories { get; set; }
 
 
         /// <summary>
@@ -852,6 +853,30 @@ namespace WebAPI.DataContext
                       .HasForeignKey(cartItem => cartItem.UserId)
                       .IsRequired();
             });
+
+            modelBuilder.Entity<CartItem>(entity =>
+            {
+                entity.HasOne(cartItem => cartItem.Product)
+                      .WithMany(product => product.CartItems)
+                      .HasForeignKey(cartItem => cartItem.ProductId)
+                      .IsRequired();
+            });
+
+            // Configure the relationship between import and export history with accessory and car
+            modelBuilder.Entity<ImportExportHistory>(entity =>
+            {
+                entity.HasOne(imExHis => imExHis.Accessory)
+                      .WithMany(accessory => accessory.ImportExportHistories)
+                      .HasForeignKey(imExHis => imExHis.AccessoryId);
+            });
+
+            modelBuilder.Entity<ImportExportHistory>(entity =>
+           {
+               entity.HasOne(imExHis => imExHis.Car)
+                     .WithMany(car => car.ImportExportHistories)
+                     .HasForeignKey(imExHis => imExHis.CarId);
+           });
+
 
             modelBuilder.Entity<CartItem>(entity =>
             {

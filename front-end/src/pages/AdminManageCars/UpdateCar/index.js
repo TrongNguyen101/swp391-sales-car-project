@@ -191,6 +191,7 @@ function UpdateCarPage() {
               error={!!errorQuantity}
               helperText={errorQuantity || ""}
               InputLabelProps={{ shrink: true }}
+              disabled
             />
           </Box>
           <Box sx={{ width: "500px", margin: "10px 0", padding: "0 10px" }}>

@@ -83,7 +83,7 @@ namespace WebAPI.DAO
             }
         }
 
-        public async Task<bool> CreateAccessory(Accessory accessory)
+        public async Task<Accessory> CreateAccessory(Accessory accessory)
         {
             try
             {
@@ -91,13 +91,13 @@ namespace WebAPI.DAO
                 {
                     await context.Accessories.AddAsync(accessory);
                     await context.SaveChangesAsync();
-                    return true;
+                    return accessory;
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
-                return false;
+                return null;
             }
         }
 
@@ -142,6 +142,22 @@ namespace WebAPI.DAO
             {
                 Console.WriteLine("Error: ", e);
                 return false;
+            }
+        }
+
+        public async Task<List<Accessory>> GetAccessoriesByListId(List<int> ids)
+        {
+            using (var context = new VinfastContext())
+            {
+                return await context.Accessories.Where(a => ids.Contains(a.Id)).ToListAsync();
+            }
+        }
+        public async Task UpdateAccessories(List<Accessory> accessories)
+        {
+            using (var context = new VinfastContext())
+            {
+                context.Accessories.UpdateRange(accessories);
+                await context.SaveChangesAsync();
             }
         }
     }

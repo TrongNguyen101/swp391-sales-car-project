@@ -90,5 +90,56 @@ namespace WebAPI.DAO
                                     .ToListAsync();
             }
         }
+
+        public async Task<List<InvoiceItem>> GetInvoiceItemsByInvoiceId(string invoiceId)
+        {
+            using (var context = new VinfastContext())
+            {
+                return await context.InvoiceItems
+                                    .Where(ii => ii.InvoiceId == invoiceId)
+                                    .ToListAsync();
+            }
+        }
+
+        public async Task<bool> CreateListImportExportHistory(List<ImportExportHistory> importExportHistories)
+        {
+            using (var context = new VinfastContext())
+            {
+                using (var transaction = await context.Database.BeginTransactionAsync())
+                {
+                    try
+                    {
+                        await context.ImportExportHistories.AddRangeAsync(importExportHistories);
+                        await context.SaveChangesAsync();
+                        await transaction.CommitAsync();
+                        return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        await transaction.RollbackAsync();
+                        Console.WriteLine($"Error create import export history: {ex}");
+                        return false;
+                    }
+                }
+            }
+        }
+
+        public async Task<bool> CreateImportExportHistory(ImportExportHistory importExportHistory)
+        {
+            try
+            {
+                using (var context = new VinfastContext())
+                {
+                    await context.ImportExportHistories.AddAsync(importExportHistory);
+                    await context.SaveChangesAsync();
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error create import export history: {ex}");
+                return false;
+            }
+        }
     }
 }

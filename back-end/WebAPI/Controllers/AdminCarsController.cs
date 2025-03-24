@@ -239,12 +239,22 @@ namespace WebAPI.Controllers
 
                 Console.WriteLine(adminCar);
                 if (await CarsDAO.GetInstance().AdminAddMoreCar(adminCar))
-
                 {
+                    var importHistory = new ImportExportHistory
+                    {
+                        CarId = adminCar.Id,
+                        Quantity = adminAddMoreCarDTO.Quantity,
+                        Type = "import",
+                        TransactionDate = DateTime.Now,
+                        Note = "Add more car",
+                        ProductName = adminCar.Name
+                    };
+                    await TransactionsDAO.GetInstance().CreateImportExportHistory(importHistory);
+
                     return Ok(new DataResponse
                     {
                         StatusCode = 200,
-                        Message = "Car deleted successfully",
+                        Message = "Car added successfully",
                         Success = true
                     });
                 }
@@ -299,9 +309,9 @@ namespace WebAPI.Controllers
                 }
                 #endregion
 
-                var car = await CarsDAO.GetInstance().GetCarByName(carData.Model);
+                var carJustCreate = await CarsDAO.GetInstance().GetCarByName(carData.Model);
 
-                if (car != null)
+                if (carJustCreate != null)
                 {
                     return BadRequest(ResponseHelper.Response(400, "Car already exists", false, null));
                 }
@@ -323,8 +333,18 @@ namespace WebAPI.Controllers
                     IsDeleted = false
                 };
                 if (await CarsDAO.GetInstance().CreateCar(newCar))
-
                 {
+                    carJustCreate = await CarsDAO.GetInstance().GetCarByName(carData.Model);
+                    var importHistory = new ImportExportHistory
+                    {
+                        CarId = carJustCreate.Id,
+                        Quantity = carData.Quantity,
+                        Type = "import",
+                        TransactionDate = DateTime.Now,
+                        Note = "Create new car",
+                        ProductName = carJustCreate.Name
+                    };
+                    await TransactionsDAO.GetInstance().CreateImportExportHistory(importHistory);
                     return Ok(new DataResponse
                     {
                         StatusCode = 200,

@@ -75,5 +75,6 @@ namespace WebAPI.Models
         public ICollection<AccessoryImage>? AccessoryImages { get; set; } = new List<AccessoryImage>();
         public ICollection<CartItem>? CartItems { get; set; } = new List<CartItem>();
         public ICollection<InvoiceItem>? InvoiceItems { get; set; } = new List<InvoiceItem>();
+        public ICollection<ImportExportHistory>? ImportExportHistories { get; set; } = new List<ImportExportHistory>();
     }
 }

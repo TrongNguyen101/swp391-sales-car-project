@@ -35,5 +35,6 @@ namespace WebAPI.Models
         public ICollection<CarColor>? CarColors { get; set; } = new List<CarColor>();
         public ICollection<CarDeposit>? CarDeposits { get; set; } = new List<CarDeposit>();
         public ICollection<InvoiceItem>? InvoiceItems { get; set; } = new List<InvoiceItem>();
+        public ICollection<ImportExportHistory>? ImportExportHistories { get; set; } = new List<ImportExportHistory>();
     }
 }
