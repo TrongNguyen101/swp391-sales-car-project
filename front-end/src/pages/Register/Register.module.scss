@@ -209,3 +209,14 @@ a {
     border-color: var(--primary-color);
   }
 }
+
+.otp-inputs {
+  padding-bottom: 10px;
+  input {
+    outline-color: var(--primary-color);
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    margin: 5px;
+  }
+}

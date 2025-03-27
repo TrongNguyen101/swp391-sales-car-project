@@ -63,12 +63,20 @@ function CarsTable() {
   const fetchData = async () => {
     try {
       const response = await adminCarServices.adminGetAllCars();
-      if (response.statusCode !== 200) {
-        setRows([]);
-      } else {
+      console.log("response before if: ", response);
+      if (response.statusCode === 200) {
         console.log("all car:", response.data);
         setRows(response.data);
         setSearchRows(response.data);
+      }
+      if (response.statusCode === 401) {
+        console.log("Failed to fetch cars because:", response.message);
+        navigate("/login");
+      }
+      if (response.statusCode !== 200) {
+        console.error("Failed to fetch cars:", response.message);
+        setRows([]);
+        setSearchRows([]);
       }
     } catch (error) {
       console.error("Failed to fetch users:", error);
@@ -116,8 +124,11 @@ function CarsTable() {
       if (response.statusCode === 200) {
         fetchData();
         setOpenAddMoreCarDialog(false);
+        setSelectedCar("");
+        setQuantity(0);
+        console.log("Add more car successfully:", response);
       } else {
-        console.error("Failed to add more car:", response.message);
+        console.error("Failed to add more car:", response);
       }
     } catch (error) {
       console.error("Failed to add more car:", error);

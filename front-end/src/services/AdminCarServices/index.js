@@ -2,10 +2,16 @@ import * as request from "../../utils/CarRequest";
 
 export const adminGetAllCars = async () => {
   try {
-    const response = await request.get("/api/AdminCars");
+    const endpoint = "/api/AdminCars";
+    const token = localStorage.getItem("Bearer");
+    const response = await request.get(endpoint, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     return response.data;
   } catch (error) {
-    return error.response;
+    return error.response.data;
   }
 };
 
@@ -53,7 +59,7 @@ export const adminAddMoreCar = async (carId) => {
     );
     return response.data;
   } catch (error) {
-    return error.response;
+    return error.response.data;
   }
 };
 

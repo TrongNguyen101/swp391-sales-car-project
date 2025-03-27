@@ -2,11 +2,12 @@ import { Button, Dialog, DialogActions, DialogContent, DialogContentText, Dialog
 import classNames from "classnames/bind";
 import styles from "./Register.module.scss";
 import { Link, useNavigate } from "react-router-dom";
-import { forwardRef, useState } from "react";
+import { forwardRef, useRef, useState } from "react";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import * as authService from "../../services/AuthService";
 import * as AuthValidator from "../../validation/AuthValidation";
+import * as OTPValidator from "../../validation/OTPValidation";
 
 const cx = classNames.bind(styles);
 
@@ -38,6 +39,12 @@ function RegisterPage() {
   const [errorFullname, setErrorFullname] = useState("");
   const [message, setMessage] = useState("");
 
+  // state for OTP
+  const [otpDialogOpen, setOtpDialogOpen] = useState(false);
+  const [otpValue, setOtpValue] = useState(new Array(6).fill(""));
+  const [errorOtp, setErrorOtp] = useState("");
+  const otpRefs = useRef(new Array(6).fill(null));
+
   const navigate = useNavigate();
 
   const handleShowPassword = () => {
@@ -60,29 +67,47 @@ function RegisterPage() {
    *
    * @throws {Error} - Throws an error if the registration process fails.
    */
-  const fetchRegister = async () => {
+  // const fetchRegister = async () => {
+  //   try {
+  //     const response = await authService.postRegister(
+  //       fullname,
+  //       email,
+  //       password
+  //     );
+  //     if (response.status === 200) {
+  //       setMessage(response.data.message);
+  //       setOpenDialog(true);
+  //     }
+  //     if (response.status === 409) {
+  //       setErrorEmail(response.data.message);
+  //     }
+  //     if (response.status === 400) {
+  //       alert(response.data.message);
+  //     }
+  //   } catch (error) {
+  //     if (error.response) {
+  //       console.log(error.response);
+  //     }
+  //   }
+  // };
+
+  const handleCheckEmail = async (emailNeedToCheck) => {
     try {
-      const response = await authService.postRegister(
-        fullname,
-        email,
-        password
-      );
-      if (response.status === 200) {
-        setMessage(response.data.message);
-        setOpenDialog(true);
-      }
-      if (response.status === 409) {
-        setErrorEmail(response.data.message);
-      }
-      if (response.status === 400) {
-        alert(response.data.message);
+      const response = await authService.checkEmail(emailNeedToCheck);
+      if (response.statusCode === 200) {
+        console.log("ketquachekemail", response);
+        setErrorEmail("");
+        setOtpDialogOpen(true);
+        // fetchRegister();
+      } else {
+        console.log("email existed",response);
+        setErrorEmail("Email already exists");
       }
     } catch (error) {
-      if (error.response) {
-        console.log(error.response);
-      }
+      console.log(error);
     }
   };
+
 
   /**
    * Handles the form submission event.
@@ -116,19 +141,103 @@ function RegisterPage() {
     }
 
     if (!emailError && !passwordError && !rePasswordError && !fullnameError) {
-      fetchRegister();
+      handleCheckEmail(email);
+    }
+  };
+  const handleOtpChange = (e, index) => {
+    const { value } = e.target;
+    if (/^[0-9]$/.test(value) || value === "") {
+      const newOtpValue = [...otpValue];
+      newOtpValue[index] = value;
+      setOtpValue(newOtpValue);
+    }
+    setTimeout(() => {
+      if (value !== "" && index < otpRefs.current.length - 1) {
+        otpRefs.current[index + 1].focus();
+      }
+    }, 0);
+  };
+
+  const handleOtpPaste = (e) => {
+    e.preventDefault(); // Prevent default paste behavior
+
+    const pastedText = e.clipboardData.getData("text");
+    const cleanText = pastedText.replace(/\D/g, ""); // Remove non-numeric characters
+
+    if (!cleanText) return;
+
+    const newOtpValue = [...otpValue];
+
+    for (let i = 0; i < cleanText.length && i < otpRefs.current.length; i++) {
+      newOtpValue[i] = cleanText[i];
+    }
+
+    setOtpValue(newOtpValue);
+
+    // Move focus to the last entered character
+    const nextIndex = Math.min(cleanText.length, otpRefs.current.length - 1);
+    otpRefs.current[nextIndex]?.focus();
+  };
+
+  const handleOtpKeyDown = (e, index) => {
+    if (e.key === "Backspace" && otpValue[index] === "" && index > 0) {
+      otpRefs.current[index - 1].focus();
     }
   };
 
-    const handleCloseDialog = () => {
-      setOpenDialog(false);
-      navigate("/login");
+  const handleOtpSubmit = () => {
+      const otp = otpValue.join("");
+      const otpError = OTPValidator.validateOTP(otp);
+      if (otpError) {
+        setErrorOtp(otpError);
+      } else {
+        fetchRegister(otp);
+      }
     };
   
-    const Transition = forwardRef(function Transition(props, ref) {
-      return <Slide direction="down" ref={ref} {...props} />;
-    });
+    const fetchRegister = async (otp) => {
+      try {
+        const response = await authService.postRegister(
+          fullname,
+          email,
+          password,
+          rePassword,
+          otp
+        );
   
+        if (response.status === 200) {
+          setOtpDialogOpen(false);
+          setErrorOtp("");
+          setOtpValue(new Array(6).fill(""));
+          setMessage("Register successfully");
+          setOpenDialog(true);
+        } else {
+          setErrorOtp("Invalid OTP code");
+        }
+      } catch (error) {
+        if (error.response) {
+          console.log(error.response);
+        }
+      }
+    };
+
+
+  const handleOtpDialogClose = () => {
+    setOtpDialogOpen(false);
+    setErrorOtp("");
+    setOtpValue(new Array(6).fill(""));
+  };
+
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+    navigate("/login");
+  };
+
+  const Transition = forwardRef(function Transition(props, ref) {
+    return <Slide direction="down" ref={ref} {...props} />;
+  });
+
 
   return (
     <div className={cx("container")}>
@@ -278,6 +387,64 @@ function RegisterPage() {
             color="primary"
           >
             OK
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Show Enter OTP code popup */}
+      <Dialog
+        open={otpDialogOpen}
+        aria-labelledby="otp-dialog-title"
+        aria-describedby="otp-dialog-description"
+        sx={{ textAlign: "center" }}
+      >
+        <DialogTitle id="otp-dilog-title">Enter OTP code</DialogTitle>
+        <DialogContentText
+          sx={{
+            fontSize: "1.2rem",
+            fontWeight: "300",
+            width: "400px",
+            height: "50px",
+          }}
+        >
+          Please enter OTP code sent to your email
+        </DialogContentText>
+        <div className={cx("otp-inputs")}>
+          {otpValue.map((value, index) => (
+            <input
+              key={index}
+              ref={(el) => (otpRefs.current[index] = el)}
+              margin="10px"
+              type="text"
+              variant="outlined"
+              value={value}
+              onChange={(e) => handleOtpChange(e, index)}
+              onKeyDown={(e) => handleOtpKeyDown(e, index)}
+              inputProps={{
+                maxLength: 1,
+              }}
+              onPaste={handleOtpPaste}
+              error={!!errorOtp}
+            />
+          ))}
+        </div>
+        {errorOtp && (
+          <Typography sx={{ color: "red", textAlign: "center" }}>
+            {errorOtp}
+          </Typography>
+        )}
+        <DialogActions sx={{ justifyContent: "center", marginBottom: "15px" }}>
+          <Button variant="contained"
+          onClick={handleOtpSubmit}
+          >
+            Submit
+          </Button>
+          <Button
+            color="error"
+            variant="outlined"
+            onClick={handleOtpDialogClose}
+          >
+            Cancel
           </Button>
         </DialogActions>
       </Dialog>

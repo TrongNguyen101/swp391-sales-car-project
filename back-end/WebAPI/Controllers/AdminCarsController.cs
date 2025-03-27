@@ -41,6 +41,19 @@ namespace WebAPI.Controllers
         {
             try
             {
+                #region Authentication, Authorization
+                // Check authentication and authorization of user based on the specified HTTP context and role that need to check for this function
+                // If the user is not authenticated or authorized, return error message
+                // If the user is authenticated and authorized, return claims of user
+                // admin role id = 1
+                // customer role id = 2
+                var (isSuccess, errorMessage, claims) = JwtTokenHelper.AuthenticateAndAuthorize(HttpContext, 1);
+                if (!isSuccess)
+                {
+                    return Unauthorized(ResponseHelper.ResponseError(401, errorMessage, false, null));
+                }
+                #endregion
+
                 var adminCars = await CarsDAO.GetInstance().GetAllCars();
                 if (adminCars == null || adminCars.Count == 0)
                 {
@@ -70,6 +83,8 @@ namespace WebAPI.Controllers
                 });
             }
         }
+
+        
 
         [HttpGet("{id}")]
         public async Task<ActionResult> AdminGetCarById(int id)
@@ -199,27 +214,15 @@ namespace WebAPI.Controllers
             try
             {
                 #region Authentication, Authorization
-                // Get token
-                var authorizationHeader = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
-
-                // Check token
-                if (authorizationHeader == null || !authorizationHeader.StartsWith("Bearer "))
+                // Check authentication and authorization of user based on the specified HTTP context and role that need to check for this function
+                // If the user is not authenticated or authorized, return error message
+                // If the user is authenticated and authorized, return claims of user
+                // admin role id = 1
+                // customer role id = 2
+                var (isSuccess, errorMessage, claims) = JwtTokenHelper.AuthenticateAndAuthorize(HttpContext, 1);
+                if (!isSuccess)
                 {
-                    return Unauthorized(ResponseHelper.Response(401, "Authentication token is missing or invalid", false, null));
-                }
-                // Format token
-                var token = authorizationHeader.Split(" ")[1];
-                // Get claims
-                var claims = JwtTokenHelper.GetUserClaims(token);
-                // Verify token
-                if (claims == null)
-                {
-                    return Unauthorized(ResponseHelper.Response(401, "Authentication token is invalid", false, null));
-                }
-                // Check role
-                if (claims.TryGetValue("role", out var roleId) && roleId.ToString() != "1")
-                {
-                    return Unauthorized(ResponseHelper.Response(401, "Unauthorized access denied", false, null));
+                    return Unauthorized(ResponseHelper.ResponseError(401, errorMessage, false, null));
                 }
                 #endregion
 
