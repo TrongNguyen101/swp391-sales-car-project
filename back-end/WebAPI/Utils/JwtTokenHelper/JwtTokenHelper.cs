@@ -1,8 +1,10 @@
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
+using Microsoft.AspNetCore.Mvc;
 using WebAPI.DTO;
 using WebAPI.Utils.EncoderHelper;
+using WebAPI.Utils.ResponseHelper;
 
 namespace WebAPI.Utils.JwtTokenHelper
 {
@@ -141,5 +143,42 @@ namespace WebAPI.Utils.JwtTokenHelper
             }
         }
 
+        /// <summary>
+        /// Authenticate and authorize the user based on the specified HTTP context.
+        /// </summary>
+        /// <param name="httpContext">The HTTP context for the request.</param>
+        /// <param name="roleId">The role ID to check for authorization.</param>
+        public static (bool isSuccess, string? errorMessage, Dictionary<string, object>? claims) AuthenticateAndAuthorize(HttpContext httpContext, int roleIdFromFunctionNeedToCheck)
+        {
+            // Get token
+            var authorizationHeader = httpContext.Request.Headers["Authorization"].FirstOrDefault();
+
+            // Check token
+            if (authorizationHeader == null || !authorizationHeader.StartsWith("Bearer "))
+            {
+                return (false, "Authentication token is missing or invalid", null);
+            }
+
+            // Format token
+            var token = authorizationHeader.Split(" ")[1];
+
+            // Get claims
+            var claims = GetUserClaims(token);
+
+            // Verify token
+            if (claims == null)
+            {
+                return (false, "Authentication token is invalid", null);
+            }
+
+            // Check role
+            if (claims.TryGetValue("role", out var roleId) && roleId.ToString() != roleIdFromFunctionNeedToCheck.ToString())
+            {
+                return (false, "Unauthorized access denied", null);
+            }
+
+            // Nếu mọi thứ hợp lệ, trả về thành công cùng với claims
+            return (true, null, claims);
+        }
     }
 }

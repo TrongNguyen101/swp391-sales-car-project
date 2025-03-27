@@ -153,6 +153,65 @@ namespace WebAPI.Controllers
             }
         }
 
+
+        [HttpPost("checkEmailExist")]
+        [AllowAnonymous]
+        public async Task<IActionResult> CheckEmailExist([FromBody] RegisterRequest? registerRequest)
+        {
+            try
+            {
+                var userDAO = await UsersDAO.GetInstance().findUserByEmail(registerRequest.Email);
+                if (userDAO != null)
+                {
+                    return Conflict(new DataResponse
+                    {
+                        StatusCode = 409,
+                        Success = false,
+                        Message = "Email already exists",
+                    });
+                }
+                // please code again just for runnning
+                string storedOtp = await _cache.StringGetAsync(registerRequest.Email);
+
+                if (!string.IsNullOrEmpty(storedOtp))
+                {
+                    await _cache.KeyDeleteAsync(registerRequest.Email); // Delete existing OTP before sending a new one
+                }
+
+                var otpCode = GenerateOTP();
+                await _cache.StringSetAsync(registerRequest.Email, otpCode, TimeSpan.FromMinutes(5));
+                bool isSentEmail = await SendEmail(registerRequest.Email, otpCode);
+                if (isSentEmail)
+                {
+                    return Ok(new DataResponse
+                    {
+                        StatusCode = 200,
+                        Success = true,
+                        Message = "Send OTP for new user successfully",
+                    });
+                }
+                else
+                {
+                    return BadRequest(new DataResponse
+                    {
+                        StatusCode = 400,
+                        Success = false,
+                        Message = "Failed to send OTP for new user. Please try again.",
+                    });
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new DataResponse
+                {
+                    StatusCode = 400,
+                    Success = false,
+                    Message = e.Message,
+                });
+            }
+        }
+
+
         /// <summary>
         /// Authenticates a user based on the provided login credentials.
         /// </summary>
@@ -171,17 +230,37 @@ namespace WebAPI.Controllers
         {
             try
             {
-                var userDAO = await UsersDAO.GetInstance().findUserByEmail(RegisterRequest.Email);
-                if (userDAO != null)
+                if (string.IsNullOrEmpty(RegisterRequest.Email) || string.IsNullOrEmpty(RegisterRequest.Password) || string.IsNullOrEmpty(RegisterRequest.Fullname) || string.IsNullOrEmpty(RegisterRequest.OTP))
                 {
-                    return Conflict(new DataResponse
+                    return BadRequest(new DataResponse
                     {
-                        StatusCode = 409,
+                        StatusCode = 400,
                         Success = false,
-                        Message = "Email already exists",
+                        Message = "Email, password fullname and OTP are required",
                     });
                 }
-                userDAO = new Users
+
+                if (RegisterRequest.Password != RegisterRequest.RePassword)
+                {
+                    return BadRequest(new DataResponse
+                    {
+                        StatusCode = 400,
+                        Success = false,
+                        Message = "Passwords do not match",
+                    });
+                }
+                
+                if (await VerifyOTPCode(RegisterRequest.Email, RegisterRequest.OTP) == false)
+                {
+                    return BadRequest(new DataResponse
+                    {
+                        StatusCode = 400,
+                        Success = false,
+                        Message = "Invalid or expired OTP",
+                    });
+                }
+
+                var userDAO = new Users
                 {
                     Id = Guid.NewGuid(),
                     UserName = RegisterRequest.Fullname.ToLower(),

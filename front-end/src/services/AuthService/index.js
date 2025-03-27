@@ -57,7 +57,7 @@ export const confirmPassword = async (email, password) => {
  * @returns {Promise<Object>} The response from the server.
  * @throws {Object} The error response from the server if the request fails.
  */
-export const postRegister = async (fullname, email, password) => {
+export const postRegister = async (fullname, email, password, rePassword, otp) => {
   try {
     const response = await request.post(
       "api/Auth/Register",
@@ -65,6 +65,8 @@ export const postRegister = async (fullname, email, password) => {
         fullname: fullname,
         email: email,
         password: password,
+        rePassword: rePassword,
+        otp: otp,
       },
       {
         headers: {
@@ -73,6 +75,26 @@ export const postRegister = async (fullname, email, password) => {
       }
     );
     return response;
+  } catch (error) {
+    return error.response;
+  }
+};
+
+export const checkEmail = async (emailNeedToCheck) => {
+  try {
+    const enpoint = `api/Auth/checkEmailExist`;
+    const response = await request.post(
+      enpoint,
+      {
+        email: emailNeedToCheck,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response.data;
   } catch (error) {
     return error.response;
   }
