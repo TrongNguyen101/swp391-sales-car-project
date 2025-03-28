@@ -32,3 +32,22 @@ export const getAllAccessoryTransactions = async () => {
     return error.response;
   }
 };
+
+export const getInvoiceItemList = async (invoiceId) => {
+  try {
+    const response = await request.get(`/api/AdminTransactions/getInvoiceItemByInvoiceId/${invoiceId}`);
+    return response.data;
+  } catch (error) {
+    return error.response;
+  }
+};
+
+export const getInvoiceById = async (invoiceId) => {
+  try {
+    const response = await request.get(`/api/AdminTransactions/getTransactionById/${invoiceId}`);
+    return response.data;
+  } catch (error) {
+    return error.response;
+  }
+};
+

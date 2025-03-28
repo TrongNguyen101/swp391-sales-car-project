@@ -110,7 +110,7 @@ const ViewHistoryPaymentPage = () => {
                                                 color: "white",
                                                 width: "15%",
                                             }}
-                                            align="center"
+                                            align="left"
                                         >
                                             Invoice ID
                                         </TableCell>
@@ -143,8 +143,8 @@ const ViewHistoryPaymentPage = () => {
                                         </TableCell>
                                         <TableCell
                                             sx={{ backgroundColor: "primary.main", color: "white" }}
-                                            align="center"
-                                            width="40%"
+                                            align="left"
+                                            width="20%"
                                         >
                                             Invoice information
                                         </TableCell>
@@ -168,10 +168,10 @@ const ViewHistoryPaymentPage = () => {
                                             <TableCell align="center" sx={{ width: "2%" }}>
                                                 {row.status}
                                             </TableCell>
-                                            <TableCell align="right" sx={{ width: "10%" }}>
+                                            <TableCell align="center" sx={{ width: "10%" }}>
                                                 {row.totalAmount} VND
                                             </TableCell>
-                                            <TableCell align="left" sx={{ width: "10%" }}>
+                                            <TableCell align="center" sx={{ width: "10%" }}>
                                                 {row.payDate}
                                             </TableCell>
                                             <TableCell align="left">

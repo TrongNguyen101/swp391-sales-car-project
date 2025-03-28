@@ -180,13 +180,13 @@ namespace WebAPI.Controllers
             }
         }
 
-        [HttpGet("getInvoiceItemById/{id}")]
-        public async Task<ActionResult> GetInvoiceItemById(string id)
+        [HttpGet("getInvoiceItemByInvoiceId/{id}")]
+        public async Task<ActionResult> GetInvoiceItemByInvoiceId(string id)
         {
             try
             {
-                var invoiceItems = await TransactionsDAO.GetInstance().GetAllInvoiceItemById(id);
-                if (invoiceItems == null || !invoiceItems.Any())
+                var invoiceItemList = await TransactionsDAO.GetInstance().GetInvoiceItemsByInvoiceId(id);
+                if (invoiceItemList == null || !invoiceItemList.Any())
                 {
                     return NotFound(new DataResponse
                     {
@@ -195,7 +195,7 @@ namespace WebAPI.Controllers
                         Success = false
                     });
                 }
-                var invoiceItemDTOs = AutoMapper.ToInvoiceItemDTOList(invoiceItems);
+                var invoiceItemDTOs = AutoMapper.ToInvoiceItemDTOList(invoiceItemList);
 
                 return Ok(new DataResponse
                 {

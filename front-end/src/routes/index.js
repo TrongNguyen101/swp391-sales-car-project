@@ -36,6 +36,7 @@ import CreateURLPaymentOfAccessoryPage from "../pages/CreateURLPaymentOfAccessor
 import AdminManageTestDrivenPage from "../pages/AdminManageTestDriven";
 import UpdateAccessoryPage from "../pages/AdminManageAccessories/UpdateAccessory";
 import AdminManageImportExportPage from "../pages/AdminManageImportExport";
+import AdminManageAccessoryTransactionsDetailPage from "../pages/AdminManageAccessoryTransactionsDetail";
 const publicRoutes = [
   { path: "/", page: HomePage },
   { path: "/profile", page: ProfilePage },
@@ -120,6 +121,8 @@ const publicRoutes = [
 
   // Admin manage accessory routes
   { path: "/dashboard/accessory-transactions-history", page: AdminManageAccessoryTransactionsPage, layout: DashboardLayout },
+  { path: "/dashboard/accessory-transactions-detail/:invoiceId", page: AdminManageAccessoryTransactionsDetailPage, layout: DashboardLayout },
+
 
   // Admin manage test driven routes
   { path: "/dashboard/test-driven-register", page: AdminManageTestDrivenPage, layout: DashboardLayout },
