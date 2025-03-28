@@ -51,6 +51,7 @@ function CreateAccessoryPage() {
 
   //state of the message of the dialog
   const [message, setMessage] = useState("");
+  const [statusResponse, setStatusResponse] = useState(false);
 
   //state of the successful dialog
   const [openDialog, setOpenDialog] = useState(false);
@@ -152,9 +153,11 @@ function CreateAccessoryPage() {
       if (response.statusCode === 200) {
         setMessage(response.message);
         setOpenDialog(true);
+        setStatusResponse(true);
       } else {
         setMessage(response.data.value.message);
         setOpenErrorDialog(true);
+        setStatusResponse(false);
       }
     } catch (error) {
       setMessage("Error creating accessory");
@@ -165,7 +168,9 @@ function CreateAccessoryPage() {
 
   const handleCloseDialog = () => {
     setOpenDialog(false);
-    navigate("/dashboard/accessories");
+    if (statusResponse) {
+      navigate("/dashboard/accessories");
+    }
   };
   const handleCloseErrorDialog = () => {
     setOpenErrorDialog(false);

@@ -39,6 +39,7 @@ function UpdateAccessoryPage() {
   const [dimensions, setDimensions] = useState("");
   const [material, setMaterial] = useState("");
   const [warranty, setWarranty] = useState("");
+  const [isShowed, setIsShowed] = useState(false);
 
   // Error states
   const [errorName, setErrorName] = useState("");
@@ -94,6 +95,7 @@ function UpdateAccessoryPage() {
         setDimensions(response.data.dimensions);
         setMaterial(response.data.material);
         setWarranty(response.data.warranty);
+        setIsShowed(response.data.isShowed);
         console.log(response.data);
         console.log(response.data.categoryId);
       }
@@ -191,6 +193,7 @@ function UpdateAccessoryPage() {
         dimensions,
         material,
         warranty,
+        isShowed,
       };
       console.log(accessoryData);
       const response = await adminAccessoryServices.adminUpdateAccessory(
@@ -254,42 +257,41 @@ function UpdateAccessoryPage() {
                   display: "flex",
                   width: "100%",
                   justifyContent: "space-between",
+                  marginBottom: "1em",
                 }}
               >
                 {/* Field select category */}
-                <Box sx={{ width: "100%", paddingRight: "20px" }}>
-                  {loading && categories.length > 0 && (
-                    <FormControl
-                      variant="outlined"
-                      sx={{ width: 300, marginTop: "5px" }}
-                      error={!!errorCategoryId}
+                {loading && categories.length > 0 && (
+                  <FormControl
+                    variant="outlined"
+                    sx={{ width: "100%", paddingRight: "20px" }}
+                    error={!!errorCategoryId}
+                  >
+                    <InputLabel id="category-select-label">
+                      Select Category
+                    </InputLabel>
+                    <Select
+                      labelId="category-select-label"
+                      sx={{ width: "100%" }}
+                      value={categoryId}
+                      onChange={(e) => {
+                        setCategoryId(e.target.value);
+                        setErrorCategoryId("");
+                      }}
+                      label="Select Category"
                     >
-                      <InputLabel id="category-select-label">
-                        Select Category
-                      </InputLabel>
-                      <Select
-                        labelId="category-select-label"
-                        sx={{ width: "100%" }}
-                        value={categoryId}
-                        onChange={(e) => {
-                          setCategoryId(e.target.value);
-                          setErrorCategoryId("");
-                        }}
-                        label="Select Category"
-                      >
-                        {categories.map((cate) => (
-                          <MenuItem key={cate.id} value={cate.id}>
-                            {cate.name}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                      <FormHelperText>{errorCategoryId || ""}</FormHelperText>
-                    </FormControl>
-                  )}
-                </Box>
+                      {categories.map((cate) => (
+                        <MenuItem key={cate.id} value={cate.id}>
+                          {cate.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                    <FormHelperText>{errorCategoryId || ""}</FormHelperText>
+                  </FormControl>
+                )}
 
                 <TextField
-                  sx={{ width: "100%", marginBottom: "1em" }}
+                  sx={{ width: "100%" }}
                   type="text"
                   label="Origin"
                   spellCheck="false"
@@ -302,6 +304,7 @@ function UpdateAccessoryPage() {
                   helperText={errorOrigin || ""}
                 />
               </Box>
+              {/* box current quantity */}
               <Box
                 display={{
                   display: "flex",
@@ -310,7 +313,7 @@ function UpdateAccessoryPage() {
                 }}
               >
                 <TextField
-                  sx={{ width: "60%", paddingRight: "20px" }}
+                  sx={{ width: "100%", paddingRight: "20px" }}
                   type="number"
                   label="Current Quantity"
                   spellCheck="false"
@@ -323,19 +326,21 @@ function UpdateAccessoryPage() {
                   helperText={errorQuantity || ""}
                   disabled
                 />
+
                 <TextField
-                  sx={{ width: "60%", paddingRight: "20px" }}
-                  type="number"
-                  label="Add More Quantity"
+                  sx={{ width: "100%", marginBottom: "1em", paddingRight: "20px", }}
+                  type="text"
+                  label="Warranty"
                   spellCheck="false"
-                  value={addQuantity || 0}
+                  value={warranty}
                   onChange={(e) => {
-                    setAddQuantity(e.target.value);
-                    setErrorAddQuantity("");
+                    setWarranty(e.target.value);
+                    setErrorWarranty("");
                   }}
-                  error={!!errorAddQuantity}
-                  helperText={errorAddQuantity || ""}
+                  error={!!errorWarranty}
+                  helperText={errorWarranty || ""}
                 />
+
                 <TextField
                   sx={{ width: "80%", marginBottom: "1em" }}
                   type="text"
@@ -356,20 +361,42 @@ function UpdateAccessoryPage() {
               </Box>
             </Box>
             {/* Block right */}
-            <Box sx={{ paddingRight: "20px", width: "500px" }}>
-              <TextField
-                sx={{ width: "100%", marginBottom: "1em" }}
-                type="text"
-                label="Warranty"
-                spellCheck="false"
-                value={warranty}
-                onChange={(e) => {
-                  setWarranty(e.target.value);
-                  setErrorWarranty("");
-                }}
-                error={!!errorWarranty}
-                helperText={errorWarranty || ""}
-              />
+            <Box sx={{ width: "500px" }}>
+              <Box display={{ display: "flex", width: "100%", justifyContent: "space-between", marginBottom: "1em", }}>
+                <TextField
+                  sx={{ width: "100%", paddingRight: "20px" }}
+                  type="number"
+                  label="Add More Quantity"
+                  spellCheck="false"
+                  value={addQuantity || 0}
+                  onChange={(e) => {
+                    setAddQuantity(e.target.value);
+                    setErrorAddQuantity("");
+                  }}
+                  error={!!errorAddQuantity}
+                  helperText={errorAddQuantity || ""}
+                />
+                <FormControl sx={{ width: "100%" }}>
+                  <InputLabel id="show-model">Publish</InputLabel>
+                  <Select
+                    labelId="show-model"
+                    label="Show Model"
+                    value={isShowed}
+                    onChange={(e) => setIsShowed(e.target.value)}
+                  >
+                    <MenuItem value={true}>
+                      <Box sx={{ display: "flex", alignItems: "center" }}>
+                        <Typography sx={{ width: "20%" }}>Published </Typography>
+                      </Box>
+                    </MenuItem>
+                    <MenuItem value={false}>
+                      <Box sx={{ display: "flex", alignItems: "center" }}>
+                        <Typography sx={{ width: "20%" }}>Hide </Typography>
+                      </Box>
+                    </MenuItem>
+                  </Select>
+                </FormControl>
+              </Box>
               {/* Block weight and color */}
               <Box
                 display={{
