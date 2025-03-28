@@ -11,8 +11,6 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 
 import * as adminCarServices from "../../../services/AdminCarServices";
 
