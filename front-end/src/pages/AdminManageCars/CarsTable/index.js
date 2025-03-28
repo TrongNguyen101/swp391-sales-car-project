@@ -43,7 +43,6 @@ function CarsTable() {
   const [searchRows, setSearchRows] = useState([]);
 
   // Search state
-  const [searchQuery, setSearchQuery] = useState("");
   const [isSearchFocused, setIsSearchFocused] = useState(false);
 
   // Delete car state
@@ -56,8 +55,6 @@ function CarsTable() {
   const [openAddMoreCarDialog, setOpenAddMoreCarDialog] = useState(false);
   const [errorSelectedCarId, setErrorSelectedCarId] = useState(null);
   const [errorQuantity, setErrorQuantity] = useState(null);
-
-  const [searchValue, setSearchValue] = useState("");
 
   // Fetch data from server
   const fetchData = async () => {
@@ -85,6 +82,7 @@ function CarsTable() {
 
   useEffect(() => {
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleGoToDetailPage = (row) => {
@@ -108,11 +106,6 @@ function CarsTable() {
     setOpenAddMoreCarDialog(false);
   };
 
-  const handleKeyPress = (event) => {
-    if (event.key === "Enter") {
-      handleSearch();
-    }
-  };
   // Add more car function
   const fetchAddMoreCar = async (car, quantity) => {
     try {
@@ -151,9 +144,20 @@ function CarsTable() {
   //------------------------------------------------------------------------------------------------------------
 
   const handleSearchChange = (event) => {
-    setSearchValue(event.target.value);
-  };
+    const value = event.target.value;
 
+    // Perform filtering immediately as the user types
+    if (value.trim()) {
+      const filteredAccessory = rows.filter(
+        (car) =>
+          car.model?.toString().toLowerCase().includes(value.toLowerCase())
+      );
+      setSearchRows(filteredAccessory);
+    } else {
+      setSearchRows(rows); // If input is empty, show all rows
+    }
+  };
+ 
   // Delete car
   const handleDelete = async () => {
     try {
@@ -179,17 +183,6 @@ function CarsTable() {
   const handleDeleteDialogClose = () => {
     setDeleteDialogOpen(false);
     setRowToDelete(null);
-  };
-
-  const handleSearch = () => {
-    if (searchValue.trim()) {
-      const filteredCars = rows.filter((car) =>
-        car.model.toLowerCase().includes(searchValue.toLowerCase())
-      );
-      setSearchRows(filteredCars);
-    } else {
-      setSearchRows(rows); // Nếu input trống, hiển thị tất cả xe
-    }
   };
 
   // format the price
@@ -228,11 +221,11 @@ function CarsTable() {
             label="Search Car name"
             variant="outlined"
             sx={{ width: 300 }}
-            value={searchValue}
+            // value={searchValue}
             onFocus={() => setIsSearchFocused(true)}
             onBlur={() => setIsSearchFocused(false)}
             onChange={handleSearchChange}
-            onKeyPress={handleKeyPress}
+            // onKeyPress={handleKeyPress}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
@@ -241,7 +234,7 @@ function CarsTable() {
                     sx={{
                       color: isSearchFocused ? "primary.main" : "inherit",
                     }}
-                    onClick={handleSearch}
+                  //onClick={handleSearch}
                   >
                     <FontAwesomeIcon icon={faSearch} />
                   </IconButton>
@@ -323,7 +316,7 @@ function CarsTable() {
             <TableBody>
               {searchRows.map((row) => (
                 <TableRow
-                  key={row.Id}
+                  key={row.id}
                   sx={{
                     "&:last-child td": { border: 0 },
                     cursor: "pointer",

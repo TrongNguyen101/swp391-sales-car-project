@@ -9,6 +9,21 @@ export const adminGetAllDepositTransactions = async () => {
   }
 };
 
+export const userGetAllTransactions = async () => {
+  try {
+    const token = localStorage.getItem("Bearer");
+    const response = await request.get("/api/AdminTransactions/getAllTransactions",{
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    return error.response;
+  }
+};
+
+
 export const getAllAccessoryTransactions = async () => {
   try {
     const response = await request.get("/api/AdminTransactions/getAllAccessoryTransactions");
@@ -17,3 +32,22 @@ export const getAllAccessoryTransactions = async () => {
     return error.response;
   }
 };
+
+export const getInvoiceItemList = async (invoiceId) => {
+  try {
+    const response = await request.get(`/api/AdminTransactions/getInvoiceItemByInvoiceId/${invoiceId}`);
+    return response.data;
+  } catch (error) {
+    return error.response;
+  }
+};
+
+export const getInvoiceById = async (invoiceId) => {
+  try {
+    const response = await request.get(`/api/AdminTransactions/getTransactionById/${invoiceId}`);
+    return response.data;
+  } catch (error) {
+    return error.response;
+  }
+};
+

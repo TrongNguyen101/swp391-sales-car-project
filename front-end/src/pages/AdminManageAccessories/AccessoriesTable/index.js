@@ -44,9 +44,6 @@ function AccessoriesTable() {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [rowToDelete, setRowToDelete] = useState(null);
 
-
-
-  const [searchValue, setSearchValue] = useState("");
   const [searchRows, setSearchRows] = useState([]);
 
   // Fetch data from server
@@ -114,22 +111,16 @@ function AccessoriesTable() {
   };
 
   const handleSearchChange = (event) => {
-    setSearchValue(event.target.value);
-  };
-  const handleSearch = () => {
-    if (searchValue.trim()) {
-      const filteredAccessory = rows.filter((car) =>
-        car.name.toLowerCase().includes(searchValue.toLowerCase())
+    const value = event.target.value;
+    // Perform filtering immediately as the user types
+    if (value.trim()) {
+      const filteredAccessory = rows.filter(
+        (accessory) =>
+          accessory.name?.toString().toLowerCase().includes(value.toLowerCase())
       );
       setSearchRows(filteredAccessory);
     } else {
-      setSearchRows(rows); // Nếu input trống, hiển thị tất cả xe
-    }
-  };
-
-  const handleKeyPress = (event) => {
-    if (event.key === "Enter") {
-      handleSearch();
+      setSearchRows(rows); // If input is empty, show all rows
     }
   };
 
@@ -172,11 +163,9 @@ function AccessoriesTable() {
             label="Search accessory name"
             variant="outlined"
             sx={{ width: 300 }}
-            value={searchValue}
             onFocus={() => setIsSearchFocused(true)}
             onBlur={() => setIsSearchFocused(false)}
             onChange={handleSearchChange}
-            onKeyPress={handleKeyPress}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
@@ -185,7 +174,6 @@ function AccessoriesTable() {
                     sx={{
                       color: isSearchFocused ? "primary.main" : "inherit",
                     }}
-                    onClick={handleSearch}
                   >
                     <FontAwesomeIcon icon={faSearch} />
                   </IconButton>

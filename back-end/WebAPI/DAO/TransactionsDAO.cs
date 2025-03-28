@@ -26,6 +26,13 @@ namespace WebAPI.DAO
             return instance;
         }
 
+        public async Task<Invoice> GetInvoiceById(string invoiceId)
+        {
+            using (var context = new VinfastContext())
+            {
+                return await context.Invoices.FirstOrDefaultAsync(i => i.Id == invoiceId);
+            }
+        }
 
         public async Task<bool> CreateInvoiceAsync(Invoice invoice, List<InvoiceItem> invoiceItems)
         {
@@ -78,6 +85,28 @@ namespace WebAPI.DAO
                 return await context.Invoices
                                     .Where(i => i.TypeOfProduct != "accessory")
                                     .ToListAsync();
+            }
+        }
+
+        public async Task<List<Invoice>> GetAllTransactions(string customerId)
+        {
+            try
+            {
+                using (var context = new VinfastContext())
+                {
+                    if (customerId != null)
+                    {
+                        return await context.Invoices
+                                            .Where(i => i.UserId.ToString() == customerId)
+                                            .ToListAsync();
+                    }
+                    return await context.Invoices.ToListAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error get all transactions: {ex}");
+                return null;
             }
         }
 

@@ -131,6 +131,11 @@ namespace WebAPI.Controllers
                 {
                     cartItemExist.Quantity += 1;
 
+                    if (cartItemExist.Quantity > accessoryAdded.Quantity)
+                    {
+                        return BadRequest(ResponseHelper.Response(400, accessoryAdded.Name + " is not enough", false, null));
+                    }
+
                     if (await CartDAO.GetInstance().UpdateCartItem(cartItemExist))
                     {
                         return Ok(ResponseHelper.Response(200, "Updated cart successfully", true, null));
@@ -286,11 +291,7 @@ namespace WebAPI.Controllers
                         return BadRequest(ResponseHelper.Response(400, "Accessory is out of stock", false, null));
                     }
 
-                    // check quantity of accessory
-                    if (accessoryAdded.Quantity <= cartItemDTO.Quantity)
-                    {
-                        return BadRequest(ResponseHelper.Response(400, cartItemDTO.ProductName + " is not enough", false, null));
-                    }
+
                     #endregion
 
                     #region Update accessory in cart
@@ -301,6 +302,12 @@ namespace WebAPI.Controllers
                     if (cartItemExist != null)
                     {
                         cartItemExist.Quantity = cartItemDTO.Quantity;
+
+                        // check quantity of accessory
+                        if (accessoryAdded.Quantity < cartItemExist.Quantity)
+                        {
+                            return BadRequest(ResponseHelper.Response(400, cartItemDTO.ProductName + " is not enough", false, null));
+                        }
 
                         if (!await CartDAO.GetInstance().UpdateCartItem(cartItemExist))
                         {
@@ -321,17 +328,6 @@ namespace WebAPI.Controllers
                 Console.WriteLine("Update item quantity failed: " + ex);
                 return BadRequest(ResponseHelper.Response(500, "Internal server error. Please contact support.", false, null));
             }
-        }
-
-        /// <summary>
-        /// Checkout
-        /// </summary>
-        /// <returns>Return status code</returns>
-        [HttpPost]
-        [Route("checkout")]
-        public IActionResult Checkout()
-        {
-            return Ok();
         }
     }
 }

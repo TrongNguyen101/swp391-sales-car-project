@@ -340,6 +340,24 @@ namespace WebAPI.Utils.AutoMapper
             return invoices.Select(invoice => ToInvoiceDTO(invoice)).ToList();
         }
 
+        public static InvoiceItemDTO ToInvoiceItemDTO(InvoiceItem invoiceItem)
+        {
+            return new InvoiceItemDTO
+            {
+                Id = invoiceItem.Id,
+                InvoiceId = invoiceItem.InvoiceId,
+                ProductName = invoiceItem.ProductName,
+                Quantity = invoiceItem.Quantity,
+                UnitPrice = FormatPrice(invoiceItem.UnitPrice),
+                subTotal = FormatPrice(invoiceItem.Quantity * invoiceItem.UnitPrice)
+            };
+        }
+
+        public static List<InvoiceItemDTO> ToInvoiceItemDTOList(List<InvoiceItem> invoiceItems)
+        {
+            return invoiceItems.Select(invoiceItem => ToInvoiceItemDTO(invoiceItem)).ToList();
+        }
+
         public static ImportExportHistoryDTO ToImportExportHistoryDTO(ImportExportHistory importExportHistory)
         {
             return new ImportExportHistoryDTO

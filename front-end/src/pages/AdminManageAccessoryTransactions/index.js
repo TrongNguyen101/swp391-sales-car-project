@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import classNames from "classnames/bind";
 import {
   Box,
-  Button,
   IconButton,
   InputAdornment,
   Paper,
@@ -20,13 +19,16 @@ import styles from "./AdminManageAccessoryTransactions.module.scss";
 import * as invoiceService from "../../services/InvoiceServices";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from "react-router-dom";
 
 const cx = classNames.bind(styles);
 
 const AdminManageAccessoryTransactionsPage = () => {
+  const navigate = useNavigate();
   const [allRows, setAllRows] = useState([]);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [searchRows, setSearchRows] = useState([]);
+  
 
   // Fetch data from server
   const fetchData = async () => {
@@ -37,6 +39,7 @@ const AdminManageAccessoryTransactionsPage = () => {
       } else {
         setAllRows(response.data);
         setSearchRows(response.data);
+        console.log("Fetched data:", response.data);
       }
     } catch (error) {
       console.error("Failed to fetch invoice:", error);
@@ -61,6 +64,11 @@ const AdminManageAccessoryTransactionsPage = () => {
     } else {
       setSearchRows(allRows); // If input is empty, show all rows
     }
+  };
+
+  const handleGoToDetailPage = (row) => {
+    console.log("Row clicked:", row);
+    navigate(`/dashboard/accessory-transactions-detail/${row.id}`);
   };
 
   return (
@@ -207,6 +215,7 @@ const AdminManageAccessoryTransactionsPage = () => {
                     cursor: "pointer",
                     "&:hover": { backgroundColor: "#f5f5f5" },
                   }}
+                  onClick={() => handleGoToDetailPage(row)}
                 >
                   <TableCell
                     align="left"
