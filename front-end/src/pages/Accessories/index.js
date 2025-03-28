@@ -49,7 +49,6 @@ function AccessoriesPage() {
   const navigate = useNavigate();
   const [accessories, setAccessories] = useState([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState(1); // Add state for selected category ID
-  const [searchValue, setSearchValue] = useState("");
   const [searchRows, setSearchRows] = useState([]);
 
   const handleClickCard = (accessoryId) => () => {
@@ -96,24 +95,17 @@ function AccessoriesPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCategoryId]);
 
-  const handleSearch = () => {
-    if (searchValue.trim()) {
-      const filteredAccessory = accessories.filter((accessory) =>
-        accessory.name.toLowerCase().includes(searchValue.toLowerCase())
+  const handleSearchChange = (event) => {
+    const value = event.target.value;
+    // Perform filtering immediately as the user types
+    if (value.trim()) {
+      const filteredAccessory = accessories.filter(
+        (accessory) =>
+          accessory.name?.toString().toLowerCase().includes(value.toLowerCase())
       );
       setSearchRows(filteredAccessory);
     } else {
-      setSearchRows(accessories); // Nếu input trống, hiển thị tất cả xe
-    }
-  };
-
-  const handleSearchChange = (event) => {
-    setSearchValue(event.target.value);
-  };
-
-  const handleKeyPress = (event) => {
-    if (event.key === 'Enter') {
-      handleSearch();
+      setSearchRows(accessories); // If input is empty, show all rows
     }
   };
 
@@ -154,11 +146,9 @@ function AccessoriesPage() {
                   type="text"
                   placeholder="Search name of accessory..."
                   className={cx("search")}
-                  value={searchValue}
                   onChange={handleSearchChange}
-                  onKeyPress={handleKeyPress}
                 />
-                <Button onClick={handleSearch}><FontAwesomeIcon icon={faMagnifyingGlass} /></Button>
+                <Button><FontAwesomeIcon icon={faMagnifyingGlass} /></Button>
               </div>
               <Button
                 variant="outlined"
