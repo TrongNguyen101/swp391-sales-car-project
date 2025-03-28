@@ -422,10 +422,6 @@ namespace WebAPI.Controllers
                 car.Seats = adminCarDTO.Seat;
                 car.Quantity = adminCarDTO.Quantity;
 
-                car.Image = adminCarDTO.Image;
-                car.SpecImage = adminCarDTO.SpecImage;
-                car.ImageBanner = adminCarDTO.BannerImage;
-
                 car.PriceBatteryOwn = adminCarDTO.PriceBatteryOwn;
                 car.PriceBatteryRental = adminCarDTO.PriceBatteryRental;
                 car.PriceDeposite = adminCarDTO.PriceDeposite;
