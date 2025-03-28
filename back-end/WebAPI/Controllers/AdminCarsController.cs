@@ -174,8 +174,7 @@ namespace WebAPI.Controllers
                     });
                 }
 
-                adminCar.IsDeleted = true;
-                Console.WriteLine(adminCar);
+                adminCar.IsShowed = false;
                 if (await CarsDAO.GetInstance().DeleteCarById(adminCar))
 
                 {
