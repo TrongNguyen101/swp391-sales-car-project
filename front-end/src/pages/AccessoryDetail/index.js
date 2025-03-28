@@ -78,7 +78,7 @@ function AccessoryDetailPage() {
       return;
     }
     try {
-      const data = await cartService.postAddProductToCart(
+      const response = await cartService.postAddProductToCart(
         token,
         accessory.id,
         accessory.name,
@@ -86,8 +86,11 @@ function AccessoryDetailPage() {
         accessory.image,
         userId
       );
-      if (data.statusCode === 200) {
+      if (response.statusCode === 200) {
         setMessage("Added to cart successfully!");
+        setOpenDialog(true);
+      } else {
+        setMessage(response.message);
         setOpenDialog(true);
       }
     } catch (error) {
@@ -180,6 +183,11 @@ function AccessoryDetailPage() {
                 <Typography className={cx("information__price")}>
                   {formatPrice(accessory.price)} VND
                 </Typography>
+                <div className={cx("information__description")}>
+                  <Typography className={cx("information__description-title")}>
+                    Quantity: {accessory.quantity}
+                  </Typography>
+                </div>
                 <div className={cx("information__description")}>
                   <Typography className={cx("information__description-title")}>
                     Description

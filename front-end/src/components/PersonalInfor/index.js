@@ -74,10 +74,10 @@ const PersonalInfo = () => {
 
       if (response.status === 200) {
         setUserData({ ...response.data.data, id: userId }); // Ensure userId is set in userData
-        setEditData(response.data.data); // Đồng bộ dữ liệu chỉnh sửa với dữ liệu gốc
+        setEditData(response.data.data); // 
       }
     } catch (error) {
-      console.error("Lỗi khi lấy thông tin người dùng:", error);
+      console.error("Error", error);
     }
   };
 
@@ -92,7 +92,7 @@ const PersonalInfo = () => {
 
   const handleClose = () => {
     setOpen(false);
-    setEditData(userData); // Reset về dữ liệu gốc khi đóng dialog
+    setEditData(userData);
     setError({});
   };
 
@@ -103,17 +103,21 @@ const PersonalInfo = () => {
 
   const validate = () => {
     let tempError = {};
-    if (editData.userName.length > 20) tempError.userName = "Tên phải dưới 20 ký tự.";
-    if (!/\S+@\S+\.\S+/.test(editData.email)) tempError.email = "Email không hợp lệ.";
-    if (!/^\d+$/.test(editData.phone)) tempError.phone = "Số điện thoại chỉ chứa số.";
+    if (editData.userName.length > 25) tempError.userName = "Name must be less than 25 characters.";
+    if (editData.userName.length === 0) tempError.userName = "Name must not be empty.";
+    if (!/\S+@\S+\.\S+/.test(editData.email)) tempError.email = "Email is not valid.";
+    if (editData.email.length === 0) tempError.email = "Email must not be empty.";
+    if (!/^\d+$/.test(editData.phone)) tempError.phone = "Phone must be a number.";
+    if (editData.phone.length < 10 || editData.phone.length > 11) tempError.phone = "Phone must be 10 or 11 digits.";
     setError(tempError);
     return Object.keys(tempError).length === 0;
   };
 
+
   const handleSave = async (e) => {
     e.preventDefault();
     if (validate()) {
-      if (window.confirm("Bạn có chắc chắn muốn lưu thay đổi?")) {
+      if (window.confirm("Do you want to save the changes?")) {
         try {
           const token = localStorage.getItem('Bearer');
           if (!token) {
@@ -136,13 +140,13 @@ const PersonalInfo = () => {
           if (response.status === 200) {
             setUserData(editData); // Cập nhật lại dữ liệu gốc
             setOpen(false);
-            alert("Cập nhật thành công!");
+            alert("Update successfully!");
           } else {
-            alert(response.data.message || "Cập nhật thất bại!");
+            alert(response.data.message || "Can not update the data!");
           }
         } catch (error) {
-          console.error('Lỗi khi cập nhật dữ liệu:', error);
-          alert('Can not update the data!.');
+          console.error('Error', error);
+          alert('Can not update the data!');
         }
       }
     }
@@ -396,10 +400,10 @@ const PersonalInfo = () => {
               helperText={error.phone}
             />
             <DialogActions>
-              <Button onClick={handleClose} color="primary">
+              <Button onClick={handleClose} color="error" variant="outlined">
                 Cancel
               </Button>
-              <Button type="submit" color="primary">
+              <Button type="submit" color="primary" variant='contained'>
                 OK
               </Button>
             </DialogActions>

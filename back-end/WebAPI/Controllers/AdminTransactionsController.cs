@@ -58,6 +58,56 @@ namespace WebAPI.Controllers
             }
         }
 
+
+        [HttpGet("getAllTransactions")]
+        public async Task<ActionResult> GetAllTransactions()
+        {
+            try
+            {
+                #region Authentication, Authorization
+                // Check authentication and authorization of user based on the specified HTTP context and role that need to check for this function
+                // If the user is not authenticated or authorized, return error message
+                // If the user is authenticated and authorized, return claims of user
+                // admin role id = 1
+                // customer role id = 2
+                var (isSuccess, errorMessage, claims) = JwtTokenHelper.AuthenticateAndAuthorize(HttpContext, 2);
+                if (!isSuccess)
+                {
+                    return Unauthorized(ResponseHelper.ResponseError(401, errorMessage, false, null));
+                }
+                #endregion
+                claims.TryGetValue("sub", out var userId);
+                var invoices = await TransactionsDAO.GetInstance().GetAllTransactions(userId.ToString());
+                if (!invoices.Any())
+                {
+                    return NotFound(new DataResponse
+                    {
+                        StatusCode = 404,
+                        Message = "No deposit transactions found",
+                        Success = false
+                    });
+                }
+                var invoiceDTOs = AutoMapper.ToInvoiceDTOList(invoices);
+
+                return Ok(new DataResponse
+                {
+                    StatusCode = 200,
+                    Message = "Successfully retrieved all deposit transactions.",
+                    Success = true,
+                    Data = invoiceDTOs
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new DataResponse
+                {
+                    StatusCode = 400,
+                    Message = ex.Message,
+                    Success = false
+                });
+            }
+        }
+
         [HttpGet("getAllAccessoryTransactions")]
         public async Task<ActionResult> GetAllDepositAccessoryTransactions()
         {

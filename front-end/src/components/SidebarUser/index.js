@@ -61,50 +61,6 @@ const Sidebar = () => {
           <Typography>Hello</Typography>
         </div>
       </div>
-      <div className={cx('category')}><Typography>VEHICLE INFORMATION</Typography></div>
-      <ListItem
-        button="true"
-        //onClick={handleNavigation("/dashboard/account")}
-        sx={{
-          cursor: "pointer",
-          padding: "8px 15px",
-          "&:hover": {
-            "& .MuiListItemIcon-root, & .MuiTypography-root": {
-              color: "primary.main",
-            },
-          },
-        }}
-      ><Typography>My Car</Typography></ListItem>
-      <div className={cx('category')}><Typography>ORDERS & SERVICES</Typography></div>
-      <ListItem
-        button="true"
-        onClick={handleNavigation("/deposit-transaction-history")}
-        sx={{
-          cursor: "pointer",
-          padding: "8px 15px",
-          "&:hover": {
-            "& .MuiListItemIcon-root, & .MuiTypography-root": {
-              color: "primary.main",
-            },
-          },
-        }}
-      >
-        <Typography>Deposit Transaction History</Typography>
-      </ListItem>
-
-      <ListItem
-        button="true"
-        //onClick={handleNavigation("")}
-        sx={{
-          cursor: "pointer",
-          padding: "8px 15px",
-          "&:hover": {
-            "& .MuiListItemIcon-root, & .MuiTypography-root": {
-              color: "primary.main",
-            },
-          },
-        }}
-      ><Typography>Orders History</Typography></ListItem>
 
       <div className={cx('category')}><Typography>ACCOUNT</Typography></div>
       <ListItem
@@ -120,7 +76,26 @@ const Sidebar = () => {
           },
         }}
       ><Typography>Personal Information</Typography></ListItem>
-      <Box sx={{ padding: "10px" }}>
+
+      <div className={cx('category')}><Typography>ORDERS & SERVICES</Typography></div>
+      <ListItem
+        button="true"
+        onClick={handleNavigation("/deposit-transaction-history")}
+        sx={{
+          cursor: "pointer",
+          padding: "8px 15px",
+          "&:hover": {
+            "& .MuiListItemIcon-root, & .MuiTypography-root": {
+              color: "primary.main",
+            },
+          },
+        }}
+      >
+        <Typography>Transaction History</Typography>
+      </ListItem>
+
+
+      <Box sx={{ padding: "40px 0" }}>
         <Button variant="outlined" color="error" fullWidth>
           <Typography>Log Out</Typography>
         </Button>

@@ -81,6 +81,28 @@ namespace WebAPI.DAO
             }
         }
 
+        public async Task<List<Invoice>> GetAllTransactions(string customerId)
+        {
+            try
+            {
+                using (var context = new VinfastContext())
+                {
+                    if (customerId != null)
+                    {
+                        return await context.Invoices
+                                            .Where(i => i.UserId.ToString() == customerId)
+                                            .ToListAsync();
+                    }
+                    return await context.Invoices.ToListAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error get all transactions: {ex}");
+                return null;
+            }
+        }
+
         public async Task<List<Invoice>> GetAllAccessoryTransactions()
         {
             using (var context = new VinfastContext())

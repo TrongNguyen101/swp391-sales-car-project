@@ -1,5 +1,6 @@
 .wrapper {
   width: 100%;
+  border-top: solid 1px #e0e0e0;
 }
 
 .conatiner {
@@ -7,6 +8,7 @@
   width: var(--default-width);
   margin: 0 auto;
   justify-content: space-between;
+  padding-top: 20px;
 }
 
 .conatiner_table {
