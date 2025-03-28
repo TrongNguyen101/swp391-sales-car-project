@@ -25,6 +25,7 @@ const ViewHistoryPaymentPage = () => {
             } else {
                 setAllRows(response.data);
                 setSearchRows(response.data);
+                console.log(response.data);
             }
         } catch (error) {
             console.error("Failed to fetch invoice:", error);

@@ -144,6 +144,80 @@ namespace WebAPI.Controllers
             }
         }
 
+        [HttpGet("getTransactionById/{id}")]
+        public async Task<ActionResult> GetTransactionById(string id)
+        {
+            try
+            {
+                var invoice = await TransactionsDAO.GetInstance().GetInvoiceById(id);
+                if (invoice == null)
+                {
+                    return NotFound(new DataResponse
+                    {
+                        StatusCode = 404,
+                        Message = "Transaction not found",
+                        Success = false
+                    });
+                }
+                var invoiceDTO = AutoMapper.ToInvoiceDTO(invoice);
+
+                return Ok(new DataResponse
+                {
+                    StatusCode = 200,
+                    Message = "Successfully retrieved transaction.",
+                    Success = true,
+                    Data = invoiceDTO
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new DataResponse
+                {
+                    StatusCode = 400,
+                    Message = ex.Message,
+                    Success = false
+                });
+            }
+        }
+
+        [HttpGet("getInvoiceItemById/{id}")]
+        public async Task<ActionResult> GetInvoiceItemById(string id)
+        {
+            try
+            {
+                var invoiceItems = await TransactionsDAO.GetInstance().GetAllInvoiceItemById(id);
+                if (invoiceItems == null || !invoiceItems.Any())
+                {
+                    return NotFound(new DataResponse
+                    {
+                        StatusCode = 404,
+                        Message = "Transaction not found",
+                        Success = false
+                    });
+                }
+                var invoiceItemDTOs = AutoMapper.ToInvoiceItemDTOList(invoiceItems);
+
+                return Ok(new DataResponse
+                {
+                    StatusCode = 200,
+                    Message = "Successfully retrieved transaction.",
+                    Success = true,
+                    Data = invoiceItemDTOs
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new DataResponse
+                {
+                    StatusCode = 400,
+                    Message = ex.Message,
+                    Success = false
+                });
+            }
+        }
+
+
+
 
         [HttpPost("createInvoice")]
         public async Task<IActionResult> CreateInvoice([FromBody] InvoiceDTO invoiceDTO)

@@ -120,15 +120,11 @@ namespace WebAPI.Controllers
                     return BadRequest(ResponseHelper.Response(400, "Accessory is out of stock", false, null));
 
                 }
-
                 #endregion
 
                 #region Add accessory to cart
                 // Check cart item exist
                 var cartItemExist = await CartDAO.GetInstance().GetCartItemByProductIdAndUserId(cartItemDTO.ProductId, cartItemDTO.UserId);
-
-
-
 
                 // If cart item exist, update quantity
                 if (cartItemExist != null)
@@ -332,17 +328,6 @@ namespace WebAPI.Controllers
                 Console.WriteLine("Update item quantity failed: " + ex);
                 return BadRequest(ResponseHelper.Response(500, "Internal server error. Please contact support.", false, null));
             }
-        }
-
-        /// <summary>
-        /// Checkout
-        /// </summary>
-        /// <returns>Return status code</returns>
-        [HttpPost]
-        [Route("checkout")]
-        public IActionResult Checkout()
-        {
-            return Ok();
         }
     }
 }

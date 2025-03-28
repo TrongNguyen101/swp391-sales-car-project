@@ -26,6 +26,22 @@ namespace WebAPI.DAO
             return instance;
         }
 
+        public async Task<Invoice> GetInvoiceById(string invoiceId)
+        {
+            using (var context = new VinfastContext())
+            {
+                return await context.Invoices.FirstOrDefaultAsync(i => i.Id == invoiceId);
+            }
+        }
+
+        public async Task<List<InvoiceItem>> GetAllInvoiceItemById(string invoiceItemId)
+        {
+            using (var context = new VinfastContext())
+            {
+                return await context.InvoiceItems.Where(ii => ii.InvoiceId == invoiceItemId).ToListAsync();
+            }
+        }
+
 
         public async Task<bool> CreateInvoiceAsync(Invoice invoice, List<InvoiceItem> invoiceItems)
         {
