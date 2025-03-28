@@ -41,8 +41,9 @@ function UpdateCarPage() {
       if (response.statusCode !== 200) {
         alert("Failed to fetch car details: " + response.message);
       } else {
+        console.log(response.data);
         setModel(response.data.model || "");
-        setSeats(response.data.seats || 0);
+        setSeats(response.data.seat || 0);
         setPriceBatteryRental(response.data.priceBatteryRental || 0);
         setPriceBatteryOwn(response.data.priceBatteryOwn || 0);
         setPriceDeposite(response.data.priceDeposite || 0);
@@ -153,13 +154,11 @@ function UpdateCarPage() {
                 <MenuItem value={true}>
                   <Box sx={{ display: "flex", alignItems: "center" }}>
                     <Typography sx={{ width: "20%" }}>Published </Typography>
-                    <FontAwesomeIcon color="green" icon={faEye} />
                   </Box>
                 </MenuItem>
                 <MenuItem value={false}>
                   <Box sx={{ display: "flex", alignItems: "center" }}>
                     <Typography sx={{ width: "20%" }}>Hide </Typography>
-                    <FontAwesomeIcon color="red" icon={faEyeSlash} />
                   </Box>
                 </MenuItem>
               </Select>

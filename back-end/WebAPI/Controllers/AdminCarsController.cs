@@ -174,8 +174,7 @@ namespace WebAPI.Controllers
                     });
                 }
 
-                adminCar.IsDeleted = true;
-                Console.WriteLine(adminCar);
+                adminCar.IsShowed = false;
                 if (await CarsDAO.GetInstance().DeleteCarById(adminCar))
 
                 {
@@ -422,10 +421,6 @@ namespace WebAPI.Controllers
                 car.Name = adminCarDTO.Model;
                 car.Seats = adminCarDTO.Seat;
                 car.Quantity = adminCarDTO.Quantity;
-
-                car.Image = adminCarDTO.Image;
-                car.SpecImage = adminCarDTO.SpecImage;
-                car.ImageBanner = adminCarDTO.BannerImage;
 
                 car.PriceBatteryOwn = adminCarDTO.PriceBatteryOwn;
                 car.PriceBatteryRental = adminCarDTO.PriceBatteryRental;

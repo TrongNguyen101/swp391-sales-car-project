@@ -35,7 +35,7 @@ function UpdateSpecificationImageCarComponent({
 
   // handle the save of the image
   const handleSaveSpeImage = async () => {
-    if (car.image) {
+    if (car.specImage) {
       setMessage(
         "The specification image already exists. Please delete it first."
       );

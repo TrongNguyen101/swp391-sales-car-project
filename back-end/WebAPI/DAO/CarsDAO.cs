@@ -70,8 +70,7 @@ namespace WebAPI.DAO
             {
                 using (var context = new VinfastContext())
                 {
-                    context.Attach(car);
-                    context.Entry(car).Property(c => c.IsDeleted).IsModified = true;
+                    context.Cars.Update(car);
                     await context.SaveChangesAsync();
                     return true;
                 }
