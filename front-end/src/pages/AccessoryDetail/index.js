@@ -171,7 +171,6 @@ function AccessoryDetailPage() {
               <div className={cx("container__accessory-image")}>
                 <AccessoryGalleryComponent
                   accessoryId={accessoryId}
-                  accessoryImage={accessory.image}
                 />
               </div>
               <div className={cx("container__accessory-info")}>

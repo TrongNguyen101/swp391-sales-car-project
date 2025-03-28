@@ -480,14 +480,14 @@ namespace WebAPI.DataContext
                     new Category
                     {
                         Id = 1,
-                        Name = "New product",
+                        Name = "All accessories",
                         ParentsId = 0,
                         IsDeleted = false
                     },
                     new Category
                     {
                         Id = 2,
-                        Name = "LifeStyle",
+                        Name = "Common car accessories",
                         ParentsId = 0,
                         IsDeleted = false
                     },
@@ -561,7 +561,7 @@ namespace WebAPI.DataContext
                         Price = 6000000,
                         Quantity = 10,
                         Image = "Sac_tai_nha.png",
-                        CategoryId = 5,
+                        CategoryId = 2,
                         IsDeleted = false,
                         IsShowed = true,
                         Origin = "Vietnam",

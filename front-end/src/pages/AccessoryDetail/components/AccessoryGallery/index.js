@@ -9,7 +9,7 @@ import * as accessoryService from "../../../../services/AccessoryService";
 
 const cx = classNames.bind(styles);
 
-const AccessoryGallery = ({ accessoryId, accessoryImage }) => {
+const AccessoryGallery = ({ accessoryId }) => {
   const [images, setImages] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
 
@@ -25,7 +25,6 @@ const AccessoryGallery = ({ accessoryId, accessoryImage }) => {
         setSelectedImage(response.data[0].colorImage);
         setImages((prevImages) => [
           ...response.data,
-          { colorImage: accessoryImage },
         ]);
       }
     } catch (error) {
@@ -36,7 +35,7 @@ const AccessoryGallery = ({ accessoryId, accessoryImage }) => {
   useEffect(() => {
     fetchAccessoryImages();
     // eslint-disable-next-line
-  }, [accessoryImage, accessoryId]);
+  }, [accessoryId]);
 
   return (
     <div className={cx("gallery")}>

@@ -112,8 +112,7 @@ namespace WebAPI.Controllers
                         Success = false
                     });
                 }
-
-                adminAccessory.IsDeleted = true;
+                adminAccessory.IsShowed = false;
                 Console.WriteLine(adminAccessory);
                 if (await AccessoriesDAO.GetInstance().UpdateAccessory(adminAccessory))
 
@@ -191,7 +190,6 @@ namespace WebAPI.Controllers
                     Price = accessoryData.Price,
                     Quantity = accessoryData.Quantity,
                     Description = accessoryData.Description,
-                    IsDeleted = accessoryData.IsDeleted,
                     IsShowed = accessoryData.IsShowed,
                     CategoryId = accessoryData.CategoryId,
                     Origin = accessoryData.Origin,
@@ -289,7 +287,6 @@ namespace WebAPI.Controllers
                 }
 
                 accessory.Name = adminAccessoryDTO.Name;
-                accessory.Image = accessory.Image;
                 accessory.Price = adminAccessoryDTO.Price;
                 accessory.Quantity += adminAccessoryDTO.Quantity;
                 accessory.Description = adminAccessoryDTO.Description;
@@ -300,9 +297,7 @@ namespace WebAPI.Controllers
                 accessory.Material = adminAccessoryDTO.Material;
                 accessory.Color = adminAccessoryDTO.Color;
                 accessory.Warranty = adminAccessoryDTO.Warranty;
-
-                accessory.IsDeleted = accessory.IsDeleted;
-                accessory.IsShowed = accessory.IsShowed;
+                accessory.IsShowed = adminAccessoryDTO.IsShowed;
 
                 if (await AccessoriesDAO.GetInstance().UpdateAccessory(accessory))
                 {

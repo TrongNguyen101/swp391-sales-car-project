@@ -51,6 +51,7 @@ function CreateAccessoryPage() {
 
   //state of the message of the dialog
   const [message, setMessage] = useState("");
+  const [statusResponse, setStatusResponse] = useState(false);
 
   //state of the successful dialog
   const [openDialog, setOpenDialog] = useState(false);
@@ -152,9 +153,11 @@ function CreateAccessoryPage() {
       if (response.statusCode === 200) {
         setMessage(response.message);
         setOpenDialog(true);
+        setStatusResponse(true);
       } else {
         setMessage(response.data.value.message);
         setOpenErrorDialog(true);
+        setStatusResponse(false);
       }
     } catch (error) {
       setMessage("Error creating accessory");
@@ -165,7 +168,9 @@ function CreateAccessoryPage() {
 
   const handleCloseDialog = () => {
     setOpenDialog(false);
-    navigate("/dashboard/accessories");
+    if (statusResponse) {
+      navigate("/dashboard/accessories");
+    }
   };
   const handleCloseErrorDialog = () => {
     setOpenErrorDialog(false);
@@ -173,7 +178,7 @@ function CreateAccessoryPage() {
 
   return (
     <Box>
-      <Box>
+      <Box sx={{ padding: "20px" }}>
         <Typography variant="h4" gutterBottom>
           Create Accessory
         </Typography>
@@ -228,7 +233,9 @@ function CreateAccessoryPage() {
                       }}
                       label="Select Category"
                     >
-                      {categories.map((cate) => (
+                      {categories
+                      .filter((cate) => cate.id !== 3 && cate.id !== 4 && cate.id !== 1)
+                      .map((cate) => (
                         <MenuItem key={cate.id} value={cate.id}>
                           {cate.name}
                         </MenuItem>
