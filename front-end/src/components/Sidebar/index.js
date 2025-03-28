@@ -32,8 +32,13 @@ const Sidebar = ({ onSelectCategory }) => {
   }, []);
 
   const handleCategoryClick = (id) => {
+    if (id === 0) {
+      onSelectCategory(id);
+    }
     onSelectCategory(id); // Call the callback function with the selected category ID
   };
+
+
 
   const renderCategories = (parentsId = 0) => {
     return categories
@@ -86,7 +91,9 @@ const Sidebar = ({ onSelectCategory }) => {
       <Typography className={cx("sidebar__title")}>
         Categories
       </Typography>
-      <div className={cx("sidebar__content")}>{renderCategories()}</div>
+      <div className={cx("sidebar__content")}>
+        {renderCategories()}
+      </div>
     </div>
   );
 };

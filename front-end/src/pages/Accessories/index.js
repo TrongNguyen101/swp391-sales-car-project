@@ -48,7 +48,7 @@ const cx = classNames.bind(styles);
 function AccessoriesPage() {
   const navigate = useNavigate();
   const [accessories, setAccessories] = useState([]);
-  const [selectedCategoryId, setSelectedCategoryId] = useState(null); // Add state for selected category ID
+  const [selectedCategoryId, setSelectedCategoryId] = useState(1); // Add state for selected category ID
   const [searchValue, setSearchValue] = useState("");
   const [searchRows, setSearchRows] = useState([]);
 
@@ -58,7 +58,7 @@ function AccessoriesPage() {
   };
 
   const fetchAccessories = async (categoryId) => {
-    if (selectedCategoryId !== null) {
+    if (selectedCategoryId !== 1) {
       try {
         const response = await accessoryService.getAccessoriesByCategoryId(
           categoryId
@@ -178,7 +178,9 @@ function AccessoriesPage() {
               </Button>
             </div>
             <div className={cx("container__accessories--list")}>
-              {searchRows.map((accessory, index) => (
+              {searchRows
+              .filter((acc) => acc.isShowed)
+              .map((accessory, index) => (
                 // card accessory
                 <div
                   className={cx("container__accessory-card")}

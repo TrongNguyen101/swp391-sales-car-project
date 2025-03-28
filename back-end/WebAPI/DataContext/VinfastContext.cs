@@ -480,14 +480,7 @@ namespace WebAPI.DataContext
                     new Category
                     {
                         Id = 1,
-                        Name = "New product",
-                        ParentsId = 0,
-                        IsDeleted = false
-                    },
-                    new Category
-                    {
-                        Id = 2,
-                        Name = "LifeStyle",
+                        Name = "All accessories",
                         ParentsId = 0,
                         IsDeleted = false
                     },
