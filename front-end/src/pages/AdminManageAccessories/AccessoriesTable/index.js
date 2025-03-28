@@ -18,11 +18,7 @@ import {
   TextField,
   InputAdornment,
   Typography,
-  Box,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
+  Box
 } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -48,20 +44,10 @@ function AccessoriesTable() {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [rowToDelete, setRowToDelete] = useState(null);
 
-  // Add more accessory state
-  const [selectedaccessory, setSelectedaccessory] = useState("");
-  const [quantity, setQuantity] = useState(0);
-  const [openAddMoreaccessoryDialog, setOpenAddMoreaccessoryDialog] =
-    useState(false);
-  const [errorSelectedaccessoryId, setErrorSelectedaccessoryId] =
-    useState(null);
-  const [errorQuantity, setErrorQuantity] = useState(null);
+
 
   const [searchValue, setSearchValue] = useState("");
   const [searchRows, setSearchRows] = useState([]);
-
-  // State information
-  const [message, setMessage] = useState("");
 
   // Fetch data from server
   const fetchData = async () => {
@@ -96,49 +82,6 @@ function AccessoriesTable() {
     navigate("/dashboard/create-new-accessory");
   };
 
-  // Add more accessory button
-  const handleAddMoreaccessoryClickOpen = () => {
-    setOpenAddMoreaccessoryDialog(true);
-  };
-  const handleAddaccessoryDialogClose = () => {
-    setOpenAddMoreaccessoryDialog(false);
-  };
-
-  // Add more accessory function
-  const fetchAddMoreaccessory = async (accessory, quantity) => {
-    try {
-      //   const accessoryId = accessory.id;
-      //   const response = await adminAccessoryServices.adminAddMoreAccessory({
-      //     accessoryId,
-      //     quantity,
-      //   });
-      //   if (response.statusCode === 200) {
-      //     fetchData();
-      //     setOpenAddMoreaccessoryDialog(false);
-      //   } else {
-      //     console.error("Failed to add more accessory:", response.message);
-      //   }
-    } catch (error) {
-      console.error("Failed to add more accessory:", error);
-    }
-  };
-  // Add more accessory button
-  const handleAddMoreaccessory = async () => {
-    const accessory = rows.find(
-      (accessory) => accessory.model === selectedaccessory
-    );
-    if (!accessory) {
-      setErrorSelectedaccessoryId("Please select a accessory");
-    }
-    if (quantity <= 0) {
-      setErrorQuantity("Quantity must be greater than 0");
-    }
-    if (accessory && quantity > 0) {
-      fetchAddMoreaccessory(accessory, quantity);
-    }
-  };
-
-  //------------------------------------------------------------------------------------------------------------
 
   // Delete accessory
   const handleDeleteAccessory = async () => {
@@ -148,7 +91,6 @@ function AccessoriesTable() {
       );
       if (response.statusCode === 200) {
         fetchData();
-        setMessage("Delete accessory successfully");
         setDeleteDialogOpen(true);
       } else {
         console.error("Failed to delete accessory:", response.message);
@@ -392,87 +334,6 @@ function AccessoriesTable() {
         </Table>
       </TableContainer>
 
-      {/* Add more accessory dialog ----------------------------------------------------------------------------------------- */}
-      <Dialog open={openAddMoreaccessoryDialog}>
-        <DialogTitle>
-          <Typography
-            sx={{
-              fontSize: "1.8rem",
-              fontWeight: "600",
-              lineHeight: "1.5",
-              color: "primary.main",
-              textAlign: "center",
-            }}
-          >
-            Add more accessory
-          </Typography>
-        </DialogTitle>
-        {/* Form add information */}
-        <DialogContent>
-          <FormControl variant="outlined" sx={{ width: 300, marginTop: "5px" }}>
-            {/* accessory Selection */}
-            <InputLabel id="accessory-select-label">
-              Select accessory
-            </InputLabel>
-            <Select
-              labelId="accessory-select-label"
-              value={selectedaccessory}
-              onChange={(e) => {
-                setSelectedaccessory(e.target.value);
-                setErrorSelectedaccessoryId("");
-              }}
-              label="Select accessory"
-            >
-              {rows.map((accessory) => (
-                <MenuItem key={accessory.id} value={accessory.model}>
-                  {accessory.model}
-                </MenuItem>
-              ))}
-            </Select>
-            {errorSelectedaccessoryId && (
-              <Typography sx={{ color: "red" }}>
-                {errorSelectedaccessoryId}
-              </Typography>
-            )}
-            {/* Quantity Input */}
-            <TextField
-              margin="dense"
-              label="Quantity"
-              type="number"
-              fullWidth
-              value={quantity}
-              onChange={(e) => {
-                setQuantity(e.target.value);
-                setErrorQuantity("");
-              }}
-              sx={{ marginTop: "20px" }}
-            />
-            {errorQuantity && (
-              <Typography sx={{ color: "red" }}>{errorQuantity}</Typography>
-            )}
-          </FormControl>
-        </DialogContent>
-
-        {/* Button submit and cancel */}
-        <DialogActions>
-          <Box display="flex" justifyContent="center" width="100%" gap={2}>
-            <Button
-              onClick={handleAddMoreaccessory}
-              color="primary"
-              variant="contained"
-            >
-              Save
-            </Button>
-            <Button
-              onClick={handleAddaccessoryDialogClose}
-              color="error"
-              variant="contained"
-            >
-              Cancel
-            </Button>
-          </Box>
-        </DialogActions>
-      </Dialog>
 
       {/* Delete dialog ----------------------------------------------------------------------------------------- */}
       <Dialog open={deleteDialogOpen} sx={{ textAlign: "center" }}>

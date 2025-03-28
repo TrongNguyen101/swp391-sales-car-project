@@ -141,5 +141,13 @@ namespace WebAPI.DAO
                 return false;
             }
         }
+
+        public async Task<List<ImportExportHistory>> GetAllImportExportHistories()
+        {
+            using (var context = new VinfastContext())
+            {
+                return await context.ImportExportHistories.ToListAsync();
+            }
+        }
     }
 }
