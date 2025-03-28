@@ -35,6 +35,7 @@ import CreateURLPaymentOfAccessoryPage from "../pages/CreateURLPaymentOfAccessor
 // Admin Manage Test Driven
 import AdminManageTestDrivenPage from "../pages/AdminManageTestDriven";
 import UpdateAccessoryPage from "../pages/AdminManageAccessories/UpdateAccessory";
+import AdminManageImportExportPage from "../pages/AdminManageImportExport";
 const publicRoutes = [
   { path: "/", page: HomePage },
   { path: "/profile", page: ProfilePage },
@@ -104,6 +105,13 @@ const publicRoutes = [
   {
     path: "/dashboard/edit-accessory/:accessoryId",
     page: UpdateAccessoryPage,
+    layout: DashboardLayout,
+  },
+
+  // Admin Manage Import export history route
+  {
+    path: "/dashboard/import-export-history",
+    page: AdminManageImportExportPage,
     layout: DashboardLayout,
   },
 

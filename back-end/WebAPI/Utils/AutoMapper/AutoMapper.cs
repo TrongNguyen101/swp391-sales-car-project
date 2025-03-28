@@ -340,6 +340,26 @@ namespace WebAPI.Utils.AutoMapper
             return invoices.Select(invoice => ToInvoiceDTO(invoice)).ToList();
         }
 
+        public static ImportExportHistoryDTO ToImportExportHistoryDTO(ImportExportHistory importExportHistory)
+        {
+            return new ImportExportHistoryDTO
+            {
+                Id = importExportHistory.Id,
+                ProductName = importExportHistory.ProductName,
+                Type = importExportHistory.Type,
+                Quantity = importExportHistory.Quantity,
+                TransactionDate = FormatDateTime(importExportHistory.TransactionDate),
+                Note = importExportHistory.Note,
+                AccessoryId = importExportHistory.AccessoryId,
+                CarId = importExportHistory.CarId
+            };
+        }
+
+        public static List<ImportExportHistoryDTO> ToImportExportHistoryDTOList(List<ImportExportHistory> importExportHistories)
+        {
+            return importExportHistories.Select(importExportHistory => ToImportExportHistoryDTO(importExportHistory)).ToList();
+        }
+
 
         private static string FormatFullname(string fullname)
         {

@@ -5,6 +5,7 @@ import {
   faCoins,
   faShoppingCart,
   faCar,
+  faClipboard,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -233,6 +234,43 @@ function SidebarDashboard() {
             Accessory Management
           </Typography>
         </ListItem>
+
+        <ListItem
+          button="true"
+          onClick={handleNavigation(
+            "/dashboard/import-export-history"
+          )}
+          sx={{
+            cursor: "pointer",
+            padding: "8px 35px",
+            "&:hover": {
+              "& .MuiListItemIcon-root, & .MuiTypography-root": {
+                color: "primary.main",
+              },
+            },
+          }}
+        >
+          <ListItemIcon
+            sx={{
+              minWidth: "50px",
+              fontSize: "1.5rem",
+              justifyContent: "center",
+            }}
+          >
+            <FontAwesomeIcon icon={faClipboard} />
+          </ListItemIcon>
+          <Typography
+            sx={{
+              fontSize: "1rem",
+              fontWeight: "500",
+              lineHeight: "1.5rem",
+              color: "#3c3c3c",
+            }}
+          >
+            Import Export History
+          </Typography>
+        </ListItem>
+
         <ListItem
           button="true"
           onClick={handleNavigation("/dashboard/deposit-transactions-history")}
@@ -266,6 +304,7 @@ function SidebarDashboard() {
             Deposit Transactions
           </Typography>
         </ListItem>
+
         <ListItem
           button="true"
           onClick={handleNavigation(
