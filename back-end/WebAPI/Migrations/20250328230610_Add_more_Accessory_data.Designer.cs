@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebAPI.DataContext;
 
@@ -11,9 +12,11 @@ using WebAPI.DataContext;
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(VinfastContext))]
-    partial class VinfastContextModelSnapshot : ModelSnapshot
+    [Migration("20250328230610_Add_more_Accessory_data")]
+    partial class Add_more_Accessory_data
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -469,190 +472,6 @@ namespace WebAPI.Migrations
                             ColorId = 8,
                             AccessoryId = 3,
                             ColorImage = "VF3_camera_lui_1.jpg",
-                            ColorName = "White",
-                            IsDeleted = false
-                        },
-                        new
-                        {
-                            ColorId = 201,
-                            AccessoryId = 201,
-                            ColorImage = "Tham_Cop_3D_VF7.png",
-                            ColorName = "White",
-                            IsDeleted = false
-                        },
-                        new
-                        {
-                            ColorId = 202,
-                            AccessoryId = 202,
-                            ColorImage = "Goi_Dan_Film_Cach_Nhiet_VinFast_VF7.png",
-                            ColorName = "White",
-                            IsDeleted = false
-                        },
-                        new
-                        {
-                            ColorId = 203,
-                            AccessoryId = 203,
-                            ColorImage = "Tham_San_3D_VF_7.png",
-                            ColorName = "White",
-                            IsDeleted = false
-                        },
-                        new
-                        {
-                            ColorId = 204,
-                            AccessoryId = 203,
-                            ColorImage = "Tham_San_3D_VF72.png",
-                            ColorName = "White",
-                            IsDeleted = false
-                        },
-                        new
-                        {
-                            ColorId = 205,
-                            AccessoryId = 204,
-                            ColorImage = "Cop_Noc_Phi_Thuyen_Oto_VinFast_ VF8.png",
-                            ColorName = "White",
-                            IsDeleted = false
-                        },
-                        new
-                        {
-                            ColorId = 206,
-                            AccessoryId = 204,
-                            ColorImage = "Cop_Noc_Phi_Thuyen_O_To_VinFast_VF82.png",
-                            ColorName = "White",
-                            IsDeleted = false
-                        },
-                        new
-                        {
-                            ColorId = 207,
-                            AccessoryId = 205,
-                            ColorImage = "Tham_San_Nhua_2D_VF8.png",
-                            ColorName = "White",
-                            IsDeleted = false
-                        },
-                        new
-                        {
-                            ColorId = 208,
-                            AccessoryId = 205,
-                            ColorImage = "Tham_San_Nhua_2D_VF82.png",
-                            ColorName = "White",
-                            IsDeleted = false
-                        },
-                        new
-                        {
-                            ColorId = 209,
-                            AccessoryId = 205,
-                            ColorImage = "Tham_San_Nhua_2D_VF83.png",
-                            ColorName = "White",
-                            IsDeleted = false
-                        },
-                        new
-                        {
-                            ColorId = 210,
-                            AccessoryId = 205,
-                            ColorImage = "Tham_San_Nhua_2D_VF84.png",
-                            ColorName = "White",
-                            IsDeleted = false
-                        },
-                        new
-                        {
-                            ColorId = 211,
-                            AccessoryId = 206,
-                            ColorImage = "Goi_Film_Cach_Nhiet_Dan_Tran_VinFast_VF8.png",
-                            ColorName = "White",
-                            IsDeleted = false
-                        },
-                        new
-                        {
-                            ColorId = 212,
-                            AccessoryId = 4,
-                            ColorImage = "VF5_tham_nhua.png",
-                            ColorName = "White",
-                            IsDeleted = false
-                        },
-                        new
-                        {
-                            ColorId = 213,
-                            AccessoryId = 4,
-                            ColorImage = "Tham San Nhua 2D VF 52.png",
-                            ColorName = "White",
-                            IsDeleted = false
-                        },
-                        new
-                        {
-                            ColorId = 214,
-                            AccessoryId = 4,
-                            ColorImage = "Tham San Nhua 2D VF 53.png",
-                            ColorName = "White",
-                            IsDeleted = false
-                        },
-                        new
-                        {
-                            ColorId = 215,
-                            AccessoryId = 4,
-                            ColorImage = "Tham San Nhua 2D VF 54.png",
-                            ColorName = "White",
-                            IsDeleted = false
-                        },
-                        new
-                        {
-                            ColorId = 216,
-                            AccessoryId = 4,
-                            ColorImage = "Tham San Nhua 2D VF 55.png",
-                            ColorName = "White",
-                            IsDeleted = false
-                        },
-                        new
-                        {
-                            ColorId = 217,
-                            AccessoryId = 9,
-                            ColorImage = "VF6_Tham_cop.png",
-                            ColorName = "White",
-                            IsDeleted = false
-                        },
-                        new
-                        {
-                            ColorId = 218,
-                            AccessoryId = 9,
-                            ColorImage = "Tham Cop 3D VF 62.png",
-                            ColorName = "White",
-                            IsDeleted = false
-                        },
-                        new
-                        {
-                            ColorId = 219,
-                            AccessoryId = 8,
-                            ColorImage = "VF6_tham_nhua.png",
-                            ColorName = "White",
-                            IsDeleted = false
-                        },
-                        new
-                        {
-                            ColorId = 220,
-                            AccessoryId = 8,
-                            ColorImage = "Tham San Nhua 2D VF 62.png",
-                            ColorName = "White",
-                            IsDeleted = false
-                        },
-                        new
-                        {
-                            ColorId = 221,
-                            AccessoryId = 7,
-                            ColorImage = "VF6_Goi_dan_phim_cach_nhiet.png",
-                            ColorName = "White",
-                            IsDeleted = false
-                        },
-                        new
-                        {
-                            ColorId = 222,
-                            AccessoryId = 5,
-                            ColorImage = "VF5_Goi_dan_phim_cach_nhiet.png",
-                            ColorName = "White",
-                            IsDeleted = false
-                        },
-                        new
-                        {
-                            ColorId = 223,
-                            AccessoryId = 6,
-                            ColorImage = "VF5_Tham_cop.png",
                             ColorName = "White",
                             IsDeleted = false
                         });
@@ -1634,13 +1453,13 @@ namespace WebAPI.Migrations
                             Id = new Guid("5168db79-a770-472d-82ed-061cba60f1e1"),
                             Address = "456 User St",
                             CreatedAt = new DateTime(2023, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Email = "nguyentrong.se11@gmail.com",
+                            Email = "Bangle15092002@gmail.com",
                             IsDeleted = false,
                             LastChange = new DateTime(2023, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Password = "e7f5c00bfc7067a49da98fa9b1eacd8d428a4632197edaa84c9dacd40ca35050",
                             Phone = "0987654321",
                             RoleId = 2,
-                            UserName = "Nguyen Trong"
+                            UserName = "Le Khanh Bang"
                         });
                 });
 
