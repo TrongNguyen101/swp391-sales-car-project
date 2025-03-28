@@ -315,7 +315,7 @@ namespace WebAPI.Controllers
 
                 if (carJustCreate != null)
                 {
-                    return BadRequest(ResponseHelper.Response(400, "Car already exists", false, null));
+                    return BadRequest(ResponseHelper.ResponseError(400, "Car already exists", false, null));
                 }
 
                 var newCar = new Cars

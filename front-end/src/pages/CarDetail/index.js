@@ -69,6 +69,15 @@ function CarDetailPage() {
     initialSlide: selectedColor,
   };
 
+  const settings1Image = {
+    dots: false,
+    infinite: false,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    initialSlide: selectedColor,
+  };
+
   const handleColorChange = (index) => {
     setSelectedColor(index);
   };
@@ -200,6 +209,7 @@ function CarDetailPage() {
         </div>
         <div className={cx("color-block")}>
           <div className={cx("car-color-block")}>
+            {colors.length !== 1 ? (
             <Slider {...settings} key={selectedColor}>
               {colors.map((color, index) => (
                 <div className={cx("car-color-item")} key={index}>
@@ -210,6 +220,16 @@ function CarDetailPage() {
                 </div>
               ))}
             </Slider>
+          ) : (
+            <Slider {...settings1Image} key={selectedColor}>
+              <div className={cx("car-color-item")} key={0}>
+                <img
+                  src={`https://localhost:7005/api/Images/ColorDetail/${colors[0].ColorImage}`}
+                  alt={colors[0].ColorName}
+                />
+              </div>
+            </Slider>
+          )}
           </div>
           <div className={cx("car-color")}>
             {colors.map((color, index) => (

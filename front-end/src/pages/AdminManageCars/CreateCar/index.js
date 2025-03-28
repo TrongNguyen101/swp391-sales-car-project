@@ -36,6 +36,7 @@ function CreateCarPage() {
 
   //state of the message of the dialog
   const [message, setMessage] = useState("");
+  const [statusResponse, setStatusResponse] = useState(false);
 
   //state of the successful dialog
   const [openDialog, setOpenDialog] = useState(false);
@@ -93,9 +94,11 @@ function CreateCarPage() {
       const response = await adminCarServices.adminCreateCar(carData);
       if (response.statusCode === 200) {
         setMessage(response.message);
+        setStatusResponse(true);
         setOpenDialog(true);
       } else {
-        setMessage(response.data.value.message);
+        setStatusResponse(response.data.success);
+        setMessage(response.data.message);
         setOpenDialog(true);
       }
     } catch (error) {
@@ -107,7 +110,9 @@ function CreateCarPage() {
 
   const handleCloseDialog = () => {
     setOpenDialog(false);
-    navigate("/dashboard/cars");
+    if (statusResponse) {
+      navigate("/dashboard/cars");
+    }
   };
 
   return (
