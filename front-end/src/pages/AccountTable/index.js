@@ -207,6 +207,7 @@ function AccountTablePage() {
           justifyContent: "center",
           maxHeight: 400,
           overflow: "auto",
+          marginTop: "20px",
         }}
       >
         <Table aria-label="simple table" stickyHeader>

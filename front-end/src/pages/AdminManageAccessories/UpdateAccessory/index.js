@@ -280,7 +280,9 @@ function UpdateAccessoryPage() {
                       }}
                       label="Select Category"
                     >
-                      {categories.map((cate) => (
+                      {categories
+                      .filter((cate) => cate.id !== 3 && cate.id !== 4 && cate.id !== 1)
+                      .map((cate) => (
                         <MenuItem key={cate.id} value={cate.id}>
                           {cate.name}
                         </MenuItem>
