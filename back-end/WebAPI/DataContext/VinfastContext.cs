@@ -461,10 +461,10 @@ namespace WebAPI.DataContext
                 new Users
                 {
                     Id = new Guid("5168db79-a770-472d-82ed-061cba60f1e1"),
-                    UserName = "Le Khanh Bang",
+                    UserName = "Nguyen Trong",
                     Address = "456 User St",
                     Phone = "0987654321",
-                    Email = "Bangle15092002@gmail.com",
+                    Email = "nguyentrong.se11@gmail.com",
                     Password = EncyptHelper.Sha256Encrypt("User@12345"), // Note: In a real application, store hashed passwords
                     CreatedAt = new DateTime(2023, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                     IsDeleted = false,
@@ -575,7 +575,7 @@ namespace WebAPI.DataContext
                     new Accessory
                     {
                         Id = 2,
-                        Name = "Thảm nhựa VF3",
+                        Name = "VF3 Plastic Carpet",
                         Price = 1668000,
                         Quantity = 10,
                         Image = "VF3_tham_nhua.png",
@@ -593,7 +593,7 @@ namespace WebAPI.DataContext
                     new Accessory
                     {
                         Id = 3,
-                        Name = "Camera Lùi VF3",
+                        Name = "VF 3 Rear Camera",
                         Price = 26720000,
                         Quantity = 10,
                         Image = "VF3_Camera_lui.png",
@@ -611,7 +611,7 @@ namespace WebAPI.DataContext
                     new Accessory
                     {
                         Id = 4,
-                        Name = "Thảm nhựa VF5",
+                        Name = "VF 5 Plastic Floor Mats",
                         Price = 1969000,
                         Quantity = 10,
                         Image = "VF5_tham_nhua.png",
@@ -629,7 +629,7 @@ namespace WebAPI.DataContext
                     new Accessory
                     {
                         Id = 5,
-                        Name = "Gói Dán Film Cách Nhiệt VinFast VF5",
+                        Name = "VF 5 Heat Insulation Film Package",
                         Price = 5500000,
                         Quantity = 10,
                         Image = "VF5_Goi_dan_phim_cach_nhiet.png",
@@ -647,7 +647,7 @@ namespace WebAPI.DataContext
                     new Accessory
                     {
                         Id = 6,
-                        Name = "Thảm cốp 3D VF5",
+                        Name = "VF 5 3D Trunk Mat",
                         Price = 990000,
                         Quantity = 10,
                         Image = "VF5_Tham_cop.png",
@@ -665,7 +665,7 @@ namespace WebAPI.DataContext
                     new Accessory
                     {
                         Id = 7,
-                        Name = "Gói dán film cách nhiệt VF6",
+                        Name = "VF 6 Heat Insulation Film Package",
                         Price = 5500000,
                         Quantity = 10,
                         Image = "VF6_Goi_dan_phim_cach_nhiet.png",
@@ -683,7 +683,7 @@ namespace WebAPI.DataContext
                     new Accessory
                     {
                         Id = 8,
-                        Name = "Thảm nhựa 3D VF6",
+                        Name = "VF 6 3D Plastic Floor Mats",
                         Price = 1990000,
                         Quantity = 10,
                         Image = "VF6_tham_nhua.png",
@@ -701,7 +701,7 @@ namespace WebAPI.DataContext
                     new Accessory
                     {
                         Id = 9,
-                        Name = "Thảm cốp 3D VF6",
+                        Name = "VF 6 3D Trunk Mat",
                         Price = 990000,
                         Quantity = 10,
                         Image = "VF6_Tham_cop.png",
@@ -715,6 +715,114 @@ namespace WebAPI.DataContext
                         Color = "Black",
                         Warranty = "6 months",
                         Description = "3D trunk mat for the VinFast VF6."
+                    },
+                    new Accessory
+                    {
+                        Id = 201,
+                        Name = "VF 7 3D Trunk Mat",
+                        Price = 990000,
+                        Quantity = 8,
+                        Image = "Tham_Cop_3D_VF7.png",
+                        CategoryId = 7,
+                        IsDeleted = false,
+                        IsShowed = true,
+                        Origin = "Vietnam",
+                        Dimensions = "100x80x5 cm",
+                        Weight = 2.0,
+                        Material = "Rubber",
+                        Color = "Black",
+                        Warranty = "6 months",
+                        Description = "3D trunk mat for the VinFast VF7."
+                    },
+                    new Accessory
+                    {
+                        Id = 202,
+                        Name = "VF 7 Heat Insulation Film Package",
+                        Price = 5500000,
+                        Quantity = 10,
+                        Image = "Goi_Dan_Film_Cach_Nhiet_VinFast_VF7.png",
+                        CategoryId = 8,
+                        IsDeleted = false,
+                        IsShowed = true,
+                        Origin = "Vietnam",
+                        Dimensions = "100x80x5 cm",
+                        Weight = 2.0,
+                        Material = "Rubber",
+                        Color = "Black",
+                        Warranty = "6 months",
+                        Description = "VF x 3M heat insulation film products help insulate, block infrared radiation, eliminate UV rays, effectively reduce glare to improve the customer experience in the car, protect customers from harmful rays as well as increase the durability of the car's interior. Warranty."
+                    },
+                    new Accessory
+                    {
+                        Id = 203,
+                        Name = "3D Floor Mat VF 7",
+                        Price = 540000,
+                        Quantity = 10,
+                        Image = "Tham_San_3D_VF_7.png",
+                        CategoryId = 8,
+                        IsDeleted = false,
+                        IsShowed = true,
+                        Origin = "Vietnam",
+                        Dimensions = "100x80x5 cm",
+                        Weight = 2.0,
+                        Material = " TPE plastic",
+                        Color = "Black",
+                        Warranty = "6 months",
+                        Description = "VinFast VF 7 floor mats are molded mats manufactured in Vietnam, according to Japanese production lines. Made from high-quality, non-toxic TPE plastic material."
+                    },
+                    new Accessory
+                    {
+                     Id = 204,
+                        Name = "VinFast VF 8 Car Roof Top Box",
+                        Price = 7000000,
+                        Quantity = 10,
+                        Image = "Cop_Noc_Phi_Thuyen_Oto_VinFast_ VF8.png",
+                        CategoryId = 9,
+                        IsDeleted = false,
+                        IsShowed = true,
+                        Origin = "Vietnam",
+                        Dimensions = "100x80x5 cm",
+                        Weight = 2.0,
+                        Material = "Rubber",
+                        Color = "Black",
+                        Warranty = "6 months",
+                        Description = "The car roof rack for VinFast VF 8 is an ideal choice to expand storage space during journeys. Modern, convenient design with superior quality, the product brings convenience and style to every trip."
+                    },
+                    new Accessory
+                    {
+                     Id = 205,
+                        Name = "2D VF 8 Plastic Floor Mats",
+                        Price = 2210000,
+                        Quantity = 10,
+                        Image = "Tham_San_Nhua_2D_VF8.png",
+                        CategoryId = 9,
+                        IsDeleted = false,
+                        IsShowed = true,
+                        Origin = "Vietnam",
+                        Dimensions = "100x80x5 cm",
+                        Weight = 2.0,
+                        Material = "Plastic",
+                        Color = "Black",
+                        Warranty = "6 months",
+                        Description = "VinFast VF 8 floor mats are molded mats manufactured in Vietnam, according to Japanese production lines. Made from high-quality, non-toxic TPE plastic material."
+                    },
+                    new Accessory
+                    {
+                     Id = 206,
+                        Name = "Ceiling Heat Insulation Film Package",
+                        Price = 7000000,
+                        Quantity = 10,
+                        Image = "Goi_Film_Cach_Nhiet_Dan_Tran_VinFast_VF8.png",
+                        CategoryId = 9,
+                        IsDeleted = false,
+                        IsShowed = true,
+                        Origin = "Vietnam",
+                        Dimensions = "100x80x5 cm",
+                        Weight = 2.0,
+                        Material = "Ceramic is coated with Titanium Nitride technology.",   
+                        Color = "Black",
+                        Warranty = "6 months",
+                        Description = "VF x 3M heat insulation film products help insulate, block infrared radiation, eliminate UV rays, effectively reduce glare to improve the customer experience in the car, protect customers from harmful rays as well as increase the durability of the car's interior. Warranty"
                     }
                 );
             });
@@ -789,6 +897,191 @@ namespace WebAPI.DataContext
                     ColorImage = "VF3_camera_lui_1.jpg",
                     IsDeleted = false,
                     AccessoryId = 3
+                },
+                new AccessoryImage
+                {
+                    ColorId = 201,
+                    ColorName = "White",
+                    ColorImage = "Tham_Cop_3D_VF7.png",
+                    IsDeleted = false,
+                    AccessoryId = 201
+                },
+                new AccessoryImage
+                {
+                    ColorId = 202,
+                    ColorName = "White",
+                    ColorImage = "Goi_Dan_Film_Cach_Nhiet_VinFast_VF7.png",
+                    IsDeleted = false,
+                    AccessoryId = 202
+                },
+                new AccessoryImage
+                {
+                    ColorId = 203,
+                    ColorName = "White",
+                    ColorImage = "Tham_San_3D_VF_7.png",
+                    IsDeleted = false,
+                    AccessoryId = 203
+                },
+                new AccessoryImage
+                {
+                    ColorId = 204,
+                    ColorName = "White",
+                    ColorImage = "Tham_San_3D_VF72.png",
+                    IsDeleted = false,
+                    AccessoryId = 203
+                },
+                new AccessoryImage
+                {
+                    ColorId = 205,
+                    ColorName = "White",
+                    ColorImage = "Cop_Noc_Phi_Thuyen_Oto_VinFast_ VF8.png",
+                    IsDeleted = false,
+                    AccessoryId = 204
+                },
+                new AccessoryImage
+                {
+                    ColorId = 206,
+                    ColorName = "White",
+                    ColorImage = "Cop_Noc_Phi_Thuyen_O_To_VinFast_VF82.png",
+                    IsDeleted = false,
+                    AccessoryId = 204
+                }, 
+                new AccessoryImage
+                {
+                    ColorId = 207,
+                    ColorName = "White",
+                    ColorImage = "Tham_San_Nhua_2D_VF8.png",
+                    IsDeleted = false,
+                    AccessoryId = 205
+                },
+                new AccessoryImage
+                {
+                    ColorId = 208,
+                    ColorName = "White",
+                    ColorImage = "Tham_San_Nhua_2D_VF82.png",
+                    IsDeleted = false,
+                    AccessoryId = 205
+                },
+                new AccessoryImage
+                {
+                    ColorId = 209,
+                    ColorName = "White",
+                    ColorImage = "Tham_San_Nhua_2D_VF83.png",
+                    IsDeleted = false,
+                    AccessoryId = 205
+                },
+                new AccessoryImage
+                {
+                    ColorId = 210,
+                    ColorName = "White",
+                    ColorImage = "Tham_San_Nhua_2D_VF84.png",
+                    IsDeleted = false,
+                    AccessoryId = 205
+                },
+                new AccessoryImage
+                {
+                    ColorId = 211,
+                    ColorName = "White",
+                    ColorImage = "Goi_Film_Cach_Nhiet_Dan_Tran_VinFast_VF8.png",
+                    IsDeleted = false,
+                    AccessoryId = 206
+                },
+                // VF5 - VF6
+                new AccessoryImage
+                {
+                    ColorId = 212,
+                    ColorName = "White",
+                    ColorImage = "VF5_tham_nhua.png",
+                    IsDeleted = false,
+                    AccessoryId = 4
+                },
+                new AccessoryImage
+                {
+                    ColorId = 213,
+                    ColorName = "White",
+                    ColorImage = "Tham San Nhua 2D VF 52.png",
+                    IsDeleted = false,
+                    AccessoryId = 4
+                },
+                new AccessoryImage
+                {
+                    ColorId = 214,
+                    ColorName = "White",
+                    ColorImage = "Tham San Nhua 2D VF 53.png",
+                    IsDeleted = false,
+                    AccessoryId = 4
+                },
+                new AccessoryImage
+                {
+                    ColorId = 215,
+                    ColorName = "White",
+                    ColorImage = "Tham San Nhua 2D VF 54.png",
+                    IsDeleted = false,
+                    AccessoryId = 4
+                },
+                new AccessoryImage
+                {
+                    ColorId = 216,
+                    ColorName = "White",
+                    ColorImage = "Tham San Nhua 2D VF 55.png",
+                    IsDeleted = false,
+                    AccessoryId = 4
+                },
+                new AccessoryImage
+                {
+                    ColorId = 217,
+                    ColorName = "White",
+                    ColorImage = "VF6_Tham_cop.png",
+                    IsDeleted = false,
+                    AccessoryId = 9
+                },
+                new AccessoryImage
+                {
+                    ColorId = 218,
+                    ColorName = "White",
+                    ColorImage = "Tham Cop 3D VF 62.png",
+                    IsDeleted = false,
+                    AccessoryId = 9
+                },
+                new AccessoryImage
+                {
+                    ColorId = 219,
+                    ColorName = "White",
+                    ColorImage = "VF6_tham_nhua.png",
+                    IsDeleted = false,
+                    AccessoryId = 8
+                },
+                new AccessoryImage
+                {
+                    ColorId = 220,
+                    ColorName = "White",
+                    ColorImage = "Tham San Nhua 2D VF 62.png",
+                    IsDeleted = false,
+                    AccessoryId = 8
+                },
+                new AccessoryImage
+                {
+                    ColorId = 221,
+                    ColorName = "White",
+                    ColorImage = "VF6_Goi_dan_phim_cach_nhiet.png",
+                    IsDeleted = false,
+                    AccessoryId = 7
+                },
+                new AccessoryImage
+                {
+                    ColorId = 222,
+                    ColorName = "White",
+                    ColorImage = "VF5_Goi_dan_phim_cach_nhiet.png",
+                    IsDeleted = false,
+                    AccessoryId = 5
+                },
+                new AccessoryImage
+                {
+                    ColorId = 223,
+                    ColorName = "White",
+                    ColorImage = "VF5_Tham_cop.png",
+                    IsDeleted = false,
+                    AccessoryId = 6
                 }
             );
 
