@@ -84,7 +84,40 @@ namespace WebAPI.Controllers
             }
         }
 
-        
+        [HttpGet("UserGetAllCars")]
+        public async Task<ActionResult> UserGetAllCars()
+        {
+            try
+            {
+                var adminCars = await CarsDAO.GetInstance().GetAllCars();
+                if (adminCars == null || adminCars.Count == 0)
+                {
+                    return NotFound(new DataResponse
+                    {
+                        StatusCode = 404,
+                        Message = "No car found",
+                        Success = false
+                    });
+                }
+                var admincCarDTOs = AutoMapper.ToAdminCarDTOList(adminCars);
+                return Ok(new DataResponse
+                {
+                    StatusCode = 200,
+                    Message = "Get all cars successfully",
+                    Success = true,
+                    Data = admincCarDTOs
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new DataResponse
+                {
+                    StatusCode = 400,
+                    Message = ex.Message,
+                    Success = false
+                });
+            }
+        }
 
         [HttpGet("{id}")]
         public async Task<ActionResult> AdminGetCarById(int id)

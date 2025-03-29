@@ -30,7 +30,7 @@ const TestDriveRegistration = () => {
   // Fetch data from server
   const fetchData = async () => {
     try {
-      const response = await adminCarServices.adminGetAllCars();
+      const response = await adminCarServices.userGetAllCars();
       if (response.statusCode !== 200) {
         setListCar([]);
       } else {
