@@ -38,6 +38,8 @@ function RegisterPage() {
   const [errorRePassword, setErrorRePassword] = useState("");
   const [errorFullname, setErrorFullname] = useState("");
   const [message, setMessage] = useState("");
+  const [phone, setPhone] = useState("");
+  const [errorPhone, setErrorPhone] = useState("");
 
   // state for OTP
   const [otpDialogOpen, setOtpDialogOpen] = useState(false);
@@ -67,29 +69,6 @@ function RegisterPage() {
    *
    * @throws {Error} - Throws an error if the registration process fails.
    */
-  // const fetchRegister = async () => {
-  //   try {
-  //     const response = await authService.postRegister(
-  //       fullname,
-  //       email,
-  //       password
-  //     );
-  //     if (response.status === 200) {
-  //       setMessage(response.data.message);
-  //       setOpenDialog(true);
-  //     }
-  //     if (response.status === 409) {
-  //       setErrorEmail(response.data.message);
-  //     }
-  //     if (response.status === 400) {
-  //       alert(response.data.message);
-  //     }
-  //   } catch (error) {
-  //     if (error.response) {
-  //       console.log(error.response);
-  //     }
-  //   }
-  // };
 
   const handleCheckEmail = async (emailNeedToCheck) => {
     try {
@@ -100,7 +79,7 @@ function RegisterPage() {
         setOtpDialogOpen(true);
         // fetchRegister();
       } else {
-        console.log("email existed",response);
+        console.log("email existed", response);
         setErrorEmail("Email already exists");
       }
     } catch (error) {
@@ -127,6 +106,8 @@ function RegisterPage() {
       rePassword
     );
 
+    const phoneError = AuthValidator.validatePhone(phone);
+
     if (emailError) {
       setErrorEmail(emailError);
     }
@@ -140,7 +121,11 @@ function RegisterPage() {
       setErrorFullname(fullnameError);
     }
 
-    if (!emailError && !passwordError && !rePasswordError && !fullnameError) {
+    if (phoneError) {
+      setErrorPhone(phoneError);
+    }
+
+    if (!emailError && !passwordError && !rePasswordError && !fullnameError && !phoneError) {
       handleCheckEmail(email);
     }
   };
@@ -186,40 +171,41 @@ function RegisterPage() {
   };
 
   const handleOtpSubmit = () => {
-      const otp = otpValue.join("");
-      const otpError = OTPValidator.validateOTP(otp);
-      if (otpError) {
-        setErrorOtp(otpError);
+    const otp = otpValue.join("");
+    const otpError = OTPValidator.validateOTP(otp);
+    if (otpError) {
+      setErrorOtp(otpError);
+    } else {
+      fetchRegister(otp);
+    }
+  };
+
+  const fetchRegister = async (otp) => {
+    try {
+      const response = await authService.postRegister(
+        fullname,
+        email,
+        password,
+        rePassword,
+        phone,
+        otp
+      );
+
+      if (response.status === 200) {
+        setOtpDialogOpen(false);
+        setErrorOtp("");
+        setOtpValue(new Array(6).fill(""));
+        setMessage("Register successfully");
+        setOpenDialog(true);
       } else {
-        fetchRegister(otp);
+        setErrorOtp("Invalid OTP code");
       }
-    };
-  
-    const fetchRegister = async (otp) => {
-      try {
-        const response = await authService.postRegister(
-          fullname,
-          email,
-          password,
-          rePassword,
-          otp
-        );
-  
-        if (response.status === 200) {
-          setOtpDialogOpen(false);
-          setErrorOtp("");
-          setOtpValue(new Array(6).fill(""));
-          setMessage("Register successfully");
-          setOpenDialog(true);
-        } else {
-          setErrorOtp("Invalid OTP code");
-        }
-      } catch (error) {
-        if (error.response) {
-          console.log(error.response);
-        }
+    } catch (error) {
+      if (error.response) {
+        console.log(error.response);
       }
-    };
+    }
+  };
 
 
   const handleOtpDialogClose = () => {
@@ -280,6 +266,23 @@ function RegisterPage() {
             />
             {errorEmail && (
               <Typography sx={{ color: "red" }}>{errorEmail}</Typography>
+            )}
+          </div>
+          <div className={cx("form-group")}>
+            <input
+              type="text"
+              id="phone"
+              className={!errorPhone ? cx("input") : cx("error-input")}
+              placeholder="Phone"
+              spellCheck="false"
+              value={phone}
+              onChange={(e) => {
+                setPhone(e.target.value);
+                setErrorPhone("");
+              }}
+            />
+            {errorPhone && (
+              <Typography sx={{ color: "red" }}>{errorPhone}</Typography>
             )}
           </div>
           <div className={cx("field-password")}>
@@ -435,7 +438,7 @@ function RegisterPage() {
         )}
         <DialogActions sx={{ justifyContent: "center", marginBottom: "15px" }}>
           <Button variant="contained"
-          onClick={handleOtpSubmit}
+            onClick={handleOtpSubmit}
           >
             Submit
           </Button>

@@ -20,7 +20,7 @@ export const validateEmail = (email) => {
     return "Email should not contain space";
   } else if (/^[!@#$%^&*(),.?":{}|<>]|[!@#$%^&*(),.?":{}|<>]$/.test(email)) {
     return "Email is incorect format";
-  } 
+  }
   return null;
 };
 
@@ -47,5 +47,20 @@ export const validateConfirmPassword = (password, confirmPassword) => {
   } else if (password !== confirmPassword) {
     return "Passwords do not match";
   }
+  return null;
+};
+
+export const validatePhone = (phone) => {
+
+  const phoneRegex = /^(0|\+84)[1-9][0-9]{8,9}$/; 
+
+  if (!phone) {
+    return "Phone is required";
+  }
+
+  if (!phoneRegex.test(phone)) {
+    return "Phone number is invalid";
+  }
+
   return null;
 };

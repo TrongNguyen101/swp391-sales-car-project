@@ -265,7 +265,7 @@ namespace WebAPI.Controllers
                     Id = Guid.NewGuid(),
                     UserName = RegisterRequest.Fullname.ToLower(),
                     Address = null,
-                    Phone = null,
+                    Phone = RegisterRequest.Phone,
                     Email = RegisterRequest.Email,
                     Password = EncyptHelper.Sha256Encrypt(RegisterRequest.Password),
                     CreatedAt = DateTime.UtcNow,

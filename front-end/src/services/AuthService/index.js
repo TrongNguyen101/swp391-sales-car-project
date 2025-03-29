@@ -57,7 +57,7 @@ export const confirmPassword = async (email, password) => {
  * @returns {Promise<Object>} The response from the server.
  * @throws {Object} The error response from the server if the request fails.
  */
-export const postRegister = async (fullname, email, password, rePassword, otp) => {
+export const postRegister = async (fullname, email, password, rePassword, phone, otp) => {
   try {
     const response = await request.post(
       "api/Auth/Register",
@@ -66,6 +66,7 @@ export const postRegister = async (fullname, email, password, rePassword, otp) =
         email: email,
         password: password,
         rePassword: rePassword,
+        phone: phone,
         otp: otp,
       },
       {
