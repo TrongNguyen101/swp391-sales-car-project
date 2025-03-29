@@ -8,6 +8,8 @@ namespace WebAPI.DTO
 
         public string? RePassword { get; set; }
 
+        public string? Phone { get; set; }
+
         public string? OTP { get; set; }
     }
 }
