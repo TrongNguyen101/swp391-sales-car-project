@@ -66,13 +66,13 @@ const TestDriveRegistration = () => {
 
         // Kiểm tra kết quả trả về (giả sử status 200 là thành công)
         if (response && response.status === 200) {
-          alert("Đăng ký lái thử thành công!");
+          alert("Registration successful! We will contact you soon.");
         } else {
-          alert("Đăng ký thất bại. Vui lòng thử lại.");
+          alert("Registration failed. Please try again later.");
         }
       } catch (error) {
-        console.error("Lỗi khi đăng ký lái thử:", error);
-        alert("Có lỗi xảy ra. Vui lòng kiểm tra lại thông tin.");
+        console.error("Registration failed. Please try again later.", error);
+        alert("Registration failed. Please try again later.");
       }
     }
   };
