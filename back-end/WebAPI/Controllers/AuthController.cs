@@ -11,6 +11,7 @@ using System.Net;
 using System.Collections.Concurrent;
 using System.Security.Cryptography;
 using StackExchange.Redis;
+using WebAPI.Utils.ResponseHelper;
 
 namespace WebAPI.Controllers
 {
@@ -92,25 +93,32 @@ namespace WebAPI.Controllers
         {
             try
             {
+                #region Authentication, Authorization
+                var authorizationHeader = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
+                // Check authentication and authorization of user based on the specified HTTP context and role that need to check for this function
+                // If the user is not authenticated or authorized, return error message
+                // If the user is authenticated and authorized, return claims of user
+                // admin role id = 1
+                // customer role id = 2
+                var (isSuccess, errorMessage, claims) = JwtTokenHelper.AuthenticateAndAuthorize(HttpContext, 2);
+
+                if (!isSuccess)
+                {
+                    // Return error message if the user is not authenticated or authorized
+                    return Unauthorized(ResponseHelper.ResponseError(401, errorMessage ?? "Unknown error", false, null));
+                }
+                #endregion
                 var userDAO = await UsersDAO.GetInstance().findUserByEmail(LoginRequest.Email);
                 if (userDAO == null)
                 {
-                    return NotFound(new DataResponse
-                    {
-                        StatusCode = 404,
-                        Success = false,
-                        Message = "Email or password is incorrect",
-                    });
+                    return NotFound(ResponseHelper.ResponseError(404, "User not found", false, null));
+
                 }
                 if (userDAO.Password != EncyptHelper.Sha256Encrypt(LoginRequest.Password))
                 {
-                    return Unauthorized(new DataResponse
-                    {
-                        StatusCode = 401,
-                        Success = false,
-                        Message = "Password is incorrect",
-                    });
+                    return Unauthorized(ResponseHelper.ResponseError(401, "Password is incorrect", false, null));
                 }
+                   
                 // please code again just for runnning
                 string storedOtp = await _cache.StringGetAsync(LoginRequest.Email);
 
@@ -137,7 +145,7 @@ namespace WebAPI.Controllers
                     {
                         StatusCode = 400,
                         Success = false,
-                        Message = "Recent password is incorrect",
+                        Message = "Failed to send OTP. Please try again.",
                     });
                 }
             }
@@ -249,7 +257,7 @@ namespace WebAPI.Controllers
                         Message = "Passwords do not match",
                     });
                 }
-                
+
                 if (await VerifyOTPCode(RegisterRequest.Email, RegisterRequest.OTP) == false)
                 {
                     return BadRequest(new DataResponse

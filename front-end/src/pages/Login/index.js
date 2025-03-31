@@ -75,6 +75,7 @@ function LoginPage() {
   const fetchLogin = async () => {
     try {
       const response = await authService.postLogin(email, password);
+      console.log("response login", response);
       if (response.status === 200) {
         localStorage.setItem("Bearer", response.data.data.token);
         setMessage(response.data.message);

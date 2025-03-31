@@ -48,11 +48,11 @@ namespace WebAPI.DAO
             }
         }
 
-        public async Task<Users?> FindUserById(Guid userId)
+        public async Task<Users?> FindUserById(string userId)
         {
             using (var context = new VinfastContext())
             {
-                return await context.Users.Where(u => u.Id == userId).FirstOrDefaultAsync();
+                return await context.Users.Where(u => u.Id.ToString() == userId).FirstOrDefaultAsync();
             }
         }
 

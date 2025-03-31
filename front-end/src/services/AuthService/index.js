@@ -30,8 +30,10 @@ export const postLogin = async (email, password) => {
 
 export const confirmPassword = async (email, password) => {
   try {
+    const token = localStorage.getItem("Bearer");
+    const enpoint = "api/Auth/ConfirmPassword";
     const response = await request.post(
-      "api/Auth/ConfirmPassword",
+      enpoint,
       {
         email: email,
         password: password,
@@ -39,12 +41,14 @@ export const confirmPassword = async (email, password) => {
       {
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
       }
     );
-    return response;
+    console.log("response confirm password aaaa", response);
+    return response.data;
   } catch (error) {
-    return error.response;
+    return error.response.data;
   }
 };
 

@@ -1,50 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import axios from 'axios';
 import classNames from 'classnames/bind';
 import { Typography, Avatar, Button, ListItem, Box } from '@mui/material';
 
 import styles from './SidebarUser.module.scss';
-import * as DecodePayload from '../../lib/DecodePayload';
-import { useNavigate } from 'react-router-dom';
+import { useUserData } from "../../layouts/ProfileUserLayout";
 
 const cx = classNames.bind(styles);
-const API_URL = "https://localhost:7005/api/Users";
 
-const Sidebar = () => {
-  const [userData, setUserData] = useState({});
+const SidebarUser = () => {
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const token = localStorage.getItem('Bearer');
-        if (!token) {
-          console.error("User not logged in");
-          return;
-        }
-
-        const decodedPayload = DecodePayload.decodePayload(token);
-        const userId = decodedPayload.sub;
-        if (!userId) {
-          console.error("User ID not found in token");
-          return;
-        }
-
-        const response = await axios.get(`${API_URL}/${userId}`, {
-          headers: { "Authorization": `Bearer ${token}` }
-        });
-
-        if (response.status === 200) {
-          setUserData({ ...response.data.data, id: userId }); // Ensure userId is set in userData
-        }
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
-    };
-
-    fetchUserData();
-  }, []);
+  const { userData } = useUserData();
 
   const handleNavigation = (path) => () => {
     navigate(path);
@@ -104,4 +70,4 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar;
+export default SidebarUser;

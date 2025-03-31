@@ -1,41 +1,50 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
-import axios from 'axios';
 import classNames from 'classnames/bind';
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, Typography } from '@mui/material';
 
-import * as DecodePayload from '../../lib/DecodePayload'; // Import DecodePayload module
 import * as AuthValidator from "../../validation/AuthValidation";
 import * as authService from "../../services/AuthService";
 import * as OTPValidator from "../../validation/OTPValidation";
+import * as adminService from "../../services/AdminServices";
+import { useUserData } from "../../layouts/ProfileUserLayout";
 
 import styles from './PersonalInfor.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
-
-
 const cx = classNames.bind(styles);
-const API_URL = "https://localhost:7005/api/Users";
 
-const PersonalInfo = () => {
-  const [userData, setUserData] = useState({});
-  const [open, setOpen] = useState(false);
-  const [editData, setEditData] = useState({});
-  const [error, setError] = useState({});
-  const navigate = useNavigate();
+const PersonalInfoPage = () => {
+  // User data state 
+  const { userData, refetch } = useUserData();
+  // Status of updating user information
+  const [updateStatus, setUpdateStatus] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
 
   const [newPasswordDialogOpen, setNewPasswordDialogOpen] = useState(false);
-  const [newPassword, setNewPassword] = useState('');
+  const [newPassword, setNewPassword] = useState("");
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [reNewPassword, setReNewPassword] = useState("");
   const [showReNewPassword, setShowReNewPassword] = useState(false);
   const [errorNewPassword, setErrorNewPassword] = useState("");
   const [errorReNewPassword, setErrorReNewPassword] = useState("");
 
+  // State for editing user information form
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [address, setAddress] = useState("");
+  const [openEditUserInformationDialog, setOpenEditUserInformationDialog] = useState(false);
+
+  // State for editing information form
+  const [errorFullname, setErrorFullname] = useState("");
+  const [errorEmail, setErrorEmail] = useState("");
+  const [errorPhone, setErrorPhone] = useState("");
+  const [errorAddress, setErrorAddress] = useState("");
+
   // Confirm password dialog
-  const [confirmPasswordDialogOpen, setConfirmPasswordDialogOpen] = useState(false);
+  const [openConfirmPasswordDialog, setConfirmPasswordDialogOpen] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errorConfirmPassword, setErrorConfirmPassword] = useState("");
@@ -47,108 +56,72 @@ const PersonalInfo = () => {
   const otpRefs = useRef([]);
 
   // Information dialog
-  const [openDialog, setOpenDialog] = useState(false);
-  const [message, setMessage] = useState("");
+  const [openInformationDialog, setOpenInformationDialog] = useState(false);
 
-  const handleCloseDialog = () => {
-    setOpenDialog(false);
-    fetchUserData();
+  const handleClickOpenEditInformationForm = () => {
+    setOpenEditUserInformationDialog(true);
+    setUpdateStatus(null);
+    setFullName(userData?.userName || "");
+    setEmail(userData?.email || "");
+    setPhone(userData?.phone || "");
+    setAddress(userData?.address || "");
   };
 
-  const fetchUserData = async () => {
+  const handleCloseEditInformationForm = () => {
+    setOpenEditUserInformationDialog(false);
+    setUpdateStatus(null);
+  };
+
+  const handleCloseInformationDialog = () => {
+    setOpenInformationDialog(false);
+    setUpdateStatus(null);
+  };
+
+  const handleSubmitEDitInformationForm = (event) => {
+    event.preventDefault();
+
+    const fullnameError = AuthValidator.validateFullname(fullName);
+    if (fullnameError) {
+      setErrorFullname(fullnameError);
+      return;
+    }
+    const emailError = AuthValidator.validateEmail(email);
+    if (emailError) {
+      setErrorEmail(emailError);
+      return;
+    }
+    const phoneError = AuthValidator.validatePhone(phone);
+    if (phoneError) {
+      setErrorPhone(phoneError);
+      return;
+    }
+    const addressError = AuthValidator.validateAddress(address);
+    if (addressError) {
+      setErrorAddress(addressError);
+      return;
+    }
+    if (!fullnameError && !emailError && !phoneError && !addressError) {
+      handleSave();
+    }
+
+  };
+
+  const handleSave = async () => {
     try {
-      const token = localStorage.getItem('Bearer');
-      if (!token) {
-        navigate('/login'); // Redirect to login page if not logged in
-      }
-
-      const decodedPayload = DecodePayload.decodePayload(token);
-      const userId = decodedPayload.sub; // Ensure the token contains the user ID
-      if (!userId) {
-        console("User ID not found in token!");
-      }
-
-      const response = await axios.get(`${API_URL}/${userId}`, {
-        headers: { "Authorization": `Bearer ${token}` }
-      });
-
-      if (response.status === 200) {
-        setUserData({ ...response.data.data, id: userId }); // Ensure userId is set in userData
-        setEditData(response.data.data); // 
+      const response = await adminService.userUpdateInformation(fullName, email, phone, address);
+      if (response.statusCode === 200) {
+        setUpdateStatus({ type: 'success', message: 'Profile updated successfully' });
+        await refetch();
+        setOpenEditUserInformationDialog(false);
+        setOpenInformationDialog(true);
+      } else {
+        setOpenEditUserInformationDialog(false);
+        setUpdateStatus({ type: 'error', message: "Failed to update profile" });
+        setOpenInformationDialog(true);
       }
     } catch (error) {
-      console.error("Error", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchUserData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-    setEditData(userData);
-    setError({});
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setEditData({ ...editData, [name]: value });
-  };
-
-  const validate = () => {
-    let tempError = {};
-    if (editData.userName.length > 25) tempError.userName = "Name must be less than 25 characters.";
-    if (editData.userName.length === 0) tempError.userName = "Name must not be empty.";
-    if (!/\S+@\S+\.\S+/.test(editData.email)) tempError.email = "Email is not valid.";
-    if (editData.email.length === 0) tempError.email = "Email must not be empty.";
-    if (!/^\d+$/.test(editData.phone)) tempError.phone = "Phone must be a number.";
-    if (editData.phone.length < 10 || editData.phone.length > 11) tempError.phone = "Phone must be 10 or 11 digits.";
-    setError(tempError);
-    return Object.keys(tempError).length === 0;
-  };
-
-
-  const handleSave = async (e) => {
-    e.preventDefault();
-    if (validate()) {
-      if (window.confirm("Do you want to save the changes?")) {
-        try {
-          const token = localStorage.getItem('Bearer');
-          if (!token) {
-            navigate('/login'); // Redirect to login page if not logged in
-          }
-
-          const userId = userData.id; // Ensure the user ID is correctly extracted
-          if (!userId) {
-            alert("User ID not found!");
-            return;
-          }
-
-          const response = await axios.put(`${API_URL}/Edit/${userId}`, editData, {
-            headers: {
-              "Content-Type": "application/json",
-              "Authorization": `Bearer ${token}`
-            }
-          });
-
-          if (response.status === 200) {
-            setUserData(editData); // Cập nhật lại dữ liệu gốc
-            setOpen(false);
-            alert("Update successfully!");
-          } else {
-            alert(response.data.message || "Can not update the data!");
-          }
-        } catch (error) {
-          console.error('Error', error);
-          alert('Can not update the data!');
-        }
-      }
+      setOpenEditUserInformationDialog(false);
+      setUpdateStatus({ type: 'error', message: "Failed to update profile" });
     }
   };
 
@@ -191,8 +164,8 @@ const PersonalInfo = () => {
       );
       if (response.status === 200) {
         setNewPasswordDialogOpen(false);
-        setMessage(response.data.message);
-        setOpenDialog(true);
+        setUpdateStatus({ type: 'success', message: 'Profile updated successfully' });
+        setOpenInformationDialog(true);
       }
       if (response.status === 400) {
         setErrorNewPassword(response.data.message);
@@ -215,7 +188,7 @@ const PersonalInfo = () => {
   };
   const handleConfirmPasswordSubmit = (event) => {
     event.preventDefault();
-    const confirmPasswordError = AuthValidator.validatePassword(confirmPassword);
+    const confirmPasswordError = AuthValidator.validateInput(confirmPassword);
 
     if (confirmPasswordError) {
       setErrorConfirmPassword(confirmPasswordError);
@@ -226,25 +199,25 @@ const PersonalInfo = () => {
 
   const fetchConfirmPassword = async () => {
     try {
+      setIsLoading(true);
       const response = await authService.confirmPassword(userData.email, confirmPassword);
-      if (response.status === 200) {
+      if (response.statusCode === 200) {
         setOtpDialogOpen(true);
         setConfirmPasswordDialogOpen(false);
         console.log("OTP sent to email: ", response);
+      } else {
+        if (response.statusCode === 401) {
+          setErrorConfirmPassword("Password is incorrect");
+        } else {
+          setOpenInformationDialog(true);
+          setConfirmPasswordDialogOpen(false);
+          setUpdateStatus({ type: 'error', message: "Error. Please contact support for changing password." });
+        }
       }
-      if (response.status === 404) {
-        setErrorConfirmPassword(response.data.message);
-      }
-      if (response.status === 400) {
-        alert(response.data.message);
-      }
-      if (response.status === 401) {
-        setErrorConfirmPassword(response.data.message);
-      }
-    } catch (error) {
-      if (error.response) {
-        console.log(error.response);
-      }
+    } catch {
+      setConfirmPasswordDialogOpen(false);
+      setUpdateStatus({ type: 'error', message: "Internal server error. Please contact support for changing password." });
+      setOpenInformationDialog(true);
     }
   }
 
@@ -336,7 +309,7 @@ const PersonalInfo = () => {
           <Typography sx={{ fontSize: '1.5rem', fontWeight: '500' }}>
             Personal Information
           </Typography>
-          <Button onClick={handleClickOpen}>Edit Information</Button>
+          <Button variant="contained" onClick={handleClickOpenEditInformationForm}>Edit Information</Button>
         </div>
         <div className={cx('info')}>
           <div className={cx('info-item')}>
@@ -351,20 +324,24 @@ const PersonalInfo = () => {
             <span className={cx('label')}>Phone Number:</span>
             <span className={cx('value')}>{userData.phone}</span>
           </div>
+          <div className={cx('info-item')}>
+            <span className={cx('label')}>Address:</span>
+            <span className={cx('value')}>{userData.address ? (userData.address) : ("Please update your address")}</span>
+          </div>
         </div>
         <div className={cx('password-change')}>
-          <Button onClick={handleOpenConfirmPasswordDialog}>Change Password</Button>
+          <Button variant="outlined" onClick={handleOpenConfirmPasswordDialog}>Change Password</Button>
         </div>
       </div>
 
       {/* Show update information dialog */}
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog open={openEditUserInformationDialog} onClose={handleCloseEditInformationForm}>
         <DialogTitle>Edit Information</DialogTitle>
         <DialogContent>
           <DialogContentText>
             Please edit your information below:
           </DialogContentText>
-          <form onSubmit={handleSave}>
+          <form onSubmit={handleSubmitEDitInformationForm}>
             <TextField
               autoFocus
               margin="dense"
@@ -372,21 +349,14 @@ const PersonalInfo = () => {
               label="Full Name"
               type="text"
               fullWidth
-              value={editData.userName}
-              onChange={handleChange}
-              error={!!error.userName}
-              helperText={error.userName}
-            />
-            <TextField
-              margin="dense"
-              name="email"
-              label="Email"
-              type="email"
-              fullWidth
-              value={editData.email}
-              onChange={handleChange}
-              error={!!error.email}
-              helperText={error.email}
+              value={fullName}
+              onChange={(e) => {
+                setFullName(e.target.value);
+                setErrorFullname("")
+              }
+              }
+              error={!!errorFullname}
+              helperText={errorFullname}
             />
             <TextField
               margin="dense"
@@ -394,13 +364,31 @@ const PersonalInfo = () => {
               label="Phone Number"
               type="text"
               fullWidth
-              value={editData.phone}
-              onChange={handleChange}
-              error={!!error.phone}
-              helperText={error.phone}
+              value={phone}
+              onChange={(e) => {
+                setPhone(e.target.value);
+                setErrorPhone("")
+              }}
+              error={!!errorPhone}
+              helperText={errorPhone}
             />
+            <TextField
+              margin="dense"
+              name="address"
+              label="Address"
+              type="text"
+              fullWidth
+              value={address}
+              onChange={(e) => {
+                setAddress(e.target.value);
+                setErrorAddress("")
+              }}
+              error={!!errorAddress}
+              helperText={errorAddress}
+            />
+
             <DialogActions>
-              <Button onClick={handleClose} color="error" variant="outlined">
+              <Button onClick={handleCloseEditInformationForm} color="error" variant="outlined">
                 Cancel
               </Button>
               <Button type="submit" color="primary" variant='contained'>
@@ -413,7 +401,7 @@ const PersonalInfo = () => {
 
       {/* Show confirm passowrd dialog */}
       <Dialog
-        open={confirmPasswordDialogOpen}
+        open={openConfirmPasswordDialog}
         aria-labelledby="forgot-password-dialog-title"
         aria-describedby="forgot-password-dialog-description"
       >
@@ -620,30 +608,35 @@ const PersonalInfo = () => {
         </DialogActions>
       </Dialog>
 
-      {/* Show login successful dialog */}
+      {/* Show information dialog */}
       <Dialog
-        open={openDialog}
+        open={openInformationDialog}
         keepMounted
-        onClose={handleCloseDialog}
+        onClose={handleCloseInformationDialog}
         aria-labelledby="alert-dialog-slide-title"
         aria-describedby="alert-dialog-slide-description"
-        sx={{ "& .MuiDialog-paper": { width: "440px", height: "140px" } }}
+        sx={{ "& .MuiDialog-paper": { width: "540px", height: "240px" } }}
       >
         <DialogTitle
           id="alert-dialog-slide-title"
           sx={{
             textAlign: "center",
-            fontSize: "1.6rem",
-            fontWeight: "500",
-            lineHeight: "1.5",
+            marginTop: "20px"
           }}
         >
-          {message}
+          {updateStatus && (
+            <Typography
+              color={updateStatus.type === 'error' ? 'error' : 'success'}
+              sx={{ fontWeight: 500, fontSize: "30px" }}
+            >
+              {updateStatus.message}
+            </Typography>
+          )}
         </DialogTitle>
         <DialogActions sx={{ justifyContent: "center" }}>
           <Button
             variant="contained"
-            onClick={handleCloseDialog}
+            onClick={handleCloseInformationDialog}
             color="primary"
           >
             OK
@@ -654,4 +647,4 @@ const PersonalInfo = () => {
   );
 };
 
-export default PersonalInfo;
+export default PersonalInfoPage;

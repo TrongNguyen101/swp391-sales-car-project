@@ -148,7 +148,7 @@ namespace WebAPI.Utils.JwtTokenHelper
         /// </summary>
         /// <param name="httpContext">The HTTP context for the request.</param>
         /// <param name="roleId">The role ID to check for authorization.</param>
-        public static (bool isSuccess, string? errorMessage, Dictionary<string, object>? claims) AuthenticateAndAuthorize(HttpContext httpContext, int roleIdFromFunctionNeedToCheck)
+        public static (bool isSuccess, string? errorMessage, Dictionary<string, object>? claims) AuthenticateAndAuthorize(HttpContext httpContext, params int[] allowedRoleIds)
         {
             // Get token
             var authorizationHeader = httpContext.Request.Headers["Authorization"].FirstOrDefault();
@@ -172,7 +172,7 @@ namespace WebAPI.Utils.JwtTokenHelper
             }
 
             // Check role
-            if (claims.TryGetValue("role", out var roleId) && roleId.ToString() != roleIdFromFunctionNeedToCheck.ToString())
+            if (!claims.TryGetValue("role", out var roleId) || !allowedRoleIds.Select(r => r.ToString()).Contains(roleId.ToString()))
             {
                 return (false, "Unauthorized access denied", null);
             }
