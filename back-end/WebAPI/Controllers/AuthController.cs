@@ -3,12 +3,10 @@ using WebAPI.DAO;
 using WebAPI.Utils.EncyptHelper;
 using WebAPI.Utils.AutoMapper;
 using WebAPI.DTO;
-using Microsoft.AspNetCore.Authorization;
 using WebAPI.Utils.JwtTokenHelper;
 using WebAPI.Models;
 using System.Net.Mail;
 using System.Net;
-using System.Collections.Concurrent;
 using System.Security.Cryptography;
 using StackExchange.Redis;
 using WebAPI.Utils.ResponseHelper;
@@ -41,7 +39,6 @@ namespace WebAPI.Controllers
         /// </list>
         /// </returns>
         [HttpPost("Login")]
-        [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] LoginRequestDTO LoginRequest)
         {
             try
@@ -88,7 +85,6 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("ConfirmPassword")]
-        [AllowAnonymous]
         public async Task<IActionResult> ConfirmPassword([FromBody] LoginRequestDTO LoginRequest)
         {
             try
@@ -101,13 +97,13 @@ namespace WebAPI.Controllers
                 // admin role id = 1
                 // customer role id = 2
                 var (isSuccess, errorMessage, claims) = JwtTokenHelper.AuthenticateAndAuthorize(HttpContext, 2);
-
                 if (!isSuccess)
                 {
                     // Return error message if the user is not authenticated or authorized
                     return Unauthorized(ResponseHelper.ResponseError(401, errorMessage ?? "Unknown error", false, null));
                 }
                 #endregion
+
                 var userDAO = await UsersDAO.GetInstance().findUserByEmail(LoginRequest.Email);
                 if (userDAO == null)
                 {
@@ -118,104 +114,36 @@ namespace WebAPI.Controllers
                 {
                     return Unauthorized(ResponseHelper.ResponseError(401, "Password is incorrect", false, null));
                 }
-                   
-                // please code again just for runnning
-                string storedOtp = await _cache.StringGetAsync(LoginRequest.Email);
 
-                if (!string.IsNullOrEmpty(storedOtp))
-                {
-                    await _cache.KeyDeleteAsync(LoginRequest.Email); // Delete existing OTP before sending a new one
-                }
-
-                var otpCode = GenerateOTP();
-                await _cache.StringSetAsync(LoginRequest.Email, otpCode, TimeSpan.FromMinutes(5));
-                bool isSentEmail = await SendEmail(LoginRequest.Email, otpCode);
-                if (isSentEmail)
-                {
-                    return Ok(new DataResponse
-                    {
-                        StatusCode = 200,
-                        Success = true,
-                        Message = "Send OTP successfully",
-                    });
-                }
-                else
-                {
-                    return BadRequest(new DataResponse
-                    {
-                        StatusCode = 400,
-                        Success = false,
-                        Message = "Failed to send OTP. Please try again.",
-                    });
-                }
+                return Ok(ResponseHelper.ResponseSuccess(200, "Password is correct", true, null));
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                return BadRequest(new DataResponse
-                {
-                    StatusCode = 400,
-                    Success = false,
-                    Message = "Internal server error. Please contact support for changing password.",
-                });
+                Console.WriteLine("Error at ConfirmPassword function: ", e);
+                return BadRequest(ResponseHelper.ResponseError(400, "Internal server error: Please contact support", false, null));
             }
         }
 
 
         [HttpPost("checkEmailExist")]
-        [AllowAnonymous]
-        public async Task<IActionResult> CheckEmailExist([FromBody] RegisterRequest? registerRequest)
+        public async Task<IActionResult> CheckEmailExist([FromBody] RequestCheckEmailDTO? registerRequest)
         {
             try
             {
                 var userDAO = await UsersDAO.GetInstance().findUserByEmail(registerRequest.Email);
-                if (userDAO != null)
+                if (userDAO == null)
                 {
-                    return Conflict(new DataResponse
-                    {
-                        StatusCode = 409,
-                        Success = false,
-                        Message = "Email already exists",
-                    });
-                }
-                // please code again just for runnning
-                string storedOtp = await _cache.StringGetAsync(registerRequest.Email);
-
-                if (!string.IsNullOrEmpty(storedOtp))
-                {
-                    await _cache.KeyDeleteAsync(registerRequest.Email); // Delete existing OTP before sending a new one
-                }
-
-                var otpCode = GenerateOTP();
-                await _cache.StringSetAsync(registerRequest.Email, otpCode, TimeSpan.FromMinutes(5));
-                bool isSentEmail = await SendEmail(registerRequest.Email, otpCode);
-                if (isSentEmail)
-                {
-                    return Ok(new DataResponse
-                    {
-                        StatusCode = 200,
-                        Success = true,
-                        Message = "Send OTP for new user successfully",
-                    });
+                    return NotFound(ResponseHelper.ResponseError(404, "Email not found", false, null));
                 }
                 else
                 {
-                    return BadRequest(new DataResponse
-                    {
-                        StatusCode = 400,
-                        Success = false,
-                        Message = "Failed to send OTP for new user. Please try again.",
-                    });
+                    return Ok(ResponseHelper.ResponseError(200, "Email is found", true, null));
                 }
             }
             catch (Exception e)
             {
-                return BadRequest(new DataResponse
-                {
-                    StatusCode = 400,
-                    Success = false,
-                    Message = e.Message,
-                });
+                Console.WriteLine("Error at CheckEmailExist function: ", e);
+                return BadRequest(ResponseHelper.ResponseError(400, "Internal server error: Please contact support", false, null));
             }
         }
 
@@ -233,45 +161,29 @@ namespace WebAPI.Controllers
         /// </list>
         /// </returns>
         [HttpPost("Register")]
-        [AllowAnonymous]
         public async Task<IActionResult> Register([FromBody] RegisterRequest RegisterRequest)
         {
             try
             {
                 if (string.IsNullOrEmpty(RegisterRequest.Email) || string.IsNullOrEmpty(RegisterRequest.Password) || string.IsNullOrEmpty(RegisterRequest.Fullname) || string.IsNullOrEmpty(RegisterRequest.OTP))
                 {
-                    return BadRequest(new DataResponse
-                    {
-                        StatusCode = 400,
-                        Success = false,
-                        Message = "Email, password fullname and OTP are required",
-                    });
+                    return BadRequest(ResponseHelper.ResponseError(400, "Email, password, fullname and OTP are required", false, null));
                 }
 
                 if (RegisterRequest.Password != RegisterRequest.RePassword)
                 {
-                    return BadRequest(new DataResponse
-                    {
-                        StatusCode = 400,
-                        Success = false,
-                        Message = "Passwords do not match",
-                    });
+                    return BadRequest(ResponseHelper.ResponseError(400, "Passwords do not match", false, null));
                 }
 
                 if (await VerifyOTPCode(RegisterRequest.Email, RegisterRequest.OTP) == false)
                 {
-                    return BadRequest(new DataResponse
-                    {
-                        StatusCode = 400,
-                        Success = false,
-                        Message = "Invalid or expired OTP",
-                    });
+                    return BadRequest(ResponseHelper.ResponseError(400, "Invalid or expired OTP", false, null));
                 }
 
-                var userDAO = new Users
+                var newUser = new Users
                 {
                     Id = Guid.NewGuid(),
-                    UserName = RegisterRequest.Fullname.ToLower(),
+                    UserName = RegisterRequest.Fullname,
                     Address = null,
                     Phone = RegisterRequest.Phone,
                     Email = RegisterRequest.Email,
@@ -281,22 +193,15 @@ namespace WebAPI.Controllers
                     LastChange = DateTime.UtcNow,
                     RoleId = 2
                 };
-                UsersDAO.GetInstance().AddUser(userDAO);
-                return Ok(new DataResponse
-                {
-                    StatusCode = 200,
-                    Success = true,
-                    Message = "Register successfully",
-                });
+
+                await UsersDAO.GetInstance().AddUser(newUser);
+
+                return Ok(ResponseHelper.ResponseSuccess(200, "Register successfully", true, null));
             }
             catch (Exception e)
             {
-                return BadRequest(new DataResponse
-                {
-                    StatusCode = 400,
-                    Success = false,
-                    Message = e.Message,
-                });
+                Console.WriteLine("Error at Register function: " + e);
+                return BadRequest(ResponseHelper.ResponseError(400, "Internal server error: Please contact support", false, null));
             }
         }
 
@@ -308,24 +213,17 @@ namespace WebAPI.Controllers
         /// An <see cref="IActionResult"/> indicating the result of the login attempt:
         /// <list type="bullet">
         /// <item><description>200 OK: If the login is successful, returns a token.</description></item>
-        /// <item><description>404 Not Found: If the email is not found.</description></item>
-        /// <item><description>401 Unauthorized: If the password is incorrect.</description></item>
         /// <item><description>400 Bad Request: If an exception occurs during the process.</description></item>
         /// </list>
         /// </returns>
         [HttpPost("SendOTP")]
-        public async Task<IActionResult> SendOTP([FromBody] RequestForgotPassword request)
+        public async Task<IActionResult> SendOTP([FromBody] RequestCheckEmailDTO request)
         {
             try
             {
                 if (string.IsNullOrEmpty(request.Email))
                 {
-                    return BadRequest(new DataResponse
-                    {
-                        StatusCode = 400,
-                        Success = false,
-                        Message = "Email is required",
-                    });
+                    return BadRequest(ResponseHelper.ResponseError(400, "Email is required", false, null));
                 }
                 // please code again just for runnning
                 string storedOtp = await _cache.StringGetAsync(request.Email);
@@ -335,48 +233,22 @@ namespace WebAPI.Controllers
                     await _cache.KeyDeleteAsync(request.Email); // Delete existing OTP before sending a new one
                 }
 
-                var user = await UsersDAO.GetInstance().findUserByEmail(request.Email);
-                if (user == null)
-                {
-                    return NotFound(new DataResponse
-                    {
-                        StatusCode = 404,
-                        Success = false,
-                        Message = "Email not found",
-                    });
-                }
-                var userDTO = AutoMapper.ToUserDTO(user);
-
                 var otpCode = GenerateOTP();
                 await _cache.StringSetAsync(request.Email, otpCode, TimeSpan.FromMinutes(5));
                 bool isSentEmail = await SendEmail(request.Email, otpCode);
                 if (isSentEmail)
                 {
-                    return Ok(new DataResponse
-                    {
-                        StatusCode = 200,
-                        Success = true,
-                        Message = "Send OTP successfully",
-                    });
+                    return Ok(ResponseHelper.ResponseSuccess(200, "Send OTP successfully", true, null));
                 }
                 else
                 {
-                    return BadRequest(new DataResponse
-                    {
-                        StatusCode = 400,
-                        Success = false,
-                        Message = "Failed to send OTP. Please try again.",
-                    });
+                    return BadRequest(ResponseHelper.ResponseError(400, "Failed to send OTP. Please try again.", false, null));
                 }
             }
             catch (Exception e)
             {
-                return BadRequest(new DataResponse
-                {
-                    StatusCode = 500,
-                    Success = false,
-                    Message = "Internal server error. Please contact support.",
-                });
+                Console.WriteLine("Error at SendOTP fuction: " + e);
+                return BadRequest(ResponseHelper.ResponseError(400, "Internal server error: Please contact support", false, null));
             }
         }
 
@@ -396,42 +268,23 @@ namespace WebAPI.Controllers
             {
                 if (string.IsNullOrEmpty(request.Email) || string.IsNullOrEmpty(request.OTP))
                 {
-                    return BadRequest(new DataResponse
-                    {
-                        StatusCode = 400,
-                        Success = false,
-                        Message = "Email and OTP are required",
-                    });
+                    return BadRequest(ResponseHelper.ResponseError(400, "Email and OTP are required", false, null));
                 }
 
                 bool isVerified = await VerifyOTPCode(request.Email, request.OTP);
                 if (isVerified)
                 {
-                    return Ok(new DataResponse
-                    {
-                        StatusCode = 200,
-                        Success = true,
-                        Message = "OTP verified successfully",
-                    });
+                    return Ok(ResponseHelper.ResponseSuccess(200, "OTP verified successfully", true, null));
                 }
                 else
                 {
-                    return BadRequest(new DataResponse
-                    {
-                        StatusCode = 400,
-                        Success = false,
-                        Message = "Invalid or expired OTP",
-                    });
+                    return BadRequest(ResponseHelper.ResponseError(400, "Invalid or expired OTP", false, null));
                 }
             }
             catch (Exception ex)
             {
-                return BadRequest(new DataResponse
-                {
-                    StatusCode = 400,
-                    Success = false,
-                    Message = ex.Message,
-                });
+                Console.WriteLine("Error at VerifyOTP function: " + ex);
+                return BadRequest(ResponseHelper.ResponseError(400, "Internal server error: Please contact support", false, null));
             }
         }
 
@@ -546,66 +399,35 @@ namespace WebAPI.Controllers
         {
             try
             {
-                if (!ModelState.IsValid)
+                if (string.IsNullOrEmpty(request.Email) || string.IsNullOrEmpty(request.Password) || string.IsNullOrEmpty(request.RePassword) || string.IsNullOrEmpty(request.OTP))
                 {
-                    return BadRequest(new DataResponse
-                    {
-                        StatusCode = 400,
-                        Success = false,
-                        Message = "Email and new password are required",
-                    });
+                    return BadRequest(ResponseHelper.ResponseError(400, "Email, password, re-password and OTP are required", false, null));
                 }
 
-                if (request.Password != request.rePassword)
+                if (request.Password != request.RePassword)
                 {
-                    return BadRequest(new DataResponse
-                    {
-                        StatusCode = 400,
-                        Success = false,
-                        Message = "Passwords do not match",
-                    });
+                    return BadRequest(ResponseHelper.ResponseError(400, "Passwords do not match", false, null));
                 }
 
                 if (await VerifyOTPCode(request.Email, request.OTP) == false)
                 {
-                    return BadRequest(new DataResponse
-                    {
-                        StatusCode = 400,
-                        Success = false,
-                        Message = "Invalid or expired OTP",
-                    });
+                    return BadRequest(ResponseHelper.ResponseError(400, "Invalid or expired OTP", false, null));
                 }
 
                 if (await UsersDAO.GetInstance().ResetPassword(request))
                 {
                     await _cache.KeyDeleteAsync(request.Email); // Delete existing OTP after update password
-                    return Ok(new DataResponse
-                    {
-                        StatusCode = 200,
-                        Success = true,
-                        Message = "Password changed successfully",
-                    });
+                    return Ok(ResponseHelper.ResponseSuccess(200, "Password reset successfully", true, null));
                 }
                 else
                 {
-                    return BadRequest(new DataResponse
-                    {
-                        StatusCode = 400,
-                        Success = false,
-                        Message = "Failed to reset password. Please try again.",
-                    });
+                    return BadRequest(ResponseHelper.ResponseError(400, "Failed to reset password. Please try again.", false, null));
                 }
-
-
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return BadRequest(new DataResponse
-                {
-                    StatusCode = 400,
-                    Success = false,
-                    Message = "Internal server error. Please contact support."
-                });
+                Console.WriteLine("Error at ResetPassword function: " + ex);
+                return BadRequest(ResponseHelper.ResponseError(400, "Internal server error: Please contact support", false, null));
             }
         }
     }

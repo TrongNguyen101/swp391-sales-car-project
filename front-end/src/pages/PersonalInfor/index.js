@@ -1,7 +1,17 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from "react";
 
-import classNames from 'classnames/bind';
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, Typography } from '@mui/material';
+import classNames from "classnames/bind";
+import {
+  Button,
+  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  TextField,
+  Typography,
+} from "@mui/material";
 
 import * as AuthValidator from "../../validation/AuthValidation";
 import * as authService from "../../services/AuthService";
@@ -9,18 +19,18 @@ import * as OTPValidator from "../../validation/OTPValidation";
 import * as adminService from "../../services/AdminServices";
 import { useUserData } from "../../layouts/ProfileUserLayout";
 
-import styles from './PersonalInfor.module.scss';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import styles from "./PersonalInfor.module.scss";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 
 const cx = classNames.bind(styles);
 
 const PersonalInfoPage = () => {
-  // User data state 
+  // User data state
   const { userData, refetch } = useUserData();
   // Status of updating user information
   const [updateStatus, setUpdateStatus] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
+  const [openWaitingDialog, setOpenWaitingDialog] = useState(false);
 
   const [newPasswordDialogOpen, setNewPasswordDialogOpen] = useState(false);
   const [newPassword, setNewPassword] = useState("");
@@ -35,16 +45,17 @@ const PersonalInfoPage = () => {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
-  const [openEditUserInformationDialog, setOpenEditUserInformationDialog] = useState(false);
+  const [openEditUserInformationDialog, setOpenEditUserInformationDialog] =
+    useState(false);
 
   // State for editing information form
   const [errorFullname, setErrorFullname] = useState("");
-  const [errorEmail, setErrorEmail] = useState("");
   const [errorPhone, setErrorPhone] = useState("");
   const [errorAddress, setErrorAddress] = useState("");
 
   // Confirm password dialog
-  const [openConfirmPasswordDialog, setConfirmPasswordDialogOpen] = useState(false);
+  const [openConfirmPasswordDialog, setConfirmPasswordDialogOpen] =
+    useState(false);
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errorConfirmPassword, setErrorConfirmPassword] = useState("");
@@ -74,7 +85,7 @@ const PersonalInfoPage = () => {
 
   const handleCloseInformationDialog = () => {
     setOpenInformationDialog(false);
-    setUpdateStatus(null);
+    setUpdateStatus("");
   };
 
   const handleSubmitEDitInformationForm = (event) => {
@@ -85,11 +96,7 @@ const PersonalInfoPage = () => {
       setErrorFullname(fullnameError);
       return;
     }
-    const emailError = AuthValidator.validateEmail(email);
-    if (emailError) {
-      setErrorEmail(emailError);
-      return;
-    }
+
     const phoneError = AuthValidator.validatePhone(phone);
     if (phoneError) {
       setErrorPhone(phoneError);
@@ -100,28 +107,35 @@ const PersonalInfoPage = () => {
       setErrorAddress(addressError);
       return;
     }
-    if (!fullnameError && !emailError && !phoneError && !addressError) {
+    if (!fullnameError && !phoneError && !addressError) {
       handleSave();
     }
-
   };
 
   const handleSave = async () => {
     try {
-      const response = await adminService.userUpdateInformation(fullName, email, phone, address);
+      const response = await adminService.userUpdateInformation(
+        fullName,
+        email,
+        phone,
+        address
+      );
       if (response.statusCode === 200) {
-        setUpdateStatus({ type: 'success', message: 'Profile updated successfully' });
+        setUpdateStatus({
+          type: "success",
+          message: "Profile updated successfully",
+        });
         await refetch();
         setOpenEditUserInformationDialog(false);
         setOpenInformationDialog(true);
       } else {
         setOpenEditUserInformationDialog(false);
-        setUpdateStatus({ type: 'error', message: "Failed to update profile" });
+        setUpdateStatus({ type: "error", message: "Failed to update profile" });
         setOpenInformationDialog(true);
       }
     } catch (error) {
       setOpenEditUserInformationDialog(false);
-      setUpdateStatus({ type: 'error', message: "Failed to update profile" });
+      setUpdateStatus({ type: "error", message: "Failed to update profile" });
     }
   };
 
@@ -151,27 +165,37 @@ const PersonalInfoPage = () => {
     if (reNewPasswordError) {
       setErrorReNewPassword(reNewPasswordError);
     }
-    if (!reNewPasswordError && !newPasswordError) fetchChangePassword();
+    if (!reNewPasswordError && !newPasswordError) {
+      fetchChangePassword();
+    }
   };
 
   const fetchChangePassword = async () => {
     try {
+      const otp = otpValue.join("");
       const response = await authService.postResetPassword(
         userData.email,
         newPassword,
         reNewPassword,
-        otpValue.join("")
+        otp
       );
-      if (response.status === 200) {
+      if (response.statusCode === 200) {
         setNewPasswordDialogOpen(false);
-        setUpdateStatus({ type: 'success', message: 'Profile updated successfully' });
+        setUpdateStatus({
+          type: "success",
+          message: "Changed password successfully",
+        });
+        setOpenInformationDialog(true);
+      } else {
+        setNewPasswordDialogOpen(false);
+        setUpdateStatus({
+          type: "error",
+          message: "Failed to change password",
+        });
         setOpenInformationDialog(true);
       }
-      if (response.status === 400) {
-        setErrorNewPassword(response.data.message);
-      }
     } catch (error) {
-      console.log(error.response);
+      console.log("Error here: ", error);
     }
   };
 
@@ -188,38 +212,73 @@ const PersonalInfoPage = () => {
   };
   const handleConfirmPasswordSubmit = (event) => {
     event.preventDefault();
-    const confirmPasswordError = AuthValidator.validateInput(confirmPassword);
 
+    const confirmPasswordError = AuthValidator.validateInput(confirmPassword);
     if (confirmPasswordError) {
       setErrorConfirmPassword(confirmPasswordError);
     }
 
-    if (!confirmPasswordError) fetchConfirmPassword();
+    if (!confirmPasswordError) {
+      setConfirmPasswordDialogOpen(false);
+      setOpenWaitingDialog(true);
+      setUpdateStatus({
+        type: "success",
+        message: "Sending OTP code to your email...",
+      });
+      fetchConfirmPassword();
+    }
+  };
+
+  const fetchSendOTP = async (email) => {
+    try {
+      const response = await authService.postSendOTP(email);
+      if (response.statusCode === 200) {
+        localStorage.setItem("email", email);
+        setOpenWaitingDialog(false);
+        setOtpValue(new Array(6).fill(""));
+        setOtpDialogOpen(true);
+      } else {
+        setOpenWaitingDialog(false);
+        setUpdateStatus({
+          type: "error",
+          message: "Send OTP to email failed",
+        });
+        setOpenInformationDialog(true);
+      }
+    } catch (error) {
+      setOpenWaitingDialog(false);
+      setUpdateStatus({
+        type: "error",
+        message:
+          "Internal server error. Please contact support for changing password.",
+      });
+      setOpenInformationDialog(true);
+    }
   };
 
   const fetchConfirmPassword = async () => {
     try {
-      setIsLoading(true);
-      const response = await authService.confirmPassword(userData.email, confirmPassword);
+      const response = await authService.confirmPassword(
+        userData.email,
+        confirmPassword
+      );
       if (response.statusCode === 200) {
-        setOtpDialogOpen(true);
+        setOpenWaitingDialog(true);
+        fetchSendOTP(userData.email);
         setConfirmPasswordDialogOpen(false);
-        console.log("OTP sent to email: ", response);
       } else {
-        if (response.statusCode === 401) {
-          setErrorConfirmPassword("Password is incorrect");
-        } else {
-          setOpenInformationDialog(true);
-          setConfirmPasswordDialogOpen(false);
-          setUpdateStatus({ type: 'error', message: "Error. Please contact support for changing password." });
-        }
+        setErrorConfirmPassword("Password is incorrect");
       }
     } catch {
       setConfirmPasswordDialogOpen(false);
-      setUpdateStatus({ type: 'error', message: "Internal server error. Please contact support for changing password." });
+      setUpdateStatus({
+        type: "error",
+        message:
+          "Internal server error. Please contact support for changing password.",
+      });
       setOpenInformationDialog(true);
     }
-  }
+  };
 
   const handleOtpChange = (e, index) => {
     const { value } = e.target;
@@ -274,24 +333,17 @@ const PersonalInfoPage = () => {
 
   const fetchVerifyOTP = async (otp) => {
     try {
-      const response = await authService.postVerifyOTP(
-        userData.email,
-        otp
-      );
+      const response = await authService.postVerifyOTP(userData.email, otp);
 
-      if (response.status === 200) {
+      if (response.statusCode === 200) {
         setOtpDialogOpen(false);
         setNewPasswordDialogOpen(true);
-        console.log("OTP verified: ", response);
         setErrorOtp("");
-      }
-      if (response.status === 400) {
-        setErrorOtp(response.data.message);
+      } else {
+        setErrorOtp("OTP is incorrect");
       }
     } catch (error) {
-      if (error.response) {
-        console.log(error.response);
-      }
+      console.log(error.response);
     }
   };
 
@@ -301,41 +353,54 @@ const PersonalInfoPage = () => {
     setOtpValue(new Array(6).fill(""));
   };
 
-
   return (
-    <div className={cx('container__personal-info')}>
-      <div className={cx('personal-info')}>
-        <div className={cx('title')}>
-          <Typography sx={{ fontSize: '1.5rem', fontWeight: '500' }}>
+    <div className={cx("container__personal-info")}>
+      <div className={cx("personal-info")}>
+        <div className={cx("title")}>
+          <Typography sx={{ fontSize: "1.5rem", fontWeight: "500" }}>
             Personal Information
           </Typography>
-          <Button variant="contained" onClick={handleClickOpenEditInformationForm}>Edit Information</Button>
+          <Button
+            variant="contained"
+            onClick={handleClickOpenEditInformationForm}
+          >
+            Edit Information
+          </Button>
         </div>
-        <div className={cx('info')}>
-          <div className={cx('info-item')}>
-            <span className={cx('label')}>Full Name:</span>
-            <span className={cx('value')}>{userData.userName}</span>
+        <div className={cx("info")}>
+          <div className={cx("info-item")}>
+            <span className={cx("label")}>Full Name:</span>
+            <span className={cx("value")}>{userData.userName}</span>
           </div>
-          <div className={cx('info-item')}>
-            <span className={cx('label')}>Email:</span>
-            <span className={cx('value')}>{userData.email}</span>
+          <div className={cx("info-item")}>
+            <span className={cx("label")}>Email:</span>
+            <span className={cx("value")}>{userData.email}</span>
           </div>
-          <div className={cx('info-item')}>
-            <span className={cx('label')}>Phone Number:</span>
-            <span className={cx('value')}>{userData.phone}</span>
+          <div className={cx("info-item")}>
+            <span className={cx("label")}>Phone Number:</span>
+            <span className={cx("value")}>{userData.phone}</span>
           </div>
-          <div className={cx('info-item')}>
-            <span className={cx('label')}>Address:</span>
-            <span className={cx('value')}>{userData.address ? (userData.address) : ("Please update your address")}</span>
+          <div className={cx("info-item")}>
+            <span className={cx("label")}>Address:</span>
+            <span className={cx("value")}>
+              {userData.address
+                ? userData.address
+                : "Please update your address"}
+            </span>
           </div>
         </div>
-        <div className={cx('password-change')}>
-          <Button variant="outlined" onClick={handleOpenConfirmPasswordDialog}>Change Password</Button>
+        <div className={cx("password-change")}>
+          <Button variant="outlined" onClick={handleOpenConfirmPasswordDialog}>
+            Change Password
+          </Button>
         </div>
       </div>
 
       {/* Show update information dialog */}
-      <Dialog open={openEditUserInformationDialog} onClose={handleCloseEditInformationForm}>
+      <Dialog
+        open={openEditUserInformationDialog}
+        onClose={handleCloseEditInformationForm}
+      >
         <DialogTitle>Edit Information</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -352,9 +417,8 @@ const PersonalInfoPage = () => {
               value={fullName}
               onChange={(e) => {
                 setFullName(e.target.value);
-                setErrorFullname("")
-              }
-              }
+                setErrorFullname("");
+              }}
               error={!!errorFullname}
               helperText={errorFullname}
             />
@@ -367,7 +431,7 @@ const PersonalInfoPage = () => {
               value={phone}
               onChange={(e) => {
                 setPhone(e.target.value);
-                setErrorPhone("")
+                setErrorPhone("");
               }}
               error={!!errorPhone}
               helperText={errorPhone}
@@ -381,17 +445,21 @@ const PersonalInfoPage = () => {
               value={address}
               onChange={(e) => {
                 setAddress(e.target.value);
-                setErrorAddress("")
+                setErrorAddress("");
               }}
               error={!!errorAddress}
               helperText={errorAddress}
             />
 
             <DialogActions>
-              <Button onClick={handleCloseEditInformationForm} color="error" variant="outlined">
+              <Button
+                onClick={handleCloseEditInformationForm}
+                color="error"
+                variant="outlined"
+              >
                 Cancel
               </Button>
-              <Button type="submit" color="primary" variant='contained'>
+              <Button type="submit" color="primary" variant="contained">
                 OK
               </Button>
             </DialogActions>
@@ -442,7 +510,6 @@ const PersonalInfoPage = () => {
                   ></FontAwesomeIcon>
                 </div>
               </div>
-
             </div>
             <Button
               onClick={handleConfirmPasswordSubmit}
@@ -615,18 +682,19 @@ const PersonalInfoPage = () => {
         onClose={handleCloseInformationDialog}
         aria-labelledby="alert-dialog-slide-title"
         aria-describedby="alert-dialog-slide-description"
-        sx={{ "& .MuiDialog-paper": { width: "540px", height: "240px" } }}
+        sx={{ "& .MuiDialog-paper": { width: "540px", height: "180px" } }}
       >
         <DialogTitle
           id="alert-dialog-slide-title"
           sx={{
             textAlign: "center",
-            marginTop: "20px"
+            marginTop: "20px",
+            height: "80px",
           }}
         >
           {updateStatus && (
             <Typography
-              color={updateStatus.type === 'error' ? 'error' : 'success'}
+              color={updateStatus.type === "error" ? "error" : "success"}
               sx={{ fontWeight: 500, fontSize: "30px" }}
             >
               {updateStatus.message}
@@ -642,6 +710,32 @@ const PersonalInfoPage = () => {
             OK
           </Button>
         </DialogActions>
+      </Dialog>
+
+      {/* Show waiting dialog */}
+      <Dialog
+        open={openWaitingDialog}
+        keepMounted
+        aria-labelledby="alert-dialog-slide-title"
+        aria-describedby="alert-dialog-slide-description"
+        sx={{ "& .MuiDialog-paper": { width: "540px", height: "180px" } }}
+      >
+        <DialogTitle
+          id="alert-dialog-slide-title"
+          sx={{
+            textAlign: "center",
+            marginTop: "20px",
+          }}
+        >
+          {updateStatus && (
+            <Typography sx={{ fontWeight: 500, fontSize: "30px" }}>
+              Sending OTP code to your email...
+            </Typography>
+          )}
+        </DialogTitle>
+        <DialogContent sx={{ textAlign: "center" }}>
+          <CircularProgress />
+        </DialogContent>
       </Dialog>
     </div>
   );
