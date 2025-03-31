@@ -1,6 +1,6 @@
 namespace WebAPI.DTO
 {
-    public class RequestForgotPassword
+    public class RequestCheckEmailDTO
     {
         public string? Email { get; set; }
     }

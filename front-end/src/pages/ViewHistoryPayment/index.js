@@ -54,8 +54,7 @@ const ViewHistoryPaymentPage = () => {
 
     return (
         <div className={cx("wrapper")}>
-            <div className={cx('conatiner')}>
-                <Sidebar />
+            <div className={cx("conatiner")}>
                 <Box>
                     {/* Search transaction */}
                     <Box
@@ -89,7 +88,7 @@ const ViewHistoryPaymentPage = () => {
                             }}
                         />
                     </Box>
-                    <div className={cx('conatiner_table')}>
+                    <div className={cx("conatiner_table")}>
                         <TableContainer
                             component={Paper}
                             sx={{

@@ -1,0 +1,25 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+.sidebar {
+  width: 300px;
+  padding-bottom: 20px;
+}
+
+.container__content {
+  flex-grow: 1;
+  scrollbar-color: var(--primary-color);
+  display: flex;
+  width: var(--default-width);
+  margin: auto;
+  margin-top: 100px;  
+
+}
+
+@media only screen and (max-width: 100em) {
+  .container__content {
+    width: 1400px;
+  }
+}

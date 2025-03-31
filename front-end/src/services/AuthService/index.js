@@ -30,8 +30,10 @@ export const postLogin = async (email, password) => {
 
 export const confirmPassword = async (email, password) => {
   try {
+    const token = localStorage.getItem("Bearer");
+    const enpoint = "api/Auth/ConfirmPassword";
     const response = await request.post(
-      "api/Auth/ConfirmPassword",
+      enpoint,
       {
         email: email,
         password: password,
@@ -39,12 +41,13 @@ export const confirmPassword = async (email, password) => {
       {
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
       }
     );
-    return response;
+    return response.data;
   } catch (error) {
-    return error.response;
+    return error.response.data;
   }
 };
 
@@ -57,7 +60,14 @@ export const confirmPassword = async (email, password) => {
  * @returns {Promise<Object>} The response from the server.
  * @throws {Object} The error response from the server if the request fails.
  */
-export const postRegister = async (fullname, email, password, rePassword, phone, otp) => {
+export const postRegister = async (
+  fullname,
+  email,
+  password,
+  rePassword,
+  phone,
+  otp
+) => {
   try {
     const response = await request.post(
       "api/Auth/Register",
@@ -75,9 +85,9 @@ export const postRegister = async (fullname, email, password, rePassword, phone,
         },
       }
     );
-    return response;
+    return response.data;
   } catch (error) {
-    return error.response;
+    return error.response.data;
   }
 };
 
@@ -97,14 +107,15 @@ export const checkEmail = async (emailNeedToCheck) => {
     );
     return response.data;
   } catch (error) {
-    return error.response;
+    return error.response.data;
   }
 };
 
 export const postSendOTP = async (email) => {
   try {
+    const enpoint = `api/Auth/SendOTP`;
     const response = await request.post(
-      "api/Auth/SendOTP",
+      enpoint,
       {
         email: email,
       },
@@ -114,9 +125,9 @@ export const postSendOTP = async (email) => {
         },
       }
     );
-    return response;
+    return response.data;
   } catch (error) {
-    return error.response;
+    return error.response.data;
   }
 };
 
@@ -134,20 +145,26 @@ export const postVerifyOTP = async (email, otp) => {
         },
       }
     );
-    return response;
+    return response.data;
   } catch (error) {
-    return error.response;
+    return error.response.data;
   }
 };
 
-export const postResetPassword = async (email, newPassword, rePassword, OTPCode) => {
+export const postResetPassword = async (
+  email,
+  newPassword,
+  rePassword,
+  OTPCode
+) => {
   try {
+    const enpoint = "api/Auth/ResetPassword";
     const response = await request.post(
-      "api/Auth/ResetPassword",
+      enpoint,
       {
         Email: email,
         Password: newPassword,
-        rePassword: rePassword,
+        RePassword: rePassword,
         OTP: OTPCode,
       },
       {
@@ -156,8 +173,8 @@ export const postResetPassword = async (email, newPassword, rePassword, OTPCode)
         },
       }
     );
-    return response;
+    return response.data;
   } catch (error) {
-    return error.response;
+    return error.response.data;
   }
 };

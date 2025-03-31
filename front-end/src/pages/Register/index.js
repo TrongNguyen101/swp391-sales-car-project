@@ -1,4 +1,14 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Slide, Typography } from "@mui/material";
+import {
+  Button,
+  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Slide,
+  Typography,
+} from "@mui/material";
 import classNames from "classnames/bind";
 import styles from "./Register.module.scss";
 import { Link, useNavigate } from "react-router-dom";
@@ -40,6 +50,7 @@ function RegisterPage() {
   const [message, setMessage] = useState("");
   const [phone, setPhone] = useState("");
   const [errorPhone, setErrorPhone] = useState("");
+  const [openWaitingDialog, setOpenWaitingDialog] = useState(false);
 
   // state for OTP
   const [otpDialogOpen, setOtpDialogOpen] = useState(false);
@@ -48,6 +59,9 @@ function RegisterPage() {
   const otpRefs = useRef(new Array(6).fill(null));
 
   const navigate = useNavigate();
+
+  const [openInformationDialog, setOpenInformationDialog] = useState(false);
+  const [informationContent, setInformationContent] = useState("");
 
   const handleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -61,32 +75,6 @@ function RegisterPage() {
     window.scrollTo({ top: 0, behavior: "smooth" });
     navigate("/");
   };
-
-  /**
-   * Handles the registration process by sending user details to the server.
-   *
-   * @returns {Promise<void>} - A promise that resolves when the registration process is complete.
-   *
-   * @throws {Error} - Throws an error if the registration process fails.
-   */
-
-  const handleCheckEmail = async (emailNeedToCheck) => {
-    try {
-      const response = await authService.checkEmail(emailNeedToCheck);
-      if (response.statusCode === 200) {
-        console.log("ketquachekemail", response);
-        setErrorEmail("");
-        setOtpDialogOpen(true);
-        // fetchRegister();
-      } else {
-        console.log("email existed", response);
-        setErrorEmail("Email already exists");
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
 
   /**
    * Handles the form submission event.
@@ -125,10 +113,55 @@ function RegisterPage() {
       setErrorPhone(phoneError);
     }
 
-    if (!emailError && !passwordError && !rePasswordError && !fullnameError && !phoneError) {
+    if (
+      !emailError &&
+      !passwordError &&
+      !rePasswordError &&
+      !fullnameError &&
+      !phoneError
+    ) {
       handleCheckEmail(email);
     }
   };
+
+  const handleCheckEmail = async (emailNeedToCheck) => {
+    try {
+      const response = await authService.checkEmail(emailNeedToCheck);
+      if (response.statusCode === 404) {
+        setErrorEmail("");
+        setOpenWaitingDialog(true); // Show waiting dialog
+        fetchSendOTP(emailNeedToCheck); // Send OTP to email
+      } else if (response.statusCode === 200) {
+        setErrorEmail("Email already exists");
+      } else {
+        setErrorEmail("Check email failed");
+      }
+    } catch (error) {
+      setInformationContent({
+        type: "error",
+        message: "Internal server error. Please contact support",
+      });
+    }
+  };
+
+  const fetchSendOTP = async (email) => {
+    try {
+      const response = await authService.postSendOTP(email);
+      if (response.statusCode === 200) {
+        localStorage.setItem("email", email);
+        setOpenWaitingDialog(false);
+        setOtpDialogOpen(true);
+      } else {
+        setErrorEmail("Send OTP to email failed");
+        setOpenWaitingDialog(false);
+      }
+    } catch (error) {
+      console.log("Error at fetchSendOTP", error);
+      setOpenWaitingDialog(false);
+      setErrorEmail("Send OTP to email failed");
+    }
+  };
+
   const handleOtpChange = (e, index) => {
     const { value } = e.target;
     if (/^[0-9]$/.test(value) || value === "") {
@@ -191,7 +224,7 @@ function RegisterPage() {
         otp
       );
 
-      if (response.status === 200) {
+      if (response.statusCode === 200) {
         setOtpDialogOpen(false);
         setErrorOtp("");
         setOtpValue(new Array(6).fill(""));
@@ -201,19 +234,18 @@ function RegisterPage() {
         setErrorOtp("Invalid OTP code");
       }
     } catch (error) {
-      if (error.response) {
-        console.log(error.response);
-      }
+      setInformationContent({
+        type: "error",
+        message: "Internal server error. Please contact support",
+      });
     }
   };
-
 
   const handleOtpDialogClose = () => {
     setOtpDialogOpen(false);
     setErrorOtp("");
     setOtpValue(new Array(6).fill(""));
   };
-
 
   const handleCloseDialog = () => {
     setOpenDialog(false);
@@ -223,7 +255,6 @@ function RegisterPage() {
   const Transition = forwardRef(function Transition(props, ref) {
     return <Slide direction="down" ref={ref} {...props} />;
   });
-
 
   return (
     <div className={cx("container")}>
@@ -239,7 +270,7 @@ function RegisterPage() {
               type="text"
               id="fullname"
               className={!errorFullname ? cx("input") : cx("error-input")}
-              placeholder="Fullname"
+              placeholder="Full name"
               spellCheck="false"
               value={fullname}
               onChange={(e) => {
@@ -259,6 +290,7 @@ function RegisterPage() {
               placeholder="Email"
               spellCheck="false"
               value={email}
+              autoComplete="new-email"
               onChange={(e) => {
                 setEmail(e.target.value);
                 setErrorEmail("");
@@ -293,6 +325,7 @@ function RegisterPage() {
               placeholder="Password"
               spellCheck="false"
               value={password}
+              autoComplete="new-password"
               onChange={(e) => {
                 setPassword(e.target.value);
                 setErrorPassword("");
@@ -437,9 +470,7 @@ function RegisterPage() {
           </Typography>
         )}
         <DialogActions sx={{ justifyContent: "center", marginBottom: "15px" }}>
-          <Button variant="contained"
-            onClick={handleOtpSubmit}
-          >
+          <Button variant="contained" onClick={handleOtpSubmit}>
             Submit
           </Button>
           <Button
@@ -450,6 +481,56 @@ function RegisterPage() {
             Cancel
           </Button>
         </DialogActions>
+      </Dialog>
+
+      {/* Show waiting dialog */}
+      <Dialog
+        open={openWaitingDialog}
+        keepMounted
+        aria-labelledby="alert-dialog-slide-title"
+        aria-describedby="alert-dialog-slide-description"
+        sx={{ "& .MuiDialog-paper": { width: "540px", height: "180px" } }}
+      >
+        <DialogTitle
+          id="alert-dialog-slide-title"
+          sx={{
+            textAlign: "center",
+            marginTop: "20px",
+          }}
+        >
+          <Typography sx={{ fontWeight: 500, fontSize: "30px" }}>
+            Sending OTP code to your email...
+          </Typography>
+        </DialogTitle>
+        <DialogContent sx={{ textAlign: "center" }}>
+          <CircularProgress />
+        </DialogContent>
+      </Dialog>
+
+      {/* Show information dialog */}
+      <Dialog
+        open={openInformationDialog}
+        keepMounted
+        aria-labelledby="alert-dialog-slide-title"
+        aria-describedby="alert-dialog-slide-description"
+        sx={{ "& .MuiDialog-paper": { width: "540px", height: "160px" } }}
+      >
+        <DialogTitle
+          id="alert-dialog-slide-title"
+          sx={{
+            textAlign: "center",
+            marginTop: "20px",
+          }}
+        >
+          {informationContent && (
+            <Typography
+              color={informationContent.type === "error" ? "error" : "success"}
+              sx={{ fontWeight: 500, fontSize: "30px" }}
+            >
+              {informationContent.message}
+            </Typography>
+          )}
+        </DialogTitle>
       </Dialog>
     </div>
   );

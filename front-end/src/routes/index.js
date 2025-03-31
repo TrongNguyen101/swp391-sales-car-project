@@ -1,7 +1,6 @@
 import HomePage from "../pages/Home";
 import LoginPage from "../pages/Login";
 import CarsPage from "../pages/Cars";
-import ProfilePage from "../pages/Profile";
 import AccessoriesPage from "../pages/Accessories";
 import AccessoryDetailPage from "../pages/AccessoryDetail";
 import RegisterPage from "../pages/Register";
@@ -9,7 +8,7 @@ import CarDetailPage from "../pages/CarDetail";
 import CreateURLPaymentOfDepositPage from "../pages/CreateURLPaymentOfDeposit";
 import DepositPaymentResponsePage from "../pages/PaymentResponse";
 import TestDriveRegistration from "../pages/TestDriveRegistration";
-import { DashboardLayout } from "../layouts";
+import { DashboardLayout, ProfileUserLayout } from "../layouts";
 import AccountTablePage from "../pages/AccountTable";
 import CartPage from "../pages/Cart";
 
@@ -37,9 +36,9 @@ import AdminManageTestDrivenPage from "../pages/AdminManageTestDriven";
 import UpdateAccessoryPage from "../pages/AdminManageAccessories/UpdateAccessory";
 import AdminManageImportExportPage from "../pages/AdminManageImportExport";
 import AdminManageAccessoryTransactionsDetailPage from "../pages/AdminManageAccessoryTransactionsDetail";
+import PersonalInfoPage from "../pages/PersonalInfor";
 const publicRoutes = [
   { path: "/", page: HomePage },
-  { path: "/profile", page: ProfilePage },
   { path: "/cars", page: CarsPage },
   { path: "/cars/:carId", page: CarDetailPage },
   { path: "/accessories", page: AccessoriesPage },
@@ -53,7 +52,8 @@ const publicRoutes = [
   { path: "/reset-password", page: TestDriveRegistration },
 
   { path: "/invoice/:userId", page: CreateURLPaymentOfAccessoryPage },
-  { path: "/deposit-transaction-history", page: ViewHistoryPaymentPage },
+  { path: "/deposit-transaction-history", page: ViewHistoryPaymentPage, layout: ProfileUserLayout },
+  { path: "/profile", page: PersonalInfoPage, layout: ProfileUserLayout },
 
   {
     path: "/dashboard/account",

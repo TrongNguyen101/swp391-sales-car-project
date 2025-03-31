@@ -1,14 +1,46 @@
 export const validateFullname = (fullname) => {
-  if (!fullname || fullname.trim() === "") {
+  // Early return for non-string or undefined input
+  if (typeof fullname !== "string" || fullname === undefined || fullname === null) {
+    return "Fullname must be a valid string";
+  }
+  const trimmed = fullname.trim(); // Trim once for efficiency
+
+  // Check if empty
+  if (trimmed === "") {
     return "Fullname is required";
-  } else if (/\d/.test(fullname)) {
-    return "Fullname should not contain numbers";
-  } else if (fullname.trim().split(/\s+/).length < 2) {
-    return "Fullname must contain at least two words";
-  } else if (/^\s|\s$/.test(fullname)) {
+  }
+
+  // Check length (optional max limit)
+  if (trimmed.length > 50) {
+    return "Fullname must not exceed 50 characters";
+  }
+
+  // Check for invalid characters (allow letters, spaces, hyphens, apostrophes)
+  if (!/^[a-zA-Z\s'-]+$/.test(trimmed)) {
+    return "Fullname can only contain letters, spaces, hyphens, and apostrophes";
+  }
+
+  // Split into words (handle multiple spaces)
+  const words = trimmed.split(/\s+/).filter(word => word.length > 0);
+
+  // Check word count (configurable minimum)
+  const minWords = 2; // Could be a parameter if flexibility is needed
+  if (words.length < minWords) {
+    return `Fullname must contain at least ${minWords} words`;
+  }
+
+  // Check each word's minimum length
+  const minWordLength = 1; // Adjust as needed
+  if (words.some(word => word.length < minWordLength)) {
+    return `Each word in Fullname must be at least ${minWordLength} character(s)`;
+  }
+
+  // Check for leading/trailing spaces (already handled by trim, but explicit for clarity)
+  if (fullname !== trimmed) {
     return "Fullname should not start or end with a space";
   }
-  return null;
+
+  return null; // Valid
 };
 
 export const validateEmail = (email) => {
@@ -52,15 +84,61 @@ export const validateConfirmPassword = (password, confirmPassword) => {
 
 export const validatePhone = (phone) => {
 
-  const phoneRegex = /^(0|\+84)[1-9][0-9]{8,9}$/; 
+  const trimmed = phone.trim(); // Remove leading/trailing spaces
 
+  // Check if empty
+  if (trimmed === "") {
+    return "Phone number is required";
+  }
+
+  const phoneRegex = /^(0|\+84)[1-9][0-9]{8,9}$/;
   if (!phone) {
     return "Phone is required";
   }
-
   if (!phoneRegex.test(phone)) {
     return "Phone number is invalid";
   }
 
+  if (phone !== trimmed) {
+    return "Phone number should not start or end with a space";
+  }
+
   return null;
 };
+
+export const validateAddress = (address) => {
+  // Check for valid string input
+  if (typeof address !== "string" || address === undefined || address === null) {
+    return "Address must be a valid string";
+  }
+  const trimmed = address.trim(); // Trim once for efficiency
+  // Check if empty
+  if (trimmed === "") {
+    return "Address is required";
+  }
+  // Check maximum length (e.g., 100 characters)
+  if (trimmed.length > 100) {
+    return "Address must not exceed 100 characters";
+  }
+  // Check for valid characters (letters, numbers, spaces, hyphens, periods, commas)
+  if (!/^[a-zA-Z0-9\s.,'-]+$/.test(trimmed)) {
+    return "Address can only contain letters, numbers, spaces, commas, periods, hyphens, and apostrophes";
+  }
+  // Check for leading/trailing spaces
+  if (address !== trimmed) {
+    return "Address should not start or end with a space";
+  }
+
+  return null; // Valid
+};
+
+export const validateInput = (input) => {
+  const trimmed = input.trim(); // Trim once for efficiency
+  if (trimmed === "") {
+    return "Input is required";
+  }
+  if (input !== trimmed) {
+    return "Input should not start or end with a space";
+  }
+  return null; // Valid
+}

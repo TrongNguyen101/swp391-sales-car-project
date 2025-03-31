@@ -48,11 +48,11 @@ namespace WebAPI.DAO
             }
         }
 
-        public async Task<Users?> FindUserById(Guid userId)
+        public async Task<Users?> FindUserById(string userId)
         {
             using (var context = new VinfastContext())
             {
-                return await context.Users.Where(u => u.Id == userId).FirstOrDefaultAsync();
+                return await context.Users.Where(u => u.Id.ToString() == userId).FirstOrDefaultAsync();
             }
         }
 
@@ -60,12 +60,25 @@ namespace WebAPI.DAO
         /// Adds a new user to the database.
         /// </summary>
         /// <param name="user">The user to add.</param>
-        public void AddUser(Users user)
+        public async Task AddUser(Users user)
         {
-            using (var context = new VinfastContext())
+            try
             {
-                context.Users.Add(user);
-                context.SaveChanges();
+                using var context = new VinfastContext();
+                await context.Users.AddAsync(user);
+                await context.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                Console.WriteLine("Failed to add new user to database: " + ex.Message);
+                // Handle database-specific errors
+                throw new Exception("Failed to add new user to database: " + ex.Message);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred while adding user: " + ex.Message);
+                // Handle other unexpected errors
+                throw new Exception("An error occurred while adding user: " + ex.Message);
             }
         }
 

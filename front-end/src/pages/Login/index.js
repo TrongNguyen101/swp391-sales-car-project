@@ -2,6 +2,7 @@ import classNames from "classnames/bind";
 import styles from "./Login.module.scss";
 import {
   Button,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -36,7 +37,8 @@ function LoginPage() {
   const [errorPassword, setErrorPassword] = useState("");
   const [message, setMessage] = useState("");
   const [openDialog, setOpenDialog] = useState(false);
-  const [forgotPasswordOpen, setForgotPasswordOpen] = useState(false);
+  const [openForgotPasswordDialog, setOpenForgotPasswordDialog] =
+    useState(false);
   const [forgotPasswordEmail, setForgotPasswordEmail] = useState("");
   const [errorForgotPasswordEmail, setErrorForgotPasswordEmail] = useState("");
   const [otpDialogOpen, setOtpDialogOpen] = useState(false);
@@ -52,6 +54,10 @@ function LoginPage() {
   const [reNewPassword, setReNewPassword] = useState("");
   const [errorReNewPassword, setErrorReNewPassword] = useState("");
   const [showReNewPassword, setShowReNewPassword] = useState(false);
+
+  const [openWaitingDialog, setOpenWaitingDialog] = useState(false);
+  const [informationContent, setInformationContent] = useState({});
+  const [openInformationDialog, setOpenInformationDialog] = useState(false);
 
   const otpRefs = useRef([]);
   const navigate = useNavigate();
@@ -119,24 +125,46 @@ function LoginPage() {
     if (emailError) {
       setErrorForgotPasswordEmail(emailError);
     } else {
-      fetchSendOTP(forgotPasswordEmail);
+      handleCheckEmail(forgotPasswordEmail);
+    }
+  };
+
+  const handleCheckEmail = async (emailNeedToCheck) => {
+    try {
+      const response = await authService.checkEmail(emailNeedToCheck);
+      if (response.statusCode === 200) {
+        setErrorForgotPasswordEmail("");
+        setOpenForgotPasswordDialog(false);
+        setOpenWaitingDialog(true); // Show waiting dialog
+        fetchSendOTP(emailNeedToCheck); // Send OTP to email
+      } else if (response.statusCode === 404) {
+        setErrorForgotPasswordEmail("Email not found");
+      } else {
+        setErrorForgotPasswordEmail("Check email failed");
+      }
+    } catch (error) {
+      setInformationContent({
+        type: "error",
+        message: "Internal server error. Please contact support",
+      });
     }
   };
 
   const fetchSendOTP = async (email) => {
     try {
       const response = await authService.postSendOTP(email);
-      if (response.status === 200) {
+      if (response.statusCode === 200) {
         localStorage.setItem("email", email);
-        setForgotPasswordOpen(false);
+        setOpenWaitingDialog(false);
         setOtpDialogOpen(true);
-        setErrorForgotPasswordEmail("");
       } else {
-        setErrorForgotPasswordEmail(response.data.message);
+        setErrorEmail("Send OTP to email failed");
+        setOpenWaitingDialog(false);
       }
-      return response.data;
     } catch (error) {
-      return error.response;
+      console.log("Error at fetchSendOTP", error);
+      setOpenWaitingDialog(false);
+      setErrorForgotPasswordEmail("Send OTP to email failed");
     }
   };
 
@@ -147,7 +175,7 @@ function LoginPage() {
   };
 
   const handleForgotPasswordClose = () => {
-    setForgotPasswordOpen(false);
+    setOpenForgotPasswordDialog(false);
     setErrorForgotPasswordEmail("");
     setForgotPasswordEmail("");
   };
@@ -156,6 +184,8 @@ function LoginPage() {
     setOtpDialogOpen(false);
     setErrorOtp("");
     setOtpValue(new Array(6).fill(""));
+    setOpenForgotPasswordDialog(true);
+    setErrorForgotPasswordEmail("");
   };
 
   const handleOtpChange = (e, index) => {
@@ -189,7 +219,7 @@ function LoginPage() {
         otp
       );
 
-      if (response.status === 200) {
+      if (response.statusCode === 200) {
         setOtpDialogOpen(false);
         setNewPasswordDialogOpen(true);
         setErrorOtp("");
@@ -285,7 +315,7 @@ function LoginPage() {
   };
 
   const handleToFogotPassword = () => {
-    setForgotPasswordOpen(true);
+    setOpenForgotPasswordDialog(true);
   };
 
   return (
@@ -403,7 +433,7 @@ function LoginPage() {
 
       {/* Show forgot password popup */}
       <Dialog
-        open={forgotPasswordOpen}
+        open={openForgotPasswordDialog}
         onClose={handleForgotPasswordClose}
         aria-labelledby="forgot-password-dialog-title"
         aria-describedby="forgot-password-dialog-description"
@@ -605,6 +635,56 @@ function LoginPage() {
             Cancel
           </Button>
         </DialogActions>
+      </Dialog>
+
+      {/* Show waiting dialog */}
+      <Dialog
+        open={openWaitingDialog}
+        keepMounted
+        aria-labelledby="alert-dialog-slide-title"
+        aria-describedby="alert-dialog-slide-description"
+        sx={{ "& .MuiDialog-paper": { width: "540px", height: "180px" } }}
+      >
+        <DialogTitle
+          id="alert-dialog-slide-title"
+          sx={{
+            textAlign: "center",
+            marginTop: "20px",
+          }}
+        >
+          <Typography sx={{ fontWeight: 500, fontSize: "30px" }}>
+            Sending OTP code to your email...
+          </Typography>
+        </DialogTitle>
+        <DialogContent sx={{ textAlign: "center" }}>
+          <CircularProgress />
+        </DialogContent>
+      </Dialog>
+
+      {/* Show information dialog */}
+      <Dialog
+        open={openInformationDialog}
+        keepMounted
+        aria-labelledby="alert-dialog-slide-title"
+        aria-describedby="alert-dialog-slide-description"
+        sx={{ "& .MuiDialog-paper": { width: "540px", height: "160px" } }}
+      >
+        <DialogTitle
+          id="alert-dialog-slide-title"
+          sx={{
+            textAlign: "center",
+            marginTop: "20px",
+          }}
+        >
+          {informationContent && (
+            <Typography
+              color={informationContent.type === "error" ? "error" : "success"}
+              sx={{ fontWeight: 500, fontSize: "30px" }}
+            >
+              {informationContent.message}
+            </Typography>
+          )}
+        </DialogTitle>
       </Dialog>
     </div>
   );
