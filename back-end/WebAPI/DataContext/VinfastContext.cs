@@ -425,7 +425,12 @@ namespace WebAPI.DataContext
                 new Roles
                 {
                     RoleId = 2,
-                    RoleName = "User"
+                    RoleName = "Customer"
+                },
+                new Roles
+                {
+                    RoleId = 3,
+                    RoleName = "Staff"
                 }
             );
 
@@ -456,8 +461,7 @@ namespace WebAPI.DataContext
                     IsDeleted = false,
                     LastChange = new DateTime(2023, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                     RoleId = 2
-                }
-                ,
+                },
                 new Users
                 {
                     Id = new Guid("5168db79-a770-472d-82ed-061cba60f1e1"),
@@ -470,6 +474,19 @@ namespace WebAPI.DataContext
                     IsDeleted = false,
                     LastChange = new DateTime(2023, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                     RoleId = 2
+                },
+                new Users
+                {
+                    Id = new Guid("1f2628eb-34bf-4e4b-a9d2-308827bed09a"),
+                    UserName = "Nguyen Duong Phu Trong",
+                    Address = "456 User St",
+                    Phone = "0987654321",
+                    Email = "staff@gmail.com",
+                    Password = EncyptHelper.Sha256Encrypt("Staff@12345"), // Note: In a real application, store hashed passwords
+                    CreatedAt = new DateTime(2023, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                    IsDeleted = false,
+                    LastChange = new DateTime(2023, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                    RoleId = 3
                 }
             );
 
@@ -480,71 +497,57 @@ namespace WebAPI.DataContext
                     new Category
                     {
                         Id = 1,
-                        Name = "All accessories",
-                        ParentsId = 0,
-                        IsDeleted = false
-                    },
-                    new Category
-                    {
-                        Id = 2,
                         Name = "Common car accessories",
                         ParentsId = 0,
                         IsDeleted = false
                     },
                     new Category
                     {
-                        Id = 3,
+                        Id = 2,
                         Name = "Electric car accessories",
                         ParentsId = 0,
                         IsDeleted = false
                     },
                     new Category
                     {
+                        Id = 3,
+                        Name = "Accessories of VF3",
+                        ParentsId = 2,
+                        IsDeleted = false
+                    },
+                    new Category
+                    {
                         Id = 4,
-                        Name = "Gasoline car accessories",
-                        ParentsId = 0,
+                        Name = "Accessories of VF5",
+                        ParentsId = 2,
                         IsDeleted = false
                     },
                     new Category
                     {
                         Id = 5,
-                        Name = "Accessories of VF3",
-                        ParentsId = 3,
+                        Name = "Accessories of VF6",
+                        ParentsId = 2,
                         IsDeleted = false
                     },
                     new Category
                     {
                         Id = 6,
-                        Name = "Accessories of VF5",
-                        ParentsId = 3,
+                        Name = "Accessories of VF7",
+                        ParentsId = 2,
                         IsDeleted = false
                     },
                     new Category
                     {
                         Id = 7,
-                        Name = "Accessories of VF6",
-                        ParentsId = 3,
+                        Name = "Accessories of VF8",
+                        ParentsId = 2,
                         IsDeleted = false
                     },
                     new Category
                     {
                         Id = 8,
-                        Name = "Accessories of VF7",
-                        ParentsId = 3,
-                        IsDeleted = false
-                    },
-                    new Category
-                    {
-                        Id = 9,
-                        Name = "Accessories of VF8",
-                        ParentsId = 3,
-                        IsDeleted = false
-                    },
-                    new Category
-                    {
-                        Id = 10,
                         Name = "Accessories of VF9",
-                        ParentsId = 3,
+                        ParentsId = 2,
                         IsDeleted = false
                     }
                 );
@@ -561,7 +564,7 @@ namespace WebAPI.DataContext
                         Price = 6000000,
                         Quantity = 10,
                         Image = "Sac_tai_nha.png",
-                        CategoryId = 2,
+                        CategoryId = 1,
                         IsDeleted = false,
                         IsShowed = true,
                         Origin = "Vietnam",
@@ -579,7 +582,7 @@ namespace WebAPI.DataContext
                         Price = 1668000,
                         Quantity = 10,
                         Image = "VF3_tham_nhua.png",
-                        CategoryId = 5,
+                        CategoryId = 3,
                         IsDeleted = false,
                         IsShowed = true,
                         Origin = "Vietnam",
@@ -597,7 +600,7 @@ namespace WebAPI.DataContext
                         Price = 26720000,
                         Quantity = 10,
                         Image = "VF3_Camera_lui.png",
-                        CategoryId = 5,
+                        CategoryId = 3,
                         IsDeleted = false,
                         IsShowed = true,
                         Origin = "Japan",
@@ -615,7 +618,7 @@ namespace WebAPI.DataContext
                         Price = 1969000,
                         Quantity = 10,
                         Image = "VF5_tham_nhua.png",
-                        CategoryId = 6,
+                        CategoryId = 4,
                         IsDeleted = false,
                         IsShowed = true,
                         Origin = "Vietnam",
@@ -633,7 +636,7 @@ namespace WebAPI.DataContext
                         Price = 5500000,
                         Quantity = 10,
                         Image = "VF5_Goi_dan_phim_cach_nhiet.png",
-                        CategoryId = 6,
+                        CategoryId = 4,
                         IsDeleted = false,
                         IsShowed = true,
                         Origin = "Vietnam",
@@ -651,7 +654,7 @@ namespace WebAPI.DataContext
                         Price = 990000,
                         Quantity = 10,
                         Image = "VF5_Tham_cop.png",
-                        CategoryId = 6,
+                        CategoryId = 4,
                         IsDeleted = false,
                         IsShowed = true,
                         Origin = "Vietnam",
@@ -669,7 +672,7 @@ namespace WebAPI.DataContext
                         Price = 5500000,
                         Quantity = 10,
                         Image = "VF6_Goi_dan_phim_cach_nhiet.png",
-                        CategoryId = 7,
+                        CategoryId = 5,
                         IsDeleted = false,
                         IsShowed = true,
                         Origin = "Vietnam",
@@ -687,7 +690,7 @@ namespace WebAPI.DataContext
                         Price = 1990000,
                         Quantity = 10,
                         Image = "VF6_tham_nhua.png",
-                        CategoryId = 7,
+                        CategoryId = 5,
                         IsDeleted = false,
                         IsShowed = true,
                         Origin = "Vietnam",
@@ -705,7 +708,7 @@ namespace WebAPI.DataContext
                         Price = 990000,
                         Quantity = 10,
                         Image = "VF6_Tham_cop.png",
-                        CategoryId = 7,
+                        CategoryId = 5,
                         IsDeleted = false,
                         IsShowed = true,
                         Origin = "Vietnam",
@@ -723,7 +726,7 @@ namespace WebAPI.DataContext
                         Price = 990000,
                         Quantity = 8,
                         Image = "Tham_Cop_3D_VF7.png",
-                        CategoryId = 7,
+                        CategoryId = 5,
                         IsDeleted = false,
                         IsShowed = true,
                         Origin = "Vietnam",
@@ -741,7 +744,7 @@ namespace WebAPI.DataContext
                         Price = 5500000,
                         Quantity = 10,
                         Image = "Goi_Dan_Film_Cach_Nhiet_VinFast_VF7.png",
-                        CategoryId = 8,
+                        CategoryId = 6,
                         IsDeleted = false,
                         IsShowed = true,
                         Origin = "Vietnam",
@@ -759,7 +762,7 @@ namespace WebAPI.DataContext
                         Price = 540000,
                         Quantity = 10,
                         Image = "Tham_San_3D_VF_7.png",
-                        CategoryId = 8,
+                        CategoryId = 6,
                         IsDeleted = false,
                         IsShowed = true,
                         Origin = "Vietnam",
@@ -772,12 +775,12 @@ namespace WebAPI.DataContext
                     },
                     new Accessory
                     {
-                     Id = 204,
-                        Name = "VinFast VF 8 Car Roof Top Box",
+                        Id = 204,
+                        Name = "VinFast VF8 Car Roof Top Box",
                         Price = 7000000,
                         Quantity = 10,
                         Image = "Cop_Noc_Phi_Thuyen_Oto_VinFast_ VF8.png",
-                        CategoryId = 9,
+                        CategoryId = 7,
                         IsDeleted = false,
                         IsShowed = true,
                         Origin = "Vietnam",
@@ -790,12 +793,12 @@ namespace WebAPI.DataContext
                     },
                     new Accessory
                     {
-                     Id = 205,
-                        Name = "2D VF 8 Plastic Floor Mats",
+                        Id = 205,
+                        Name = "2D VF8 Plastic Floor Mats",
                         Price = 2210000,
                         Quantity = 10,
                         Image = "Tham_San_Nhua_2D_VF8.png",
-                        CategoryId = 9,
+                        CategoryId = 7,
                         IsDeleted = false,
                         IsShowed = true,
                         Origin = "Vietnam",
@@ -808,18 +811,18 @@ namespace WebAPI.DataContext
                     },
                     new Accessory
                     {
-                     Id = 206,
+                        Id = 206,
                         Name = "Ceiling Heat Insulation Film Package",
                         Price = 7000000,
                         Quantity = 10,
                         Image = "Goi_Film_Cach_Nhiet_Dan_Tran_VinFast_VF8.png",
-                        CategoryId = 9,
+                        CategoryId = 7,
                         IsDeleted = false,
                         IsShowed = true,
                         Origin = "Vietnam",
-                        Dimensions = "100x80x5 cm",
+                        Dimensions = "100x80x5cm",
                         Weight = 2.0,
-                        Material = "Ceramic is coated with Titanium Nitride technology.",   
+                        Material = "Ceramic is coated with Titanium Nitride technology.",
                         Color = "Black",
                         Warranty = "6 months",
                         Description = "VF x 3M heat insulation film products help insulate, block infrared radiation, eliminate UV rays, effectively reduce glare to improve the customer experience in the car, protect customers from harmful rays as well as increase the durability of the car's interior. Warranty"
@@ -945,7 +948,7 @@ namespace WebAPI.DataContext
                     ColorImage = "Cop_Noc_Phi_Thuyen_O_To_VinFast_VF82.png",
                     IsDeleted = false,
                     AccessoryId = 204
-                }, 
+                },
                 new AccessoryImage
                 {
                     ColorId = 207,

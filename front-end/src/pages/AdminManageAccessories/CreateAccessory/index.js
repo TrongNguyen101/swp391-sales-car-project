@@ -234,7 +234,7 @@ function CreateAccessoryPage() {
                       label="Select Category"
                     >
                       {categories
-                      .filter((cate) => cate.id !== 3 && cate.id !== 4 && cate.id !== 1)
+                      .filter((cate) => cate.id !== 2)
                       .map((cate) => (
                         <MenuItem key={cate.id} value={cate.id}>
                           {cate.name}

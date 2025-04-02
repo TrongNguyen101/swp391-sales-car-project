@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebAPI.DataContext;
 
@@ -11,9 +12,11 @@ using WebAPI.DataContext;
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(VinfastContext))]
-    partial class VinfastContextModelSnapshot : ModelSnapshot
+    [Migration("20250401073031_Update_Accessory_data")]
+    partial class Update_Accessory_data
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -319,60 +322,6 @@ namespace WebAPI.Migrations
                             Quantity = 10,
                             Warranty = "6 months",
                             Weight = 2.0
-                        },
-                        new
-                        {
-                            Id = 204,
-                            CategoryId = 7,
-                            Color = "Black",
-                            Description = "The car roof rack for VinFast VF 8 is an ideal choice to expand storage space during journeys. Modern, convenient design with superior quality, the product brings convenience and style to every trip.",
-                            Dimensions = "100x80x5 cm",
-                            Image = "Cop_Noc_Phi_Thuyen_Oto_VinFast_ VF8.png",
-                            IsDeleted = false,
-                            IsShowed = true,
-                            Material = "Rubber",
-                            Name = "VinFast VF8 Car Roof Top Box",
-                            Origin = "Vietnam",
-                            Price = 7000000.0,
-                            Quantity = 10,
-                            Warranty = "6 months",
-                            Weight = 2.0
-                        },
-                        new
-                        {
-                            Id = 205,
-                            CategoryId = 7,
-                            Color = "Black",
-                            Description = "VinFast VF 8 floor mats are molded mats manufactured in Vietnam, according to Japanese production lines. Made from high-quality, non-toxic TPE plastic material.",
-                            Dimensions = "100x80x5 cm",
-                            Image = "Tham_San_Nhua_2D_VF8.png",
-                            IsDeleted = false,
-                            IsShowed = true,
-                            Material = "Plastic",
-                            Name = "2D VF8 Plastic Floor Mats",
-                            Origin = "Vietnam",
-                            Price = 2210000.0,
-                            Quantity = 10,
-                            Warranty = "6 months",
-                            Weight = 2.0
-                        },
-                        new
-                        {
-                            Id = 206,
-                            CategoryId = 7,
-                            Color = "Black",
-                            Description = "VF x 3M heat insulation film products help insulate, block infrared radiation, eliminate UV rays, effectively reduce glare to improve the customer experience in the car, protect customers from harmful rays as well as increase the durability of the car's interior. Warranty",
-                            Dimensions = "100x80x5cm",
-                            Image = "Goi_Film_Cach_Nhiet_Dan_Tran_VinFast_VF8.png",
-                            IsDeleted = false,
-                            IsShowed = true,
-                            Material = "Ceramic is coated with Titanium Nitride technology.",
-                            Name = "Ceiling Heat Insulation Film Package",
-                            Origin = "Vietnam",
-                            Price = 7000000.0,
-                            Quantity = 10,
-                            Warranty = "6 months",
-                            Weight = 2.0
                         });
                 });
 
@@ -501,62 +450,6 @@ namespace WebAPI.Migrations
                             ColorId = 204,
                             AccessoryId = 203,
                             ColorImage = "Tham_San_3D_VF72.png",
-                            ColorName = "White",
-                            IsDeleted = false
-                        },
-                        new
-                        {
-                            ColorId = 205,
-                            AccessoryId = 204,
-                            ColorImage = "Cop_Noc_Phi_Thuyen_Oto_VinFast_ VF8.png",
-                            ColorName = "White",
-                            IsDeleted = false
-                        },
-                        new
-                        {
-                            ColorId = 206,
-                            AccessoryId = 204,
-                            ColorImage = "Cop_Noc_Phi_Thuyen_O_To_VinFast_VF82.png",
-                            ColorName = "White",
-                            IsDeleted = false
-                        },
-                        new
-                        {
-                            ColorId = 207,
-                            AccessoryId = 205,
-                            ColorImage = "Tham_San_Nhua_2D_VF8.png",
-                            ColorName = "White",
-                            IsDeleted = false
-                        },
-                        new
-                        {
-                            ColorId = 208,
-                            AccessoryId = 205,
-                            ColorImage = "Tham_San_Nhua_2D_VF82.png",
-                            ColorName = "White",
-                            IsDeleted = false
-                        },
-                        new
-                        {
-                            ColorId = 209,
-                            AccessoryId = 205,
-                            ColorImage = "Tham_San_Nhua_2D_VF83.png",
-                            ColorName = "White",
-                            IsDeleted = false
-                        },
-                        new
-                        {
-                            ColorId = 210,
-                            AccessoryId = 205,
-                            ColorImage = "Tham_San_Nhua_2D_VF84.png",
-                            ColorName = "White",
-                            IsDeleted = false
-                        },
-                        new
-                        {
-                            ColorId = 211,
-                            AccessoryId = 206,
-                            ColorImage = "Goi_Film_Cach_Nhiet_Dan_Tran_VinFast_VF8.png",
                             ColorName = "White",
                             IsDeleted = false
                         },
@@ -1486,12 +1379,7 @@ namespace WebAPI.Migrations
                         new
                         {
                             RoleId = 2,
-                            RoleName = "Customer"
-                        },
-                        new
-                        {
-                            RoleId = 3,
-                            RoleName = "Staff"
+                            RoleName = "User"
                         });
                 });
 
@@ -1632,19 +1520,6 @@ namespace WebAPI.Migrations
                             Phone = "0987654321",
                             RoleId = 2,
                             UserName = "Nguyen Trong"
-                        },
-                        new
-                        {
-                            Id = new Guid("1f2628eb-34bf-4e4b-a9d2-308827bed09a"),
-                            Address = "456 User St",
-                            CreatedAt = new DateTime(2023, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Email = "staff@gmail.com",
-                            IsDeleted = false,
-                            LastChange = new DateTime(2023, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Password = "fbef4e8b28be6c2d65f3a0ddaebee28001d9e33743b7dc8e2843dea8c1129362",
-                            Phone = "0987654321",
-                            RoleId = 3,
-                            UserName = "Nguyen Duong Phu Trong"
                         });
                 });
 

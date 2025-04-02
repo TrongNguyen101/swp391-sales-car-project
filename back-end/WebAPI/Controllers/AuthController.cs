@@ -180,7 +180,7 @@ namespace WebAPI.Controllers
                     return BadRequest(ResponseHelper.ResponseError(400, "Invalid or expired OTP", false, null));
                 }
 
-                var newUser = new Users
+                var newCustomer = new Users
                 {
                     Id = Guid.NewGuid(),
                     UserName = RegisterRequest.Fullname,
@@ -194,7 +194,7 @@ namespace WebAPI.Controllers
                     RoleId = 2
                 };
 
-                await UsersDAO.GetInstance().AddUser(newUser);
+                await UsersDAO.GetInstance().AddUser(newCustomer);
 
                 return Ok(ResponseHelper.ResponseSuccess(200, "Register successfully", true, null));
             }
@@ -204,6 +204,63 @@ namespace WebAPI.Controllers
                 return BadRequest(ResponseHelper.ResponseError(400, "Internal server error: Please contact support", false, null));
             }
         }
+
+
+        [HttpPost("createAccountStaff")]
+        public async Task<IActionResult> CreateAccountStaff([FromBody] RegisterRequest RegisterRequest)
+        {
+            try
+            {
+                #region Authentication, Authorization
+                var authorizationHeader = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
+                // Check authentication and authorization of user based on the specified HTTP context and role that need to check for this function
+                // If the user is not authenticated or authorized, return error message
+                // If the user is authenticated and authorized, return claims of user
+                // admin role id = 1
+                // customer role id = 2
+                var (isSuccess, errorMessage, claims) = JwtTokenHelper.AuthenticateAndAuthorize(HttpContext, 1);
+                if (!isSuccess)
+                {
+                    // Return error message if the user is not authenticated or authorized
+                    return Unauthorized(ResponseHelper.ResponseError(401, errorMessage ?? "Unknown error", false, null));
+                }
+                #endregion
+
+                if (string.IsNullOrEmpty(RegisterRequest.Email) || string.IsNullOrEmpty(RegisterRequest.Password) || string.IsNullOrEmpty(RegisterRequest.Fullname) || string.IsNullOrEmpty(RegisterRequest.Phone))
+                {
+                    return BadRequest(ResponseHelper.ResponseError(400, "Email, password, fullname and phone are required", false, null));
+                }
+
+                if (RegisterRequest.Password != RegisterRequest.RePassword)
+                {
+                    return BadRequest(ResponseHelper.ResponseError(400, "Passwords do not match", false, null));
+                }
+
+                var newStaff = new Users
+                {
+                    Id = Guid.NewGuid(),
+                    UserName = RegisterRequest.Fullname,
+                    Address = null,
+                    Phone = RegisterRequest.Phone,
+                    Email = RegisterRequest.Email,
+                    Password = EncyptHelper.Sha256Encrypt(RegisterRequest.Password),
+                    CreatedAt = DateTime.UtcNow,
+                    IsDeleted = false,
+                    LastChange = DateTime.UtcNow,
+                    RoleId = 3
+                };
+
+                await UsersDAO.GetInstance().AddUser(newStaff);
+
+                return Ok(ResponseHelper.ResponseSuccess(200, "Register successfully", true, null));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error at Register function: " + e);
+                return BadRequest(ResponseHelper.ResponseError(400, "Internal server error: Please contact support", false, null));
+            }
+        }
+
 
         /// <summary>
         /// Authenticates a user based on the provided login credentials.

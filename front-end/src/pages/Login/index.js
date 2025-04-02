@@ -57,7 +57,7 @@ function LoginPage() {
 
   const [openWaitingDialog, setOpenWaitingDialog] = useState(false);
   const [informationContent, setInformationContent] = useState({});
-  const [openInformationDialog, setOpenInformationDialog] = useState(false);
+  const [openInformationDialog] = useState(false);
 
   const otpRefs = useRef([]);
   const navigate = useNavigate();

@@ -42,6 +42,7 @@ function ProfileUserLayout({ children }) {
             }
             const response = await adminService.getCurrentUser();
             if (response.statusCode === 200) {
+                console.log(response.data);
                 setUserData(response.data);
             }
         } catch (error) {

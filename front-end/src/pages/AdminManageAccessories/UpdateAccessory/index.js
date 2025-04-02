@@ -76,7 +76,9 @@ function UpdateAccessoryPage() {
   // fetch the accessory details by the accessoryId
   const fetchAccessoryDetails = async () => {
     try {
-      const response = await adminAccessoryServices.getAccessoryById(accessoryId);
+      const response = await adminAccessoryServices.getAccessoryById(
+        accessoryId
+      );
       if (response.statusCode !== 200) {
         setMessage("Failed to fetch accessory details");
         setOpenDialog(true);
@@ -102,8 +104,7 @@ function UpdateAccessoryPage() {
     } catch (error) {
       setMessage("Failed to fetch accessory details");
       setOpenDialog(true);
-    }
-    finally {
+    } finally {
       setLoading(true);
     }
   };
@@ -116,8 +117,6 @@ function UpdateAccessoryPage() {
     loadData();
     // eslint-disable-next-line
   }, []);
-
-
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
@@ -281,12 +280,12 @@ function UpdateAccessoryPage() {
                       label="Select Category"
                     >
                       {categories
-                      .filter((cate) => cate.id !== 3 && cate.id !== 4 && cate.id !== 1)
-                      .map((cate) => (
-                        <MenuItem key={cate.id} value={cate.id}>
-                          {cate.name}
-                        </MenuItem>
-                      ))}
+                        .filter((cate) => cate.id !== 2)
+                        .map((cate) => (
+                          <MenuItem key={cate.id} value={cate.id}>
+                            {cate.name}
+                          </MenuItem>
+                        ))}
                     </Select>
                     <FormHelperText>{errorCategoryId || ""}</FormHelperText>
                   </FormControl>
@@ -330,7 +329,11 @@ function UpdateAccessoryPage() {
                 />
 
                 <TextField
-                  sx={{ width: "100%", marginBottom: "1em", paddingRight: "20px", }}
+                  sx={{
+                    width: "100%",
+                    marginBottom: "1em",
+                    paddingRight: "20px",
+                  }}
                   type="text"
                   label="Warranty"
                   spellCheck="false"
@@ -364,7 +367,14 @@ function UpdateAccessoryPage() {
             </Box>
             {/* Block right */}
             <Box sx={{ width: "500px" }}>
-              <Box display={{ display: "flex", width: "100%", justifyContent: "space-between", marginBottom: "1em", }}>
+              <Box
+                display={{
+                  display: "flex",
+                  width: "100%",
+                  justifyContent: "space-between",
+                  marginBottom: "1em",
+                }}
+              >
                 <TextField
                   sx={{ width: "100%", paddingRight: "20px" }}
                   type="number"
@@ -388,7 +398,9 @@ function UpdateAccessoryPage() {
                   >
                     <MenuItem value={true}>
                       <Box sx={{ display: "flex", alignItems: "center" }}>
-                        <Typography sx={{ width: "20%" }}>Published </Typography>
+                        <Typography sx={{ width: "20%" }}>
+                          Published{" "}
+                        </Typography>
                       </Box>
                     </MenuItem>
                     <MenuItem value={false}>

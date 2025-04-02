@@ -24,7 +24,7 @@ function Overview() {
         setTotalAccounts(response.data);
       }
     } catch (error) {
-      return error.response.data.meassage;
+      console.log("Error fetching total accounts:", error);
     }
   };
 

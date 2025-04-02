@@ -360,12 +360,14 @@ const PersonalInfoPage = () => {
           <Typography sx={{ fontSize: "1.5rem", fontWeight: "500" }}>
             Personal Information
           </Typography>
-          <Button
-            variant="contained"
-            onClick={handleClickOpenEditInformationForm}
-          >
-            Edit Information
-          </Button>
+          {userData.roleId === 1 ? null : (
+            <Button
+              variant="contained"
+              onClick={handleClickOpenEditInformationForm}
+            >
+              Edit Information
+            </Button>
+          )}
         </div>
         <div className={cx("info")}>
           <div className={cx("info-item")}>
@@ -390,9 +392,14 @@ const PersonalInfoPage = () => {
           </div>
         </div>
         <div className={cx("password-change")}>
-          <Button variant="outlined" onClick={handleOpenConfirmPasswordDialog}>
-            Change Password
-          </Button>
+          {userData.roleId === 1 ? null : (
+            <Button
+              variant="outlined"
+              onClick={handleOpenConfirmPasswordDialog}
+            >
+              Change Password
+            </Button>
+          )}
         </div>
       </div>
 

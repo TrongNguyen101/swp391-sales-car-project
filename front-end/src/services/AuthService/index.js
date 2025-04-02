@@ -91,6 +91,40 @@ export const postRegister = async (
   }
 };
 
+export const createNewAccountStaff = async (
+  fullname,
+  email,
+  password,
+  rePassword,
+  phone,
+  otp
+) => {
+  try {
+    const token = localStorage.getItem("Bearer");
+    const enpoint = "api/Auth/createAccountStaff";
+    const response = await request.post(
+      enpoint,
+      {
+        fullname: fullname,
+        email: email,
+        password: password,
+        rePassword: rePassword,
+        phone: phone,
+        otp: otp,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
 export const checkEmail = async (emailNeedToCheck) => {
   try {
     const enpoint = `api/Auth/checkEmailExist`;

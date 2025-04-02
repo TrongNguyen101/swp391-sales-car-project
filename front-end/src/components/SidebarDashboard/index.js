@@ -6,6 +6,7 @@ import {
   faShoppingCart,
   faCar,
   faClipboard,
+  faUserTie,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -22,8 +23,9 @@ import styles from "./SidebarDashboard.module.scss";
 
 const cx = classNames.bind(styles);
 
-function SidebarDashboard() {
+function SidebarDashboard( { managerRoleId } ) {
   const navigate = useNavigate();
+  console.log("managerRoleId: ", managerRoleId);
 
   const handleNavigation = (path) => () => {
     navigate(path);
@@ -165,9 +167,48 @@ function SidebarDashboard() {
               color: "#3c3c3c",
             }}
           >
-            Account Management
+            Customer Management
           </Typography>
         </ListItem>
+
+        {/* Staff management navigation */}
+        {managerRoleId === 1 && (
+          <ListItem
+            button="true"
+            onClick={handleNavigation("/dashboard/account-staff")}
+            sx={{
+              cursor: "pointer",
+              padding: "8px 35px",
+              "&:hover": {
+                "& .MuiListItemIcon-root, & .MuiTypography-root": {
+                  color: "primary.main",
+                },
+              },
+            }}
+          >
+            <ListItemIcon
+              sx={{
+                minWidth: "50px",
+                fontSize: "1.5rem",
+                justifyContent: "center",
+              }}
+            >
+              <FontAwesomeIcon icon={faUserTie} />
+            </ListItemIcon>
+            <Typography
+              sx={{
+                fontSize: "1rem",
+                fontWeight: "500",
+                lineHeight: "1.5rem",
+                color: "#3c3c3c",
+              }}
+            >
+              Staff Management
+            </Typography>
+          </ListItem>
+        )}
+
+        {/* Car management navigation */}
         <ListItem
           button="true"
           onClick={handleNavigation("/dashboard/cars")}
@@ -201,6 +242,7 @@ function SidebarDashboard() {
             Cars Management
           </Typography>
         </ListItem>
+
         <ListItem
           button="true"
           onClick={handleNavigation("/dashboard/accessories")}
@@ -237,9 +279,7 @@ function SidebarDashboard() {
 
         <ListItem
           button="true"
-          onClick={handleNavigation(
-            "/dashboard/import-export-history"
-          )}
+          onClick={handleNavigation("/dashboard/import-export-history")}
           sx={{
             cursor: "pointer",
             padding: "8px 35px",

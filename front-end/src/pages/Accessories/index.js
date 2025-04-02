@@ -4,7 +4,10 @@ import { useEffect, useState } from "react";
 import { Button, Typography } from "@mui/material";
 import classNames from "classnames/bind";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCartShopping, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCartShopping,
+  faMagnifyingGlass,
+} from "@fortawesome/free-solid-svg-icons";
 
 import styles from "./Accessories.module.scss";
 import Sidebar from "../../components/Sidebar";
@@ -57,7 +60,7 @@ function AccessoriesPage() {
   };
 
   const fetchAccessories = async (categoryId) => {
-    if (selectedCategoryId !== 1) {
+    if (selectedCategoryId !== 0) {
       try {
         const response = await accessoryService.getAccessoriesByCategoryId(
           categoryId
@@ -67,7 +70,6 @@ function AccessoriesPage() {
         } else {
           setAccessories(response.data);
           setSearchRows(response.data);
-
         }
       } catch (error) {
         setAccessories([]);
@@ -80,15 +82,12 @@ function AccessoriesPage() {
         } else {
           setAccessories(response.data);
           setSearchRows(response.data);
-
         }
       } catch (error) {
         setAccessories([]);
       }
     }
   };
-
-
 
   useEffect(() => {
     fetchAccessories(selectedCategoryId);
@@ -99,9 +98,8 @@ function AccessoriesPage() {
     const value = event.target.value;
     // Perform filtering immediately as the user types
     if (value.trim()) {
-      const filteredAccessory = accessories.filter(
-        (accessory) =>
-          accessory.name?.toString().toLowerCase().includes(value.toLowerCase())
+      const filteredAccessory = accessories.filter((accessory) =>
+        accessory.name?.toString().toLowerCase().includes(value.toLowerCase())
       );
       setSearchRows(filteredAccessory);
     } else {
@@ -148,7 +146,9 @@ function AccessoriesPage() {
                   className={cx("search")}
                   onChange={handleSearchChange}
                 />
-                <Button><FontAwesomeIcon icon={faMagnifyingGlass} /></Button>
+                <Button>
+                  <FontAwesomeIcon icon={faMagnifyingGlass} />
+                </Button>
               </div>
               <Button
                 variant="outlined"
@@ -169,40 +169,42 @@ function AccessoriesPage() {
             </div>
             <div className={cx("container__accessories--list")}>
               {searchRows
-              .filter((acc) => acc.isShowed)
-              .map((accessory, index) => (
-                // card accessory
-                <div
-                  className={cx("container__accessory-card")}
-                  key={index}
-                  onClick={handleClickCard(accessory.id)}
-                >
-                  <div className={cx("container__accessory-content")}>
-                    <div className={cx("card-image")}>
-                      <img
-                        src={`https://localhost:7005/api/Images/Accessory/${accessory.image}`}
-                        alt={accessory.name}
-                      />
-                    </div>
-                    <div className={cx("card-title")}>
-                      <Typography
-                        sx={{
-                          fontSize: "1.5rem",
-                          fontWeight: "500",
-                          color: "#333",
-                        }}
-                      >
-                        {accessory.name}
-                      </Typography>
-                    </div>
-                    <div className={cx("card-info")}>
-                      <div className={cx("price")}>
-                        <Typography>Price: {formatPrice(accessory.price)} VND</Typography>
+                .filter((acc) => acc.isShowed)
+                .map((accessory, index) => (
+                  // card accessory
+                  <div
+                    className={cx("container__accessory-card")}
+                    key={index}
+                    onClick={handleClickCard(accessory.id)}
+                  >
+                    <div className={cx("container__accessory-content")}>
+                      <div className={cx("card-image")}>
+                        <img
+                          src={`https://localhost:7005/api/Images/Accessory/${accessory.image}`}
+                          alt={accessory.name}
+                        />
+                      </div>
+                      <div className={cx("card-title")}>
+                        <Typography
+                          sx={{
+                            fontSize: "1.5rem",
+                            fontWeight: "500",
+                            color: "#333",
+                          }}
+                        >
+                          {accessory.name}
+                        </Typography>
+                      </div>
+                      <div className={cx("card-info")}>
+                        <div className={cx("price")}>
+                          <Typography>
+                            Price: {formatPrice(accessory.price)} VND
+                          </Typography>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
             </div>
           </div>
         </div>

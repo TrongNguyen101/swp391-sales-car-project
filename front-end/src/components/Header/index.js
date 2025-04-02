@@ -110,7 +110,7 @@ function HeaderComponent() {
     if (token) {
       setIsLoggedIn(true);
       const decoded = DecodePayload.decodePayload(token);
-      if (decoded.role === 1) {
+      if (decoded.role === 1 || decoded.role === 3) {
         setDisableDashboard(false);
       }
     }

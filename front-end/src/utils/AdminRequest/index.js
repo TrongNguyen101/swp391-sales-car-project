@@ -9,3 +9,8 @@ export const put = async (path, data, config) => {
   const response = await request.put(path, data, config);
   return response;
 }
+
+export const deleteById = async (path, config) => {
+  const response = await request.delete(path, config);
+  return response;
+}

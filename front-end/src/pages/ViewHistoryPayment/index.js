@@ -4,7 +4,6 @@ import { Box, IconButton, InputAdornment, Paper, Table, TableBody, TableCell, Ta
 
 import styles from './ViewHistoryPayment.module.scss';
 import * as invoiceService from "../../services/InvoiceServices";
-import Sidebar from '../../components/SidebarUser';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import classNames from "classnames/bind";
 import {
   Box,
   Button,
@@ -26,11 +25,9 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faSearch } from "@fortawesome/free-solid-svg-icons";
 
-import styles from "./AdminManageTestDriven.module.scss";
 import * as testDriveRegisterService from "../../services/TestDriveRegistrationService";
 import * as adminCarServices from "../../services/AdminCarServices";
 
-const cx = classNames.bind(styles);
 
 const AdminManageTestDrivenPage = () => {
   const [allRows, setAllRows] = useState([]);
@@ -149,23 +146,24 @@ const AdminManageTestDrivenPage = () => {
   };
 
   return (
-    <div className={cx("conatiner")}>
+    <Box sx={{ width: "100%", paddingBottom: "40px" }}>
       <Typography
         variant="h4"
-        align="center"
+        align="left"
         gutterBottom
-        sx={{ fontWeight: "500", paddingBottom: "20px" }}
+        sx={{ fontWeight: "500", paddingBottom: "20px", paddingLeft: "45px" }}
       >
         Test Drive Registration
       </Typography>
 
       {/* Search transaction */}
       <Box
-        display="flex"
-        justifyContent="space-between"
-        width="100%"
-        paddingBottom="10px"
-        paddingLeft="20px"
+       sx={{
+        display: "flex",
+        justifyContent: "left",
+        width: "100%",
+        padding: "0 40px 10px 40px",
+      }}
       >
         <TextField
           type="text"
@@ -192,7 +190,7 @@ const AdminManageTestDrivenPage = () => {
         />
       </Box>
 
-      <div className={cx("conatiner_table")}>
+      <Box sx={{ width: "100%", padding: "0 40px" }}>
         <TableContainer
           component={Paper}
           sx={{
@@ -403,7 +401,7 @@ const AdminManageTestDrivenPage = () => {
             </TableBody>
           </Table>
         </TableContainer>
-      </div>
+      </Box>
 
       {/* Dialog for updata status test drive */}
       <Dialog open={openUpdateStatusDialog}>
@@ -551,7 +549,7 @@ const AdminManageTestDrivenPage = () => {
           </Button>
         </DialogActions>
       </Dialog>
-    </div>
+    </Box>
   );
 };
 

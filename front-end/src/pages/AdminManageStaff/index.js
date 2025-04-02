@@ -17,14 +17,23 @@ import {
   InputAdornment,
   Typography,
   Box,
+  DialogContentText,
 } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit, faSearch } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEdit,
+  faRotateLeft,
+  faSearch,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
 import * as AdminServices from "../../services/AdminServices";
 import * as SearchValidate from "../../validation/SearchValidation";
 import * as UpdateDataValidate from "../../validation/UserUpdateValidation";
+import { useNavigate } from "react-router-dom";
 
-function AccountTablePage() {
+function AdminManageStaffPage() {
+  const navigate = useNavigate();
+
   const [rows, setRows] = useState([]);
   const [open, setOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
@@ -38,17 +47,21 @@ function AccountTablePage() {
   const [errorSearch, setErrorSearch] = useState("");
   const [errorFullname, setErrorFullname] = useState("");
   const [errorPhone, setErrorPhone] = useState("");
+  const [rowSelectedTo, setRowSelectedTo] = useState(null);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [openRestoreDialog, setOpenRestoreDialog] = useState(false);
 
   const fetchData = async () => {
     try {
-      const response = await AdminServices.getAllUsers();
+      const response = await AdminServices.getAllStaffs();
       if (response.statusCode !== 200) {
         setRows([]);
       } else {
         setRows(response.data);
+        console.log("Data fetched successfully:", response.data);
       }
     } catch (error) {
-      console.error("Failed to fetch users:", error);
+      console.log("Failed to fetch users:", error);
     }
   };
 
@@ -68,7 +81,7 @@ function AccountTablePage() {
 
   const fetchUpdateData = async () => {
     try {
-      const response = await AdminServices.UpdateUser(
+      const response = await AdminServices.adminUpdateStaffInformation(
         userId,
         fullname,
         address,
@@ -145,6 +158,68 @@ function AccountTablePage() {
     }
   };
 
+  const handleOpenConfirmDeleteDialog = (row) => {
+    setOpenDeleteDialog(true);
+    setRowSelectedTo(row);
+  };
+
+  // Delete staff
+  const handleDeleteStaff = async () => {
+    try {
+      const response = await AdminServices.adminDeleteStaff(
+        rowSelectedTo.userId
+      );
+      if (response.statusCode === 200) {
+        fetchData();
+      } else {
+        console.error("Failed to delete car:", response.message);
+      }
+    } catch (error) {
+      console.error("catch error of deleting car:", error);
+    } finally {
+      setOpenDeleteDialog(false);
+      setRowSelectedTo(null);
+    }
+  };
+
+  const handleCloseConfirmDeleteDialog = () => {
+    setOpenDeleteDialog(false);
+    setRowSelectedTo(null);
+  };
+
+  const handleOpenConfirmRestoreDialog = (row) => {
+    setOpenRestoreDialog(true);
+    setRowSelectedTo(row);
+  };
+
+  const handleRestoreStaff = async () => {
+    try {
+      const response = await AdminServices.adminRestoreStaff(
+        rowSelectedTo.userId
+      );
+      if (response.statusCode === 200) {
+        fetchData();
+      } else {
+        console.error("Failed to restore staff:", response.message);
+      }
+    } catch (error) {
+      console.error("catch error of restoring staff:", error);
+    } finally {
+      setOpenRestoreDialog(false);
+      setRowSelectedTo(null);
+    }
+  };
+
+  const handleCloseConfirmRestoreDialog = () => {
+    setOpenRestoreDialog(false);
+    setRowSelectedTo(null);
+  };
+
+  // Link to create new accessory page
+  const handleGoToCreateNewaccessoryPage = () => {
+    navigate("/dashboard/create-account-staff");
+  };
+
   return (
     <Box sx={{ width: "100%", paddingBottom: "40px" }}>
       <Typography
@@ -153,48 +228,57 @@ function AccountTablePage() {
         gutterBottom
         sx={{ fontWeight: "500", paddingBottom: "20px", paddingLeft: "45px" }}
       >
-        Customer List
+        Account Staff Management
       </Typography>
-      <div
-        style={{
+
+      <Box
+        sx={{
           display: "flex",
-          justifyContent: "left",
+          justifyContent: "space-between",
           width: "100%",
+          margin: "0 auto",
           padding: "0 40px 10px 40px",
         }}
       >
-        <Box sx={{ display: "flex", gap: 2, flexDirection: "column" }}>
-          <TextField
-            label="Search email"
-            variant="outlined"
-            sx={{ width: 300 }}
-            value={searchQuery}
-            onChange={(e) => {
-              setSearchQuery(e.target.value);
-              fetchData();
-              setErrorSearch("");
-            }}
-            onFocus={() => setIsSearchFocused(true)}
-            onBlur={() => setIsSearchFocused(false)}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="search"
-                    onClick={handleSearch}
-                    sx={{ color: isSearchFocused ? "primary.main" : "inherit" }}
-                  >
-                    <FontAwesomeIcon icon={faSearch} />
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-          />
-          {errorSearch && (
-            <Typography sx={{ color: "red" }}>{errorSearch}</Typography>
-          )}
+        <Box display="flex" gap={2}>
+          <Button
+            onClick={handleGoToCreateNewaccessoryPage}
+            color="primary"
+            variant="contained"
+          >
+            Create new account for staff
+          </Button>
         </Box>
-      </div>
+        <TextField
+          label="Search email or full name"
+          variant="outlined"
+          sx={{ width: 300 }}
+          value={searchQuery}
+          onChange={(e) => {
+            setSearchQuery(e.target.value);
+            fetchData();
+            setErrorSearch("");
+          }}
+          onFocus={() => setIsSearchFocused(true)}
+          onBlur={() => setIsSearchFocused(false)}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="search"
+                  onClick={handleSearch}
+                  sx={{ color: isSearchFocused ? "primary.main" : "inherit" }}
+                >
+                  <FontAwesomeIcon icon={faSearch} />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+        />
+        {errorSearch && (
+          <Typography sx={{ color: "red" }}>{errorSearch}</Typography>
+        )}
+      </Box>
       <Box sx={{ width: "100%", padding: "0 40px" }}>
         <TableContainer
           component={Paper}
@@ -216,13 +300,19 @@ function AccountTablePage() {
                     width: "25%",
                   }}
                 >
-                  Fullname
+                  Full Name
+                </TableCell>
+                <TableCell
+                  sx={{ backgroundColor: "primary.main", color: "white" }}
+                  align="left"
+                >
+                  Status
                 </TableCell>
                 <TableCell
                   sx={{
                     backgroundColor: "primary.main",
                     color: "white",
-                    width: "22%",
+                    width: "15%",
                   }}
                   align="left"
                 >
@@ -231,21 +321,21 @@ function AccountTablePage() {
                 <TableCell
                   sx={{ backgroundColor: "primary.main", color: "white" }}
                   align="left"
+                  width="5%"
                 >
-                  Phone
-                </TableCell>
-                <TableCell
-                  sx={{ backgroundColor: "primary.main", color: "white" }}
-                  align="left"
-                  width="20%"
-                >
-                  Address
+                  Role
                 </TableCell>
                 <TableCell
                   sx={{ backgroundColor: "primary.main", color: "white" }}
                   align="left"
                 >
                   Created At
+                </TableCell>
+                <TableCell
+                  sx={{ backgroundColor: "primary.main", color: "white" }}
+                  align="left"
+                >
+                  Last Updated At
                 </TableCell>
                 <TableCell
                   sx={{ backgroundColor: "primary.main", color: "white" }}
@@ -269,23 +359,60 @@ function AccountTablePage() {
                   <TableCell align="left" sx={{ width: "20%" }}>
                     {row.userName}
                   </TableCell>
-                  <TableCell align="left" sx={{ width: "20%" }}>
-                    {row.email}
+                  <TableCell align="left">
+                    {row.isDeleted === "False" ? (
+                      <Typography color="green" fontWeight={500}>
+                        Active
+                      </Typography>
+                    ) : (
+                      <Typography color="red" fontWeight={500}>
+                        Inactive
+                      </Typography>
+                    )}
                   </TableCell>
-                  <TableCell align="left">{row.phone}</TableCell>
-                  <TableCell align="left">{row.address}</TableCell>
+                  <TableCell align="left">{row.email}</TableCell>
+                  <TableCell align="left">
+                    {row.roleId === 3 && "Staff"}
+                  </TableCell>
                   <TableCell align="left">{row.createdAt}</TableCell>
+                  <TableCell align="left">{row.lastChange}</TableCell>
                   <TableCell align="center">
-                    <IconButton
-                      aria-label="edit"
-                      color="success"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleEditClickOpen(row);
-                      }}
-                    >
-                      <FontAwesomeIcon icon={faEdit} />
-                    </IconButton>
+                    {/* Edit Button */}
+                    {row.isDeleted === "False" ? (
+                      <Box>
+                        <IconButton
+                          aria-label="edit"
+                          color="success"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleEditClickOpen(row);
+                          }}
+                        >
+                          <FontAwesomeIcon icon={faEdit} />
+                        </IconButton>
+                        <IconButton
+                          aria-label="edit"
+                          color="error"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleOpenConfirmDeleteDialog(row);
+                          }}
+                        >
+                          <FontAwesomeIcon icon={faTrash} />
+                        </IconButton>
+                      </Box>
+                    ) : (
+                      <IconButton
+                        aria-label="edit"
+                        color="primary"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleOpenConfirmRestoreDialog(row);
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faRotateLeft} />
+                      </IconButton>
+                    )}
                   </TableCell>
                 </TableRow>
               ))}
@@ -309,7 +436,7 @@ function AccountTablePage() {
               color: "primary.main",
             }}
           >
-            {editMode ? "Edit Row" : "Row Details"}
+            {editMode ? "Edit Staff Information" : "Details of Staff"}
           </Typography>
         </DialogTitle>
         <DialogContent>
@@ -325,6 +452,14 @@ function AccountTablePage() {
                     disabled
                     value={userId}
                     onChange={(e) => setUserId(e.target.value)}
+                  />
+                  <TextField
+                    margin="dense"
+                    label="Email"
+                    type="text"
+                    fullWidth
+                    disabled
+                    defaultValue={selectedRow.email}
                   />
                   <TextField
                     margin="dense"
@@ -358,14 +493,7 @@ function AccountTablePage() {
                       {errorPhone}
                     </Typography>
                   )}
-                  <TextField
-                    margin="dense"
-                    label="Email"
-                    type="text"
-                    fullWidth
-                    disabled
-                    defaultValue={selectedRow.email}
-                  />
+
                   <TextField
                     margin="dense"
                     label="Address"
@@ -447,8 +575,62 @@ function AccountTablePage() {
           )}
         </DialogActions>
       </Dialog>
+
+      {/* Confirm Delete dialog ----------------------------------------------------------------------------------------- */}
+      <Dialog open={openDeleteDialog} sx={{ textAlign: "center" }}>
+        <DialogTitle color="error">Confirm Delete</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to delete
+            {rowSelectedTo ? " " + rowSelectedTo.userName : null}?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions sx={{ justifyContent: "center", paddingBottom: "20px" }}>
+          <Button
+            onClick={handleCloseConfirmDeleteDialog}
+            variant="contained"
+            color="error"
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={handleDeleteStaff}
+            variant="contained"
+            color="primary"
+          >
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Confirm Restore dialog ----------------------------------------------------------------------------------------- */}
+      <Dialog open={openRestoreDialog} sx={{ textAlign: "center" }}>
+        <DialogTitle color="error">Confirm Delete</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to restore
+            {rowSelectedTo ? " " + rowSelectedTo.userName : null}?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions sx={{ justifyContent: "center", paddingBottom: "20px" }}>
+          <Button
+            onClick={handleCloseConfirmRestoreDialog}
+            variant="contained"
+            color="error"
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={handleRestoreStaff}
+            variant="contained"
+            color="primary"
+          >
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }
 
-export default AccountTablePage;
+export default AdminManageStaffPage;

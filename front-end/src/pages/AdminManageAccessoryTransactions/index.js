@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import classNames from "classnames/bind";
 import {
   Box,
   IconButton,
@@ -15,13 +14,11 @@ import {
   Typography,
 } from "@mui/material";
 
-import styles from "./AdminManageAccessoryTransactions.module.scss";
 import * as invoiceService from "../../services/InvoiceServices";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 
-const cx = classNames.bind(styles);
 
 const AdminManageAccessoryTransactionsPage = () => {
   const navigate = useNavigate();
@@ -72,21 +69,24 @@ const AdminManageAccessoryTransactionsPage = () => {
   };
 
   return (
-    <div className={cx("conatiner")}>
+    <Box sx={{ width: "100%", paddingBottom: "40px" }}>
       <Typography
         variant="h4"
-        align="center"
+        align="left"
         gutterBottom
-        sx={{ fontWeight: "500", paddingBottom: "20px" }}
+        sx={{ fontWeight: "500", paddingBottom: "20px", paddingLeft: "45px" }}
       >
         Accessory Transactions
       </Typography>
 
       <Box
-        display="flex"
-        justifyContent="space-between"
-        width="100%"
-        paddingBottom="10px"
+       sx={{
+        display: "flex",
+        justifyContent: "left",
+        width: "100%",
+        padding: "0 40px 10px 40px",
+      }}
+        
       >
         <TextField
           type="text"
@@ -113,7 +113,7 @@ const AdminManageAccessoryTransactionsPage = () => {
         />
       </Box>
 
-      <div className={cx("conatiner_table")}>
+      <Box sx={{ width: "100%", padding: "0 40px" }}>
         <TableContainer
           component={Paper}
           sx={{
@@ -264,8 +264,8 @@ const AdminManageAccessoryTransactionsPage = () => {
             </TableBody>
           </Table>
         </TableContainer>
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };
 

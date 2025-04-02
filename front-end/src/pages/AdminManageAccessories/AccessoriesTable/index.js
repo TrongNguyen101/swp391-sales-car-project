@@ -18,7 +18,7 @@ import {
   TextField,
   InputAdornment,
   Typography,
-  Box
+  Box,
 } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -79,7 +79,6 @@ function AccessoriesTable() {
     navigate("/dashboard/create-new-accessory");
   };
 
-
   // Delete accessory
   const handleDeleteAccessory = async () => {
     try {
@@ -114,9 +113,8 @@ function AccessoriesTable() {
     const value = event.target.value;
     // Perform filtering immediately as the user types
     if (value.trim()) {
-      const filteredAccessory = rows.filter(
-        (accessory) =>
-          accessory.name?.toString().toLowerCase().includes(value.toLowerCase())
+      const filteredAccessory = rows.filter((accessory) =>
+        accessory.name?.toString().toLowerCase().includes(value.toLowerCase())
       );
       setSearchRows(filteredAccessory);
     } else {
@@ -130,7 +128,7 @@ function AccessoriesTable() {
   };
 
   return (
-    <>
+    <Box sx={{ width: "100%", paddingBottom: "40px" }}>
       <Typography
         variant="h4"
         align="left"
@@ -144,8 +142,8 @@ function AccessoriesTable() {
         style={{
           display: "flex",
           justifyContent: "flex-end",
-          width: "91%",
-          margin: "0 auto",
+          width: "100%",
+          padding: "0 40px 10px 40px",
         }}
       >
         <Box display="flex" justifyContent="space-between" width="100%" gap={2}>
@@ -185,143 +183,142 @@ function AccessoriesTable() {
       </div>
 
       {/* Table show list product---------------------------------------------------------------------------------------------------- */}
-      <TableContainer
-        component={Paper}
-        sx={{
-          width: "91%",
-          margin: "0 auto",
-          display: "flex",
-          justifyContent: "center",
-          maxHeight: 400,
-          overflow: "auto",
-          marginTop: "10px",
-        }}
-      >
-        <Table aria-label="simple table" stickyHeader>
-          <TableHead sx={{ backgroundColor: "primary.main", color: "white" }}>
-            <TableRow>
-              <TableCell
-                sx={{
-                  backgroundColor: "primary.main",
-                  color: "white",
-                  width: "20%",
-                }}
-              >
-                Name
-              </TableCell>
-              <TableCell
-                sx={{
-                  backgroundColor: "primary.main",
-                  color: "white",
-                  width: "2%",
-                }}
-              >
-                Status
-              </TableCell>
-              <TableCell
-                sx={{
-                  backgroundColor: "primary.main",
-                  color: "white",
-                  width: "15%",
-                }}
-                align="center"
-              >
-                Price
-              </TableCell>
-              <TableCell
-                sx={{ backgroundColor: "primary.main", color: "white" }}
-                align="center"
-              >
-                Material
-              </TableCell>
-              <TableCell
-                sx={{ backgroundColor: "primary.main", color: "white" }}
-                align="center"
-                width="20%"
-              >
-                Origin
-              </TableCell>
-              <TableCell
-                sx={{ backgroundColor: "primary.main", color: "white" }}
-                align="right"
-              >
-                Quantity
-              </TableCell>
-              <TableCell
-                sx={{ backgroundColor: "primary.main", color: "white" }}
-                align="center"
-              >
-                Action
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {searchRows.map((row) => (
-              <TableRow
-                key={row.Id}
-                sx={{
-                  "&:last-child td": { border: 0 },
-                  cursor: "pointer",
-                  "&:hover": { backgroundColor: "#f5f5f5" },
-                }}
-                onClick={() => handleGoToAccessoryDetailPage(row)}
-              >
-                <TableCell align="left" sx={{ width: "20%" }}>
-                  {row.name}
+      <Box sx={{ width: "100%", padding: "0 40px" }}>
+        <TableContainer
+          component={Paper}
+          sx={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "center",
+            maxHeight: 400,
+            overflow: "auto",
+          }}
+        >
+          <Table aria-label="simple table" stickyHeader>
+            <TableHead sx={{ backgroundColor: "primary.main", color: "white" }}>
+              <TableRow>
+                <TableCell
+                  sx={{
+                    backgroundColor: "primary.main",
+                    color: "white",
+                    width: "20%",
+                  }}
+                >
+                  Name
                 </TableCell>
-                <TableCell align="center" sx={{ width: "2%" }}>
-                  {row.isDeleted ? (
-                    <Typography color="error">Deleted</Typography>
-                  ) : row.isShowed ? (
-                    <FontAwesomeIcon color="green" icon={faEye} />
-                  ) : (
-                    <FontAwesomeIcon color="red" icon={faEyeSlash} />
-                  )}
+                <TableCell
+                  sx={{
+                    backgroundColor: "primary.main",
+                    color: "white",
+                    width: "2%",
+                  }}
+                >
+                  Status
                 </TableCell>
-                <TableCell align="right" sx={{ width: "15%" }}>
-                  {formatPrice(row.price)}
+                <TableCell
+                  sx={{
+                    backgroundColor: "primary.main",
+                    color: "white",
+                    width: "15%",
+                  }}
+                  align="center"
+                >
+                  Price
                 </TableCell>
-                <TableCell align="center">{row.material}</TableCell>
-                <TableCell align="center">{row.origin}</TableCell>
-                <TableCell align="right">{row.quantity}</TableCell>
-
-                {/* Action for each row data ------------ */}
-
-                <TableCell align="center">
-                  {/* Edit Button */}
-                  {row.isDeleted ? (
-                    <Typography color="error">Deleted</Typography>
-                  ) : (
-                    <Box>
-                      <IconButton
-                        aria-label="edit"
-                        color="success"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleGoToEditaccessoryPage(row);
-                        }}
-                      >
-                        <FontAwesomeIcon icon={faEdit} />
-                      </IconButton>
-                      <IconButton
-                        aria-label="edit"
-                        color="error"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDeleteDialogOpen(row);
-                        }}
-                      >
-                        <FontAwesomeIcon icon={faTrash} />
-                      </IconButton>
-                    </Box>
-                  )}
+                <TableCell
+                  sx={{ backgroundColor: "primary.main", color: "white" }}
+                  align="center"
+                >
+                  Material
+                </TableCell>
+                <TableCell
+                  sx={{ backgroundColor: "primary.main", color: "white" }}
+                  align="center"
+                  width="20%"
+                >
+                  Origin
+                </TableCell>
+                <TableCell
+                  sx={{ backgroundColor: "primary.main", color: "white" }}
+                  align="right"
+                >
+                  Quantity
+                </TableCell>
+                <TableCell
+                  sx={{ backgroundColor: "primary.main", color: "white" }}
+                  align="center"
+                >
+                  Action
                 </TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {searchRows.map((row) => (
+                <TableRow
+                  key={row.Id}
+                  sx={{
+                    "&:last-child td": { border: 0 },
+                    cursor: "pointer",
+                    "&:hover": { backgroundColor: "#f5f5f5" },
+                  }}
+                  onClick={() => handleGoToAccessoryDetailPage(row)}
+                >
+                  <TableCell align="left" sx={{ width: "20%" }}>
+                    {row.name}
+                  </TableCell>
+                  <TableCell align="center" sx={{ width: "2%" }}>
+                    {row.isDeleted ? (
+                      <Typography color="error">Deleted</Typography>
+                    ) : row.isShowed ? (
+                      <FontAwesomeIcon color="green" icon={faEye} />
+                    ) : (
+                      <FontAwesomeIcon color="red" icon={faEyeSlash} />
+                    )}
+                  </TableCell>
+                  <TableCell align="right" sx={{ width: "15%" }}>
+                    {formatPrice(row.price)}
+                  </TableCell>
+                  <TableCell align="center">{row.material}</TableCell>
+                  <TableCell align="center">{row.origin}</TableCell>
+                  <TableCell align="right">{row.quantity}</TableCell>
 
+                  {/* Action for each row data ------------ */}
+
+                  <TableCell align="center">
+                    {/* Edit Button */}
+                    {row.isDeleted ? (
+                      <Typography color="error">Deleted</Typography>
+                    ) : (
+                      <Box>
+                        <IconButton
+                          aria-label="edit"
+                          color="success"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleGoToEditaccessoryPage(row);
+                          }}
+                        >
+                          <FontAwesomeIcon icon={faEdit} />
+                        </IconButton>
+                        <IconButton
+                          aria-label="edit"
+                          color="error"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteDialogOpen(row);
+                          }}
+                        >
+                          <FontAwesomeIcon icon={faTrash} />
+                        </IconButton>
+                      </Box>
+                    )}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Box>
 
       {/* Delete dialog ----------------------------------------------------------------------------------------- */}
       <Dialog open={deleteDialogOpen} sx={{ textAlign: "center" }}>
@@ -349,7 +346,7 @@ function AccessoriesTable() {
           </Button>
         </DialogActions>
       </Dialog>
-    </>
+    </Box>
   );
 }
 export default AccessoriesTable;
