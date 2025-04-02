@@ -143,7 +143,7 @@ function UpdateSpecificationImageCarComponent({
         }}
       >
         {/* review Specificationimage area */}
-        <Box sx={{ width: "1200px" }}>
+        <Box sx={{ width: "1000px" }}>
           {car.specImage ? (
             <img
               src={`https://localhost:7005/api/Images/Spec/${car.specImage}`}
@@ -156,7 +156,7 @@ function UpdateSpecificationImageCarComponent({
               maxSize={10 * 1024 * 1024} // 10MB
               onUpload={handleUploadSpe}
               multiple={false}
-              previewWidthSize="1200px"
+              previewWidthSize="1000px"
               previewHeightSize="100%"
             />
           )}

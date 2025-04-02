@@ -30,7 +30,7 @@ function AdminDetailCarPage() {
   // fetch the car details by the carId
   const fetchCarDetails = async () => {
     try {
-      const response = await adminCarServices.getCarById(carId);
+      const response = await adminCarServices.adminGetCarById(carId);
       if (response.statusCode !== 200) {
         setMessage("Failed to fetch car details");
         setInforDialogOpen(true);

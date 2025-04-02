@@ -49,7 +49,7 @@ function AdminManageStaffPage() {
   const [errorPhone, setErrorPhone] = useState("");
   const [rowSelectedTo, setRowSelectedTo] = useState(null);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  const [openRestoreDialog, setOpenRestoreDialog] = useState(false);
+  const [openConfirmRestoreDialog, setOpenConfirmRestoreDialog] = useState(false);
 
   const fetchData = async () => {
     try {
@@ -188,7 +188,7 @@ function AdminManageStaffPage() {
   };
 
   const handleOpenConfirmRestoreDialog = (row) => {
-    setOpenRestoreDialog(true);
+    setOpenConfirmRestoreDialog(true);
     setRowSelectedTo(row);
   };
 
@@ -205,13 +205,13 @@ function AdminManageStaffPage() {
     } catch (error) {
       console.error("catch error of restoring staff:", error);
     } finally {
-      setOpenRestoreDialog(false);
+      setOpenConfirmRestoreDialog(false);
       setRowSelectedTo(null);
     }
   };
 
   const handleCloseConfirmRestoreDialog = () => {
-    setOpenRestoreDialog(false);
+    setOpenConfirmRestoreDialog(false);
     setRowSelectedTo(null);
   };
 
@@ -604,7 +604,7 @@ function AdminManageStaffPage() {
       </Dialog>
 
       {/* Confirm Restore dialog ----------------------------------------------------------------------------------------- */}
-      <Dialog open={openRestoreDialog} sx={{ textAlign: "center" }}>
+      <Dialog open={openConfirmRestoreDialog} sx={{ textAlign: "center" }}>
         <DialogTitle color="error">Confirm Delete</DialogTitle>
         <DialogContent>
           <DialogContentText>

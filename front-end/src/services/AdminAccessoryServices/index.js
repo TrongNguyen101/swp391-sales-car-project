@@ -44,16 +44,39 @@ export const adminUpdateAccessory = async (adminAccessoryId, formData) => {
   }
 };
 
-
 export const adminDeleteAccessory = async (adminAccesoryId) => {
   try {
-    const response = await request.deletebyId(`/api/AdminAccessories/delete/${adminAccesoryId}`);
+    const token = localStorage.getItem("Bearer");
+    const endpoint = `/api/AdminAccessories/delete/${adminAccesoryId}`;
+    const response = await request.deletebyId(endpoint, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     return response.data;
   } catch (error) {
-    return error.response;
+    return error.response.data;
   }
 };
 
+export const adminRestoreAccessory = async (adminAccesoryId) => {
+  try {
+    const token = localStorage.getItem("Bearer");
+    const endpoint = `/api/AdminAccessories/adminRestoreAccessory/${adminAccesoryId}`;
+    const response = await request.put(
+      endpoint,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};
 
 export const getAccessoryById = async (id) => {
   try {
@@ -65,7 +88,10 @@ export const getAccessoryById = async (id) => {
 };
 
 // upload image services
-export const adminUploadImageOfAccessory = async (adminAccessoryId, formData) => {
+export const adminUploadImageOfAccessory = async (
+  adminAccessoryId,
+  formData
+) => {
   try {
     const endpoint = `/api/AdminAccessories/adminUpdateImageAccessory/${adminAccessoryId}`;
     const token = localStorage.getItem("Bearer");
@@ -81,7 +107,10 @@ export const adminUploadImageOfAccessory = async (adminAccessoryId, formData) =>
 };
 
 // delete image services
-export const adminDeleteImageOfAccessory = async (adminAccessoryId, typeOfImage) => {
+export const adminDeleteImageOfAccessory = async (
+  adminAccessoryId,
+  typeOfImage
+) => {
   try {
     const token = localStorage.getItem("Bearer");
     const response = await request.put(
@@ -134,5 +163,3 @@ export const deleteImageDetailOfAccessory = async (idImageDetail) => {
     return error.response;
   }
 };
-
-

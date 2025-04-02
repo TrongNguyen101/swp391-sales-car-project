@@ -192,52 +192,96 @@ namespace WebAPI.Controllers
             }
         }
 
-        [HttpPut("delete/{adminCarId}")]
-        public async Task<IActionResult> AdminDeleteByCarId(int adminCarId)
+        [HttpDelete("deleteCar/{adminCarId}")]
+        public async Task<IActionResult> AdminDeleteCarByCarId(int adminCarId)
         {
             try
             {
+                #region Authentication, Authorization
+                // Check authentication and authorization of user based on the specified HTTP context and role that need to check for this function
+                // If the user is not authenticated or authorized, return error message
+                // If the user is authenticated and authorized, return claims of user
+                // admin role id = 1
+                // customer role id = 2
+                // staff role id = 3
+                var (isSuccess, errorMessage, claims) = JwtTokenHelper.AuthenticateAndAuthorize(HttpContext, 1, 3);
+                if (!isSuccess)
+                {
+                    // Return error message if the user is not authenticated or authorized
+                    return Unauthorized(ResponseHelper.ResponseError(401, errorMessage ?? "Unknown error", false, null));
+                }
+                #endregion
+
                 var adminCar = await CarsDAO.GetInstance().GetCarById(adminCarId);
                 if (adminCar == null)
                 {
-                    return NotFound(new DataResponse
-                    {
-                        StatusCode = 404,
-                        Message = "Car not found",
-                        Success = false
-                    });
+                    return NotFound(ResponseHelper.ResponseError(404, "Car not found", false, null));
+                }
+
+                if (adminCar.IsDeleted == true)
+                {
+                    return Conflict(ResponseHelper.ResponseError(409, "Car already deleted", false, null));
                 }
 
                 adminCar.IsShowed = false;
+                adminCar.IsDeleted = true;
                 if (await CarsDAO.GetInstance().DeleteCarById(adminCar))
-
                 {
-                    return Ok(new DataResponse
-                    {
-                        StatusCode = 200,
-                        Message = "Car deleted successfully",
-                        Success = true
-                    });
+                    return Ok(ResponseHelper.Response(200, "Delete car successfully", true, null));
                 }
                 else
                 {
-                    return BadRequest(new DataResponse
-                    {
-                        StatusCode = 400,
-                        Message = "Delete car failed",
-                        Success = false
-                    });
+                    return BadRequest(ResponseHelper.Response(400, "Delete car failed", false, null));
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return BadRequest(new DataResponse
+                return BadRequest(ResponseHelper.Response(400, "Internal server error. Please contact support.", false, null));
+            }
+        }
+
+        [HttpPut("adminRestoreCar/{adminCarId}")]
+        public async Task<IActionResult> AdminRestoreCarByCarId(int adminCarId)
+        {
+            try
+            {
+                #region Authentication, Authorization
+                // Check authentication and authorization of user based on the specified HTTP context and role that need to check for this function
+                // If the user is not authenticated or authorized, return error message
+                // If the user is authenticated and authorized, return claims of user
+                // admin role id = 1
+                // customer role id = 2
+                // staff role id = 3
+                var (isSuccess, errorMessage, claims) = JwtTokenHelper.AuthenticateAndAuthorize(HttpContext, 1);
+                if (!isSuccess)
                 {
-                    StatusCode = 400,
-                    Message = "Internal server error. Please contact support.",
-                    Success = false
-                });
+                    // Return error message if the user is not authenticated or authorized
+                    return Unauthorized(ResponseHelper.ResponseError(401, errorMessage ?? "Unknown error", false, null));
+                }
+                #endregion
+
+                var adminCar = await CarsDAO.GetInstance().GetCarById(adminCarId);
+                if (adminCar == null)
+                {
+                    return NotFound(ResponseHelper.ResponseError(404, "Car not found", false, null));
+                }
+
+                adminCar.IsShowed = false;
+                adminCar.IsDeleted = false;
+                if (await CarsDAO.GetInstance().DeleteCarById(adminCar))
+                {
+                    return Ok(ResponseHelper.Response(200, "Delete car successfully", true, null));
+                }
+                else
+                {
+                    return BadRequest(ResponseHelper.Response(400, "Delete car failed", false, null));
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return BadRequest(ResponseHelper.Response(400, "Internal server error. Please contact support.", false, null));
             }
         }
 
@@ -358,7 +402,8 @@ namespace WebAPI.Controllers
                     PriceBatteryRental = carData.PriceBatteryRental,
                     PriceDeposite = carData.PriceDeposite,
 
-                    IsDeleted = false
+                    IsDeleted = false,
+                    IsShowed = false,
                 };
                 if (await CarsDAO.GetInstance().CreateCar(newCar))
                 {

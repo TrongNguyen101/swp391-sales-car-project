@@ -169,7 +169,7 @@ function AccessoriesPage() {
             </div>
             <div className={cx("container__accessories--list")}>
               {searchRows
-                .filter((acc) => acc.isShowed)
+                .filter((acc) => acc.isShowed === true && acc.isDeleted === false) // Filter out accessories that are not shown
                 .map((accessory, index) => (
                   // card accessory
                   <div

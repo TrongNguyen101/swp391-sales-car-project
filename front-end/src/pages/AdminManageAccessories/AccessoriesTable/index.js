@@ -25,12 +25,16 @@ import {
   faEdit,
   faEye,
   faEyeSlash,
+  faRotateLeft,
   faSearch,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import * as adminAccessoryServices from "../../../services/AdminAccessoryServices";
+import { useUserData } from "../../../App";
 
 function AccessoriesTable() {
+  const { userData } = useUserData();
+
   // variable to navigate to another page
   const navigate = useNavigate();
 
@@ -42,7 +46,15 @@ function AccessoriesTable() {
 
   // Delete accessory state
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [rowToDelete, setRowToDelete] = useState(null);
+  const [rowSelectedTo, setRowSelectedTo] = useState(null);
+
+  // Information dialog state
+  const [openInformationDialog, setOpenInformationDialog] = useState(false);
+  const [informationContent, setInformationContent] = useState(null);
+
+  // Confirm restore dialog state
+  const [openConfirmRestoreDialog, setOpenConfirmRestoreDialog] =
+    useState(false);
 
   const [searchRows, setSearchRows] = useState([]);
 
@@ -70,7 +82,7 @@ function AccessoriesTable() {
     navigate(`/dashboard/accessory-detail/${row.id}`);
   };
 
-  const handleGoToEditaccessoryPage = (row) => {
+  const handleGoToEditAccessoryPage = (row) => {
     navigate(`/dashboard/edit-accessory/${row.id}`);
   };
 
@@ -83,30 +95,51 @@ function AccessoriesTable() {
   const handleDeleteAccessory = async () => {
     try {
       const response = await adminAccessoryServices.adminDeleteAccessory(
-        rowToDelete.id
+        rowSelectedTo.id
       );
       if (response.statusCode === 200) {
         fetchData();
-        setDeleteDialogOpen(true);
+        setOpenInformationDialog(true);
+        setInformationContent({
+          type: "success",
+          message: "Delete accessory successfully",
+        });
+      } else if (response.statusCode === 409) {
+        fetchData();
+        setOpenInformationDialog(true);
+        setInformationContent({
+          type: "error",
+          message: "Item is deleted by another user",
+        });
       } else {
         console.error("Failed to delete accessory:", response.message);
+        setOpenInformationDialog(true);
+        setInformationContent({
+          type: "error",
+          message: "Delete accessory failed",
+        });
       }
     } catch (error) {
       console.error("catch error of deleting accessory:", error);
+      setOpenInformationDialog(true);
+      setInformationContent({
+        type: "error",
+        message: "Internal server error. Please try again later.",
+      });
     } finally {
       setDeleteDialogOpen(false);
-      setRowToDelete(null);
+      setRowSelectedTo(null);
     }
   };
 
   const handleDeleteDialogOpen = (row) => {
     setDeleteDialogOpen(true);
-    setRowToDelete(row);
+    setRowSelectedTo(row);
   };
 
   const handleDeleteDialogClose = () => {
     setDeleteDialogOpen(false);
-    setRowToDelete(null);
+    setRowSelectedTo(null);
   };
 
   const handleSearchChange = (event) => {
@@ -120,6 +153,55 @@ function AccessoriesTable() {
     } else {
       setSearchRows(rows); // If input is empty, show all rows
     }
+  };
+
+  // Close information dialog
+  const handleCloseInformationDialog = () => {
+    setOpenInformationDialog(false);
+    setInformationContent(null);
+  };
+
+  const handleOpenConfirmRestoreDialog = (row) => {
+    setOpenConfirmRestoreDialog(true);
+    setRowSelectedTo(row);
+  };
+
+  const handleRestoreAccessory = async () => {
+    try {
+      const response = await adminAccessoryServices.adminRestoreAccessory(
+        rowSelectedTo.id
+      );
+      if (response.statusCode === 200) {
+        fetchData();
+        setInformationContent({
+          type: "success",
+          message: "Restore accessory successfully",
+        });
+        setOpenInformationDialog(true);
+      } else {
+        console.error("Failed to restore staff:", response.message);
+        setInformationContent({
+          type: "error",
+          message: "Restore accessory failed",
+        });
+        setOpenInformationDialog(true);
+      }
+    } catch (error) {
+      console.error("catch error of restoring staff:", error);
+      setOpenInformationDialog(true);
+      setInformationContent({
+        type: "error",
+        message: "Internal server error. Please try again later.",
+      });
+    } finally {
+      setOpenConfirmRestoreDialog(false);
+      setRowSelectedTo(null);
+    }
+  };
+
+  const handleCloseConfirmRestoreDialog = () => {
+    setOpenConfirmRestoreDialog(false);
+    setRowSelectedTo(null);
   };
 
   // format the price
@@ -287,7 +369,20 @@ function AccessoriesTable() {
                   <TableCell align="center">
                     {/* Edit Button */}
                     {row.isDeleted ? (
-                      <Typography color="error">Deleted</Typography>
+                      userData.roleId === 1 ? (
+                        <IconButton
+                          aria-label="edit"
+                          color="primary"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleOpenConfirmRestoreDialog(row);
+                          }}
+                        >
+                          <FontAwesomeIcon icon={faRotateLeft} />
+                        </IconButton>
+                      ) : (
+                        <Typography color="error">Deleted</Typography>
+                      )
                     ) : (
                       <Box>
                         <IconButton
@@ -295,7 +390,7 @@ function AccessoriesTable() {
                           color="success"
                           onClick={(e) => {
                             e.stopPropagation();
-                            handleGoToEditaccessoryPage(row);
+                            handleGoToEditAccessoryPage(row);
                           }}
                         >
                           <FontAwesomeIcon icon={faEdit} />
@@ -326,7 +421,7 @@ function AccessoriesTable() {
         <DialogContent>
           <DialogContentText>
             Are you sure you want to delete
-            {rowToDelete ? " " + rowToDelete.model : null}?
+            {rowSelectedTo ? " " + rowSelectedTo.model : null}?
           </DialogContentText>
         </DialogContent>
         <DialogActions sx={{ justifyContent: "center" }}>
@@ -339,6 +434,68 @@ function AccessoriesTable() {
           </Button>
           <Button
             onClick={handleDeleteAccessory}
+            variant="contained"
+            color="primary"
+          >
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Show information dialog */}
+      <Dialog
+        open={openInformationDialog}
+        keepMounted
+        aria-labelledby="alert-dialog-slide-title"
+        aria-describedby="alert-dialog-slide-description"
+        sx={{ "& .MuiDialog-paper": { width: "540px", height: "180px" } }}
+      >
+        <DialogTitle
+          id="alert-dialog-slide-title"
+          sx={{
+            textAlign: "center",
+            marginTop: "20px",
+          }}
+        >
+          {informationContent && (
+            <Typography
+              color={informationContent.type === "error" ? "error" : "success"}
+              sx={{ fontWeight: 500, fontSize: "30px" }}
+            >
+              {informationContent.message}
+            </Typography>
+          )}
+        </DialogTitle>
+        <DialogActions sx={{ justifyContent: "center", marginBottom: "15px" }}>
+          <Button
+            color="primary"
+            variant="contained"
+            onClick={handleCloseInformationDialog}
+          >
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Confirm Restore dialog ----------------------------------------------------------------------------------------- */}
+      <Dialog open={openConfirmRestoreDialog} sx={{ textAlign: "center" }}>
+        <DialogTitle color="primary">Confirm Restore Car</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to restore
+            {rowSelectedTo ? " " + rowSelectedTo.name : null}?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions sx={{ justifyContent: "center", paddingBottom: "20px" }}>
+          <Button
+            onClick={handleCloseConfirmRestoreDialog}
+            variant="contained"
+            color="error"
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={handleRestoreAccessory}
             variant="contained"
             color="primary"
           >
