@@ -18,16 +18,16 @@ const Sidebar = ({ onSelectCategory }) => {
     setExpanded((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await categoriesService.getCategories();
-        setCategories(response.data);
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-      }
-    };
+  const fetchCategories = async () => {
+    try {
+      const response = await categoriesService.getCategories();
+      setCategories(response.data);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  };
 
+  useEffect(() => {
     fetchCategories();
   }, []);
 
@@ -37,8 +37,6 @@ const Sidebar = ({ onSelectCategory }) => {
     }
     onSelectCategory(id); // Call the callback function with the selected category ID
   };
-
-
 
   const renderCategories = (parentsId = 0) => {
     return categories
@@ -88,12 +86,14 @@ const Sidebar = ({ onSelectCategory }) => {
 
   return (
     <div className={cx("sidebar")}>
-      <Typography className={cx("sidebar__title")}>
-        Categories
-      </Typography>
-      <div className={cx("sidebar__content")}>
-        {renderCategories()}
-      </div>
+      <Typography className={cx("sidebar__title")}>Categories</Typography>
+      <ListItem button="true" onClick={() => handleCategoryClick(0)}>
+        <ListItemText
+          primary="All accessories"
+          className={cx("sidebar__text")}
+        />
+      </ListItem>
+      <div className={cx("sidebar__content")}>{renderCategories()}</div>
     </div>
   );
 };

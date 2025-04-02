@@ -9,7 +9,7 @@ namespace WebAPI.DTO
         public string? Email { get; set; }
         public string? CreatedAt { get; set; }
         public string? IsDeleted { get; set; }
-        public DateTime LastChange { get; set; }
+        public string? LastChange { get; set; }
         public int RoleId { get; set; }
     }
 }

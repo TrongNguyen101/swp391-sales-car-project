@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebAPI.DataContext;
 
@@ -11,9 +12,11 @@ using WebAPI.DataContext;
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(VinfastContext))]
-    partial class VinfastContextModelSnapshot : ModelSnapshot
+    [Migration("20250401072231_Update_data_categories")]
+    partial class Update_data_categories
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1486,12 +1489,7 @@ namespace WebAPI.Migrations
                         new
                         {
                             RoleId = 2,
-                            RoleName = "Customer"
-                        },
-                        new
-                        {
-                            RoleId = 3,
-                            RoleName = "Staff"
+                            RoleName = "User"
                         });
                 });
 
@@ -1632,19 +1630,6 @@ namespace WebAPI.Migrations
                             Phone = "0987654321",
                             RoleId = 2,
                             UserName = "Nguyen Trong"
-                        },
-                        new
-                        {
-                            Id = new Guid("1f2628eb-34bf-4e4b-a9d2-308827bed09a"),
-                            Address = "456 User St",
-                            CreatedAt = new DateTime(2023, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Email = "staff@gmail.com",
-                            IsDeleted = false,
-                            LastChange = new DateTime(2023, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Password = "fbef4e8b28be6c2d65f3a0ddaebee28001d9e33743b7dc8e2843dea8c1129362",
-                            Phone = "0987654321",
-                            RoleId = 3,
-                            UserName = "Nguyen Duong Phu Trong"
                         });
                 });
 

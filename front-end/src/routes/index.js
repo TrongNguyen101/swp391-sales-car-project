@@ -37,6 +37,8 @@ import UpdateAccessoryPage from "../pages/AdminManageAccessories/UpdateAccessory
 import AdminManageImportExportPage from "../pages/AdminManageImportExport";
 import AdminManageAccessoryTransactionsDetailPage from "../pages/AdminManageAccessoryTransactionsDetail";
 import PersonalInfoPage from "../pages/PersonalInfor";
+import AdminManageStaffPage from "../pages/AdminManageStaff";
+import AdminCreateAccountStaffPage from "../pages/AdminManageStaff/AdminCreateAccountStaff";
 const publicRoutes = [
   { path: "/", page: HomePage },
   { path: "/cars", page: CarsPage },
@@ -126,6 +128,20 @@ const publicRoutes = [
 
   // Admin manage test driven routes
   { path: "/dashboard/test-driven-register", page: AdminManageTestDrivenPage, layout: DashboardLayout },
+
+  // Admin manage staff routes
+  {
+    path: "/dashboard/account-staff",
+    page: AdminManageStaffPage,
+    layout: DashboardLayout,
+  },
+  {
+    path: "/dashboard/create-account-staff",
+    page: AdminCreateAccountStaffPage,
+    layout: DashboardLayout,
+  }
+  
+
 
 ];
 

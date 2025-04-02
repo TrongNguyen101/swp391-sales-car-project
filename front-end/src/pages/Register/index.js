@@ -47,7 +47,6 @@ function RegisterPage() {
   const [errorPassword, setErrorPassword] = useState("");
   const [errorRePassword, setErrorRePassword] = useState("");
   const [errorFullname, setErrorFullname] = useState("");
-  const [message, setMessage] = useState("");
   const [phone, setPhone] = useState("");
   const [errorPhone, setErrorPhone] = useState("");
   const [openWaitingDialog, setOpenWaitingDialog] = useState(false);
@@ -141,6 +140,7 @@ function RegisterPage() {
         type: "error",
         message: "Internal server error. Please contact support",
       });
+      setOpenInformationDialog(true);
     }
   };
 
@@ -228,7 +228,10 @@ function RegisterPage() {
         setOtpDialogOpen(false);
         setErrorOtp("");
         setOtpValue(new Array(6).fill(""));
-        setMessage("Register successfully");
+        setInformationContent({
+          type: "success",
+          message: "Register successfully.",
+        });
         setOpenDialog(true);
       } else {
         setErrorOtp("Invalid OTP code");
@@ -238,6 +241,7 @@ function RegisterPage() {
         type: "error",
         message: "Internal server error. Please contact support",
       });
+      setOpenInformationDialog(true);
     }
   };
 
@@ -403,19 +407,19 @@ function RegisterPage() {
             variant="h5"
             sx={{ fontSize: "1.6rem", fontWeight: "500", lineHeight: "1.5" }}
           >
-            {message}
+            {informationContent && (
+              <Typography
+                color={
+                  informationContent.type === "error" ? "error" : "success"
+                }
+                sx={{ fontWeight: 500, fontSize: "30px" }}
+              >
+                {informationContent.message}
+              </Typography>
+            )}
           </Typography>
         </DialogTitle>
-        <DialogContent sx={{ textAlign: "center" }}>
-          <DialogContentText id="alert-dialog-slide-description">
-            <Typography
-              variant="h6"
-              sx={{ fontSize: "1.2rem", fontWeight: "300", lineHeight: "1.5" }}
-            >
-              You have successfully register an account.
-            </Typography>
-          </DialogContentText>
-        </DialogContent>
+        
         <DialogActions sx={{ justifyContent: "center" }}>
           <Button
             variant="contained"

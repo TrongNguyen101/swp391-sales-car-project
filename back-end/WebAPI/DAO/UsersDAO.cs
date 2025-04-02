@@ -44,7 +44,7 @@ namespace WebAPI.DAO
         {
             using (var context = new VinfastContext())
             {
-                return await context.Users.Where(u => u.Email == email).FirstOrDefaultAsync();
+                return await context.Users.Where(u => u.Email == email && u.IsDeleted == false).FirstOrDefaultAsync();
             }
         }
 
@@ -92,11 +92,7 @@ namespace WebAPI.DAO
             {
                 using (var context = new VinfastContext())
                 {
-                    context.Attach(user);
-                    context.Entry(user).Property(user => user.UserName).IsModified = true;
-                    context.Entry(user).Property(user => user.Phone).IsModified = true;
-                    context.Entry(user).Property(user => user.Address).IsModified = true;
-                    context.Entry(user).Property(user => user.LastChange).IsModified = true;
+                    context.Users.Update(user);
                     await context.SaveChangesAsync();
                 }
             }
@@ -110,14 +106,22 @@ namespace WebAPI.DAO
         /// Marks a user as deleted in the database.
         /// </summary>
         /// <param name="user">The user to delete.</param>
-        public void DeleteUser(Users user)
+        public async Task DeleteUser(Users user)
         {
-            using (var context = new VinfastContext())
+            try
             {
-                user.IsDeleted = true;
-                context.Users.Update(user);
-                context.SaveChanges();
+                using (var context = new VinfastContext())
+                {
+                    context.Users.Update(user);
+                    await context.SaveChangesAsync();
+                }
             }
+            catch (Exception e)
+            {
+                Console.WriteLine("Failed to delete user: " + e);
+                throw new Exception(e.Message);
+            }
+
         }
 
         public async Task<bool> ResetPassword(ChangePasswordRequestDTO request)
@@ -139,9 +143,33 @@ namespace WebAPI.DAO
 
         public async Task<List<Users>> GetAllUsersAsync()
         {
-            using (var context = new VinfastContext())
+            try
             {
-                return await context.Users.Where(user => user.RoleId == 2).ToListAsync();
+                using (var context = new VinfastContext())
+                {
+                    return await context.Users.Where(user => user.RoleId == 2).ToListAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Failed to get all users from database. Error: ", ex);
+                return null;
+            }
+        }
+
+        public async Task<List<Users>> GetAllStaffsAsync()
+        {
+            try
+            {
+                using (var context = new VinfastContext())
+                {
+                    return await context.Users.Where(user => user.RoleId == 3).ToListAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Failed to get all staff from database. Error: ", ex);
+                return null;
             }
         }
 

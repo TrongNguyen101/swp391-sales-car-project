@@ -24,7 +24,7 @@ namespace WebAPI.Utils.AutoMapper
                 Email = user.Email,
                 CreatedAt = FormatDateTime(user.CreatedAt),
                 IsDeleted = FormatBooleanToString(user.IsDeleted),
-                LastChange = user.LastChange,
+                LastChange = FormatDateTime(user.LastChange),
                 RoleId = user.RoleId
             };
         }
@@ -44,7 +44,7 @@ namespace WebAPI.Utils.AutoMapper
                 Phone = userDTO.Phone,
                 Email = userDTO.Email,
                 IsDeleted = FormatStringToBoolean(userDTO.IsDeleted),
-                LastChange = userDTO.LastChange,
+                LastChange = ParseDateTime(userDTO.LastChange),
                 RoleId = userDTO.RoleId
             };
         }
@@ -430,6 +430,11 @@ namespace WebAPI.Utils.AutoMapper
         private static string FormatDateTime(DateTime dateTime)
         {
             return dateTime.ToString("dd-MM-yyyy HH:mm");
+        }
+
+        private static DateTime ParseDateTime(string dateTimeString)
+        {
+            return DateTime.ParseExact(dateTimeString, "dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture);
         }
 
     }

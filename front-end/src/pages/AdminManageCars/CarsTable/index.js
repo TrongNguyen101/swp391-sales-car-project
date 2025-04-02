@@ -65,12 +65,7 @@ function CarsTable() {
         console.log("all car:", response.data);
         setRows(response.data);
         setSearchRows(response.data);
-      }
-      if (response.statusCode === 401) {
-        console.log("Failed to fetch cars because:", response.message);
-        navigate("/login");
-      }
-      if (response.statusCode !== 200) {
+      } else {
         console.error("Failed to fetch cars:", response.message);
         setRows([]);
         setSearchRows([]);
@@ -148,16 +143,15 @@ function CarsTable() {
 
     // Perform filtering immediately as the user types
     if (value.trim()) {
-      const filteredAccessory = rows.filter(
-        (car) =>
-          car.model?.toString().toLowerCase().includes(value.toLowerCase())
+      const filteredAccessory = rows.filter((car) =>
+        car.model?.toString().toLowerCase().includes(value.toLowerCase())
       );
       setSearchRows(filteredAccessory);
     } else {
       setSearchRows(rows); // If input is empty, show all rows
     }
   };
- 
+
   // Delete car
   const handleDelete = async () => {
     try {
@@ -192,6 +186,14 @@ function CarsTable() {
 
   return (
     <Box sx={{ width: "100%", paddingBottom: "40px" }}>
+      <Typography
+        variant="h4"
+        align="left"
+        gutterBottom
+        sx={{ fontWeight: "500", paddingBottom: "20px", paddingLeft: "45px" }}
+      >
+        Cars Management
+      </Typography>
       {/* Navigation ----------------------------------------------------------------------------------------------------------------- */}
       <Box
         style={{
@@ -234,7 +236,7 @@ function CarsTable() {
                     sx={{
                       color: isSearchFocused ? "primary.main" : "inherit",
                     }}
-                  //onClick={handleSearch}
+                    //onClick={handleSearch}
                   >
                     <FontAwesomeIcon icon={faSearch} />
                   </IconButton>
