@@ -34,6 +34,16 @@ namespace WebAPI.DAO
             }
         }
 
+        public async Task<List<Cars>> UserGetAllCars()
+        {
+            using (var context = new VinfastContext())
+            {
+                return await context.Cars
+                    .Where(c => c.IsShowed == true && c.IsDeleted == false)
+                    .ToListAsync();
+            }
+        }
+
         public async Task<Cars> GetCarById(int id)
         {
             using (var context = new VinfastContext())
@@ -41,6 +51,21 @@ namespace WebAPI.DAO
                 return await context.Cars.FindAsync(id);
             }
         }
+
+        public async Task<Cars> UserGetCarById(int id)
+        {
+            using (var context = new VinfastContext())
+            {
+                var car = await context.Cars.FindAsync(id);
+                if (car == null || car.IsDeleted == true || car.IsShowed == false)
+                {
+                    return null;
+                }
+                return car;
+            }
+        }
+
+
 
         public async Task<Cars> GetCarByName(string name)
         {

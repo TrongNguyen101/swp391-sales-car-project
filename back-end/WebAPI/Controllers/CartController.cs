@@ -75,33 +75,18 @@ namespace WebAPI.Controllers
         {
             try
             {
-                #region Authentication, Authorization and validation
-                // Get token
-                var authorizationHeader = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
-
-                // Check token
-                if (authorizationHeader == null || !authorizationHeader.StartsWith("Bearer "))
+                #region Authentication, Authorization
+                // Check authentication and authorization of user based on the specified HTTP context and role that need to check for this function
+                // If the user is not authenticated or authorized, return error message
+                // If the user is authenticated and authorized, return claims of user
+                // admin role id = 1
+                // customer role id = 2
+                // staff role id = 3
+                var (isSuccess, errorMessage, claims) = JwtTokenHelper.AuthenticateAndAuthorize(HttpContext, 2);
+                if (!isSuccess)
                 {
-                    return Unauthorized(ResponseHelper.Response(401, "Authentication token is missing or invalid", false, null));
-                }
-                // Format token
-                var token = authorizationHeader.Split(" ")[1];
-                // Get claims
-                var claims = JwtTokenHelper.GetUserClaims(token);
-                // Verify token
-                if (claims == null)
-                {
-                    return Unauthorized(ResponseHelper.Response(401, "Authentication token is invalid", false, null));
-                }
-                // Check role
-                if (claims.TryGetValue("role", out var roleId) && roleId.ToString() != "2")
-                {
-                    return Unauthorized(ResponseHelper.Response(401, "Unauthorized access denied", false, null));
-                }
-                // Check model state
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ResponseHelper.Response(400, "The model state is invalid", false, null));
+                    // Return error message if the user is not authenticated or authorized
+                    return Unauthorized(ResponseHelper.ResponseError(401, errorMessage ?? "Unknown error", false, null));
                 }
                 #endregion
 
@@ -112,12 +97,12 @@ namespace WebAPI.Controllers
                 // Check accessory exist
                 if (accessoryAdded == null || accessoryAdded.IsDeleted == true)
                 {
-                    return NotFound(ResponseHelper.Response(404, "Product not found", false, null));
+                    return NotFound(ResponseHelper.ResponseError(404, "Product not found", false, null));
                 }
                 // check quantity of accessory
                 if (accessoryAdded.Quantity <= 0)
                 {
-                    return BadRequest(ResponseHelper.Response(400, "Accessory is out of stock", false, null));
+                    return BadRequest(ResponseHelper.ResponseError(400, "Accessory is out of stock", false, null));
 
                 }
                 #endregion
@@ -133,17 +118,17 @@ namespace WebAPI.Controllers
 
                     if (cartItemExist.Quantity > accessoryAdded.Quantity)
                     {
-                        return BadRequest(ResponseHelper.Response(400, accessoryAdded.Name + " is not enough", false, null));
+                        return BadRequest(ResponseHelper.ResponseError(400, accessoryAdded.Name + " is not enough", false, null));
                     }
 
                     if (await CartDAO.GetInstance().UpdateCartItem(cartItemExist))
                     {
-                        return Ok(ResponseHelper.Response(200, "Updated cart successfully", true, null));
+                        return Ok(ResponseHelper.ResponseError(200, "Updated cart successfully", true, null));
 
                     }
                     else
                     {
-                        return BadRequest(ResponseHelper.Response(400, "Error: can't update cart", false, null));
+                        return BadRequest(ResponseHelper.ResponseError(400, "Error: can't update cart", false, null));
                     }
                 }
 
@@ -152,11 +137,11 @@ namespace WebAPI.Controllers
                 // Add cart item
                 if (await CartDAO.GetInstance().AddCartItem(newCartItem))
                 {
-                    return Ok(ResponseHelper.Response(200, "Add accessory to cart successfully", true, null));
+                    return Ok(ResponseHelper.ResponseSuccess(200, "Add accessory to cart successfully", true, null));
                 }
                 else
                 {
-                    return BadRequest(ResponseHelper.Response(400, "Error: can't add accessory to cart", false, null));
+                    return BadRequest(ResponseHelper.ResponseError(400, "Error: can't add accessory to cart", false, null));
                 }
 
                 #endregion
@@ -164,7 +149,7 @@ namespace WebAPI.Controllers
             catch (Exception ex)
             {
                 Console.WriteLine("Add accessory to cart failed: " + ex);
-                return BadRequest(ResponseHelper.Response(500, "Internal server error. Please contact support.", false, null));
+                return BadRequest(ResponseHelper.ResponseError(500, "Internal server error. Please contact support.", false, null));
             }
         }
 

@@ -102,47 +102,97 @@ namespace WebAPI.Controllers
         {
             try
             {
+                #region Authentication, Authorization
+                // Check authentication and authorization of user based on the specified HTTP context and role that need to check for this function
+                // If the user is not authenticated or authorized, return error message
+                // If the user is authenticated and authorized, return claims of user
+                // admin role id = 1
+                // customer role id = 2
+                // staff role id = 3
+                var (isSuccess, errorMessage, claims) = JwtTokenHelper.AuthenticateAndAuthorize(HttpContext, 1, 3);
+                if (!isSuccess)
+                {
+                    // Return error message if the user is not authenticated or authorized
+                    return Unauthorized(ResponseHelper.ResponseError(401, errorMessage ?? "Unknown error", false, null));
+                }
+                #endregion
+
                 var adminAccessory = await AccessoriesDAO.GetInstance().GetAccessoryById(adminAccessoryId);
+
                 if (adminAccessory == null)
                 {
-                    return NotFound(new DataResponse
-                    {
-                        StatusCode = 404,
-                        Message = "Accessory not found",
-                        Success = false
-                    });
+                    return NotFound(ResponseHelper.ResponseError(404, "Accessory not found", false, null));
                 }
+
+                if (adminAccessory.IsDeleted == true)
+                {
+                    return Conflict(ResponseHelper.ResponseError(409, "Accessory already deleted", false, null));
+                }
+
+                adminAccessory.IsDeleted = true;
                 adminAccessory.IsShowed = false;
+
                 Console.WriteLine(adminAccessory);
                 if (await AccessoriesDAO.GetInstance().UpdateAccessory(adminAccessory))
-
                 {
-                    return Ok(new DataResponse
-                    {
-                        StatusCode = 200,
-                        Message = "Accessory deleted successfully",
-                        Success = true
-                    });
+                    return Ok(ResponseHelper.ResponseSuccess(200, "Delete accessory successfully", true, null));
                 }
                 else
                 {
-                    return BadRequest(new DataResponse
-                    {
-                        StatusCode = 400,
-                        Message = "Delete accessory failed",
-                        Success = false
-                    });
+                    return BadRequest(ResponseHelper.ResponseError(400, "Error: can't delete accessory", false, null));
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return BadRequest(new DataResponse
+                return BadRequest(ResponseHelper.ResponseError(400, "Internal server error. Please contact support.", false, null));
+            }
+        }
+
+        [HttpPut("adminRestoreAccessory/{adminAccessoryId}")]
+        public async Task<IActionResult> AdminRestoreAccessoryById(int adminAccessoryId)
+        {
+            try
+            {
+                #region Authentication, Authorization
+                // Check authentication and authorization of user based on the specified HTTP context and role that need to check for this function
+                // If the user is not authenticated or authorized, return error message
+                // If the user is authenticated and authorized, return claims of user
+                // admin role id = 1
+                // customer role id = 2
+                // staff role id = 3
+                var (isSuccess, errorMessage, claims) = JwtTokenHelper.AuthenticateAndAuthorize(HttpContext, 1);
+                if (!isSuccess)
                 {
-                    StatusCode = 500,
-                    Message = "Internal server error. Please contact support.",
-                    Success = false
-                });
+                    // Return error message if the user is not authenticated or authorized
+                    return Unauthorized(ResponseHelper.ResponseError(401, errorMessage ?? "Unknown error", false, null));
+                }
+                #endregion
+
+                var adminAccessory = await AccessoriesDAO.GetInstance().GetAccessoryById(adminAccessoryId);
+
+                if (adminAccessory == null)
+                {
+                    return NotFound(ResponseHelper.ResponseError(404, "Accessory not found", false, null));
+                }
+
+                adminAccessory.IsDeleted = false;
+                adminAccessory.IsShowed = false;
+
+                Console.WriteLine(adminAccessory);
+                if (await AccessoriesDAO.GetInstance().UpdateAccessory(adminAccessory))
+                {
+                    return Ok(ResponseHelper.ResponseSuccess(200, "Restore accessory successfully", true, null));
+                }
+                else
+                {
+                    return BadRequest(ResponseHelper.ResponseError(400, "Error: can't Restore accessory", false, null));
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return BadRequest(ResponseHelper.ResponseError(400, "Internal server error. Please contact support.", false, null));
             }
         }
 

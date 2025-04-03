@@ -4,7 +4,7 @@ import classNames from "classnames/bind";
 import { Typography, Avatar, Button, ListItem, Box } from "@mui/material";
 
 import styles from "./SidebarUser.module.scss";
-import { useUserData } from "../../layouts/ProfileUserLayout";
+import { useUserData } from "../../App";
 
 const cx = classNames.bind(styles);
 

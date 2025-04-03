@@ -35,7 +35,7 @@ function UpdateCarPage() {
 
   const fetchCarDetails = async (Id) => {
     try {
-      const response = await adminCarServices.getCarById(Id);
+      const response = await adminCarServices.adminGetCarById(Id);
       if (response.statusCode !== 200) {
         alert("Failed to fetch car details: " + response.message);
       } else {

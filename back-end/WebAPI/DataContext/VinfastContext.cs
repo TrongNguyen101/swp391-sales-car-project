@@ -897,7 +897,7 @@ namespace WebAPI.DataContext
                 {
                     ColorId = 8,
                     ColorName = "White",
-                    ColorImage = "VF3_camera_lui_1.jpg",
+                    ColorImage = "VF3_camera_lui_2.jpg",
                     IsDeleted = false,
                     AccessoryId = 3
                 },

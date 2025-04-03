@@ -17,7 +17,7 @@ import * as AuthValidator from "../../validation/AuthValidation";
 import * as authService from "../../services/AuthService";
 import * as OTPValidator from "../../validation/OTPValidation";
 import * as adminService from "../../services/AdminServices";
-import { useUserData } from "../../layouts/ProfileUserLayout";
+import { useUserData } from "../../App";
 
 import styles from "./PersonalInfor.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

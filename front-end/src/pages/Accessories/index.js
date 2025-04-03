@@ -51,7 +51,7 @@ const cx = classNames.bind(styles);
 function AccessoriesPage() {
   const navigate = useNavigate();
   const [accessories, setAccessories] = useState([]);
-  const [selectedCategoryId, setSelectedCategoryId] = useState(1); // Add state for selected category ID
+  const [selectedCategoryId, setSelectedCategoryId] = useState(0); // Add state for selected category ID
   const [searchRows, setSearchRows] = useState([]);
 
   const handleClickCard = (accessoryId) => () => {
@@ -169,7 +169,6 @@ function AccessoriesPage() {
             </div>
             <div className={cx("container__accessories--list")}>
               {searchRows
-                .filter((acc) => acc.isShowed)
                 .map((accessory, index) => (
                   // card accessory
                   <div

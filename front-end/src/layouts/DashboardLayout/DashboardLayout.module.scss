@@ -4,12 +4,12 @@
 
 .container_dashboard {
   display: flex;
-  justify-content: left;
+  // justify-content: left;
 }
 
 .container_dashboard--Sidebar {
   position: fixed;
-  width: 300px;
+  // width: 300px;
   flex-shrink: 0;
   min-height: 100vh;
   background-color: #f9f9f9;
@@ -17,9 +17,8 @@
 }
 
 .container_dashboard--Content {
-  margin-left: 300px;
+  padding-left: 300px;
   flex-grow: 1;
   display: flex;
   flex-direction: column;
 }
-

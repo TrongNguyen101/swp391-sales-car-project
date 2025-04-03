@@ -14,7 +14,7 @@ export const getAllAccessories = async () => {
     const response = await request.get("/api/Accessories");
     return response.data;
   } catch (error) {
-    return error.response;
+    return error.response.data;
   }
 };
 
@@ -25,18 +25,26 @@ export const getAccessoriesByCategoryId = async (categoryId) => {
     );
     return response.data;
   } catch (error) {
-    return error.response;
+    return error.response.data;
   }
 };
 
 export const getAccessoryById = async (accessoryId) => {
   try {
-    const response = await request.get(
-      `/api/Accessories/${accessoryId}`
-    );
+    const response = await request.get(`/api/Accessories/${accessoryId}`);
     return response.data;
   } catch (error) {
-    return error.response;
+    return error.response.data;
+  }
+};
+
+export const userGetAccessoryById = async (accessoryId) => {
+  try {
+    const endpoint = `/api/Accessories/userGetAccessory/${accessoryId}`;
+    const response = await request.get(endpoint);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
   }
 };
 
@@ -45,6 +53,6 @@ export const getAccessoryImagesByAccessoryId = async (categoryId) => {
     const response = await request.get(`/api/Accessories/image/${categoryId}`);
     return response.data;
   } catch (error) {
-    return error.response;
+    return error.response.data;
   }
 };

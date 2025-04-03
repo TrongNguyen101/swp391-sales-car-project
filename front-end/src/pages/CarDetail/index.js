@@ -17,8 +17,6 @@ function CarDetailPage() {
   const [selectedColor, setSelectedColor] = useState(0);
   const [colors, setColors] = useState([]);
 
-
-  
   const toTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -38,14 +36,16 @@ function CarDetailPage() {
 
   const fetchCarDetails = async (Id) => {
     try {
-      const response = await carService.getCarById(Id);
+      const response = await carService.userGetCarById(Id);
       if (response.statusCode !== 200) {
-        setCar({});
+        navigate("/cars");
+        return;
       } else {
         setCar(JSON.parse(response.data));
       }
     } catch (error) {
-      setCar({});
+      navigate("/cars");
+      return;
     }
   };
 
@@ -58,6 +58,7 @@ function CarDetailPage() {
     if (decoded) {
       setUser(decoded);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [carId]);
 
   const settings = {
@@ -210,26 +211,26 @@ function CarDetailPage() {
         <div className={cx("color-block")}>
           <div className={cx("car-color-block")}>
             {colors.length !== 1 ? (
-            <Slider {...settings} key={selectedColor}>
-              {colors.map((color, index) => (
-                <div className={cx("car-color-item")} key={index}>
+              <Slider {...settings} key={selectedColor}>
+                {colors.map((color, index) => (
+                  <div className={cx("car-color-item")} key={index}>
+                    <img
+                      src={`https://localhost:7005/api/Images/ColorDetail/${color.ColorImage}`}
+                      alt={color.ColorName}
+                    />
+                  </div>
+                ))}
+              </Slider>
+            ) : (
+              <Slider {...settings1Image} key={selectedColor}>
+                <div className={cx("car-color-item")} key={0}>
                   <img
-                    src={`https://localhost:7005/api/Images/ColorDetail/${color.ColorImage}`}
-                    alt={color.ColorName}
+                    src={`https://localhost:7005/api/Images/ColorDetail/${colors[0].ColorImage}`}
+                    alt={colors[0].ColorName}
                   />
                 </div>
-              ))}
-            </Slider>
-          ) : (
-            <Slider {...settings1Image} key={selectedColor}>
-              <div className={cx("car-color-item")} key={0}>
-                <img
-                  src={`https://localhost:7005/api/Images/ColorDetail/${colors[0].ColorImage}`}
-                  alt={colors[0].ColorName}
-                />
-              </div>
-            </Slider>
-          )}
+              </Slider>
+            )}
           </div>
           <div className={cx("car-color")}>
             {colors.map((color, index) => (

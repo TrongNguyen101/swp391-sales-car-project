@@ -91,14 +91,18 @@ function CartPage() {
 
   const handleIncreaseQuantity = (index) => {
     setCartItems((prev) =>
-      prev.map((item, i) => (i === index ? { ...item, quantity: item.quantity + 1 } : item))
+      prev.map((item, i) =>
+        i === index ? { ...item, quantity: item.quantity + 1 } : item
+      )
     );
   };
 
   const handleDecreaseQuantity = (index) => {
     setCartItems((prev) =>
       prev.map((item, i) =>
-        i === index && item.quantity > 1 ? { ...item, quantity: item.quantity - 1 } : item
+        i === index && item.quantity > 1
+          ? { ...item, quantity: item.quantity - 1 }
+          : item
       )
     );
   };
@@ -127,7 +131,6 @@ function CartPage() {
     if (isLoggedIn) {
       fetchCartItems();
       setOpenDialog(false);
-      return;
     }
     navigate("/login");
     setOpenDialog(false);

@@ -29,12 +29,16 @@ import {
   faEdit,
   faEye,
   faEyeSlash,
+  faRotateLeft,
   faSearch,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import * as adminCarServices from "../../../services/AdminCarServices";
+import { useUserData } from "../../../App";
 
 function CarsTable() {
+  const { userData } = useUserData();
+
   // variable to navigate to another page
   const navigate = useNavigate();
 
@@ -47,7 +51,7 @@ function CarsTable() {
 
   // Delete car state
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [rowToDelete, setRowToDelete] = useState(null);
+  const [rowSelectedTo, setRowSelectedTo] = useState(null);
 
   // Add more car state
   const [selectedCar, setSelectedCar] = useState("");
@@ -56,17 +60,23 @@ function CarsTable() {
   const [errorSelectedCarId, setErrorSelectedCarId] = useState(null);
   const [errorQuantity, setErrorQuantity] = useState(null);
 
+  // State for information dialog
+  const [openInformationDialog, setOpenInformationDialog] = useState(false);
+  const [informationContent, setInformationContent] = useState(null);
+
+  // State for restore dialog
+  const [openConfirmRestoreDialog, setOpenConfirmRestoreDialog] =
+    useState(false);
+
   // Fetch data from server
   const fetchData = async () => {
     try {
       const response = await adminCarServices.adminGetAllCars();
       console.log("response before if: ", response);
       if (response.statusCode === 200) {
-        console.log("all car:", response.data);
         setRows(response.data);
         setSearchRows(response.data);
       } else {
-        console.error("Failed to fetch cars:", response.message);
         setRows([]);
         setSearchRows([]);
       }
@@ -81,6 +91,7 @@ function CarsTable() {
   }, []);
 
   const handleGoToDetailPage = (row) => {
+    console.log("row: ", row.id);
     navigate(`/dashboard/detail-car/${row.id}`);
   };
 
@@ -155,28 +166,96 @@ function CarsTable() {
   // Delete car
   const handleDelete = async () => {
     try {
-      const response = await adminCarServices.adminDeleteCar(rowToDelete.id);
+      const response = await adminCarServices.adminDeleteCar(rowSelectedTo.id);
       if (response.statusCode === 200) {
         fetchData();
+        setOpenInformationDialog(true);
+        setInformationContent({
+          type: "success",
+          message: "Delete car successfully",
+        });
+      } else if (response.statusCode === 409) {
+        fetchData();
+        setOpenInformationDialog(true);
+        setInformationContent({
+          type: "error",
+          message: "Car is deleted by another user",
+        });
       } else {
         console.error("Failed to delete car:", response.message);
+        setOpenInformationDialog(true);
+        setInformationContent({
+          type: "error",
+          message: "Delete car failed",
+        });
       }
     } catch (error) {
       console.error("catch error of deleting car:", error);
+      setOpenInformationDialog(true);
+      setInformationContent({
+        type: "error",
+        message: "Internal server error. Please try again later.",
+      });
     } finally {
       setDeleteDialogOpen(false);
-      setRowToDelete(null);
+      setRowSelectedTo(null);
     }
   };
 
   const handleDeleteDialogOpen = (row) => {
     setDeleteDialogOpen(true);
-    setRowToDelete(row);
+    setRowSelectedTo(row);
   };
 
   const handleDeleteDialogClose = () => {
     setDeleteDialogOpen(false);
-    setRowToDelete(null);
+    setRowSelectedTo(null);
+  };
+
+  const handleCloseInformationDialog = () => {
+    setOpenInformationDialog(false);
+    setInformationContent(null);
+  };
+
+  const handleOpenConfirmRestoreDialog = (row) => {
+    setOpenConfirmRestoreDialog(true);
+    setRowSelectedTo(row);
+  };
+
+  const handleRestoreCar = async () => {
+    try {
+      const response = await adminCarServices.adminRestoreCar(rowSelectedTo.id);
+      if (response.statusCode === 200) {
+        fetchData();
+        setInformationContent({
+          type: "success",
+          message: "Restore car successfully",
+        });
+        setOpenInformationDialog(true);
+      } else {
+        console.error("Failed to restore staff:", response.message);
+        setInformationContent({
+          type: "error",
+          message: "Restore car failed",
+        });
+        setOpenInformationDialog(true);
+      }
+    } catch (error) {
+      console.error("catch error of restoring staff:", error);
+      setOpenInformationDialog(true);
+      setInformationContent({
+        type: "error",
+        message: "Internal server error. Please try again later.",
+      });
+    } finally {
+      setOpenConfirmRestoreDialog(false);
+      setRowSelectedTo(null);
+    }
+  };
+
+  const handleCloseConfirmRestoreDialog = () => {
+    setOpenConfirmRestoreDialog(false);
+    setRowSelectedTo(null);
   };
 
   // format the price
@@ -354,7 +433,20 @@ function CarsTable() {
                   <TableCell align="center">
                     {/* Edit Button */}
                     {row.isDeleted ? (
-                      <Typography color="error">Deleted</Typography>
+                      userData.roleId === 1 ? (
+                        <IconButton
+                          aria-label="edit"
+                          color="primary"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleOpenConfirmRestoreDialog(row);
+                          }}
+                        >
+                          <FontAwesomeIcon icon={faRotateLeft} />
+                        </IconButton>
+                      ) : (
+                        <Typography color="error">Deleted</Typography>
+                      )
                     ) : (
                       <Box>
                         <IconButton
@@ -473,7 +565,7 @@ function CarsTable() {
         <DialogContent>
           <DialogContentText>
             Are you sure you want to delete
-            {rowToDelete ? " " + rowToDelete.model : null}?
+            {rowSelectedTo ? " " + rowSelectedTo.model : null}?
           </DialogContentText>
         </DialogContent>
         <DialogActions sx={{ justifyContent: "center" }}>
@@ -485,6 +577,67 @@ function CarsTable() {
             Cancel
           </Button>
           <Button onClick={handleDelete} variant="contained" color="primary">
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
+      {/* Show information dialog */}
+      <Dialog
+        open={openInformationDialog}
+        keepMounted
+        aria-labelledby="alert-dialog-slide-title"
+        aria-describedby="alert-dialog-slide-description"
+        sx={{ "& .MuiDialog-paper": { width: "540px", height: "180px" } }}
+      >
+        <DialogTitle
+          id="alert-dialog-slide-title"
+          sx={{
+            textAlign: "center",
+            marginTop: "20px",
+          }}
+        >
+          {informationContent && (
+            <Typography
+              color={informationContent.type === "error" ? "error" : "success"}
+              sx={{ fontWeight: 500, fontSize: "30px" }}
+            >
+              {informationContent.message}
+            </Typography>
+          )}
+        </DialogTitle>
+        <DialogActions sx={{ justifyContent: "center", marginBottom: "15px" }}>
+          <Button
+            color="primary"
+            variant="contained"
+            onClick={handleCloseInformationDialog}
+          >
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Confirm Restore dialog ----------------------------------------------------------------------------------------- */}
+      <Dialog open={openConfirmRestoreDialog} sx={{ textAlign: "center" }}>
+        <DialogTitle color="primary">Confirm Restore Car</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to restore
+            {rowSelectedTo ? " " + rowSelectedTo.model : null}?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions sx={{ justifyContent: "center", paddingBottom: "20px" }}>
+          <Button
+            onClick={handleCloseConfirmRestoreDialog}
+            variant="contained"
+            color="error"
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={handleRestoreCar}
+            variant="contained"
+            color="primary"
+          >
             Confirm
           </Button>
         </DialogActions>

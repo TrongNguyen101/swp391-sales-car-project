@@ -25,12 +25,18 @@ export const userGetAllCars = async () => {
   }
 };
 
-export const getCarById = async (id) => {
+export const adminGetCarById = async (id) => {
   try {
-    const response = await request.getById(`/api/AdminCars/${id}`);
+    const token = localStorage.getItem("Bearer");
+    const endpoint = `/api/AdminCars/${id}`;
+    const response = await request.getById(endpoint, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     return response.data;
   } catch (error) {
-    return error.response;
+    return error.response.data;
   }
 };
 
@@ -45,10 +51,35 @@ export const getCarColorById = async (carId) => {
 
 export const adminDeleteCar = async (adminCarId) => {
   try {
-    const response = await request.put(`/api/AdminCars/delete/${adminCarId}`);
+    const token = localStorage.getItem("Bearer");
+    const endpoint = `/api/AdminCars/deleteCar/${adminCarId}`;
+    const response = await request.deleteId(endpoint, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     return response.data;
   } catch (error) {
-    return error.response;
+    return error.response.data;
+  }
+};
+
+export const adminRestoreCar = async (adminCarId) => {
+  try {
+    const token = localStorage.getItem("Bearer");
+    const endpoint = `/api/AdminCars/adminRestoreCar/${adminCarId}`;
+    const response = await request.put(
+      endpoint,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    return error.response.data;
   }
 };
 

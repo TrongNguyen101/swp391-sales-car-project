@@ -37,7 +37,7 @@ function Overview() {
       <Typography
         variant="h4"
         gutterBottom
-        sx={{ color: "#3c3c3c", paddingTop: "20px", fontWeight: "bold" }}
+        sx={{ color: "#3c3c3c", paddingTop: "20px", fontWeight: "bold", width: "500px" }}
       >
         Welcome to the Dashboard
       </Typography>

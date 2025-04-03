@@ -24,7 +24,6 @@ import * as CarService from "../../services/CarService";
 import * as DecodePayload from "../../lib/DecodePayload";
 import * as adminServices from "../../services/AdminServices";
 
-
 const cx = classNames.bind(styles);
 
 const CreateURLPaymentOfDepositPage = () => {
@@ -80,18 +79,16 @@ const CreateURLPaymentOfDepositPage = () => {
 
   const fetchCarDetails = async (Id) => {
     try {
-      const response = await CarService.getCarById(Id);
+      const response = await CarService.userGetCarById(Id);
       if (response.statusCode !== 200) {
-        setCar({});
-        setDialogMessage(response.data.message);
-        setDialogOpen(true);
+        navigate("/cars");
+        return;
       } else {
         setCar(JSON.parse(response.data));
       }
     } catch (error) {
-      setCar({});
-      setDialogMessage(error.response.data.message);
-      setDialogOpen(true);
+      navigate("/cars");
+      return;
     }
   };
 
@@ -169,9 +166,15 @@ const CreateURLPaymentOfDepositPage = () => {
         localStorage.setItem("productVersion", selectedVersion);
         localStorage.setItem("amount", car.PriceDeposite);
         if (selectedVersion === "Battery Rental") {
-          localStorage.setItem("productRemainingAnount", remainingAmount.remainingAmountBatteryRent); 
+          localStorage.setItem(
+            "productRemainingAnount",
+            remainingAmount.remainingAmountBatteryRent
+          );
         } else {
-          localStorage.setItem("productRemainingAnount", remainingAmount.remainingAmountBatteryOwn);
+          localStorage.setItem(
+            "productRemainingAnount",
+            remainingAmount.remainingAmountBatteryOwn
+          );
         }
         console.log(response.data);
         window.location.href = response.data;
