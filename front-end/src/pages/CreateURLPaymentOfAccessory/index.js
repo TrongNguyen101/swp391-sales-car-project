@@ -1,28 +1,33 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-import { Box, Button, Dialog, DialogActions, DialogTitle, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogTitle,
+  TextField,
+  Typography,
+} from "@mui/material";
 import classNames from "classnames/bind";
 
 import * as cartService from "../../services/CartService";
-import * as adminServices from "../../services/AdminServices";
 import * as DepositService from "../../services/DepositService";
 
-
 import styles from "./CreateURLPaymentOfAccessory.module.scss";
-
+import { useUserData } from "../../App";
 
 const cx = classNames.bind(styles);
 
 function CreateURLPaymentOfAccessory() {
   const navigate = useNavigate();
-  const { userId} = useParams();
+  const { userData } = useUserData();
   const [cartItems, setCartItems] = useState([]);
 
   const [message, setMessage] = useState("");
   const [openDialog, setOpenDialog] = useState(false);
   const [openErrorDialog, setOpenErrorDialog] = useState(false);
-
 
   const [customerName, setCustomerName] = useState("");
   const [email, setEmail] = useState("");
@@ -56,33 +61,19 @@ function CreateURLPaymentOfAccessory() {
     }
   };
 
-  // eslint-disable-next-line
-  const fetchUser = async () => {
-    try {
-      // const token = localStorage.getItem("Bearer");
-      // const decoded = DecodePayload.decodePayload(token);
-      const response = await adminServices.getUserById(userId);
-      setCustomerName(response.data.userName);
-      setEmail(response.data.email);
-      setPhone(response.data.phone);
-      setAddress(response.data.address);
-      console.log(response.data);
-    } catch (error) {
-      console.error("Failed to fetch user:", error);
-    }
-  };
-
   useEffect(() => {
     const savedCart = localStorage.getItem("cartItems");
     if (savedCart) {
       setCartItems(JSON.parse(savedCart));
     }
     fetchCartItems();
-    fetchUser();
+    setCustomerName(userData.userName);
+    setEmail(userData.email);
+    setPhone(userData.phone);
+    setAddress(userData.address);
+
     // eslint-disable-next-line
-  }, []);
-
-
+  }, [userData]);
 
   const handleOrderSubmit = (event) => {
     event.preventDefault();
@@ -114,7 +105,6 @@ function CreateURLPaymentOfAccessory() {
     }
   };
 
-
   const fetchCreateURLPaymentOfAccessory = async () => {
     try {
       const Amount = cartItems.reduce(
@@ -126,8 +116,8 @@ function CreateURLPaymentOfAccessory() {
       console.log(amountString);
       const paymentInformation = {
         OrderInfo: "Accessory",
-        Amount: amountString
-      }
+        Amount: amountString,
+      };
 
       const response = await DepositService.createPaymentURL(
         paymentInformation
@@ -148,7 +138,6 @@ function CreateURLPaymentOfAccessory() {
       console.log(error);
     }
   };
-
 
   const handleCloseDialog = () => {
     setOpenDialog(false);
@@ -209,13 +198,11 @@ function CreateURLPaymentOfAccessory() {
                     paddingBottom: "10px",
                   }}
                 >
-                  {formatPrice(cartItem.price)} VND
+                Unit price: {formatPrice(cartItem.price)} VND
                 </Typography>
                 <div className={cx("content__cartItem--infor__bottom")}>
                   <div
-                    className={cx(
-                      "content__cartItem--infor__bottom--quantity"
-                    )}
+                    className={cx("content__cartItem--infor__bottom--quantity")}
                   >
                     <Typography
                       sx={{
@@ -223,7 +210,7 @@ function CreateURLPaymentOfAccessory() {
                         fontSize: "24px",
                       }}
                     >
-                      {cartItem.quantity}
+                      Quantity: {cartItem.quantity}
                     </Typography>
                   </div>
                   <Typography
@@ -233,8 +220,8 @@ function CreateURLPaymentOfAccessory() {
                       width: "500px",
                     }}
                   >
-                    Subtotal:{" "}
-                    {formatPrice(cartItem.price * cartItem.quantity)} VND
+                    Subtotal: {formatPrice(cartItem.price * cartItem.quantity)}{" "}
+                    VND
                   </Typography>
                 </div>
               </div>
@@ -256,11 +243,10 @@ function CreateURLPaymentOfAccessory() {
             {/*information of User --------------------------------------------------------------------------------------------------------------- */}
             {/* wrapper */}
             <Box sx={{ padding: "20px", backgroundColor: "#f7f7f7" }}>
-
               <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                <Box sx={{ width: "500px", margin: "10px 0", padding: "0 10px" }}>
-
-
+                <Box
+                  sx={{ width: "500px", margin: "10px 0", padding: "0 10px" }}
+                >
                   <TextField
                     sx={{ width: "100%", marginBottom: "1em" }}
                     type="text"
@@ -332,8 +318,6 @@ function CreateURLPaymentOfAccessory() {
                 )}{" "}
                 VND
               </Typography>
-
-
             </div>
             <div className={cx("content__button")}>
               <Button

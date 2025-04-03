@@ -38,7 +38,7 @@ function App() {
 
       const response = await adminService.getCurrentUser();
       if (response.statusCode === 200) {
-        console.log(response.data);
+        console.log("User data: ",response.data);
         setUserData(response.data);
       }
     } catch (error) {

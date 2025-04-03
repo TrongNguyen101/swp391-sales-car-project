@@ -605,7 +605,7 @@ function AdminManageStaffPage() {
 
       {/* Confirm Restore dialog ----------------------------------------------------------------------------------------- */}
       <Dialog open={openConfirmRestoreDialog} sx={{ textAlign: "center" }}>
-        <DialogTitle color="error">Confirm Delete</DialogTitle>
+        <DialogTitle color="primary">Confirm restore</DialogTitle>
         <DialogContent>
           <DialogContentText>
             Are you sure you want to restore

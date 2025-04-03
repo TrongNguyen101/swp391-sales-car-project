@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import classNames from "classnames/bind";
@@ -6,7 +7,6 @@ import FooterComponent from "../../components/Footer";
 import HeaderComponent from "../../components/Header";
 import SidebarUser from "../../components/SidebarUser";
 import styles from "./ProfileUserLayout.module.scss";
-import { useEffect } from "react";
 
 const cx = classNames.bind(styles);
 

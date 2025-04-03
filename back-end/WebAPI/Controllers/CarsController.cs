@@ -11,11 +11,11 @@ namespace WebAPI.Controllers
     public class CarsController : ControllerBase
     {
         [HttpGet]
-        public async Task<ActionResult> GetAllCars()
+        public async Task<ActionResult> UserGetAllCars()
         {
             try
             {
-                var cars = await CarsDAO.GetInstance().GetAllCars();
+                var cars = await CarsDAO.GetInstance().UserGetAllCars();
                 if (cars == null || cars.Count == 0)
                 {
                     return NotFound(new DataResponse
@@ -80,11 +80,57 @@ namespace WebAPI.Controllers
             }
         }
 
+        [HttpGet("userGetCar/{id}")]
+        public async Task<ActionResult> UserGetCarById(int id)
+        {
+            try
+            {
+                var car = await CarsDAO.GetInstance().UserGetCarById(id);
+                if (car == null)
+                {
+                    return NotFound(new DataResponse
+                    {
+                        StatusCode = 404,
+                        Message = "Car not found",
+                        Success = false
+                    });
+                }
+                var carDTO = AutoMapper.ToCarDetailDTO(car);
+                return Ok(new DataResponse
+                {
+                    StatusCode = 200,
+                    Message = "Get car by id successfully",
+                    Success = true,
+                    Data = JsonSerializer.Serialize(carDTO)
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new DataResponse
+                {
+                    StatusCode = 400,
+                    Message = ex.Message,
+                    Success = false
+                });
+            }
+        }
+
         [HttpGet("Color/{carId}")]
         public async Task<IActionResult> GetColorByCarId(int carId)
         {
             try
             {
+                var car = await CarsDAO.GetInstance().UserGetCarById(carId);
+                if (car == null)
+                {
+                    return NotFound(new DataResponse
+                    {
+                        StatusCode = 404,
+                        Message = "Car not found",
+                        Success = false
+                    });
+                }
+
                 var carColors = await CarsDAO.GetInstance().GetCarColorsByCarId(carId);
                 if (carColors == null || carColors.Count == 0)
                 {

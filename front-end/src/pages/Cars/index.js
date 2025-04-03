@@ -56,7 +56,6 @@ function CarsPage() {
         </div>
         <div className={cx("list-cars")}>
           {cars
-            .filter((car) => car.IsShowed === true && car.IsDeleted === false) 
             .map((car, index) => (
               <div
                 className={cx("car-card")}

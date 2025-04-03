@@ -34,11 +34,35 @@ namespace WebAPI.DAO
             }
         }
 
+        public async Task<List<Accessory>> UserGetAllAccessories()
+        {
+            using (var context = new VinfastContext())
+            {
+                return await context.Accessories
+                                    .Where(c => c.IsShowed == true && c.IsDeleted == false)
+                                    .ToListAsync();
+            }
+        }
+
         public async Task<Accessory> GetAccessoryById(int id)
         {
             using (var context = new VinfastContext())
             {
                 return await context.Accessories.FindAsync(id);
+            }
+        }
+
+        public async Task<Accessory> UserGetAccessoryById(int id)
+        {
+            using (var context = new VinfastContext())
+            {
+                var accessory = await context.Accessories.FindAsync(id);
+                if (accessory == null || accessory.IsDeleted == true || accessory.IsShowed == false)
+                {
+                    return null;
+                }
+
+                return accessory;
             }
         }
 

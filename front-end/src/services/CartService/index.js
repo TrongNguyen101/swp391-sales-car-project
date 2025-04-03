@@ -26,10 +26,10 @@ export const postAddProductToCart = async (
         },
       }
     );
-    return response.data.value;
+    return response.data;
   } catch (error) {
-    console.log("error at CartService:", error.response.data.value);
-    return error.response.data.value;
+    console.log("error at CartService:", error.response.data);
+    return error.response.data;
   }
 };
 

@@ -16,7 +16,17 @@ export const getCarById = async (id) => {
   } catch (error) {
     return error.response;
   }
-}
+};
+
+export const userGetCarById = async (id) => {
+  try {
+    const endpoint = `/api/Cars/userGetCar/${id}`;
+    const response = await request.getById(endpoint);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};
 
 export const getCarColorById = async (carId) => {
   try {
@@ -25,4 +35,4 @@ export const getCarColorById = async (carId) => {
   } catch (error) {
     return error.response;
   }
-}
+};
