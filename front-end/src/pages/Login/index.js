@@ -35,8 +35,6 @@ function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [errorEmail, setErrorEmail] = useState("");
   const [errorPassword, setErrorPassword] = useState("");
-  const [message, setMessage] = useState("");
-  const [openDialog, setOpenDialog] = useState(false);
   const [openForgotPasswordDialog, setOpenForgotPasswordDialog] =
     useState(false);
   const [forgotPasswordEmail, setForgotPasswordEmail] = useState("");
@@ -57,7 +55,7 @@ function LoginPage() {
 
   const [openWaitingDialog, setOpenWaitingDialog] = useState(false);
   const [informationContent, setInformationContent] = useState({});
-  const [openInformationDialog] = useState(false);
+  const [openInformationDialog, setOpenInformationDialog] = useState(false);
 
   const otpRefs = useRef([]);
   const navigate = useNavigate();
@@ -83,9 +81,12 @@ function LoginPage() {
       const response = await authService.postLogin(email, password);
       if (response.status === 200) {
         localStorage.setItem("Bearer", response.data.data.token);
-        setMessage(response.data.message);
+        setInformationContent({
+          type: "success",
+          message: "Login successfully",
+        });
         setNavigateTo("/");
-        setOpenDialog(true);
+        setOpenInformationDialog(true);
       }
       if (response.status === 404) {
         setErrorEmail(response.data.message);
@@ -169,7 +170,7 @@ function LoginPage() {
   };
 
   const handleCloseDialog = () => {
-    setOpenDialog(false);
+    setOpenInformationDialog(false);
     navigate(navigateTo);
     setNavigateTo("");
   };
@@ -290,23 +291,35 @@ function LoginPage() {
 
   const fetchResetPassword = async () => {
     try {
+      var otp = otpValue.join("");
       const response = await authService.postResetPassword(
         localStorage.getItem("email"),
         newPassword,
         reNewPassword,
-        otpValue.join("")
+        otp
       );
-      if (response.status === 200) {
+      if (response.statusCode === 200) {
         setNewPasswordDialogOpen(false);
-        setMessage(response.data.message);
-        setOpenDialog(true);
+        setInformationContent({
+          type: "success",
+          message: "Reset password successfully",
+        });
+        setOpenInformationDialog(true);
         setNavigateTo("/login");
-      }
-      if (response.status === 400) {
-        setErrorNewPassword(response.data.message);
+      } else {
+        setInformationContent({
+          type: "error",
+          message: "Reset password failed",
+        });
+        setOpenInformationDialog(true);
       }
     } catch (error) {
       console.log(error.response);
+      setInformationContent({
+        type: "error",
+        message: "Reset password failed",
+      });
+      setOpenInformationDialog(true);
     }
   };
 
@@ -400,36 +413,6 @@ function LoginPage() {
           </div>
         </form>
       </div>
-      {/* Show login successful dialog */}
-      <Dialog
-        open={openDialog}
-        keepMounted
-        onClose={handleCloseDialog}
-        aria-labelledby="alert-dialog-slide-title"
-        aria-describedby="alert-dialog-slide-description"
-        sx={{ "& .MuiDialog-paper": { width: "440px", height: "140px" } }}
-      >
-        <DialogTitle
-          id="alert-dialog-slide-title"
-          sx={{
-            textAlign: "center",
-            fontSize: "1.6rem",
-            fontWeight: "500",
-            lineHeight: "1.5",
-          }}
-        >
-          {message}
-        </DialogTitle>
-        <DialogActions sx={{ justifyContent: "center" }}>
-          <Button
-            variant="contained"
-            onClick={handleCloseDialog}
-            color="primary"
-          >
-            OK
-          </Button>
-        </DialogActions>
-      </Dialog>
 
       {/* Show forgot password popup */}
       <Dialog
@@ -685,6 +668,16 @@ function LoginPage() {
             </Typography>
           )}
         </DialogTitle>
+
+        <DialogActions sx={{ justifyContent: "center" }}>
+          <Button
+            variant="contained"
+            onClick={handleCloseDialog}
+            color="primary"
+          >
+            OK
+          </Button>
+        </DialogActions>
       </Dialog>
     </div>
   );

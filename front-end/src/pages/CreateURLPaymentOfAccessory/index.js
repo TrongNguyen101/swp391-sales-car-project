@@ -198,7 +198,7 @@ function CreateURLPaymentOfAccessory() {
                     paddingBottom: "10px",
                   }}
                 >
-                Unit price: {formatPrice(cartItem.price)} VND
+                  Unit price: {formatPrice(cartItem.price)} VND
                 </Typography>
                 <div className={cx("content__cartItem--infor__bottom")}>
                   <div
@@ -326,7 +326,7 @@ function CreateURLPaymentOfAccessory() {
                 variant="contained"
                 sx={{ width: "100%" }}
               >
-                Order
+                Pay now with VNPay
               </Button>
             </div>
           </div>
