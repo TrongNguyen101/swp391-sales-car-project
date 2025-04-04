@@ -100,6 +100,51 @@ function AccessoryDetailPage() {
     setOpenDialog(false);
   };
 
+  const cartButton = () => {
+    if (!isLoggedIn || userData.roleId === 2) {
+      return (
+        <Button
+          variant="text"
+          sx={{
+            color: "gray",
+            width: "0px",
+            height: "40px",
+            padding: "0px",
+            "&:hover": {
+              color: "var(--primary-color)",
+            },
+          }}
+          onClick={() => navigate("/cart")}
+        >
+          <span className={cx("container__accessories--cart")}>
+            <FontAwesomeIcon icon={faCartShopping} />
+          </span>
+        </Button>
+      );
+    } else {
+      return null; // Return null if the condition is not met
+    }
+  };
+
+  const addToCartButton = () => {
+    if (!isLoggedIn || userData.roleId === 2) {
+      return (
+        <Button
+          variant="contained"
+          sx={{ with: "500px" }}
+          onClick={handleAddToCart}
+        >
+          Add to Cart
+          <span className={cx("icon")}>
+            <FontAwesomeIcon icon={faCartShopping} />
+          </span>
+        </Button>
+      );
+    } else {
+      return null; // Return null if the condition is not met
+    }
+  };
+
   // format the price
   const formatPrice = (price) => {
     return new Intl.NumberFormat("vi-VN").format(price);
@@ -142,23 +187,7 @@ function AccessoryDetailPage() {
                 / {accessory.name}
               </Typography>
             </div>
-            <Button
-              variant="text"
-              sx={{
-                color: "gray",
-                width: "0px",
-                height: "40px",
-                padding: "0px",
-                "&:hover": {
-                  color: "var(--primary-color)",
-                },
-              }}
-              onClick={() => navigate("/cart")}
-            >
-              <span className={cx("container__accessories--cart")}>
-                <FontAwesomeIcon icon={faCartShopping} />
-              </span>
-            </Button>
+            {cartButton()}
           </div>
         </div>
         <div className={cx("container")}>
@@ -186,16 +215,7 @@ function AccessoryDetailPage() {
               </div>
               <div className={cx("information__button")}>
                 <div className={cx("button__add-to-cart")}>
-                  <Button
-                    variant="contained"
-                    sx={{ with: "500px" }}
-                    onClick={handleAddToCart}
-                  >
-                    Add to Cart
-                    <span className={cx("icon")}>
-                      <FontAwesomeIcon icon={faCartShopping} />
-                    </span>
-                  </Button>
+                  {addToCartButton()}
                 </div>
               </div>
             </div>

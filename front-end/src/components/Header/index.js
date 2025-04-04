@@ -217,7 +217,7 @@ function HeaderComponent() {
                   <ListItemIcon>
                     <FontAwesomeIcon icon={faClipboard}></FontAwesomeIcon>
                   </ListItemIcon>
-                  Admin Dashboard
+                  Go To Dashboard
                 </MenuItem>
                 <MenuItem onClick={handleLogout}>
                   <ListItemIcon>

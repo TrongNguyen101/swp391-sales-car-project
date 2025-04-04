@@ -12,6 +12,7 @@ import {
 import styles from "./Accessories.module.scss";
 import Sidebar from "../../components/Sidebar";
 import * as accessoryService from "../../services/AccessoryService";
+import { useUserData } from "../../App";
 
 const cx = classNames.bind(styles);
 
@@ -50,9 +51,12 @@ const cx = classNames.bind(styles);
  */
 function AccessoriesPage() {
   const navigate = useNavigate();
+  const { userData } = useUserData();
   const [accessories, setAccessories] = useState([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState(0); // Add state for selected category ID
   const [searchRows, setSearchRows] = useState([]);
+  const token = localStorage.getItem("Bearer");
+  const isLoggedIn = Boolean(token);
 
   const handleClickCard = (accessoryId) => () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -107,6 +111,31 @@ function AccessoriesPage() {
     }
   };
 
+  const cartButton = () => {
+    if (!isLoggedIn || userData.roleId === 2) {
+      return (
+        <Button
+          variant="outlined"
+          sx={{
+            width: "80px",
+            height: "40px",
+            "&:hover": {
+              backgroundColor: "var(--primary-color)",
+              color: "white",
+            },
+          }}
+          onClick={() => navigate("/cart")}
+        >
+          <span className={cx("container__accessories--cart")}>
+            <FontAwesomeIcon icon={faCartShopping} />
+          </span>
+        </Button>
+      );
+    } else {
+      return null; // Return null if the condition is not met
+    }
+  };
+
   // format the price
   const formatPrice = (price) => {
     return new Intl.NumberFormat("vi-VN").format(price);
@@ -150,60 +179,44 @@ function AccessoriesPage() {
                   <FontAwesomeIcon icon={faMagnifyingGlass} />
                 </Button>
               </div>
-              <Button
-                variant="outlined"
-                sx={{
-                  width: "80px",
-                  height: "40px",
-                  "&:hover": {
-                    backgroundColor: "var(--primary-color)",
-                    color: "white",
-                  },
-                }}
-                onClick={() => navigate("/cart")}
-              >
-                <span className={cx("container__accessories--cart")}>
-                  <FontAwesomeIcon icon={faCartShopping} />
-                </span>
-              </Button>
+              {cartButton()}
             </div>
             <div className={cx("container__accessories--list")}>
-              {searchRows
-                .map((accessory, index) => (
-                  // card accessory
-                  <div
-                    className={cx("container__accessory-card")}
-                    key={index}
-                    onClick={handleClickCard(accessory.id)}
-                  >
-                    <div className={cx("container__accessory-content")}>
-                      <div className={cx("card-image")}>
-                        <img
-                          src={`https://localhost:7005/api/Images/Accessory/${accessory.image}`}
-                          alt={accessory.name}
-                        />
-                      </div>
-                      <div className={cx("card-title")}>
-                        <Typography
-                          sx={{
-                            fontSize: "1.5rem",
-                            fontWeight: "500",
-                            color: "#333",
-                          }}
-                        >
-                          {accessory.name}
+              {searchRows.map((accessory, index) => (
+                // card accessory
+                <div
+                  className={cx("container__accessory-card")}
+                  key={index}
+                  onClick={handleClickCard(accessory.id)}
+                >
+                  <div className={cx("container__accessory-content")}>
+                    <div className={cx("card-image")}>
+                      <img
+                        src={`https://localhost:7005/api/Images/Accessory/${accessory.image}`}
+                        alt={accessory.name}
+                      />
+                    </div>
+                    <div className={cx("card-title")}>
+                      <Typography
+                        sx={{
+                          fontSize: "1.5rem",
+                          fontWeight: "500",
+                          color: "#333",
+                        }}
+                      >
+                        {accessory.name}
+                      </Typography>
+                    </div>
+                    <div className={cx("card-info")}>
+                      <div className={cx("price")}>
+                        <Typography>
+                          Price: {formatPrice(accessory.price)} VND
                         </Typography>
-                      </div>
-                      <div className={cx("card-info")}>
-                        <div className={cx("price")}>
-                          <Typography>
-                            Price: {formatPrice(accessory.price)} VND
-                          </Typography>
-                        </div>
                       </div>
                     </div>
                   </div>
-                ))}
+                </div>
+              ))}
             </div>
           </div>
         </div>

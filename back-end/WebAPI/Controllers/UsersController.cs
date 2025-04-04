@@ -495,7 +495,7 @@ namespace WebAPI.Controllers
                 // If the user is authenticated and authorized, return claims of user
                 // admin role id = 1
                 // customer role id = 2
-                var (isSuccess, errorMessage, claims) = JwtTokenHelper.AuthenticateAndAuthorize(HttpContext, 1, 2);
+                var (isSuccess, errorMessage, claims) = JwtTokenHelper.AuthenticateAndAuthorize(HttpContext, 2, 3);
                 if (!isSuccess)
                 {
                     // Return error message if the user is not authenticated or authorized
@@ -510,6 +510,7 @@ namespace WebAPI.Controllers
                 {
                     return NotFound(ResponseHelper.ResponseError(404, "User not found", false, null));
                 }
+                
                 user.UserName = userData.UserName;
                 user.Address = userData.Address;
                 user.Phone = userData.Phone;
