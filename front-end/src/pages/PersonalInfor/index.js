@@ -173,12 +173,22 @@ const PersonalInfoPage = () => {
   const fetchChangePassword = async () => {
     try {
       const otp = otpValue.join("");
-      const response = await authService.postResetPassword(
-        userData.email,
-        newPassword,
-        reNewPassword,
-        otp
-      );
+      let response;
+      if (userData.roleId === 3) {
+         response = await authService.postResetPassword(
+          userData.email,
+          newPassword,
+          reNewPassword,
+          otp
+        );
+      } else {
+         response = await authService.postResetPassword(
+          userData.email,
+          newPassword,
+          reNewPassword,
+          otp
+        );
+      }
       if (response.statusCode === 200) {
         setNewPasswordDialogOpen(false);
         setUpdateStatus({

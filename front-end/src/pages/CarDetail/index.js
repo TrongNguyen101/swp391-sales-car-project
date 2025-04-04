@@ -6,11 +6,15 @@ import * as carService from "../../services/CarService";
 import Slider from "react-slick";
 import { Button, Typography } from "@mui/material";
 import * as DecodePayload from "../../lib/DecodePayload";
+import { useUserData } from "../../App";
 
 const cx = classNames.bind(styles);
 
 function CarDetailPage() {
+  const token = localStorage.getItem("Bearer");
+  const isLoggedIn = Boolean(token);
   const { carId } = useParams();
+  const { userData } = useUserData();
   const navigate = useNavigate();
   const [car, setCar] = useState({});
   const [user, setUser] = useState({});
@@ -91,6 +95,24 @@ function CarDetailPage() {
       const productId = carId;
       localStorage.setItem("productId", productId);
       navigate(`/deposit/${carId}`);
+    }
+  };
+
+  const depositButton = () => {
+    if (!isLoggedIn || userData.roleId === 2) {
+      return (
+        <Button
+          variant="contained"
+          onClick={handleClickDepositButton}
+          disabled={!user || user.role !== 1 ? false : true}
+        >
+          <Typography sx={{ textTransform: "none" }}>
+            Deposit {car.PriceDeposite} VND
+          </Typography>
+        </Button>
+      );
+    } else {
+      return null; // Return null if the condition is not met
     }
   };
 
@@ -196,17 +218,7 @@ function CarDetailPage() {
               </Typography>
             </div>
           </div>
-          <div className={cx("deposit-btn")}>
-            <Button
-              variant="contained"
-              onClick={handleClickDepositButton}
-              disabled={!user || user.role !== 1 ? false : true}
-            >
-              <Typography sx={{ textTransform: "none" }}>
-                Deposit {car.PriceDeposite} VND
-              </Typography>
-            </Button>
-          </div>
+          <div className={cx("deposit-btn")}>{depositButton()}</div>
         </div>
         <div className={cx("color-block")}>
           <div className={cx("car-color-block")}>
