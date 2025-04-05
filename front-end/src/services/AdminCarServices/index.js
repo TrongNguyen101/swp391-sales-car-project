@@ -15,6 +15,21 @@ export const adminGetAllCars = async () => {
   }
 };
 
+export const staffGetAllCars = async () => {
+  try {
+    const endpoint = "/api/AdminCars/StaffGetAllCars";
+    const token = localStorage.getItem("Bearer");
+    const response = await request.get(endpoint, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
 export const userGetAllCars = async () => {
   try {
     const endpoint = "/api/AdminCars/UserGetAllCars";

@@ -27,6 +27,21 @@ namespace WebAPI.Controllers
         {
             try
             {
+                #region Authentication, Authorization
+                // Check authentication and authorization of user based on the specified HTTP context and role that need to check for this function
+                // If the user is not authenticated or authorized, return error message
+                // If the user is authenticated and authorized, return claims of user
+                // admin role id = 1
+                // customer role id = 2
+                // staff role id = 3
+                var (isSuccess, errorMessage, claims) = JwtTokenHelper.AuthenticateAndAuthorize(HttpContext, 1, 2, 3);
+                if (!isSuccess)
+                {
+                    // Return error message if the user is not authenticated or authorized
+                    return Unauthorized(ResponseHelper.ResponseError(401, errorMessage ?? "Unknown error", false, null));
+                }
+                #endregion
+
                 var invoices = await TransactionsDAO.GetInstance().GetAllDepositTransactions();
                 if (!invoices.Any())
                 {
@@ -83,7 +98,7 @@ namespace WebAPI.Controllers
                     return NotFound(new DataResponse
                     {
                         StatusCode = 404,
-                        Message = "No deposit transactions found",
+                        Message = "No transactions found",
                         Success = false
                     });
                 }
@@ -92,7 +107,7 @@ namespace WebAPI.Controllers
                 return Ok(new DataResponse
                 {
                     StatusCode = 200,
-                    Message = "Successfully retrieved all deposit transactions.",
+                    Message = "Successfully retrieved all transactions.",
                     Success = true,
                     Data = invoiceDTOs
                 });
@@ -109,10 +124,25 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("getAllAccessoryTransactions")]
-        public async Task<ActionResult> GetAllDepositAccessoryTransactions()
+        public async Task<ActionResult> GetAllAccessoryTransactions()
         {
             try
             {
+                #region Authentication, Authorization
+                // Check authentication and authorization of user based on the specified HTTP context and role that need to check for this function
+                // If the user is not authenticated or authorized, return error message
+                // If the user is authenticated and authorized, return claims of user
+                // admin role id = 1
+                // customer role id = 2
+                // staff role id = 3
+                var (isSuccess, errorMessage, claims) = JwtTokenHelper.AuthenticateAndAuthorize(HttpContext, 1, 2, 3);
+                if (!isSuccess)
+                {
+                    // Return error message if the user is not authenticated or authorized
+                    return Unauthorized(ResponseHelper.ResponseError(401, errorMessage ?? "Unknown error", false, null));
+                }
+                #endregion
+
                 var invoices = await TransactionsDAO.GetInstance().GetAllAccessoryTransactions();
                 if (!invoices.Any())
                 {
@@ -149,6 +179,21 @@ namespace WebAPI.Controllers
         {
             try
             {
+                #region Authentication, Authorization
+                // Check authentication and authorization of user based on the specified HTTP context and role that need to check for this function
+                // If the user is not authenticated or authorized, return error message
+                // If the user is authenticated and authorized, return claims of user
+                // admin role id = 1
+                // customer role id = 2
+                // staff role id = 3
+                var (isSuccess, errorMessage, claims) = JwtTokenHelper.AuthenticateAndAuthorize(HttpContext, 1, 3);
+                if (!isSuccess)
+                {
+                    // Return error message if the user is not authenticated or authorized
+                    return Unauthorized(ResponseHelper.ResponseError(401, errorMessage ?? "Unknown error", false, null));
+                }
+                #endregion
+
                 var invoice = await TransactionsDAO.GetInstance().GetInvoiceById(id);
                 if (invoice == null)
                 {

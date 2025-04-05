@@ -187,29 +187,27 @@ function UpdateAccessoryPage() {
         price,
         weight,
         description,
-        addQuantity,
+        quantity: addQuantity,
         color,
         dimensions,
         material,
         warranty,
         isShowed,
       };
-      console.log(accessoryData);
       const response = await adminAccessoryServices.adminUpdateAccessory(
         id,
         accessoryData
       );
       if (response.statusCode === 200) {
-        setMessage(response.message);
+        setMessage("Accessory updated successfully");
         setOpenDialog(true);
       } else {
-        setMessage(response.data.value.message);
+        setMessage("Failed to update accessory");
         setOpenErrorDialog(true);
       }
     } catch (error) {
       setMessage("Error creating accessory");
       setOpenErrorDialog(true);
-      console.log(error);
     }
   };
 

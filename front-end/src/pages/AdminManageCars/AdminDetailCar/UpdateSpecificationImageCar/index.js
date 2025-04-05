@@ -67,7 +67,7 @@ function UpdateSpecificationImageCarComponent({
           setInforDialogOpen(true);
         }
       } catch (error) {
-        setMessage(error);
+        setMessage("Failed to upload image");
         setInforDialogOpen(true);
       }
     }
@@ -103,7 +103,7 @@ function UpdateSpecificationImageCarComponent({
         setInforDialogOpen(true);
       }
     } catch (error) {
-      setMessage(error);
+      setMessage("The attempt to delete the image failed.");
       setInforDialogOpen(true);
     }
   };

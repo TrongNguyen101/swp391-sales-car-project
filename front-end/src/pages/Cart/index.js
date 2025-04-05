@@ -131,9 +131,10 @@ function CartPage() {
     if (isLoggedIn) {
       fetchCartItems();
       setOpenDialog(false);
+    } else {
+      navigate("/login");
+      setOpenDialog(false);
     }
-    navigate("/login");
-    setOpenDialog(false);
   };
 
   const formatPrice = (price) => {

@@ -21,10 +21,10 @@ function DashboardLayout({ children }) {
   useEffect(() => {
     if (!token) {
       navigate("/login");
-    }
-
-    if (userData.roleId !== 1 && userData.roleId !== 3) {
-      navigate("/login");
+    } else {
+      if (userData.roleId !== 1 && userData.roleId !== 3) {
+        navigate("/login");
+      }
     }
     // Optionally, add token validation logic here (e.g., check expiration)
     // eslint-disable-next-line react-hooks/exhaustive-deps

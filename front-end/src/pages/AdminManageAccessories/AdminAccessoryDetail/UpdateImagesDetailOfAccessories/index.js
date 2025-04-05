@@ -66,7 +66,7 @@ function UpdateImagesDetailOfAccessoriesComponent({
         setColor("");
       }
     } catch (error) {
-      setMessage(error);
+      setMessage("Failed to upload image");
       setInforDialogOpen(true);
     }
   };
@@ -98,7 +98,8 @@ function UpdateImagesDetailOfAccessoriesComponent({
         setMessage("Image deleted successfully");
       }
     } catch (error) {
-      setMessage(error);
+      setMessage("Failed to delete image");
+      setInforDialogOpen(true);
     }
   };
 

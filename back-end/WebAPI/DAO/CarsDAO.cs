@@ -34,6 +34,14 @@ namespace WebAPI.DAO
             }
         }
 
+        public async Task<List<Cars>> StaffGetAllCars()
+        {
+            using (var context = new VinfastContext())
+            {
+                return await context.Cars.Where(c => c.IsDeleted == false).ToListAsync();
+            }
+        }
+
         public async Task<List<Cars>> UserGetAllCars()
         {
             using (var context = new VinfastContext())

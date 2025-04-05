@@ -61,7 +61,12 @@ function AccessoriesTable() {
   // Fetch data from server
   const fetchData = async () => {
     try {
-      const response = await adminAccessoryServices.adminGetAllAccessories();
+      let response;
+      if (userData.roleId === 1) {
+        response = await adminAccessoryServices.adminGetAllAccessories();
+      } else {
+        response = await adminAccessoryServices.staffGetAllAccessories();
+      }
       if (response.statusCode !== 200) {
         setRows([]);
       } else {
@@ -76,6 +81,7 @@ function AccessoriesTable() {
 
   useEffect(() => {
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleGoToAccessoryDetailPage = (row) => {

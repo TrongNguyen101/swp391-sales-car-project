@@ -151,11 +151,11 @@ function CreateAccessoryPage() {
         accessoryData
       );
       if (response.statusCode === 200) {
-        setMessage(response.message);
+        setMessage("Create accessory successfully");
         setOpenDialog(true);
         setStatusResponse(true);
       } else {
-        setMessage(response.data.value.message);
+        setMessage("Create accessory failed");
         setOpenErrorDialog(true);
         setStatusResponse(false);
       }
