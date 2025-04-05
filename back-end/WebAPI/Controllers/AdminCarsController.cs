@@ -48,7 +48,7 @@ namespace WebAPI.Controllers
                 // admin role id = 1
                 // customer role id = 2
                 // staff role id = 3
-                var (isSuccess, errorMessage, claims) = JwtTokenHelper.AuthenticateAndAuthorize(HttpContext, 1, 3);
+                var (isSuccess, errorMessage, claims) = JwtTokenHelper.AuthenticateAndAuthorize(HttpContext, 1);
                 if (!isSuccess)
                 {
                     // Return error message if the user is not authenticated or authorized
@@ -57,6 +57,40 @@ namespace WebAPI.Controllers
                 #endregion
 
                 var adminCars = await CarsDAO.GetInstance().GetAllCars();
+                if (adminCars == null || adminCars.Count == 0)
+                {
+                    return NotFound(ResponseHelper.ResponseError(404, "No car found", false, null));
+                }
+                var admincCarDTOs = AutoMapper.ToAdminCarDTOList(adminCars);
+                return Ok(ResponseHelper.ResponseSuccess(200, "Get all cars successfully", true, admincCarDTOs));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ResponseHelper.ResponseError(400, "Failed to get all cars", false, null));
+            }
+        }
+
+        [HttpGet("StaffGetAllCars")]
+        public async Task<ActionResult> StaffGetAllCars()
+        {
+            try
+            {
+                #region Authentication, Authorization
+                // Check authentication and authorization of user based on the specified HTTP context and role that need to check for this function
+                // If the user is not authenticated or authorized, return error message
+                // If the user is authenticated and authorized, return claims of user
+                // admin role id = 1
+                // customer role id = 2
+                // staff role id = 3
+                var (isSuccess, errorMessage, claims) = JwtTokenHelper.AuthenticateAndAuthorize(HttpContext, 3);
+                if (!isSuccess)
+                {
+                    // Return error message if the user is not authenticated or authorized
+                    return Unauthorized(ResponseHelper.ResponseError(401, errorMessage ?? "Unknown error", false, null));
+                }
+                #endregion
+
+                var adminCars = await CarsDAO.GetInstance().StaffGetAllCars();
                 if (adminCars == null || adminCars.Count == 0)
                 {
                     return NotFound(ResponseHelper.ResponseError(404, "No car found", false, null));
@@ -128,30 +162,15 @@ namespace WebAPI.Controllers
                 var adminCar = await CarsDAO.GetInstance().GetCarById(id);
                 if (adminCar == null)
                 {
-                    return NotFound(new DataResponse
-                    {
-                        StatusCode = 404,
-                        Message = "Car not found",
-                        Success = false
-                    });
+                    return NotFound(ResponseHelper.ResponseError(404, "Car not found", false, null));
                 }
                 var adminCarDTO = AutoMapper.ToAdminCarDTO(adminCar);
-                return Ok(new DataResponse
-                {
-                    StatusCode = 200,
-                    Message = "Get car by id successfully",
-                    Success = true,
-                    Data = adminCarDTO
-                });
+                return Ok(ResponseHelper.ResponseSuccess(200, "Get car by id successfully", true, adminCarDTO));
             }
             catch (Exception ex)
             {
-                return BadRequest(new DataResponse
-                {
-                    StatusCode = 400,
-                    Message = ex.Message,
-                    Success = false
-                });
+                Console.WriteLine(ex.Message);
+                return BadRequest(ResponseHelper.ResponseError(400, "Internal server error.", false, null));
             }
         }
 
@@ -160,35 +179,35 @@ namespace WebAPI.Controllers
         {
             try
             {
+                #region Authentication, Authorization
+                // Check authentication and authorization of user based on the specified HTTP context and role that need to check for this function
+                // If the user is not authenticated or authorized, return error message
+                // If the user is authenticated and authorized, return claims of user
+                // admin role id = 1
+                // customer role id = 2
+                // staff role id = 3
+                var (isSuccess, errorMessage, claims) = JwtTokenHelper.AuthenticateAndAuthorize(HttpContext, 1, 3);
+                if (!isSuccess)
+                {
+                    // Return error message if the user is not authenticated or authorized
+                    return Unauthorized(ResponseHelper.ResponseError(401, errorMessage ?? "Unknown error", false, null));
+                }
+                #endregion
+
                 // Admin gets all car colors by car id
                 var adminCarColors = await CarsDAO.GetInstance().GetCarColorsByCarId(adminCarId);
                 if (adminCarColors == null || adminCarColors.Count == 0)
                 {
-                    return NotFound(new DataResponse
-                    {
-                        StatusCode = 404,
-                        Message = "No color found",
-                        Success = false
-                    });
+                    return NotFound(ResponseHelper.ResponseError(404, "No color found", false, null));
                 }
                 // Convert list of CarColor to list of AdminCarColorDTO
                 var adminCarColorDTOs = AutoMapper.ToAdminCarColorDTOList(adminCarColors);
-                return Ok(new DataResponse
-                {
-                    StatusCode = 200,
-                    Message = "Get all colors by car id successfully",
-                    Success = true,
-                    Data = adminCarColorDTOs
-                });
+                return Ok(ResponseHelper.ResponseSuccess(200, "Get all car colors successfully", true, adminCarColorDTOs));
             }
             catch (Exception ex)
             {
-                return BadRequest(new DataResponse
-                {
-                    StatusCode = 400,
-                    Message = ex.Message,
-                    Success = false
-                });
+                Console.WriteLine(ex.Message);
+                return BadRequest(ResponseHelper.ResponseError(400, "Internal server error", false, null));
             }
         }
 
@@ -227,17 +246,17 @@ namespace WebAPI.Controllers
                 adminCar.IsDeleted = true;
                 if (await CarsDAO.GetInstance().DeleteCarById(adminCar))
                 {
-                    return Ok(ResponseHelper.Response(200, "Delete car successfully", true, null));
+                    return Ok(ResponseHelper.ResponseSuccess(200, "Delete car successfully", true, null));
                 }
                 else
                 {
-                    return BadRequest(ResponseHelper.Response(400, "Delete car failed", false, null));
+                    return BadRequest(ResponseHelper.ResponseError(400, "Delete car failed", false, null));
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return BadRequest(ResponseHelper.Response(400, "Internal server error. Please contact support.", false, null));
+                return BadRequest(ResponseHelper.ResponseError(400, "Internal server error. Please contact support.", false, null));
             }
         }
 
@@ -271,17 +290,17 @@ namespace WebAPI.Controllers
                 adminCar.IsDeleted = false;
                 if (await CarsDAO.GetInstance().DeleteCarById(adminCar))
                 {
-                    return Ok(ResponseHelper.Response(200, "Delete car successfully", true, null));
+                    return Ok(ResponseHelper.ResponseSuccess(200, "Delete car successfully", true, null));
                 }
                 else
                 {
-                    return BadRequest(ResponseHelper.Response(400, "Delete car failed", false, null));
+                    return BadRequest(ResponseHelper.ResponseError(400, "Delete car failed", false, null));
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return BadRequest(ResponseHelper.Response(400, "Internal server error. Please contact support.", false, null));
+                return BadRequest(ResponseHelper.ResponseError(400, "Internal server error. Please contact support.", false, null));
             }
         }
 
@@ -309,12 +328,7 @@ namespace WebAPI.Controllers
 
                 if (adminCar == null)
                 {
-                    return NotFound(new DataResponse
-                    {
-                        StatusCode = 404,
-                        Message = "Car not found",
-                        Success = false
-                    });
+                    return NotFound(ResponseHelper.ResponseError(404, "Car not found", false, null));
                 }
 
                 adminCar.Quantity = adminCar.Quantity + adminAddMoreCarDTO.Quantity;
@@ -333,32 +347,17 @@ namespace WebAPI.Controllers
                     };
                     await TransactionsDAO.GetInstance().CreateImportExportHistory(importHistory);
 
-                    return Ok(new DataResponse
-                    {
-                        StatusCode = 200,
-                        Message = "Car added successfully",
-                        Success = true
-                    });
+                    return Ok(ResponseHelper.ResponseSuccess(200, "Add more car successfully", true, null));
                 }
                 else
                 {
-                    return BadRequest(new DataResponse
-                    {
-                        StatusCode = 400,
-                        Message = "Delete car failed",
-                        Success = false
-                    });
+                    return BadRequest(ResponseHelper.ResponseError(400, "Add more car failed", false, null));
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return BadRequest(new DataResponse
-                {
-                    StatusCode = 400,
-                    Message = "Internal server error. Please contact support.",
-                    Success = false
-                });
+                return BadRequest(ResponseHelper.ResponseError(400, "Internal server error. Please contact support.", false, null));
             }
         }
         [HttpPost("adminCreateCar")]
@@ -418,32 +417,17 @@ namespace WebAPI.Controllers
                         ProductName = carJustCreate.Name
                     };
                     await TransactionsDAO.GetInstance().CreateImportExportHistory(importHistory);
-                    return Ok(new DataResponse
-                    {
-                        StatusCode = 200,
-                        Message = "Add Car successfully",
-                        Success = true
-                    });
+                    return Ok(ResponseHelper.ResponseSuccess(200, "Create car successfully", true, null));
                 }
                 else
                 {
-                    return BadRequest(new DataResponse
-                    {
-                        StatusCode = 400,
-                        Message = "Add Car failed",
-                        Success = false
-                    });
+                    return BadRequest(ResponseHelper.ResponseError(400, "Create car failed", false, null));
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return BadRequest(new DataResponse
-                {
-                    StatusCode = 400,
-                    Message = "Internal server error. Please contact support.",
-                    Success = false
-                });
+                return BadRequest(ResponseHelper.ResponseError(400, "Internal server error. Please contact support.", false, null));
             }
         }
 
@@ -860,23 +844,23 @@ namespace WebAPI.Controllers
 
                 if (imageColorOfCar == null)
                 {
-                    return NotFound(ResponseHelper.Response(404, "Image color of car is not found", false, null));
+                    return NotFound(ResponseHelper.ResponseError(404, "Image color of car is not found", false, null));
                 }
 
                 // If image color of car existed, delete image color of car
                 if (await CarsDAO.GetInstance().DeleteColorImageOfCar(imageColorOfCar))
                 {
-                    return Ok(ResponseHelper.Response(200, "Deleted color image of car successfully", true, null));
+                    return Ok(ResponseHelper.ResponseSuccess(200, "Deleted color image of car successfully", true, null));
                 }
                 else
                 {
-                    return BadRequest(ResponseHelper.Response(400, "Error: can't delete color image of car", false, null));
+                    return BadRequest(ResponseHelper.ResponseError(400, "Error: can't delete color image of car", false, null));
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Delete image color of car failed: " + ex);
-                return BadRequest(ResponseHelper.Response(404, "Internal server error. Please contact support.", false, null));
+                return BadRequest(ResponseHelper.ResponseError(400, "Internal server error. Please contact support.", false, null));
             }
         }
 

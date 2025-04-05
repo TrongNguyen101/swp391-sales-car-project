@@ -31,33 +31,68 @@ namespace WebAPI.Controllers
         {
             try
             {
+                #region Authentication, Authorization
+                // Check authentication and authorization of user based on the specified HTTP context and role that need to check for this function
+                // If the user is not authenticated or authorized, return error message
+                // If the user is authenticated and authorized, return claims of user
+                // admin role id = 1
+                // customer role id = 2
+                // staff role id = 3
+                var (isSuccess, errorMessage, claims) = JwtTokenHelper.AuthenticateAndAuthorize(HttpContext, 1, 3);
+                if (!isSuccess)
+                {
+                    // Return error message if the user is not authenticated or authorized
+                    return Unauthorized(ResponseHelper.ResponseError(401, errorMessage ?? "Unknown error", false, null));
+                }
+                #endregion
+
                 var adminAccessories = await AccessoriesDAO.GetInstance().GetAllAccessories();
                 if (adminAccessories == null || adminAccessories.Count == 0)
                 {
-                    return NotFound(new DataResponse
-                    {
-                        StatusCode = 404,
-                        Message = "No accessory found",
-                        Success = false
-                    });
+                    return NotFound(ResponseHelper.ResponseError(404, "No accessory found", false, null));
                 }
                 var admincAccessoryDTOs = AutoMapper.ToAccessoryDTOList(adminAccessories);
-                return Ok(new DataResponse
-                {
-                    StatusCode = 200,
-                    Message = "Get all accessorys successfully",
-                    Success = true,
-                    Data = admincAccessoryDTOs
-                });
+                return Ok(ResponseHelper.ResponseSuccess(200, "Get all accessories successfully", true, admincAccessoryDTOs));
             }
             catch (Exception ex)
             {
-                return BadRequest(new DataResponse
+                Console.WriteLine(ex.Message);
+                return BadRequest(ResponseHelper.ResponseError(400, "Internal server error.", false, null));
+            }
+        }
+
+        [HttpGet("staffGetAllAccessories")]
+        public async Task<ActionResult> StaffGetAllAccessories()
+        {
+            try
+            {
+                #region Authentication, Authorization
+                // Check authentication and authorization of user based on the specified HTTP context and role that need to check for this function
+                // If the user is not authenticated or authorized, return error message
+                // If the user is authenticated and authorized, return claims of user
+                // admin role id = 1
+                // customer role id = 2
+                // staff role id = 3
+                var (isSuccess, errorMessage, claims) = JwtTokenHelper.AuthenticateAndAuthorize(HttpContext, 3);
+                if (!isSuccess)
                 {
-                    StatusCode = 400,
-                    Message = ex.Message,
-                    Success = false
-                });
+                    // Return error message if the user is not authenticated or authorized
+                    return Unauthorized(ResponseHelper.ResponseError(401, errorMessage ?? "Unknown error", false, null));
+                }
+                #endregion
+
+                var adminAccessories = await AccessoriesDAO.GetInstance().StaffGetAllAccessories();
+                if (adminAccessories == null || adminAccessories.Count == 0)
+                {
+                    return NotFound(ResponseHelper.ResponseError(404, "No accessory found", false, null));
+                }
+                var admincAccessoryDTOs = AutoMapper.ToAccessoryDTOList(adminAccessories);
+                return Ok(ResponseHelper.ResponseSuccess(200, "Get all accessories successfully", true, admincAccessoryDTOs));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return BadRequest(ResponseHelper.ResponseError(400, "Internal server error.", false, null));
             }
         }
 
@@ -66,33 +101,33 @@ namespace WebAPI.Controllers
         {
             try
             {
+                #region Authentication, Authorization
+                // Check authentication and authorization of user based on the specified HTTP context and role that need to check for this function
+                // If the user is not authenticated or authorized, return error message
+                // If the user is authenticated and authorized, return claims of user
+                // admin role id = 1
+                // customer role id = 2
+                // staff role id = 3
+                var (isSuccess, errorMessage, claims) = JwtTokenHelper.AuthenticateAndAuthorize(HttpContext, 1, 3);
+                if (!isSuccess)
+                {
+                    // Return error message if the user is not authenticated or authorized
+                    return Unauthorized(ResponseHelper.ResponseError(401, errorMessage ?? "Unknown error", false, null));
+                }
+                #endregion
+
                 var adminAccessory = await AccessoriesDAO.GetInstance().GetAccessoryById(id);
                 if (adminAccessory == null)
                 {
-                    return NotFound(new DataResponse
-                    {
-                        StatusCode = 404,
-                        Message = "Accessory not found",
-                        Success = false
-                    });
+                    return NotFound(ResponseHelper.ResponseError(404, "Accessory not found", false, null));
                 }
                 var adminAccessoryDTO = AutoMapper.ToAccessoryDTO(adminAccessory);
-                return Ok(new DataResponse
-                {
-                    StatusCode = 200,
-                    Message = "Get accessory by id successfully",
-                    Success = true,
-                    Data = adminAccessoryDTO
-                });
+                return Ok(ResponseHelper.ResponseSuccess(200, "Get accessory successfully", true, adminAccessoryDTO));
             }
             catch (Exception ex)
             {
-                return BadRequest(new DataResponse
-                {
-                    StatusCode = 400,
-                    Message = ex.Message,
-                    Success = false
-                });
+                Console.WriteLine(ex.Message);
+                return BadRequest(ResponseHelper.ResponseError(400, "Internal server error. Please contact support.", false, null));
             }
         }
 
@@ -202,27 +237,17 @@ namespace WebAPI.Controllers
             try
             {
                 #region Authentication, Authorization
-                // Get token
-                var authorizationHeader = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
-
-                // Check token
-                if (authorizationHeader == null || !authorizationHeader.StartsWith("Bearer "))
+                // Check authentication and authorization of user based on the specified HTTP context and role that need to check for this function
+                // If the user is not authenticated or authorized, return error message
+                // If the user is authenticated and authorized, return claims of user
+                // admin role id = 1
+                // customer role id = 2
+                // staff role id = 3
+                var (isSuccess, errorMessage, claims) = JwtTokenHelper.AuthenticateAndAuthorize(HttpContext, 1, 3);
+                if (!isSuccess)
                 {
-                    return Unauthorized(ResponseHelper.Response(401, "Authentication token is missing or invalid", false, null));
-                }
-                // Format token
-                var token = authorizationHeader.Split(" ")[1];
-                // Get claims
-                var claims = JwtTokenHelper.GetUserClaims(token);
-                // Verify token
-                if (claims == null)
-                {
-                    return Unauthorized(ResponseHelper.Response(401, "Authentication token is invalid", false, null));
-                }
-                // Check role
-                if (claims.TryGetValue("role", out var roleId) && roleId.ToString() != "1")
-                {
-                    return Unauthorized(ResponseHelper.Response(401, "Unauthorized access denied", false, null));
+                    // Return error message if the user is not authenticated or authorized
+                    return Unauthorized(ResponseHelper.ResponseError(401, errorMessage ?? "Unknown error", false, null));
                 }
                 #endregion
 
@@ -230,7 +255,7 @@ namespace WebAPI.Controllers
 
                 if (accessory != null)
                 {
-                    return BadRequest(ResponseHelper.Response(400, "Accessory already exists", false, null));
+                    return BadRequest(ResponseHelper.ResponseError(400, "Accessory already exists", false, null));
                 }
 
                 var newAccessory = new Accessory
@@ -265,32 +290,17 @@ namespace WebAPI.Controllers
                         ProductName = accesssoryJustCreate.Name
                     };
                     await TransactionsDAO.GetInstance().CreateImportExportHistory(importHistory);
-                    return Ok(new DataResponse
-                    {
-                        StatusCode = 200,
-                        Message = "Add Accessory successfully",
-                        Success = true
-                    });
+                    return Ok(ResponseHelper.ResponseSuccess(200, "Add Accessory successfully", true, null));
                 }
                 else
                 {
-                    return BadRequest(new DataResponse
-                    {
-                        StatusCode = 400,
-                        Message = "Add Accessory failed",
-                        Success = false
-                    });
+                    return BadRequest(ResponseHelper.ResponseError(400, "Add Accessory failed", false, null));
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return BadRequest(new DataResponse
-                {
-                    StatusCode = 400,
-                    Message = "Internal server error. Please contact support.",
-                    Success = false
-                });
+                return BadRequest(ResponseHelper.ResponseError(400, "Internal server error. Please contact support.", false, null));
             }
         }
 
@@ -300,27 +310,17 @@ namespace WebAPI.Controllers
             try
             {
                 #region Authentication, Authorization
-                // Get token
-                var authorizationHeader = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
-
-                // Check token
-                if (authorizationHeader == null || !authorizationHeader.StartsWith("Bearer "))
+                // Check authentication and authorization of user based on the specified HTTP context and role that need to check for this function
+                // If the user is not authenticated or authorized, return error message
+                // If the user is authenticated and authorized, return claims of user
+                // admin role id = 1
+                // customer role id = 2
+                // staff role id = 3
+                var (isSuccess, errorMessage, claims) = JwtTokenHelper.AuthenticateAndAuthorize(HttpContext, 1, 3);
+                if (!isSuccess)
                 {
-                    return Unauthorized(ResponseHelper.Response(401, "Authentication token is missing or invalid", false, null));
-                }
-                // Format token
-                var token = authorizationHeader.Split(" ")[1];
-                // Get claims
-                var claims = JwtTokenHelper.GetUserClaims(token);
-                // Verify token
-                if (claims == null)
-                {
-                    return Unauthorized(ResponseHelper.Response(401, "Authentication token is invalid", false, null));
-                }
-                // Check role
-                if (claims.TryGetValue("role", out var roleId) && roleId.ToString() != "1")
-                {
-                    return Unauthorized(ResponseHelper.Response(401, "Unauthorized access denied", false, null));
+                    // Return error message if the user is not authenticated or authorized
+                    return Unauthorized(ResponseHelper.ResponseError(401, errorMessage ?? "Unknown error", false, null));
                 }
                 #endregion
 
@@ -328,12 +328,7 @@ namespace WebAPI.Controllers
 
                 if (accessory == null)
                 {
-                    return NotFound(new DataResponse
-                    {
-                        StatusCode = 404,
-                        Message = "Accessory not found",
-                        Success = false
-                    });
+                    return NotFound(ResponseHelper.ResponseError(404, "Accessory not found", false, null));
                 }
 
                 accessory.Name = adminAccessoryDTO.Name;
@@ -364,32 +359,17 @@ namespace WebAPI.Controllers
                         };
                         await TransactionsDAO.GetInstance().CreateImportExportHistory(importHistory);
                     }
-                    return Ok(new DataResponse
-                    {
-                        StatusCode = 200,
-                        Message = "Update Accessory successfully",
-                        Success = true
-                    });
+                    return Ok(ResponseHelper.ResponseSuccess(200, "Update Accessory successfully", true, null));
                 }
                 else
                 {
-                    return BadRequest(new DataResponse
-                    {
-                        StatusCode = 400,
-                        Message = "Update Accessory failed",
-                        Success = false
-                    });
+                    return BadRequest(ResponseHelper.ResponseError(400, "Update Accessory failed", false, null));
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return BadRequest(new DataResponse
-                {
-                    StatusCode = 400,
-                    Message = "Internal server error. Please contact support.",
-                    Success = false
-                });
+                return BadRequest(ResponseHelper.ResponseError(400, "Internal server error. Please contact support.", false, null));
             }
         }
 
@@ -400,27 +380,17 @@ namespace WebAPI.Controllers
             try
             {
                 #region Authentication, Authorization
-                // Get token
-                var authorizationHeader = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
-
-                // Check token
-                if (authorizationHeader == null || !authorizationHeader.StartsWith("Bearer "))
+                // Check authentication and authorization of user based on the specified HTTP context and role that need to check for this function
+                // If the user is not authenticated or authorized, return error message
+                // If the user is authenticated and authorized, return claims of user
+                // admin role id = 1
+                // customer role id = 2
+                // staff role id = 3
+                var (isSuccess, errorMessage, claims) = JwtTokenHelper.AuthenticateAndAuthorize(HttpContext, 1, 3);
+                if (!isSuccess)
                 {
-                    return Unauthorized(ResponseHelper.Response(401, "Authentication token is missing or invalid", false, null));
-                }
-                // Format token
-                var token = authorizationHeader.Split(" ")[1];
-                // Get claims
-                var claims = JwtTokenHelper.GetUserClaims(token);
-                // Verify token
-                if (claims == null)
-                {
-                    return Unauthorized(ResponseHelper.Response(401, "Authentication token is invalid", false, null));
-                }
-                // Check role
-                if (claims.TryGetValue("role", out var roleId) && roleId.ToString() != "1")
-                {
-                    return Unauthorized(ResponseHelper.Response(401, "Unauthorized access denied", false, null));
+                    // Return error message if the user is not authenticated or authorized
+                    return Unauthorized(ResponseHelper.ResponseError(401, errorMessage ?? "Unknown error", false, null));
                 }
                 #endregion
 
@@ -428,12 +398,7 @@ namespace WebAPI.Controllers
 
                 if (accessory == null)
                 {
-                    return NotFound(new DataResponse
-                    {
-                        StatusCode = 404,
-                        Message = "Accessory not found",
-                        Success = false
-                    });
+                    return NotFound(ResponseHelper.ResponseError(404, "Accessory not found", false, null));
                 }
 
                 if (cardImage != null)
@@ -444,32 +409,17 @@ namespace WebAPI.Controllers
                 if (await AccessoriesDAO.GetInstance().UpdateAccessory(accessory))
 
                 {
-                    return Ok(new DataResponse
-                    {
-                        StatusCode = 200,
-                        Message = "Updating card image of accessory successfully",
-                        Success = true
-                    });
+                    return Ok(ResponseHelper.ResponseSuccess(200, "Update card image of accessory successfully", true, null));
                 }
                 else
                 {
-                    return BadRequest(new DataResponse
-                    {
-                        StatusCode = 400,
-                        Message = "Updating card image of accessory failed",
-                        Success = false
-                    });
+                    return BadRequest(ResponseHelper.ResponseError(400, "Update card image of accessory failed", false, null));
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return BadRequest(new DataResponse
-                {
-                    StatusCode = 500,
-                    Message = "Internal server error. Please contact support.",
-                    Success = false
-                });
+                return BadRequest(ResponseHelper.ResponseError(400, "Update card image of accessory failed. Internal server error. Please contact support.", false, null));
             }
         }
 
@@ -479,27 +429,17 @@ namespace WebAPI.Controllers
             try
             {
                 #region Authentication, Authorization
-                // Get token
-                var authorizationHeader = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
-
-                // Check token
-                if (authorizationHeader == null || !authorizationHeader.StartsWith("Bearer "))
+                // Check authentication and authorization of user based on the specified HTTP context and role that need to check for this function
+                // If the user is not authenticated or authorized, return error message
+                // If the user is authenticated and authorized, return claims of user
+                // admin role id = 1
+                // customer role id = 2
+                // staff role id = 3
+                var (isSuccess, errorMessage, claims) = JwtTokenHelper.AuthenticateAndAuthorize(HttpContext, 1, 3);
+                if (!isSuccess)
                 {
-                    return Unauthorized(ResponseHelper.Response(401, "Authentication token is missing or invalid", false, null));
-                }
-                // Format token
-                var token = authorizationHeader.Split(" ")[1];
-                // Get claims
-                var claims = JwtTokenHelper.GetUserClaims(token);
-                // Verify token
-                if (claims == null)
-                {
-                    return Unauthorized(ResponseHelper.Response(401, "Authentication token is invalid", false, null));
-                }
-                // Check role
-                if (claims.TryGetValue("role", out var roleId) && roleId.ToString() != "1")
-                {
-                    return Unauthorized(ResponseHelper.Response(401, "Unauthorized access denied", false, null));
+                    // Return error message if the user is not authenticated or authorized
+                    return Unauthorized(ResponseHelper.ResponseError(401, errorMessage ?? "Unknown error", false, null));
                 }
                 #endregion
 
@@ -507,12 +447,7 @@ namespace WebAPI.Controllers
 
                 if (accessory == null)
                 {
-                    return NotFound(new DataResponse
-                    {
-                        StatusCode = 404,
-                        Message = "Accessory is not found",
-                        Success = false
-                    });
+                    return NotFound(ResponseHelper.ResponseError(404, "Accessory not found", false, null));
                 }
                 // Delete image of car
                 if (typeOfImage == "cardImage")
@@ -521,42 +456,22 @@ namespace WebAPI.Controllers
                 }
                 else
                 {
-                    return BadRequest(new DataResponse
-                    {
-                        StatusCode = 400,
-                        Message = "Invalid type of image",
-                        Success = false
-                    });
+                    return BadRequest(ResponseHelper.ResponseError(400, "Type of image is invalid", false, null));
                 }
 
                 if (await AccessoriesDAO.GetInstance().UpdateAccessory(accessory))
                 {
-                    return Ok(new DataResponse
-                    {
-                        StatusCode = 200,
-                        Message = "The card image of accessory have deleted successfully",
-                        Success = true
-                    });
+                    return Ok(ResponseHelper.ResponseSuccess(200, "Delete card image of accessory successfully", true, null));
                 }
                 else
                 {
-                    return BadRequest(new DataResponse
-                    {
-                        StatusCode = 400,
-                        Message = "Deleting card image of accessory failed",
-                        Success = false
-                    });
+                    return BadRequest(ResponseHelper.ResponseError(400, "Delete card image of accessory failed", false, null));
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return BadRequest(new DataResponse
-                {
-                    StatusCode = 400,
-                    Message = "Delete card image of accessory failed. Internal server error. Please contact support.",
-                    Success = false
-                });
+                return BadRequest(ResponseHelper.ResponseError(400, "Delete card image of accessory failed. Internal server error. Please contact support.", false, null));
             }
         }
 
@@ -568,27 +483,17 @@ namespace WebAPI.Controllers
             try
             {
                 #region Authentication, Authorization
-                // Get token
-                var authorizationHeader = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
-
-                // Check token
-                if (authorizationHeader == null || !authorizationHeader.StartsWith("Bearer "))
+                // Check authentication and authorization of user based on the specified HTTP context and role that need to check for this function
+                // If the user is not authenticated or authorized, return error message
+                // If the user is authenticated and authorized, return claims of user
+                // admin role id = 1
+                // customer role id = 2
+                // staff role id = 3
+                var (isSuccess, errorMessage, claims) = JwtTokenHelper.AuthenticateAndAuthorize(HttpContext, 1, 3);
+                if (!isSuccess)
                 {
-                    return Unauthorized(ResponseHelper.Response(401, "Authentication token is missing or invalid", false, null));
-                }
-                // Format token
-                var token = authorizationHeader.Split(" ")[1];
-                // Get claims
-                var claims = JwtTokenHelper.GetUserClaims(token);
-                // Verify token
-                if (claims == null)
-                {
-                    return Unauthorized(ResponseHelper.Response(401, "Authentication token is invalid", false, null));
-                }
-                // Check role
-                if (claims.TryGetValue("role", out var roleId) && roleId.ToString() != "1")
-                {
-                    return Unauthorized(ResponseHelper.Response(401, "Unauthorized access denied", false, null));
+                    // Return error message if the user is not authenticated or authorized
+                    return Unauthorized(ResponseHelper.ResponseError(401, errorMessage ?? "Unknown error", false, null));
                 }
                 #endregion
 
@@ -596,12 +501,7 @@ namespace WebAPI.Controllers
 
                 if (accessory == null)
                 {
-                    return NotFound(new DataResponse
-                    {
-                        StatusCode = 404,
-                        Message = "Accessory is not found",
-                        Success = false
-                    });
+                    return NotFound(ResponseHelper.ResponseError(404, "Accessory not found", false, null));
                 }
 
                 // save image
@@ -609,12 +509,7 @@ namespace WebAPI.Controllers
 
                 if (imageName == null)
                 {
-                    return BadRequest(new DataResponse
-                    {
-                        StatusCode = 400,
-                        Message = "Save image failed",
-                        Success = false
-                    });
+                    return BadRequest(ResponseHelper.ResponseError(400, "Image is invalid", false, null));
                 }
 
                 // create new object color image to database
@@ -629,33 +524,18 @@ namespace WebAPI.Controllers
 
                 if (await AccessoriesDAO.GetInstance().CreateDetailImageAccessory(detailImageAccessory))
                 {
-                    return Ok(new DataResponse
-                    {
-                        StatusCode = 200,
-                        Message = "Create detail image accessory successfully",
-                        Success = true
-                    });
+                    return Ok(ResponseHelper.ResponseSuccess(200, "Create detail image accessory successfully", true, null));
                 }
                 else
                 {
-                    return BadRequest(new DataResponse
-                    {
-                        StatusCode = 400,
-                        Message = "Create detail image accessory failed",
-                        Success = false
-                    });
+                    return BadRequest(ResponseHelper.ResponseError(400, "Create detail image accessory failed", false, null));
                 }
 
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return BadRequest(new DataResponse
-                {
-                    StatusCode = 500,
-                    Message = "Internal server error. Please contact support.",
-                    Success = false
-                });
+                return BadRequest(ResponseHelper.ResponseError(400, "Create detail image accessory failed. Internal server error. Please contact support.", false, null));
             }
         }
 
@@ -665,27 +545,17 @@ namespace WebAPI.Controllers
             try
             {
                 #region Authentication, Authorization
-                // Get token
-                var authorizationHeader = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
-
-                // Check token
-                if (authorizationHeader == null || !authorizationHeader.StartsWith("Bearer "))
+                // Check authentication and authorization of user based on the specified HTTP context and role that need to check for this function
+                // If the user is not authenticated or authorized, return error message
+                // If the user is authenticated and authorized, return claims of user
+                // admin role id = 1
+                // customer role id = 2
+                // staff role id = 3
+                var (isSuccess, errorMessage, claims) = JwtTokenHelper.AuthenticateAndAuthorize(HttpContext, 1, 3);
+                if (!isSuccess)
                 {
-                    return Unauthorized(ResponseHelper.Response(401, "Authentication token is missing or invalid", false, null));
-                }
-                // Format token
-                var token = authorizationHeader.Split(" ")[1];
-                // Get claims
-                var claims = JwtTokenHelper.GetUserClaims(token);
-                // Verify token
-                if (claims == null)
-                {
-                    return Unauthorized(ResponseHelper.Response(401, "Authentication token is invalid", false, null));
-                }
-                // Check role
-                if (claims.TryGetValue("role", out var roleId) && roleId.ToString() != "1")
-                {
-                    return Unauthorized(ResponseHelper.Response(401, "Unauthorized access denied", false, null));
+                    // Return error message if the user is not authenticated or authorized
+                    return Unauthorized(ResponseHelper.ResponseError(401, errorMessage ?? "Unknown error", false, null));
                 }
                 #endregion
 
@@ -693,23 +563,23 @@ namespace WebAPI.Controllers
 
                 if (imageDetail == null)
                 {
-                    return NotFound(ResponseHelper.Response(404, "Image color of car is not found", false, null));
+                    return NotFound(ResponseHelper.ResponseError(404, "Image color of car is not found", false, null));
                 }
 
                 // If image color of car existed, delete image color of car
                 if (await AccessoriesDAO.GetInstance().DeleteDetailImageAccessory(imageDetail))
                 {
-                    return Ok(ResponseHelper.Response(200, "Delete dettails image of accessory successfully", true, null));
+                    return Ok(ResponseHelper.ResponseSuccess(200, "Delete dettails image of accessory successfully", true, null));
                 }
                 else
                 {
-                    return BadRequest(ResponseHelper.Response(400, "Error: can't delete dettails image of accessory", false, null));
+                    return BadRequest(ResponseHelper.ResponseError(400, "Error: can't delete dettails image of accessory", false, null));
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Delete dettails image of accessory failed: " + ex);
-                return BadRequest(ResponseHelper.Response(404, "Internal server error. Please contact support.", false, null));
+                return BadRequest(ResponseHelper.ResponseError(404, "Internal server error. Please contact support.", false, null));
             }
         }
 

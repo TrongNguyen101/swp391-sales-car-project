@@ -2,10 +2,38 @@ import * as request from "../../utils/AccessoryRequest";
 
 export const adminGetAllAccessories = async () => {
   try {
-    const response = await request.get("/api/AdminAccessories");
+    const token = localStorage.getItem("Bearer");
+    const response = await request.get(
+      "/api/AdminAccessories",
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     return response.data;
   } catch (error) {
-    return error.response;
+    return error.response.data;
+  }
+};
+
+export const staffGetAllAccessories = async () => {
+  try {
+    const token = localStorage.getItem("Bearer");
+    const endpoint = `/api/AdminAccessories/staffGetAllAccessories`;
+    const response = await request.get(
+      endpoint,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    return error.response.data;
   }
 };
 
@@ -24,7 +52,7 @@ export const adminCreateAccessory = async (accessoryData) => {
     );
     return response.data;
   } catch (error) {
-    return error.response;
+    return error.response.data;
   }
 };
 
@@ -40,7 +68,7 @@ export const adminUpdateAccessory = async (adminAccessoryId, formData) => {
     });
     return response.data;
   } catch (error) {
-    return error.response;
+    return error.response.data;
   }
 };
 
@@ -80,10 +108,18 @@ export const adminRestoreAccessory = async (adminAccesoryId) => {
 
 export const getAccessoryById = async (id) => {
   try {
-    const response = await request.get(`/api/AdminAccessories/${id}`);
+    const token = localStorage.getItem("Bearer");
+    const response = await request.get(
+      `/api/AdminAccessories/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     return response.data;
   } catch (error) {
-    return error.response;
+    return error.response.data;
   }
 };
 
@@ -102,7 +138,7 @@ export const adminUploadImageOfAccessory = async (
     });
     return response.data;
   } catch (error) {
-    return error.response;
+    return error.response.data;
   }
 };
 
@@ -125,7 +161,7 @@ export const adminDeleteImageOfAccessory = async (
     );
     return response.data;
   } catch (error) {
-    return error.response;
+    return error.response.data;
   }
 };
 
@@ -141,7 +177,7 @@ export const uploadImageDetailOfAccessory = async (formData) => {
     });
     return response.data;
   } catch (error) {
-    return error.response;
+    return error.response.data;
   }
 };
 
@@ -160,6 +196,6 @@ export const deleteImageDetailOfAccessory = async (idImageDetail) => {
     );
     return response.data;
   } catch (error) {
-    return error.response;
+    return error.response.data;
   }
 };

@@ -70,7 +70,7 @@ function UpdateCardCarComponent({
           setInforDialogOpen(true);
         }
       } catch (error) {
-        setMessage(error);
+        setMessage("Failed to upload image");
         setInforDialogOpen(true);
       }
     }
@@ -106,7 +106,7 @@ function UpdateCardCarComponent({
         setInforDialogOpen(true);
       }
     } catch (error) {
-      setMessage(error);
+      setMessage("Failed to delete image");
       setInforDialogOpen(true);
     }
   };

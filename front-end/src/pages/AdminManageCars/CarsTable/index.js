@@ -71,8 +71,12 @@ function CarsTable() {
   // Fetch data from server
   const fetchData = async () => {
     try {
-      const response = await adminCarServices.adminGetAllCars();
-      console.log("response before if: ", response);
+      let response;
+      if (userData.roleId === 1) {
+        response = await adminCarServices.adminGetAllCars();
+      } else {
+        response = await adminCarServices.staffGetAllCars();
+      }
       if (response.statusCode === 200) {
         setRows(response.data);
         setSearchRows(response.data);

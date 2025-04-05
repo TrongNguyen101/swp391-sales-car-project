@@ -34,6 +34,15 @@ namespace WebAPI.DAO
             }
         }
 
+        public async Task<List<Accessory>> StaffGetAllAccessories()
+        {
+            using (var context = new VinfastContext())
+            {
+                return await context.Accessories.Where(c => c.IsDeleted == false)
+                                                .ToListAsync();
+            }
+        }
+
         public async Task<List<Accessory>> UserGetAllAccessories()
         {
             using (var context = new VinfastContext())

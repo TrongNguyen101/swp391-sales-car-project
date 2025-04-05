@@ -64,7 +64,7 @@ function UpdateBannerImageCarComponent({
           setInforDialogOpen(true);
         }
       } catch (error) {
-        setMessage(error);
+        setMessage("Failed to upload image");
         setInforDialogOpen(true);
       }
     }
@@ -100,7 +100,7 @@ function UpdateBannerImageCarComponent({
         setInforDialogOpen(true);
       }
     } catch (error) {
-      setMessage(error);
+      setMessage("Failed to delete image");
       setInforDialogOpen(true);
     }
   };
