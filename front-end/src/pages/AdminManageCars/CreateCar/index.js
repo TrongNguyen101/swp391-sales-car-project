@@ -51,8 +51,8 @@ function CreateCarPage() {
       isValid = false;
     }
 
-    if (!seat || seat <= 0 || seat > 9) {
-      setErrorSeats("Seats must be greater than 0, less than 10");
+    if (!seat || seat <= 3 || seat > 9) {
+      setErrorSeats("Seats must be greater than 3, less than 10");
       isValid = false;
     }
 
@@ -97,14 +97,24 @@ function CreateCarPage() {
         setStatusResponse(true);
         setOpenDialog(true);
       } else {
-        setStatusResponse(response.data.success);
-        setMessage(response.data.message);
+        if (response.status === 400) {
+          setMessage("Failed to create car");
+          setOpenDialog(true);
+          setStatusResponse(false);
+          return;
+        }
+        setStatusResponse(response.success);
+        setMessage(response.message);
         setOpenDialog(true);
       }
     } catch (error) {
-      if (error.response) {
-        console.log(error.response);
+      if (error) {
+        console.log("loi tao car", error);
       }
+      setMessage("Failed to create car");
+      setOpenDialog(true);
+      setStatusResponse(false);
+      return
     }
   };
 

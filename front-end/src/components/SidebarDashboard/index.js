@@ -25,7 +25,6 @@ const cx = classNames.bind(styles);
 
 function SidebarDashboard({ managerRoleId }) {
   const navigate = useNavigate();
-  console.log("managerRoleId: ", managerRoleId);
 
   const handleNavigation = (path) => () => {
     navigate(path);

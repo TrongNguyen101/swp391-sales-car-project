@@ -4,7 +4,6 @@ import {
   Dialog,
   DialogActions,
   DialogTitle,
-  TextField,
   Typography,
 } from "@mui/material";
 import { useState } from "react";
@@ -14,16 +13,15 @@ import AccessoryGalleryComponent from "../AccessoryGallery";
 
 function UpdateImagesDetailOfAccessoriesComponent({
   accessoryId,
-  setMessage = () => { },
-  setInforDialogOpen = () => { },
-  fetchCarDetails = () => { },
+  setMessage = () => {},
+  setInforDialogOpen = () => {},
+  fetchCarDetails = () => {},
 }) {
-  const [color, setColor] = useState("");
   const [detailImageOfAccessory, setDetailImageOfAccessory] = useState([]);
   const [selectedIdImageDetail, setSelectedIdImageDetail] = useState();
-  const [errorColor, setErrorColor] = useState("");
   const [openConfirmDeleteDialog, setOpenConfirmDeleteDialog] = useState(false);
-  const [requestFecthDetailImageList, setRequestFecthDetailImageList] = useState(false);
+  const [requestFecthDetailImageList, setRequestFecthDetailImageList] =
+    useState(false);
 
   const handleUploadDetailImage = (files) => setDetailImageOfAccessory(files);
   const handleDeleteDetailImage = (idImageDetailAccessory) =>
@@ -31,28 +29,20 @@ function UpdateImagesDetailOfAccessoriesComponent({
 
   // handle the save of the image
   const handleSaveColorImage = async () => {
-    if (
-      !detailImageOfAccessory.length ||
-      !detailImageOfAccessory[0].file
-    ) {
+    if (!detailImageOfAccessory.length || !detailImageOfAccessory[0].file) {
       setMessage("Please select an image to upload");
       setInforDialogOpen(true);
-      return;
-    }
-    if (color.length > 50 || !color) {
-      setErrorColor(
-        "Color name is required and must be less than 50 characters"
-      );
       return;
     }
 
     try {
       const formData = new FormData();
       formData.append("detailImage", detailImageOfAccessory[0].file);
-      formData.append("color", color);
+      formData.append("color", "color");
       formData.append("accessoryId", accessoryId);
 
-      const response = await adminAccessoryServices.uploadImageDetailOfAccessory(formData);
+      const response =
+        await adminAccessoryServices.uploadImageDetailOfAccessory(formData);
 
       if (response.statusCode !== 200) {
         setMessage("Failed to upload image");
@@ -63,7 +53,6 @@ function UpdateImagesDetailOfAccessoriesComponent({
         //fetch color of car
         setRequestFecthDetailImageList(!requestFecthDetailImageList);
         setDetailImageOfAccessory([]);
-        setColor("");
       }
     } catch (error) {
       setMessage("Failed to upload image");
@@ -78,14 +67,14 @@ function UpdateImagesDetailOfAccessoriesComponent({
         setInforDialogOpen(true);
         return;
       }
-      const response = await adminAccessoryServices.deleteImageDetailOfAccessory(
-        selectedIdImageDetail
-      );
+      const response =
+        await adminAccessoryServices.deleteImageDetailOfAccessory(
+          selectedIdImageDetail
+        );
       if (response.statusCode !== 200) {
         setOpenConfirmDeleteDialog(false);
         setMessage("Failed to delete image");
         setInforDialogOpen(true);
-
       } else {
         fetchCarDetails();
         //hide confirm delete dialog
@@ -131,7 +120,7 @@ function UpdateImagesDetailOfAccessoriesComponent({
           width: "100%",
           backgroundColor: "#f9f9f9",
           padding: "20px 0",
-          borderBottom: "10px solid #ffffff"
+          borderBottom: "10px solid #ffffff",
         }}
       >
         <Typography sx={{ fontWeight: "500", fontSize: "24px" }}>
@@ -163,18 +152,18 @@ function UpdateImagesDetailOfAccessoriesComponent({
         }}
       >
         <Typography sx={{ fontWeight: "500", fontSize: "24px" }}>
-          Add new color Image of Car
+          Add new detail image of accessory
         </Typography>
         <Box
           sx={{
             display: "flex",
-            justifyContent: "space-around",
+            flexDirection: "column",
+            alignItems: "center",
             paddingTop: "20px",
-            paddingRight: "40px",
             width: "100%",
           }}
         >
-          <Box sx={{ width: "700px", paddingLeft: "60px" }}>
+          <Box sx={{ width: "700px" }}>
             <ImageUploadComponent
               title="Drag & drop an image here, or click to select detail image of accessory"
               allowedTypes={["image/jpeg", "image/png"]}
@@ -186,34 +175,15 @@ function UpdateImagesDetailOfAccessoriesComponent({
               requestFecthColorOfCar={requestFecthDetailImageList}
             />
           </Box>
-          <Box sx={{ width: "200px", paddingRight: "60px" }}>
-            <Box sx={{ width: "200px", height: "200px" }}>
 
-            </Box>
-            <Box sx={{ width: "200px" }}>
-              <TextField
-                sx={{ width: "100%", marginBottom: "1em" }}
-                type="text"
-                label="Accessory Color"
-                spellCheck="false"
-                value={color}
-                onChange={(e) => {
-                  setColor(e.target.value);
-                  setErrorColor("");
-                }}
-                error={!!errorColor}
-                helperText={errorColor || ""}
-              />
-            </Box>
-            <Box sx={{ width: "200px" }}>
-              <Button
-                sx={{ width: "100%" }}
-                variant="contained"
-                onClick={handleSaveColorImage}
-              >
-                Add New Image
-              </Button>
-            </Box>
+          <Box sx={{ width: "200px", paddingTop: "20px" }}>
+            <Button
+              sx={{ width: "100%" }}
+              variant="contained"
+              onClick={handleSaveColorImage}
+            >
+              Add New Image
+            </Button>
           </Box>
         </Box>
       </Box>

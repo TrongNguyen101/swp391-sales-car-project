@@ -10,7 +10,7 @@ const cx = classNames.bind(styles);
 
 const SidebarUser = () => {
   const navigate = useNavigate();
-  const { userData } = useUserData();
+  const { userData, refetch } = useUserData();
 
   const handleNavigation = (path) => () => {
     navigate(path);
@@ -27,6 +27,18 @@ const SidebarUser = () => {
       return <Typography>Welcome staff</Typography>;
     }
     return null;
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("Bearer");
+    localStorage.removeItem("productId");
+    localStorage.removeItem("productVersion");
+    localStorage.removeItem("priceBatteryRent");
+    localStorage.removeItem("priceBatteryOwn");
+    localStorage.removeItem("remainingAmountRent");
+    localStorage.removeItem("remainingAmountOwn");
+    refetch(); // Refetch user data
+    navigate("/");
   };
 
   return (
@@ -81,7 +93,12 @@ const SidebarUser = () => {
       ) : null}
 
       <Box sx={{ padding: "40px 0" }}>
-        <Button variant="outlined" color="error" fullWidth>
+        <Button
+          variant="outlined"
+          color="error"
+          fullWidth
+          onClick={handleLogout}
+        >
           <Typography>Log Out</Typography>
         </Button>
       </Box>
