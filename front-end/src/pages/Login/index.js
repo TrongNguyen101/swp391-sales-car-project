@@ -18,6 +18,7 @@ import { useRef, useState } from "react";
 import * as authService from "../../services/AuthService";
 import * as AuthValidator from "../../validation/AuthValidation";
 import * as OTPValidator from "../../validation/OTPValidation";
+import { useUserData } from "../../App";
 
 const cx = classNames.bind(styles);
 
@@ -30,6 +31,8 @@ const cx = classNames.bind(styles);
  * @returns {JSX.Element} The rendered login page component.
  */
 function LoginPage() {
+  const { refetch } = useUserData(); // Get user data from context
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -79,8 +82,9 @@ function LoginPage() {
   const fetchLogin = async () => {
     try {
       const response = await authService.postLogin(email, password);
-      if (response.status === 200) {
-        localStorage.setItem("Bearer", response.data.data.token);
+      if (response.statusCode === 200) {
+        localStorage.setItem("Bearer", response.data.token);
+        console.log("Login successfully", response.data.token);
         setInformationContent({
           type: "success",
           message: "Login successfully",
@@ -88,18 +92,18 @@ function LoginPage() {
         setNavigateTo("/");
         setOpenInformationDialog(true);
       }
-      if (response.status === 404) {
+      if (response.statusCode === 404) {
         setErrorEmail(response.data.message);
       }
-      if (response.status === 400) {
+      if (response.statusCode === 400) {
         alert(response.data.message);
       }
-      if (response.status === 401) {
+      if (response.statusCode === 401) {
         setErrorPassword(response.data.message);
       }
     } catch (error) {
-      if (error.response) {
-        console.log(error.response);
+      if (error) {
+        console.log(error);
       }
     }
   };
@@ -173,6 +177,7 @@ function LoginPage() {
     setOpenInformationDialog(false);
     navigate(navigateTo);
     setNavigateTo("");
+    refetch(); // Fetch user data after login
   };
 
   const handleForgotPasswordClose = () => {

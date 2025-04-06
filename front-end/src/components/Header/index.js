@@ -19,6 +19,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
 import * as DecodePayload from "../../lib/DecodePayload";
+import { useUserData } from "../../App";
 
 // Bind styles to classname of html
 const cx = classnames.bind(styles);
@@ -47,6 +48,7 @@ const cx = classnames.bind(styles);
 
 function HeaderComponent() {
   const navigate = useNavigate(); // Navigate page using useNavigate hook from library react-router-dom
+  const { refetch } = useUserData(); // Get user data from context
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [disableDashboard, setDisableDashboard] = useState(true);
@@ -100,6 +102,7 @@ function HeaderComponent() {
     localStorage.removeItem("priceBatteryOwn");
     localStorage.removeItem("remainingAmountRent");
     localStorage.removeItem("remainingAmountOwn");
+    refetch(); // Refetch user data
     setIsLoggedIn(false);
     handleClose();
     navigate("/");

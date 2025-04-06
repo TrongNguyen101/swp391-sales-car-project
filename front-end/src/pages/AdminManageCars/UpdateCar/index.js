@@ -1,9 +1,12 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 import {
   Box,
   Button,
+  Dialog,
+  DialogActions,
+  DialogTitle,
   FormControl,
   InputLabel,
   MenuItem,
@@ -15,6 +18,8 @@ import {
 import * as adminCarServices from "../../../services/AdminCarServices";
 
 function UpdateCarPage() {
+  const navigate = useNavigate();
+
   //state of the values of the form
   const [model, setModel] = useState("");
   const [seat, setSeats] = useState(0);
@@ -31,15 +36,23 @@ function UpdateCarPage() {
   const [errorPriceDeposite, setErrorPriceDeposite] = useState("");
   const [errorQuantity, setErrorQuantity] = useState("");
 
+  //state of the message of the dialog
+  const [message, setMessage] = useState("");
+
+  //state of the successful dialog
+  const [openDialog, setOpenDialog] = useState(false);
+  const [openErrorDialog, setOpenErrorDialog] = useState(false);
+
   const { carId } = useParams();
 
   const fetchCarDetails = async (Id) => {
     try {
       const response = await adminCarServices.adminGetCarById(Id);
       if (response.statusCode !== 200) {
-        alert("Failed to fetch car details: " + response.message);
+        setMessage("Error update car");
+        setOpenErrorDialog(true);
       } else {
-        console.log(response.data);
+        // Set the state with the fetched data
         setModel(response.data.model || "");
         setSeats(response.data.seat || 0);
         setPriceBatteryRental(response.data.priceBatteryRental || 0);
@@ -49,7 +62,9 @@ function UpdateCarPage() {
         setIsShowed(response.data.isShowed);
       }
     } catch (error) {
-      alert("Failed to fetch car details: " + error.message);
+      console.error("Error fetching car details:", error);
+      setMessage("Error update car");
+      setOpenErrorDialog(true);
     }
   };
 
@@ -73,12 +88,15 @@ function UpdateCarPage() {
     try {
       const response = await adminCarServices.adminUpdateCar(carData);
       if (response.statusCode === 200) {
-        alert("Car updated successfully!");
+        setMessage("Car updated successfully");
+        setOpenDialog(true);
       } else {
-        alert("Error updating car: " + response.message);
+        setMessage("Failed to update car");
+        setOpenErrorDialog(true);
       }
     } catch (error) {
-      alert("Error updating car: " + error.message);
+      setMessage("Error update car");
+      setOpenErrorDialog(true);
     }
   };
   // Function to handle form submit
@@ -115,6 +133,14 @@ function UpdateCarPage() {
     if (isValid) {
       fetchUpdateCar();
     }
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+    navigate("/dashboard/cars");
+  };
+  const handleCloseErrorDialog = () => {
+    setOpenErrorDialog(false);
   };
 
   return (
@@ -260,6 +286,64 @@ function UpdateCarPage() {
           </Button>
         </Box>
       </Box>
+      <Dialog
+        open={openDialog}
+        keepMounted
+        onClose={handleCloseDialog}
+        aria-labelledby="alert-dialog-slide-title"
+        aria-describedby="alert-dialog-slide-description"
+        sx={{ "& .MuiDialog-paper": { width: "440px", height: "140px" } }}
+      >
+        <DialogTitle
+          id="alert-dialog-slide-title"
+          sx={{
+            textAlign: "center",
+            fontSize: "1.6rem",
+            fontWeight: "500",
+            lineHeight: "1.5",
+          }}
+        >
+          {message}
+        </DialogTitle>
+        <DialogActions sx={{ justifyContent: "center" }}>
+          <Button
+            variant="contained"
+            onClick={handleCloseDialog}
+            color="primary"
+          >
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        open={openErrorDialog}
+        keepMounted
+        onClose={handleCloseDialog}
+        aria-labelledby="alert-dialog-slide-title"
+        aria-describedby="alert-dialog-slide-description"
+        sx={{ "& .MuiDialog-paper": { width: "440px", height: "140px" } }}
+      >
+        <DialogTitle
+          id="alert-dialog-slide-title"
+          sx={{
+            textAlign: "center",
+            fontSize: "1.6rem",
+            fontWeight: "500",
+            lineHeight: "1.5",
+          }}
+        >
+          {message}
+        </DialogTitle>
+        <DialogActions sx={{ justifyContent: "center" }}>
+          <Button
+            variant="contained"
+            onClick={handleCloseErrorDialog}
+            color="primary"
+          >
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }

@@ -70,7 +70,6 @@ function AccessoriesTable() {
       if (response.statusCode !== 200) {
         setRows([]);
       } else {
-        console.log("all accessories:", response.data);
         setRows(response.data);
         setSearchRows(response.data);
       }

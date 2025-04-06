@@ -22,9 +22,9 @@ export const postLogin = async (email, password) => {
         },
       }
     );
-    return response;
+    return response.data;
   } catch (error) {
-    return error.response;
+    return error.response.data;
   }
 };
 
