@@ -28,7 +28,6 @@ import { faEdit, faSearch } from "@fortawesome/free-solid-svg-icons";
 import * as testDriveRegisterService from "../../services/TestDriveRegistrationService";
 import * as adminCarServices from "../../services/AdminCarServices";
 
-
 const AdminManageTestDrivenPage = () => {
   const [allRows, setAllRows] = useState([]);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
@@ -66,7 +65,7 @@ const AdminManageTestDrivenPage = () => {
 
   const fetchCarData = async () => {
     try {
-      const response = await adminCarServices.adminGetAllCars();
+      const response = await adminCarServices.staffGetAllCars();
       if (response.statusCode !== 200) {
         setListCar([]);
       } else {
@@ -158,12 +157,12 @@ const AdminManageTestDrivenPage = () => {
 
       {/* Search transaction */}
       <Box
-       sx={{
-        display: "flex",
-        justifyContent: "left",
-        width: "100%",
-        padding: "0 40px 10px 40px",
-      }}
+        sx={{
+          display: "flex",
+          justifyContent: "left",
+          width: "100%",
+          padding: "0 40px 10px 40px",
+        }}
       >
         <TextField
           type="text"
