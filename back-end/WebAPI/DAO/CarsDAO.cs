@@ -97,6 +97,20 @@ namespace WebAPI.DAO
             }
         }
 
+        public async Task<bool> CheckColorImageExist(int carId, string colorName)
+        {
+            using (var context = new VinfastContext())
+            {
+                var carColor = await context.CarColor.FirstOrDefaultAsync(cc => cc.CarId == carId && cc.ColorName == colorName);
+                if (carColor != null)
+                {
+                    return true; // Color image exists
+                } else {
+                    return false; // Color image does not exist
+                }
+            }
+        }
+
         public async Task<bool> DeleteCarById(Cars car)
         {
             try

@@ -499,11 +499,16 @@ namespace WebAPI.Controllers
                     {
                         return BadRequest(ResponseHelper.ResponseError(400, "Card image of car is required", false, null));
                     }
-                    var listImage = await CarsDAO.GetInstance().GetCarColorsByCarId(id);
-                    if (listImage == null || listImage.Count == 0)
+                    var listCarColorImage = await CarsDAO.GetInstance().GetCarColorsByCarId(id);
+                    if (listCarColorImage == null || listCarColorImage.Count == 0)
                     {
                         return BadRequest(ResponseHelper.ResponseError(400, "Color image of car is required", false, null));
                     }
+                    if (car.SpecImage == null)
+                    {
+                        return BadRequest(ResponseHelper.ResponseError(400, "Specifications image of car is required", false, null));
+                    }
+
                     car.IsShowed = adminCarDTO.IsShowed;
                 }
                 else
@@ -753,6 +758,18 @@ namespace WebAPI.Controllers
                         StatusCode = 400,
                         Message = "Invalid file type",
                         Success = false
+                    });
+                }
+
+                var isCarColorImageExist = await CarsDAO.GetInstance().CheckColorImageExist(carId, color);
+                if (isCarColorImageExist)
+                {
+                    return BadRequest(new DataResponse
+                    {
+                        StatusCode = 400,
+                        Message = "Color already exists",
+                        Success = false,
+                        Data = null
                     });
                 }
 
