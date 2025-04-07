@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styles from "./TestDrive.module.scss"; // import style module
 import { postTestDriveRegistration } from "../../services/TestDriveRegistrationService"; // Import hàm API
 
-import * as adminCarServices from "../../services/AdminCarServices";
+import * as carServices from "../../services/CarService";
 
 const VinFastLogo = "/logoJPG-removebg-preview.png";
 
@@ -30,14 +30,15 @@ const TestDriveRegistration = () => {
   // Fetch data from server
   const fetchData = async () => {
     try {
-      const response = await adminCarServices.userGetAllCars();
+      const response = await carServices.getCar();
       if (response.statusCode !== 200) {
         setListCar([]);
       } else {
-        console.log("all car:", response.data);
-        setListCar(response.data);
+        console.log("all car:", JSON.parse(response.data));
+        setListCar(JSON.parse(response.data));
       }
     } catch (error) {
+      setListCar([]);
       console.error("Failed to fetch users:", error);
     }
   };
@@ -152,8 +153,8 @@ const TestDriveRegistration = () => {
               required
             >
               {listCar.map((car) => (
-                <option key={car.id} value={car.id}>
-                  {car.model}
+                <option key={car.Id} value={car.Id}>
+                  {car.Name}
                 </option>
               ))}
             </select>

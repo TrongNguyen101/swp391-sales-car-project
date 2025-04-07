@@ -5,7 +5,7 @@ export const getCar = async () => {
     const response = await request.get("/api/Cars");
     return response.data;
   } catch (error) {
-    return error.response;
+    return error.response.data;
   }
 };
 
