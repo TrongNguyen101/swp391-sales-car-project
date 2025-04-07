@@ -22,28 +22,31 @@ function DashboardLayout({ children }) {
     if (!token) {
       navigate("/login");
     } else {
-      if (userData.roleId !== 1 && userData.roleId !== 3) {
-        navigate("/login");
+      if (managerRoldeId) {
+        if (managerRoldeId !== 1 && managerRoldeId !== 3) {
+          navigate("/login");
+        }
       }
     }
     // Optionally, add token validation logic here (e.g., check expiration)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [token, navigate]); // Re-run if token or navigate changes
+  }, [token, managerRoldeId]); // Re-run if token or navigate changes
 
   // Render only if token exists
   if (!token) return null; // Prevent rendering before redirect
-
   return (
     <div className={cx("warpper_dashboard")}>
-      <div className={cx("container_dashboard")}>
-        <div className={cx("container_dashboard--Sidebar")}>
-          <SidebarDashboard managerRoleId={managerRoldeId} />
+      {managerRoldeId && (
+        <div className={cx("container_dashboard")}>
+          <div className={cx("container_dashboard--Sidebar")}>
+            <SidebarDashboard managerRoleId={managerRoldeId} />
+          </div>
+          <div className={cx("container_dashboard--Content")}>
+            <Overview />
+            {children}
+          </div>
         </div>
-        <div className={cx("container_dashboard--Content")}>
-          <Overview />
-          {children}
-        </div>
-      </div>
+      )}
     </div>
   );
 }

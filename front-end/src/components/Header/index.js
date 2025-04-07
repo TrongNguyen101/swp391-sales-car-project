@@ -102,6 +102,7 @@ function HeaderComponent() {
     localStorage.removeItem("priceBatteryOwn");
     localStorage.removeItem("remainingAmountRent");
     localStorage.removeItem("remainingAmountOwn");
+    localStorage.clear();
     refetch(); // Refetch user data
     setIsLoggedIn(false);
     handleClose();

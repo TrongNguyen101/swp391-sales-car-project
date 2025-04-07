@@ -86,7 +86,7 @@ function AccessoryDetailPage() {
         setMessage("Added to cart successfully!");
         setOpenDialog(true);
       } else {
-        setMessage("Failed to add to cart!");
+        setMessage(response.message);
         setOpenDialog(true);
       }
     } catch (error) {

@@ -26,6 +26,7 @@ const AccessoryGalleryComponent = ({
       );
       if (response.statusCode !== 200) {
         setImages([]);
+        setSelectedImage(null);
       } else {
         setImages(response.data);
         setSelectedImage(response.data[0].colorImage);

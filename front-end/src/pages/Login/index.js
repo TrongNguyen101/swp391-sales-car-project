@@ -344,7 +344,6 @@ function LoginPage() {
     setOpenForgotPasswordDialog(true);
   };
 
-  console.log("error password: ", errorPassword);
   return (
     <div className={cx("container")}>
       {/* Form login */}
