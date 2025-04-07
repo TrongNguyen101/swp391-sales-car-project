@@ -104,7 +104,13 @@ function UpdateImagessColorCar({
 
   // Show comfirm delete image dialog
   const handleOpenConfirmDeleteDialog = () => {
-    setOpenConfirmDeleteDialog(true);
+    if (!selectedIdImageColor) {
+      setMessage("No image selected to delete");
+      setInforDialogOpen(true);
+      return;
+    } else {
+      setOpenConfirmDeleteDialog(true);
+    }
   };
   // Close comfirm delete image dialog
   const handleCloseConfirmDeleteDialog = () => {

@@ -31,7 +31,6 @@ function AdminManageImportExportPage() {
       if (response.statusCode !== 200) {
         setRows([]);
       } else {
-        console.log("all history:", response.data);
         setRows(response.data);
         setSearchRows(response.data);
       }

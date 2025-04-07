@@ -71,6 +71,11 @@ function CreateCarPage() {
       isValid = false;
     }
 
+    if (priceDeposite > priceBatteryRental || priceDeposite > priceBatteryOwn) {
+      setErrorPriceDeposite("Price Deposite must be less than Price Battery Rental and Price Battery Own");
+      isValid = false;
+    }
+
     if (!quantity || quantity <= 0) {
       setErrorQuantity("Quantity must be greater than 0");
       isValid = false;

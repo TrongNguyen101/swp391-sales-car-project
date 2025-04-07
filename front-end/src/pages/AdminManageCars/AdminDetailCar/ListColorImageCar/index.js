@@ -18,7 +18,7 @@ function ListColorImageCarComponent({
 
   const handleColorChange = (index) => {
     setSelectedColor(index);
-    selectedIdImageColor(colors[index].Id);
+    selectedIdImageColor(colors[index].id);
   };
 
   const settings = {
@@ -45,8 +45,9 @@ function ListColorImageCarComponent({
       if (response.statusCode !== 200) {
         setColors([]);
       } else {
-        setColors(JSON.parse(response.data));
-        selectedIdImageColor(JSON.parse(response.data)[0].Id);
+        console.log("image car color:", response.data);
+        setColors(response.data);
+        selectedIdImageColor(response.data[0].id);
       }
     } catch (error) {
       setColors([]);
@@ -55,6 +56,7 @@ function ListColorImageCarComponent({
 
   useEffect(() => {
     fetchCarColors(carId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [carId, requestFecthColorOfCar]);
 
   return (
@@ -66,7 +68,7 @@ function ListColorImageCarComponent({
               {colors.map((color, index) => (
                 <div className={cx("car-color-item")} key={index}>
                   <img
-                    src={`https://localhost:7005/api/Images/ColorDetail/${color.ColorImage}`}
+                    src={`https://localhost:7005/api/Images/ColorDetail/${color.colorImage}`}
                     alt={color.ColorName}
                   />
                 </div>
@@ -76,8 +78,8 @@ function ListColorImageCarComponent({
             <Slider {...settings1Image} key={selectedColor}>
               <div className={cx("car-color-item")} key={0}>
                 <img
-                  src={`https://localhost:7005/api/Images/ColorDetail/${colors[0].ColorImage}`}
-                  alt={colors[0].ColorName}
+                  src={`https://localhost:7005/api/Images/ColorDetail/${colors[0].colorImage}`}
+                  alt={colors[0].colorName}
                 />
               </div>
             </Slider>
@@ -93,8 +95,8 @@ function ListColorImageCarComponent({
               onClick={() => handleColorChange(index)}
             >
               <img
-                src={`https://localhost:7005/api/Images/Color/${color.ColorImage}`}
-                alt={color.ColorName}
+                src={`https://localhost:7005/api/Images/Color/${color.colorImage}`}
+                alt={color.colorName}
               />
             </div>
           ))}

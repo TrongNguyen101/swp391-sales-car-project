@@ -36,7 +36,7 @@ const AdminManageDepositTransactionsPage = () => {
         setSearchRows(response.data);
       }
     } catch (error) {
-      console.error("Failed to fetch invoice:", error);
+      console.log("Failed to fetch invoice: ", error);
     }
   };
 

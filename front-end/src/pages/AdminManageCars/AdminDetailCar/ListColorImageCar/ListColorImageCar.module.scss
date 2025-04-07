@@ -62,7 +62,7 @@
     transform: scale(1.1);
   }
   &.active {
-    border: none;
+    border: 1px solid var(--primary-color);
   }
   img {
     width: 100%;

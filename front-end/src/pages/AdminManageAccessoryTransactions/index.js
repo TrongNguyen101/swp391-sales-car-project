@@ -36,7 +36,6 @@ const AdminManageAccessoryTransactionsPage = () => {
       } else {
         setAllRows(response.data);
         setSearchRows(response.data);
-        console.log("Fetched data:", response.data);
       }
     } catch (error) {
       console.error("Failed to fetch invoice:", error);

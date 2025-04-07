@@ -2,9 +2,15 @@ import * as request from "../../utils/AccessoryRequest";
 
 export const adminGetAllImportExportHistories = async () => {
   try {
-    const response = await request.get("/api/AdminImportExportProduct/getAllImportExportProductHistory");
+    const token = localStorage.getItem("Bearer"); // Use a more descriptive key
+    const endpoint = "/api/AdminImportExportProduct/getAllImportExportProductHistory";
+    const response = await request.get(endpoint, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     return response.data;
   } catch (error) {
-    return error.response;
+    return error.response.data;
   }
 };

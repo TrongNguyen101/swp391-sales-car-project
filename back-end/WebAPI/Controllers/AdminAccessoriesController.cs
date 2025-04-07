@@ -342,7 +342,26 @@ namespace WebAPI.Controllers
                 accessory.Material = adminAccessoryDTO.Material;
                 accessory.Color = adminAccessoryDTO.Color;
                 accessory.Warranty = adminAccessoryDTO.Warranty;
-                accessory.IsShowed = adminAccessoryDTO.IsShowed;
+
+
+                if (accessory.IsShowed == false && adminAccessoryDTO.IsShowed == true)
+                {
+                    if (accessory.Image == null)
+                    {
+                        return BadRequest(ResponseHelper.ResponseError(400, "Card image is required", false, null));
+                    }
+                    var listImage = await AccessoriesDAO.GetInstance().GetAccessoryImagesByAccessoryId(id);
+                    if (listImage == null || listImage.Count == 0)
+                    {
+                        return BadRequest(ResponseHelper.ResponseError(400, "Detail image is required", false, null));
+                    }
+
+                    accessory.IsShowed = adminAccessoryDTO.IsShowed;
+                }
+                else
+                {
+                    accessory.IsShowed = adminAccessoryDTO.IsShowed;
+                }
 
                 if (await AccessoriesDAO.GetInstance().UpdateAccessory(accessory))
                 {
