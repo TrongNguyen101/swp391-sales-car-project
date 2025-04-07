@@ -43,7 +43,7 @@ export const getAllCartItems = async (token) => {
     });
     return response.data.value;
   } catch (error) {
-    return error.response;
+    return error.response.data.value;
   }
 };
 

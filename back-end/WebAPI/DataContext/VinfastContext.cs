@@ -822,7 +822,7 @@ namespace WebAPI.DataContext
                         Origin = "Vietnam",
                         Dimensions = "100x80x5cm",
                         Weight = 2.0,
-                        Material = "Ceramic is coated with Titanium Nitride technology.",
+                        Material = "Titanium",
                         Color = "Black",
                         Warranty = "6 months",
                         Description = "VF x 3M heat insulation film products help insulate, block infrared radiation, eliminate UV rays, effectively reduce glare to improve the customer experience in the car, protect customers from harmful rays as well as increase the durability of the car's interior. Warranty"

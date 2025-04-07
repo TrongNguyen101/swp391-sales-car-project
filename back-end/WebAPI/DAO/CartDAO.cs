@@ -76,7 +76,7 @@ namespace WebAPI.DAO
             {
                 using (var context = new VinfastContext())
                 {
-                    context.Entry(cartItem).State = EntityState.Modified;
+                    context.CartItems.Update(cartItem);
                     await context.SaveChangesAsync();
                     return true;
                 }
