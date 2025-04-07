@@ -244,6 +244,7 @@ function UpdateAccessoryPage() {
                   setName(e.target.value);
                   setErrorName("");
                 }}
+                disabled
                 error={!!errorName}
                 helperText={errorName || ""}
               />
@@ -376,7 +377,7 @@ function UpdateAccessoryPage() {
                   type="number"
                   label="Add More Quantity"
                   spellCheck="false"
-                  value={addQuantity || 0}
+                  value={addQuantity}
                   onChange={(e) => {
                     setAddQuantity(e.target.value);
                     setErrorAddQuantity("");

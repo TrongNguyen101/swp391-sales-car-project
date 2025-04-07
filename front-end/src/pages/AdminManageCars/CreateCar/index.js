@@ -46,46 +46,67 @@ function CreateCarPage() {
 
     let isValid = true;
 
+    const rentalNum = Number(priceBatteryRental);
+    const ownNum = Number(priceBatteryOwn);
+    const depositNum = Number(priceDeposite);
+    const seatsNum = Number(seat);
+    const quantityNum = Number(quantity);
+
     if (!model) {
       setErrorModel("Model is required");
       isValid = false;
     }
 
-    if (!seat || seat <= 3 || seat > 9) {
-      setErrorSeats("Seats must be greater than 3, less than 10");
+    if (!seat || seatsNum <= 3 || seatsNum > 9 || !Number.isInteger(seatsNum)) {
+      setErrorSeats("Seats must be integer number greater than 3, less than 10");
       isValid = false;
     }
 
-    if (!priceBatteryRental || priceBatteryRental <= 0) {
+    if (!priceBatteryRental || rentalNum <= 0) {
       setErrorPriceBatteryRental("Price Battery Rental must be greater than 0");
       isValid = false;
     }
 
-    if (!priceBatteryOwn || priceBatteryOwn <= 0) {
+    if (!priceBatteryOwn || ownNum <= 0) {
       setErrorPriceBatteryOwn("Price Battery Own must be greater than 0");
       isValid = false;
     }
 
-    if (!priceDeposite || priceDeposite <= 0) {
+    if (!priceDeposite || depositNum <= 0) {
       setErrorPriceDeposite("Price Deposite must be greater than 0");
       isValid = false;
     }
-    console.log("deposit: ",priceDeposite, " rental: " ,priceBatteryRental," own: ", priceBatteryOwn);
 
-    if (priceDeposite > priceBatteryRental) {
-      setErrorPriceDeposite("Price Deposite must be less than Price Battery Rental and Price Battery Own");
+    if (rentalNum >= ownNum) {
+      setErrorPriceBatteryOwn(
+        "Price battery own must be greater than price battery rental"
+      );
+      setErrorPriceBatteryRental(
+        "Price battery rental must be less than price battery own"
+      );
       isValid = false;
     }
 
-    if (priceDeposite > priceBatteryOwn) {
-      setErrorPriceDeposite("Price Deposite must be less than Price Battery Rental and Price Battery Own");
+    if (depositNum >= rentalNum) {
+      setErrorPriceDeposite(
+        "Price Deposite must be less than price battery rental"
+      );
       isValid = false;
     }
 
-    if (!quantity || quantity <= 0) {
-      setErrorQuantity("Quantity must be greater than 0");
+    if (!quantity || quantityNum <= 0 || !Number.isInteger(quantityNum)) {
+      setErrorQuantity("Quantity must be integer number  greater than 0");
       isValid = false;
     }
+
+    console.log(
+      "deposit: ",
+      priceDeposite,
+      " rental: ",
+      priceBatteryRental,
+      " own: ",
+      priceBatteryOwn
+    );
 
     if (isValid) {
       fetchCreateCar();
@@ -119,7 +140,7 @@ function CreateCarPage() {
       setMessage("Internal server error. Failed to create car");
       setOpenDialog(true);
       setStatusResponse(false);
-      return
+      return;
     }
   };
 

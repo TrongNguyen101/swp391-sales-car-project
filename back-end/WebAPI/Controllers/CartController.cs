@@ -56,6 +56,19 @@ namespace WebAPI.Controllers
                 {
                     return NotFound(ResponseHelper.Response(404, "No cart item found", false, null));
                 }
+                foreach (var cartItem in carts)
+                {
+                    var accessory = await AccessoriesDAO.GetInstance().GetAccessoryById(cartItem.ProductId);
+                    if (accessory.Quantity <= 0)
+                    {
+                        await CartDAO.GetInstance().DeleteCartItem(cartItem);
+                    }
+                    else if (cartItem.Quantity > accessory.Quantity)
+                    {
+                        cartItem.Quantity = accessory.Quantity;
+                        await CartDAO.GetInstance().UpdateCartItem(cartItem);
+                    }
+                }
                 var cartDTOs = AutoMapper.ToCartItemDTOList(carts);
                 return Ok(ResponseHelper.Response(200, "Get all cart item successfully", true, cartDTOs));
             }

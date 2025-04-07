@@ -47,7 +47,6 @@ function CartPage() {
         setCartItems([]);
       } else {
         setCartItems(response.data);
-        console.log(response.data);
         localStorage.setItem("cartItems", JSON.stringify(response.data));
       }
     } catch (error) {
@@ -121,10 +120,9 @@ function CartPage() {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const decoded = DecodePayload.decodePayload(token);
     navigate(`/invoice/${decoded.sub}`);
-    console.log(decoded);
   };
 
   const handleCloseDialog = () => {

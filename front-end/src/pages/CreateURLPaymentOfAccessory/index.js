@@ -50,7 +50,8 @@ function CreateURLPaymentOfAccessory() {
     try {
       const response = await cartService.getAllCartItems(token);
       if (response.statusCode !== 200) {
-        setCartItems([]);
+        setMessage("Some products are bought out of stock. Please check again");
+        setOpenErrorDialog(true);
       } else {
         console.log(response.data);
         localStorage.setItem("cartItems", JSON.stringify(response.data));
@@ -75,7 +76,7 @@ function CreateURLPaymentOfAccessory() {
     // eslint-disable-next-line
   }, [userData]);
 
-  const handleOrderSubmit = (event) => {
+  const handleOrderSubmit = async (event) => {
     event.preventDefault();
 
     let isValid = true;
@@ -101,7 +102,45 @@ function CreateURLPaymentOfAccessory() {
     }
 
     if (isValid) {
-      fetchCreateURLPaymentOfAccessory();
+      // get current total item in cart
+      const currentTotalItem = cartItems.reduce(
+        (sum, item) => sum + item.quantity,
+        0
+      );
+
+      // get the number of items in the cart after checking
+      const numberOfItems = await checkNumberOfItems();
+      
+      if (numberOfItems === -1) {
+        setMessage("Having error when checking number of items in cart");
+        setOpenErrorDialog(true);
+      } else if (numberOfItems < currentTotalItem) {
+        // check if the number of items in the cart is less than the current total item
+        // if yes, that means some items in the cart are bought out of stock
+        setMessage("Some products are bought out of stock. Please check again");
+        setOpenErrorDialog(true);
+      } else {
+        // check if the number of items in the cart is equal to the current total item
+        // if yes, create the payment URL. that means the items in the cart are still available
+        fetchCreateURLPaymentOfAccessory();
+      }
+    }
+  };
+
+  // refresh the cart items to check the number of items in the cart
+  const checkNumberOfItems = async () => {
+    try {
+      const response = await cartService.getAllCartItems(token);
+      if (response.statusCode !== 200) {
+        return -1;
+      } else {
+        //sum the quantity of all items in the cart
+        const numberOfItems = response.data.reduce((sum, item) => sum + item.quantity, 0);
+        //the number of items in the cart 
+        return numberOfItems;
+      }
+    } catch (error) {
+      return -1;
     }
   };
 
@@ -145,6 +184,7 @@ function CreateURLPaymentOfAccessory() {
 
   const handleCloseErrorDialog = () => {
     setOpenErrorDialog(false);
+    navigate("/cart");
   };
 
   const formatPrice = (price) => {
@@ -371,7 +411,7 @@ function CreateURLPaymentOfAccessory() {
         onClose={handleCloseDialog}
         aria-labelledby="alert-dialog-slide-title"
         aria-describedby="alert-dialog-slide-description"
-        sx={{ "& .MuiDialog-paper": { width: "440px", height: "140px" } }}
+        sx={{ "& .MuiDialog-paper": { width: "440px" } }}
       >
         <DialogTitle
           id="alert-dialog-slide-title"
@@ -384,7 +424,7 @@ function CreateURLPaymentOfAccessory() {
         >
           {message}
         </DialogTitle>
-        <DialogActions sx={{ justifyContent: "center" }}>
+        <DialogActions sx={{ justifyContent: "center", paddingBottom: "20px" }}>
           <Button
             variant="contained"
             onClick={handleCloseErrorDialog}

@@ -271,7 +271,7 @@ function AccessoryDetailPage() {
           onClose={handleCloseDialog}
           aria-labelledby="alert-dialog-slide-title"
           aria-describedby="alert-dialog-slide-description"
-          sx={{ "& .MuiDialog-paper": { width: "340px" } }}
+          sx={{ "& .MuiDialog-paper": { width: "540px" } }}
         >
           <DialogTitle
             id="alert-dialog-slide-title"

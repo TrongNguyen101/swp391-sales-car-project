@@ -105,33 +105,51 @@ function UpdateCarPage() {
 
     let isValid = true;
 
-    if (!seat || seat <= 3 || seat > 9) {
-      setErrorSeats("Seats must be greater than 3, less than 10");
+    const rentalNum = Number(priceBatteryRental);
+    const ownNum = Number(priceBatteryOwn);
+    const depositNum = Number(priceDeposite);
+    const seatsNum = Number(seat);
+    const quantityNum = Number(quantity);
+
+    if (!seat || seatsNum <= 3 || seatsNum > 9 || !Number.isInteger(seatsNum)) {
+      setErrorSeats("Seats must be integer number greater than 3, less than 10");
       isValid = false;
     }
 
-    if (!priceBatteryRental || priceBatteryRental <= 0) {
+    if (!priceBatteryRental || rentalNum <= 0) {
       setErrorPriceBatteryRental("Price Battery Rental must be greater than 0");
       isValid = false;
     }
 
-    if (!priceBatteryOwn || priceBatteryOwn <= 0) {
+    if (!priceBatteryOwn || ownNum <= 0) {
       setErrorPriceBatteryOwn("Price Battery Own must be greater than 0");
       isValid = false;
     }
 
-    if (!priceDeposite || priceDeposite <= 0) {
+    if (!priceDeposite || depositNum <= 0) {
       setErrorPriceDeposite("Price Deposite must be greater than 0");
       isValid = false;
     }
 
-    if (priceDeposite > priceBatteryRental || priceDeposite > priceBatteryOwn) {
-      setErrorPriceDeposite("Price Deposite must be less than Price Battery Rental and Price Battery Own");
+    if (rentalNum >= ownNum) {
+      setErrorPriceBatteryOwn(
+        "Price battery own must be greater than price battery rental"
+      );
+      setErrorPriceBatteryRental(
+        "Price battery rental must be less than price battery own"
+      );
       isValid = false;
     }
 
-    if (!quantity || quantity <= 0) {
-      setErrorQuantity("Quantity must be greater than 0");
+    if (depositNum >= rentalNum) {
+      setErrorPriceDeposite(
+        "Price Deposite must be less than price battery rental"
+      );
+      isValid = false;
+    }
+
+    if (!quantity || quantityNum <= 0 || !Number.isInteger(quantityNum)) {
+      setErrorQuantity("Quantity must be integer number  greater than 0");
       isValid = false;
     }
 
@@ -151,27 +169,15 @@ function UpdateCarPage() {
   return (
     <>
       {/* wrapper */}
-      <Box sx={{ padding: "20px", backgroundColor: "#f7f7f7" }}>
+      <Box sx={{ padding: "0 40px" }}>
         <Box>
-          <Typography sx={{ fontWeight: "900", fontSize: "36px" }}>
-            Update Car
+          <Typography sx={{ fontWeight: "900", fontSize: "36px", paddingBottom: "20px" }}>
+            Update Car {model}
           </Typography>
         </Box>
-        <Box
-          sx={{
-            textAlign: "center",
-            boxShadow: "rgba(0, 0, 0, 0.08) 0px 0.625rem 1.25rem",
-            backgroundColor: "#ffffff",
-            margin: "20px auto",
-            width: "90%",
-          }}
-        >
-          <Typography sx={{ fontWeight: "900", fontSize: "36px" }}>
-            {model}
-          </Typography>
-        </Box>
+        
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-          <Box sx={{ width: "500px", margin: "10px 0", padding: "0 10px" }}>
+          <Box sx={{ width: "50%", margin: "10px 0", padding: "0 10px" }}>
             <FormControl fullWidth sx={{ marginBottom: "1em" }}>
               <InputLabel id="show-model">Publish</InputLabel>
               <Select
@@ -222,7 +228,7 @@ function UpdateCarPage() {
               disabled
             />
           </Box>
-          <Box sx={{ width: "500px", margin: "10px 0", padding: "0 10px" }}>
+          <Box sx={{ width: "50%", margin: "10px 0", padding: "0 10px" }}>
             <TextField
               sx={{ width: "100%", marginBottom: "1em" }}
               type="text"
@@ -280,9 +286,8 @@ function UpdateCarPage() {
             />
           </Box>
         </Box>
-        <Box sx={{ width: "100%", margin: "auto", textAlign: "center" }}>
+        <Box sx={{ width: "100%", margin: "auto", textAlign: "left" }}>
           <Button
-            sx={{ width: "300px" }}
             variant="contained"
             color="primary"
             onClick={handleFormSubmit}
