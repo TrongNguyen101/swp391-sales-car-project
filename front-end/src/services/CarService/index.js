@@ -30,7 +30,7 @@ export const userGetCarById = async (id) => {
 
 export const getCarColorById = async (carId) => {
   try {
-    const response = await request.getById(`/api/AdminCars/adminGetColor/${carId}`);
+    const response = await request.getById(`/api/Cars/Color/${carId}`);
     return response.data;
   } catch (error) {
     return error.response;

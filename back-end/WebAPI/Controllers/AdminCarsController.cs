@@ -194,6 +194,16 @@ namespace WebAPI.Controllers
                 }
                 #endregion
 
+                var car = await CarsDAO.GetInstance().GetCarById(adminCarId);
+                if (car == null)
+                {
+                    return NotFound(new DataResponse
+                    {
+                        StatusCode = 404,
+                        Message = "Car not found",
+                        Success = false
+                    });
+                }
                 // Admin gets all car colors by car id
                 var adminCarColors = await CarsDAO.GetInstance().GetCarColorsByCarId(adminCarId);
                 if (adminCarColors == null || adminCarColors.Count == 0)
