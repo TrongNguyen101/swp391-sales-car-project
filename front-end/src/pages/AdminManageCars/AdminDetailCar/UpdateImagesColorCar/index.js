@@ -60,7 +60,7 @@ function UpdateImagessColorCar({
       const response = await adminCarServices.uploadColorImageOfCar(formData);
 
       if (response.statusCode !== 200) {
-        setMessage("Failed to upload image");
+        setMessage(response.message);
         setInforDialogOpen(true);
       } else {
         setMessage("Image uploaded successfully");
@@ -130,7 +130,7 @@ function UpdateImagessColorCar({
           width: "100%",
           backgroundColor: "#f9f9f9",
           padding: "20px 0",
-          borderBottom: "10px solid #ffffff"
+          borderBottom: "10px solid #ffffff",
         }}
       >
         <Typography sx={{ fontWeight: "500", fontSize: "24px" }}>

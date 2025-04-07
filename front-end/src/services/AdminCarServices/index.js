@@ -202,7 +202,7 @@ export const uploadColorImageOfCar = async (formData) => {
     });
     return response.data;
   } catch (error) {
-    return error.response;
+    return error.response.data;
   }
 };
 export const deleteColorImageOfCar = async (idImageColor) => {
