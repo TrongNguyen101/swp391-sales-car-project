@@ -93,13 +93,13 @@ function LoginPage() {
         setOpenInformationDialog(true);
       }
       if (response.statusCode === 404) {
-        setErrorEmail(response.data.message);
+        setErrorEmail(response.message);
       }
       if (response.statusCode === 400) {
-        alert(response.data.message);
+        alert(response.message);
       }
       if (response.statusCode === 401) {
-        setErrorPassword(response.data.message);
+        setErrorPassword(response.message);
       }
     } catch (error) {
       if (error) {
@@ -336,6 +336,8 @@ function LoginPage() {
     setOpenForgotPasswordDialog(true);
   };
 
+
+  console.log("error password: ", errorPassword);
   return (
     <div className={cx("container")}>
       {/* Form login */}
