@@ -125,7 +125,7 @@ function RegisterPage() {
 
   const handleCheckEmail = async (emailNeedToCheck) => {
     try {
-      const response = await authService.checkEmail(emailNeedToCheck);
+      const response = await authService.checkEmailExistForCreateAccount(emailNeedToCheck);
       if (response.statusCode === 404) {
         setErrorEmail("");
         setOpenWaitingDialog(true); // Show waiting dialog
