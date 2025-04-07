@@ -82,7 +82,7 @@ namespace WebAPI.Controllers
                 // admin role id = 1
                 // customer role id = 2
                 // staff role id = 3
-                var (isSuccess, errorMessage, claims) = JwtTokenHelper.AuthenticateAndAuthorize(HttpContext, 3);
+                var (isSuccess, errorMessage, claims) = JwtTokenHelper.AuthenticateAndAuthorize(HttpContext, 1, 3);
                 if (!isSuccess)
                 {
                     // Return error message if the user is not authenticated or authorized

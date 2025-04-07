@@ -26,7 +26,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faSearch } from "@fortawesome/free-solid-svg-icons";
 
 import * as testDriveRegisterService from "../../services/TestDriveRegistrationService";
-import * as adminCarServices from "../../services/AdminCarServices";
+import * as carServices from "../../services/CarService";
 
 const AdminManageTestDrivenPage = () => {
   const [allRows, setAllRows] = useState([]);
@@ -65,13 +65,15 @@ const AdminManageTestDrivenPage = () => {
 
   const fetchCarData = async () => {
     try {
-      const response = await adminCarServices.staffGetAllCars();
+      const response = await carServices.getCar();
       if (response.statusCode !== 200) {
         setListCar([]);
       } else {
-        setListCar(response.data);
+        setListCar(JSON.parse(response.data));
+        console.log("all car:", JSON.parse(response.data));
       }
     } catch (error) {
+      setListCar([]);
       console.error("Failed to fetch users:", error);
     }
   };
@@ -454,8 +456,8 @@ const AdminManageTestDrivenPage = () => {
               }}
             >
               {listCar.map((car) => (
-                <MenuItem key={car.id} value={car.model}>
-                  {car.model}
+                <MenuItem key={car.Id} value={car.Name}>
+                  {car.Name}
                 </MenuItem>
               ))}
             </Select>

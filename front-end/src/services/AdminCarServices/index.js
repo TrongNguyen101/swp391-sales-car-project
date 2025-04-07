@@ -30,15 +30,6 @@ export const staffGetAllCars = async () => {
   }
 };
 
-export const userGetAllCars = async () => {
-  try {
-    const endpoint = "/api/AdminCars/UserGetAllCars";
-    const response = await request.get(endpoint);
-    return response.data;
-  } catch (error) {
-    return error.response.data;
-  }
-};
 
 export const adminGetCarById = async (id) => {
   try {
