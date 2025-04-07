@@ -102,21 +102,15 @@ function CreateCarPage() {
         setStatusResponse(true);
         setOpenDialog(true);
       } else {
-        if (response.status === 400) {
-          setMessage("Failed to create car");
-          setOpenDialog(true);
-          setStatusResponse(false);
-          return;
-        }
         setStatusResponse(response.success);
         setMessage(response.message);
         setOpenDialog(true);
       }
     } catch (error) {
       if (error) {
-        console.log("loi tao car", error);
+        console.log("Internal server error", error);
       }
-      setMessage("Failed to create car");
+      setMessage("Internal server error. Failed to create car");
       setOpenDialog(true);
       setStatusResponse(false);
       return

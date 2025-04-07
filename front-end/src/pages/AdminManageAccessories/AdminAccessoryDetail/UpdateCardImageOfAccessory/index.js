@@ -61,7 +61,7 @@ function UpdateCardImageOfAccessoryComponent({
         );
 
         if (response.statusCode !== 200) {
-          setMessage("Failed to upload image");
+          setMessage(response.message);
           setInforDialogOpen(true);
         } else {
           setMessage("Image uploaded successfully");
