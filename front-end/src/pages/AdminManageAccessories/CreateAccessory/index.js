@@ -155,7 +155,7 @@ function CreateAccessoryPage() {
         setOpenDialog(true);
         setStatusResponse(true);
       } else {
-        setMessage("Create accessory failed");
+        setMessage(response.message);
         setOpenErrorDialog(true);
         setStatusResponse(false);
       }
@@ -234,12 +234,12 @@ function CreateAccessoryPage() {
                       label="Select Category"
                     >
                       {categories
-                      .filter((cate) => cate.id !== 2)
-                      .map((cate) => (
-                        <MenuItem key={cate.id} value={cate.id}>
-                          {cate.name}
-                        </MenuItem>
-                      ))}
+                        .filter((cate) => cate.id !== 2)
+                        .map((cate) => (
+                          <MenuItem key={cate.id} value={cate.id}>
+                            {cate.name}
+                          </MenuItem>
+                        ))}
                     </Select>
                     <FormHelperText>{errorCategoryId || ""}</FormHelperText>
                   </FormControl>

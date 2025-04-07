@@ -45,7 +45,7 @@ function UpdateImagesDetailOfAccessoriesComponent({
         await adminAccessoryServices.uploadImageDetailOfAccessory(formData);
 
       if (response.statusCode !== 200) {
-        setMessage("Failed to upload image");
+        setMessage(response.message);
         setInforDialogOpen(true);
       } else {
         setMessage("Image uploaded successfully");
@@ -73,7 +73,7 @@ function UpdateImagesDetailOfAccessoriesComponent({
         );
       if (response.statusCode !== 200) {
         setOpenConfirmDeleteDialog(false);
-        setMessage("Failed to delete image");
+        setMessage(response.message);
         setInforDialogOpen(true);
       } else {
         fetchCarDetails();

@@ -760,6 +760,17 @@ namespace WebAPI.Controllers
                         Success = false
                     });
                 }
+                if (car.IsShowed == true)
+                {
+                    return BadRequest(new DataResponse
+                    {
+                        StatusCode = 400,
+                        Message = "The car is being displayed, hide it before deleting.",
+                        Success = false,
+                        Data = null
+                    });
+                }
+
                 // check file type
                 var extension = Path.GetExtension(colorBigImage.FileName).ToLowerInvariant();
                 var extension2 = Path.GetExtension(colorSmallImage.FileName).ToLowerInvariant();
@@ -908,6 +919,19 @@ namespace WebAPI.Controllers
 
                 var imageColorOfCar = await CarsDAO.GetInstance().GetColorImageOfCarById(idImageColor);
 
+                var car = await CarsDAO.GetInstance().GetCarById(imageColorOfCar.CarId);
+
+                if (car.IsShowed == true)
+                {
+                    return BadRequest(new DataResponse
+                    {
+                        StatusCode = 400,
+                        Message = "The car is being displayed, hide it before deleting.",
+                        Success = false,
+                        Data = null
+                    });
+                }
+                
                 if (imageColorOfCar == null)
                 {
                     return NotFound(ResponseHelper.ResponseError(404, "Image color of car is not found", false, null));

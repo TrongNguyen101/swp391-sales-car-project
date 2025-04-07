@@ -394,7 +394,7 @@ namespace WebAPI.Controllers
 
 
         [HttpPut("adminUpdateImageAccessory/{adminAccessoryId}")]
-        public async Task<IActionResult> AdminUpdateImageCar(int adminAccessoryId, IFormFile? cardImage)
+        public async Task<IActionResult> AdminUpdateCardImageAccessory(int adminAccessoryId, IFormFile? cardImage)
         {
             try
             {
@@ -474,7 +474,7 @@ namespace WebAPI.Controllers
                     return BadRequest(new DataResponse
                     {
                         StatusCode = 400,
-                        Message = "The car is being displayed, hide it before deleting.",
+                        Message = "The accessory is being displayed, hide it before deleting.",
                         Success = false,
                         Data = null
                     });
@@ -535,6 +535,17 @@ namespace WebAPI.Controllers
                     return NotFound(ResponseHelper.ResponseError(404, "Accessory not found", false, null));
                 }
 
+                if (accessory.IsShowed == true)
+                {
+                    return BadRequest(new DataResponse
+                    {
+                        StatusCode = 400,
+                        Message = "The accessory is being displayed, hide it before deleting.",
+                        Success = false,
+                        Data = null
+                    });
+                }
+
                 // save image
                 string imageName = await SaveImageFileAsync(detailImage, _uploadPathforCardImageAccessories);
 
@@ -571,7 +582,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpDelete("adminDeleteDetailImageAccessory/{idDetailImage}")]
-        public async Task<ActionResult> AdminDeleteColorImageCar(int idDetailImage)
+        public async Task<ActionResult> AdminDeleteDetailImageAccessory(int idDetailImage)
         {
             try
             {
@@ -594,10 +605,23 @@ namespace WebAPI.Controllers
 
                 if (imageDetail == null)
                 {
-                    return NotFound(ResponseHelper.ResponseError(404, "Image color of car is not found", false, null));
+                    return NotFound(ResponseHelper.ResponseError(404, "Image detail of accessory is not found", false, null));
                 }
 
-                // If image color of car existed, delete image color of car
+                var accessory = await AccessoriesDAO.GetInstance().GetAccessoryById(imageDetail.AccessoryId);
+
+                if (accessory.IsShowed == true)
+                {
+                    return BadRequest(new DataResponse
+                    {
+                        StatusCode = 400,
+                        Message = "The accessory is being displayed, hide it before deleting.",
+                        Success = false,
+                        Data = null
+                    });
+                }
+
+                // If image color of accessory existed, delete image color of car
                 if (await AccessoriesDAO.GetInstance().DeleteDetailImageAccessory(imageDetail))
                 {
                     return Ok(ResponseHelper.ResponseSuccess(200, "Delete dettails image of accessory successfully", true, null));

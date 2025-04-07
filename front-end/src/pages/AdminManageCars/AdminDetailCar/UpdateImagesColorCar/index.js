@@ -83,8 +83,9 @@ function UpdateImagessColorCar({
         selectedIdImageColor
       );
       if (response.statusCode !== 200) {
-        setMessage("Failed to delete image");
+        setMessage(response.message);
         setInforDialogOpen(true);
+        setOpenConfirmDeleteDialog(false);
       } else {
         fetchCarDetails();
         //hide confirm delete dialog
