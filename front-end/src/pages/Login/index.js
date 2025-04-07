@@ -96,7 +96,10 @@ function LoginPage() {
         setErrorEmail(response.message);
       }
       if (response.statusCode === 400) {
-        setInformationContent(response.data);
+        setInformationContent({
+          type: "error",
+          message: response.message,
+        });
         setOpenInformationDialog(true);
       }
       if (response.statusCode === 401) {
@@ -106,6 +109,10 @@ function LoginPage() {
       if (error) {
         console.log(error);
       }
+      setInformationContent({
+        type: "error",
+        message: "Internal server error. Please contact support",
+      });
     }
   };
 
@@ -336,7 +343,6 @@ function LoginPage() {
   const handleToFogotPassword = () => {
     setOpenForgotPasswordDialog(true);
   };
-
 
   console.log("error password: ", errorPassword);
   return (

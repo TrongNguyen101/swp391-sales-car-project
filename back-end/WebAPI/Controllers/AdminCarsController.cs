@@ -579,6 +579,18 @@ namespace WebAPI.Controllers
                         Success = false
                     });
                 }
+
+                if (car.IsShowed == true)
+                {
+                    return BadRequest(new DataResponse
+                    {
+                        StatusCode = 400,
+                        Message = "The car is being displayed, hide it before deleting.",
+                        Success = false,
+                        Data = null
+                    });
+                }
+
                 // Delete image of car
                 if (typeOfImage == "specificationsImage")
                 {

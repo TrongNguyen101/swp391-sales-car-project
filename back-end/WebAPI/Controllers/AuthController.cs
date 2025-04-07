@@ -75,11 +75,12 @@ namespace WebAPI.Controllers
             }
             catch (Exception e)
             {
+                Console.WriteLine("Error at Login function: " + e);
                 return BadRequest(new DataResponse
                 {
                     StatusCode = 400,
                     Success = false,
-                    Message = e.Message,
+                    Message = "Internal server error: Please contact support",
                 });
             }
         }
