@@ -97,7 +97,7 @@ function UpdateCardImageOfAccessoryComponent({
       );
       if (response.statusCode !== 200) {
         setOpenDialogAtUpdateCardAccessoryComponent(false);
-        setMessage("The attempt to delete the image failed.");
+        setMessage(response.message);
         setInforDialogOpen(true);
       } else {
         fetchAccessoryDetails();
@@ -106,7 +106,7 @@ function UpdateCardImageOfAccessoryComponent({
         setInforDialogOpen(true);
       }
     } catch (error) {
-      setMessage("The attempt to delete the image failed.");
+      setMessage("Internal server error. Please try again later.");
       setInforDialogOpen(true);
     }
   };

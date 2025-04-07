@@ -97,7 +97,7 @@ function UpdateCardCarComponent({
       );
       if (response.statusCode !== 200) {
         setOpenDialogAtUpdateCardCarComponent(false);
-        setMessage("The attempt to delete the image failed.");
+        setMessage(response.message);
         setInforDialogOpen(true);
       } else {
         fetchCarDetails();

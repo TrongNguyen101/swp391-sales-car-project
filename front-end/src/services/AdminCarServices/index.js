@@ -167,7 +167,7 @@ export const uploadImageOfCar = async (carId, formData) => {
     });
     return response.data;
   } catch (error) {
-    return error.response;
+    return error.response.data;
   }
 };
 
@@ -186,7 +186,7 @@ export const deleteImageOfCar = async (adminCarId, typeOfImage) => {
     );
     return response.data;
   } catch (error) {
-    return error.response;
+    return error.response.data;
   }
 };
 
@@ -216,6 +216,6 @@ export const deleteColorImageOfCar = async (idImageColor) => {
     });
     return response.data;
   } catch (error) {
-    return error.response;
+    return error.response.data;
   }
 };

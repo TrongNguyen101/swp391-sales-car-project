@@ -468,6 +468,18 @@ namespace WebAPI.Controllers
                 {
                     return NotFound(ResponseHelper.ResponseError(404, "Accessory not found", false, null));
                 }
+
+                if (accessory.IsShowed == true)
+                {
+                    return BadRequest(new DataResponse
+                    {
+                        StatusCode = 400,
+                        Message = "The car is being displayed, hide it before deleting.",
+                        Success = false,
+                        Data = null
+                    });
+                }
+
                 // Delete image of car
                 if (typeOfImage == "cardImage")
                 {
