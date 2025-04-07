@@ -57,12 +57,19 @@ export const adminGetCarById = async (id) => {
 
 export const getCarColorById = async (carId) => {
   try {
-    const response = await request.getById(`/api/AdminCars/Color/${carId}`);
+    const token = localStorage.getItem("Bearer");
+    const endpoint = `/api/AdminCars/Color/${carId}`;
+    const response = await request.getById(endpoint, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     return response.data;
   } catch (error) {
-    return error.response;
+    return error.response.data;
   }
 };
+
 
 export const adminDeleteCar = async (adminCarId) => {
   try {

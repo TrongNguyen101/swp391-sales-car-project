@@ -4,7 +4,7 @@ import classNames from "classnames/bind";
 import Slider from "react-slick";
 
 import styles from "./ListColorImageCar.module.scss";
-import * as carService from "../../../../services/CarService";
+import * as adminCarService from "../../../../services/AdminCarServices";
 
 const cx = classNames.bind(styles);
 
@@ -41,7 +41,7 @@ function ListColorImageCarComponent({
 
   const fetchCarColors = async (carId) => {
     try {
-      const response = await carService.getCarColorById(carId);
+      const response = await adminCarService.getCarColorById(carId);
       if (response.statusCode !== 200) {
         setColors([]);
       } else {
