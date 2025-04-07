@@ -148,6 +148,28 @@ namespace WebAPI.Controllers
             }
         }
 
+        [HttpPost("checkEmailStaffExist")]
+        public async Task<IActionResult> CheckEmailStaffExist([FromBody] RequestCheckEmailDTO? registerRequest)
+        {
+            try
+            {
+                var userDAO = await UsersDAO.GetInstance().findStaffByEmail(registerRequest.Email);
+                if (userDAO == null)
+                {
+                    return NotFound(ResponseHelper.ResponseError(404, "Email not found", false, null));
+                }
+                else
+                {
+                    return Ok(ResponseHelper.ResponseError(200, "Email is found", true, null));
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error at CheckEmailStaffExist function: ", e);
+                return BadRequest(ResponseHelper.ResponseError(400, "Internal server error: Please contact support", false, null));
+            }
+        }
+
 
         /// <summary>
         /// Authenticates a user based on the provided login credentials.

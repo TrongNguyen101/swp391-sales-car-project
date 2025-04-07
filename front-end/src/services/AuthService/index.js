@@ -145,6 +145,26 @@ export const checkEmail = async (emailNeedToCheck) => {
   }
 };
 
+export const checkEmailStaff = async (emailNeedToCheck) => {
+  try {
+    const enpoint = `api/Auth/checkEmailStaffExist`;
+    const response = await request.post(
+      enpoint,
+      {
+        email: emailNeedToCheck,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
 export const postSendOTP = async (email) => {
   try {
     const enpoint = `api/Auth/SendOTP`;

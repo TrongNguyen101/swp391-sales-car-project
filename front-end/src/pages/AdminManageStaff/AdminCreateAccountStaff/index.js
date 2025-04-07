@@ -75,7 +75,7 @@ function AdminCreateAccountStaffPage() {
 
   const handleCheckEmail = async (emailNeedToCheck) => {
     try {
-      const response = await authService.checkEmail(emailNeedToCheck);
+      const response = await authService.checkEmailStaff(emailNeedToCheck);
       if (response.statusCode === 404) {
         setErrorEmail("");
         fetchRegister();
