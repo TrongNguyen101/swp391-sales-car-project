@@ -48,6 +48,14 @@ namespace WebAPI.DAO
             }
         }
 
+        public async Task<Users?> checkEmailExistForCreateAccount(string email)
+        {
+            using (var context = new VinfastContext())
+            {
+                return await context.Users.Where(u => u.Email == email).FirstOrDefaultAsync();
+            }
+        }
+
         public async Task<Users?> findStaffByEmail(string email)
         {
             using (var context = new VinfastContext())

@@ -97,7 +97,7 @@ namespace WebAPI.Controllers
                 // If the user is authenticated and authorized, return claims of user
                 // admin role id = 1
                 // customer role id = 2
-                var (isSuccess, errorMessage, claims) = JwtTokenHelper.AuthenticateAndAuthorize(HttpContext, 2);
+                var (isSuccess, errorMessage, claims) = JwtTokenHelper.AuthenticateAndAuthorize(HttpContext, 2, 3);
                 if (!isSuccess)
                 {
                     // Return error message if the user is not authenticated or authorized
@@ -148,12 +148,12 @@ namespace WebAPI.Controllers
             }
         }
 
-        [HttpPost("checkEmailStaffExist")]
-        public async Task<IActionResult> CheckEmailStaffExist([FromBody] RequestCheckEmailDTO? registerRequest)
+        [HttpPost("checkEmailExistForCreateAccount")]
+        public async Task<IActionResult> CheckEmailExistForCreateAccount([FromBody] RequestCheckEmailDTO? registerRequest)
         {
             try
             {
-                var userDAO = await UsersDAO.GetInstance().findStaffByEmail(registerRequest.Email);
+                var userDAO = await UsersDAO.GetInstance().checkEmailExistForCreateAccount(registerRequest.Email);
                 if (userDAO == null)
                 {
                     return NotFound(ResponseHelper.ResponseError(404, "Email not found", false, null));
@@ -165,11 +165,10 @@ namespace WebAPI.Controllers
             }
             catch (Exception e)
             {
-                Console.WriteLine("Error at CheckEmailStaffExist function: ", e);
+                Console.WriteLine("Error at CheckEmailExist function: ", e);
                 return BadRequest(ResponseHelper.ResponseError(400, "Internal server error: Please contact support", false, null));
             }
         }
-
 
         /// <summary>
         /// Authenticates a user based on the provided login credentials.

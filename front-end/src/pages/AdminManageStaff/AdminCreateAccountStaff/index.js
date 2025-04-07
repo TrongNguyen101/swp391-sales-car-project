@@ -14,10 +14,12 @@ import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import styles from "./AdminCreateAccountStaff.module.scss";
 import * as AuthValidator from "../../../validation/AuthValidation";
 import * as authService from "../../../services/AuthService";
+import { useNavigate } from "react-router-dom";
 
 const cx = classNames.bind(styles);
 
 function AdminCreateAccountStaffPage() {
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [showRePassword, setShowRePassword] = useState(false);
   const [fullname, setFullname] = useState("");
@@ -32,6 +34,8 @@ function AdminCreateAccountStaffPage() {
   const [errorPhone, setErrorPhone] = useState("");
   const [informationContent, setInformationContent] = useState("");
   const [openInformationDialog, setOpenInformationDialog] = useState(false);
+
+  const [statusResponse, setStatusResponse] = useState(false);
 
   const handleOnSubmit = (event) => {
     event.preventDefault();
@@ -75,7 +79,9 @@ function AdminCreateAccountStaffPage() {
 
   const handleCheckEmail = async (emailNeedToCheck) => {
     try {
-      const response = await authService.checkEmailStaff(emailNeedToCheck);
+      const response = await authService.checkEmailExistForCreateAccount(
+        emailNeedToCheck
+      );
       if (response.statusCode === 404) {
         setErrorEmail("");
         fetchRegister();
@@ -108,12 +114,14 @@ function AdminCreateAccountStaffPage() {
           type: "success",
           message: "Create account successfully",
         });
+        setStatusResponse(true);
       } else {
         setInformationContent({
           type: "error",
           message: "Create account failed",
         });
         setOpenInformationDialog(true);
+        setStatusResponse(false);
       }
     } catch (error) {
       setInformationContent({
@@ -121,6 +129,7 @@ function AdminCreateAccountStaffPage() {
         message: "Internal server error. Please contact support",
       });
       setOpenInformationDialog(true);
+      setStatusResponse(false);
     }
   };
 
@@ -134,6 +143,10 @@ function AdminCreateAccountStaffPage() {
   const handleCloseInformationDialog = () => {
     setOpenInformationDialog(false);
     setInformationContent("");
+    if (statusResponse) {
+      navigate("/dashboard/account-staff");
+      return;
+    }
   };
 
   return (

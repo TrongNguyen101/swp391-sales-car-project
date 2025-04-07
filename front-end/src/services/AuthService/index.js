@@ -145,9 +145,9 @@ export const checkEmail = async (emailNeedToCheck) => {
   }
 };
 
-export const checkEmailStaff = async (emailNeedToCheck) => {
+export const checkEmailExistForCreateAccount = async (emailNeedToCheck) => {
   try {
-    const enpoint = `api/Auth/checkEmailStaffExist`;
+    const enpoint = `api/Auth/checkEmailExistForCreateAccount`;
     const response = await request.post(
       enpoint,
       {
