@@ -96,7 +96,8 @@ function LoginPage() {
         setErrorEmail(response.message);
       }
       if (response.statusCode === 400) {
-        alert(response.message);
+        setInformationContent(response.data);
+        setOpenInformationDialog(true);
       }
       if (response.statusCode === 401) {
         setErrorPassword(response.message);
