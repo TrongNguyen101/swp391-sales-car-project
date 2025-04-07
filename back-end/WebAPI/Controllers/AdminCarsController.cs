@@ -387,6 +387,11 @@ namespace WebAPI.Controllers
                     return BadRequest(ResponseHelper.ResponseError(400, "Car already exists", false, null));
                 }
 
+                if (carData.PriceDeposite > carData.PriceBatteryRental || carData.PriceDeposite > carData.PriceBatteryOwn)
+                {
+                    return BadRequest(ResponseHelper.ResponseError(400, "Price deposite must be less than price battery rental and price battery own", false, null));
+                }
+
                 var newCar = new Cars
                 {
                     Name = carData.Model,
@@ -469,10 +474,32 @@ namespace WebAPI.Controllers
 
                 car.PriceBatteryOwn = adminCarDTO.PriceBatteryOwn;
                 car.PriceBatteryRental = adminCarDTO.PriceBatteryRental;
+
+
+                if (adminCarDTO.PriceDeposite > adminCarDTO.PriceBatteryRental || adminCarDTO.PriceDeposite > adminCarDTO.PriceBatteryOwn)
+                {
+                    return BadRequest(ResponseHelper.ResponseError(400, "Price deposite must be less than price battery rental and price battery own", false, null));
+                }
+
                 car.PriceDeposite = adminCarDTO.PriceDeposite;
 
-                car.IsDeleted = adminCarDTO.IsDeleted;
-                car.IsShowed = adminCarDTO.IsShowed;
+                if (car.IsShowed == false && adminCarDTO.IsShowed == true)
+                {
+                    if (car.Image == null)
+                    {
+                        return BadRequest(ResponseHelper.ResponseError(400, "Card image of car is required", false, null));
+                    }
+                    var listImage = await CarsDAO.GetInstance().GetCarColorsByCarId(id);
+                    if (listImage == null || listImage.Count == 0)
+                    {
+                        return BadRequest(ResponseHelper.ResponseError(400, "Color image of car is required", false, null));
+                    }
+                    car.IsShowed = adminCarDTO.IsShowed;
+                }
+                else
+                {
+                    car.IsShowed = adminCarDTO.IsShowed;
+                }
 
                 if (await CarsDAO.GetInstance().UpdateCar(car))
 
@@ -861,6 +888,52 @@ namespace WebAPI.Controllers
             {
                 Console.WriteLine("Delete image color of car failed: " + ex);
                 return BadRequest(ResponseHelper.ResponseError(400, "Internal server error. Please contact support.", false, null));
+            }
+        }
+
+        [HttpGet("adminGetColor/{carId}")]
+        public async Task<IActionResult> GetColorByCarId(int carId)
+        {
+            try
+            {
+                var car = await CarsDAO.GetInstance().GetCarById(carId);
+                if (car == null)
+                {
+                    return NotFound(new DataResponse
+                    {
+                        StatusCode = 404,
+                        Message = "Car not found",
+                        Success = false
+                    });
+                }
+
+                var carColors = await CarsDAO.GetInstance().GetCarColorsByCarId(carId);
+                if (carColors == null || carColors.Count == 0)
+                {
+                    return NotFound(new DataResponse
+                    {
+                        StatusCode = 404,
+                        Message = "No color found",
+                        Success = false
+                    });
+                }
+                var carColorDTOs = AutoMapper.ToCarColorDTOList(carColors);
+                return Ok(new DataResponse
+                {
+                    StatusCode = 200,
+                    Message = "Get all colors by car id successfully",
+                    Success = true,
+                    Data = carColorDTOs
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new DataResponse
+                {
+                    StatusCode = 400,
+                    Message = ex.Message,
+                    Success = false
+                });
             }
         }
 

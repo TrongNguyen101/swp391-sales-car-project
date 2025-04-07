@@ -32,7 +32,6 @@ const AdminManageAccessoryTransactionsDetailPage = () => {
         setInvoice({});
       } else {
         setInvoice(response.data);
-        console.log("Invoice data:", response.data);
       }
     } catch (error) {
       console.error("Failed to fetch invoice:", error);
@@ -46,7 +45,6 @@ const AdminManageAccessoryTransactionsDetailPage = () => {
         setitemRows([]);
       } else {
         setitemRows(response.data);
-        console.log("Fetched data invoice item list: ", response.data);
       }
     } catch (error) {
       console.error("Failed to fetch invoice:", error);

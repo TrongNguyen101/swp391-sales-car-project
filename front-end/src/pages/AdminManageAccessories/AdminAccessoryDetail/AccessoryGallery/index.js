@@ -1,4 +1,4 @@
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import classNames from "classnames/bind";
 
@@ -10,7 +10,10 @@ import { useParams } from "react-router-dom";
 
 const cx = classNames.bind(styles);
 
-const AccessoryGalleryComponent = ({ handleDeleteDetailImage = () => {}, requestFecthDetailImageList  }) => {
+const AccessoryGalleryComponent = ({
+  handleDeleteDetailImage = () => {},
+  requestFecthDetailImageList,
+}) => {
   const [images, setImages] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
 
@@ -27,9 +30,7 @@ const AccessoryGalleryComponent = ({ handleDeleteDetailImage = () => {}, request
         setImages(response.data);
         setSelectedImage(response.data[0].colorImage);
         handleDeleteDetailImage(response.data[0].id);
-        setImages((prevImages) => [
-          ...response.data,
-        ]);
+        setImages((prevImages) => [...response.data]);
         console.log(response.data);
       }
     } catch (error) {
@@ -45,14 +46,16 @@ const AccessoryGalleryComponent = ({ handleDeleteDetailImage = () => {}, request
   const handleSetImageForAction = (image) => {
     setSelectedImage(image.colorImage);
     handleDeleteDetailImage(image.id);
-  }
+  };
 
   return (
     <div className={cx("gallery")}>
       <div className={cx("gallery__main-image")}>
-        <MainImage
-          src={`https://localhost:7005/api/Images/Accessory/${selectedImage}`}
-        />
+        {selectedImage && (
+          <MainImage
+            src={`https://localhost:7005/api/Images/Accessory/${selectedImage}`}
+          />
+        )}
       </div>
       <div className={cx("gallery__thumbnails")}>
         {images.map((img, index) => (

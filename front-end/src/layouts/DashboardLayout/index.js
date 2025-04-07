@@ -28,7 +28,7 @@ function DashboardLayout({ children }) {
     }
     // Optionally, add token validation logic here (e.g., check expiration)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [token]); // Re-run if token or navigate changes
+  }, [token, navigate]); // Re-run if token or navigate changes
 
   // Render only if token exists
   if (!token) return null; // Prevent rendering before redirect

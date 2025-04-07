@@ -29,7 +29,6 @@ function AdminAccessoryDetailPage() {
         return;
       } else {
         setAccessory(response.data);
-        console.log(response.data);
       }
     } catch (error) {
       setMessage("Failed to fetch accessory details");

@@ -91,7 +91,7 @@ function UpdateCarPage() {
         setMessage("Car updated successfully");
         setOpenDialog(true);
       } else {
-        setMessage("Failed to update car");
+        setMessage(response.message || "Error update car");
         setOpenErrorDialog(true);
       }
     } catch (error) {
@@ -122,6 +122,11 @@ function UpdateCarPage() {
 
     if (!priceDeposite || priceDeposite <= 0) {
       setErrorPriceDeposite("Price Deposite must be greater than 0");
+      isValid = false;
+    }
+
+    if (priceDeposite > priceBatteryRental || priceDeposite > priceBatteryOwn) {
+      setErrorPriceDeposite("Price Deposite must be less than Price Battery Rental and Price Battery Own");
       isValid = false;
     }
 

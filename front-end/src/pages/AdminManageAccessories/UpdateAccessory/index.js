@@ -69,7 +69,7 @@ function UpdateAccessoryPage() {
       setCategories(response.data);
       console.log(response.data);
     } catch (error) {
-      console.error("Error fetching categories:", error);
+      console.log("Error fetching categories:", error);
     }
   };
 
@@ -98,8 +98,6 @@ function UpdateAccessoryPage() {
         setMaterial(response.data.material);
         setWarranty(response.data.warranty);
         setIsShowed(response.data.isShowed);
-        console.log(response.data);
-        console.log(response.data.categoryId);
       }
     } catch (error) {
       setMessage("Failed to fetch accessory details");
@@ -202,7 +200,7 @@ function UpdateAccessoryPage() {
         setMessage("Accessory updated successfully");
         setOpenDialog(true);
       } else {
-        setMessage("Failed to update accessory");
+        setMessage(response.message);
         setOpenErrorDialog(true);
       }
     } catch (error) {
