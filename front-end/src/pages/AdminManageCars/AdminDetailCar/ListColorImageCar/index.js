@@ -18,7 +18,7 @@ function ListColorImageCarComponent({
 
   const handleColorChange = (index) => {
     setSelectedColor(index);
-    selectedIdImageColor(colors[index].id);
+    selectedIdImageColor(colors[index].colorId);
   };
 
   const settings = {
@@ -47,7 +47,7 @@ function ListColorImageCarComponent({
       } else {
         console.log("image car color:", response.data);
         setColors(response.data);
-        selectedIdImageColor(response.data[0].id);
+        selectedIdImageColor(response.data[0].colorId);
       }
     } catch (error) {
       setColors([]);
