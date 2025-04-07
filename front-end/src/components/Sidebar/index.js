@@ -21,8 +21,13 @@ const Sidebar = ({ onSelectCategory }) => {
   const fetchCategories = async () => {
     try {
       const response = await categoriesService.getCategories();
-      setCategories(response.data);
+      if (response.statusCode === 200) {
+        setCategories(response.data);
+      } else {
+        setCategories([]);
+      }
     } catch (error) {
+      setCategories([]);
       console.error("Error fetching categories:", error);
     }
   };
