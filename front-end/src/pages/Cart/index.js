@@ -32,6 +32,7 @@ function CartPage() {
   const [cartItems, setCartItems] = useState([]);
   const [message, setMessage] = useState("");
   const [openDialog, setOpenDialog] = useState(false);
+  const [openErrorDialog, setOpenErrorDialog] = useState(false);
   const token = localStorage.getItem("Bearer");
   const isLoggedIn = Boolean(token);
 
@@ -45,14 +46,24 @@ function CartPage() {
       const response = await cartService.getAllCartItems(token);
       if (response.statusCode !== 200) {
         setCartItems([]);
+        setMessage("Some products are updated, please check again!");
+        setOpenErrorDialog(true);
       } else {
-        setCartItems(response.data);
-        localStorage.setItem("cartItems", JSON.stringify(response.data));
+        const numberItemInCart = Number(response.data);
+        if (numberItemInCart === 0) {
+          console.log("value when delete: ", response.data);
+          setCartItems([]);
+          setMessage("Some product updated. Please check again");
+          setOpenErrorDialog(true);
+        } else {
+          setCartItems(response.data);
+          localStorage.setItem("cartItems", JSON.stringify(response.data));
+        }
       }
     } catch (error) {
       setCartItems([]);
-      setMessage("An error occurred while fetching your cart.");
-      setOpenDialog(true);
+      setMessage("Some products are updated, please check again!");
+      setOpenErrorDialog(true);
     }
   };
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -135,6 +146,11 @@ function CartPage() {
     }
   };
 
+  const handleCloseErrorDialog = () => {
+      navigate("/accessories");
+      setOpenErrorDialog(false);
+  };
+
   const formatPrice = (price) => {
     return new Intl.NumberFormat("vi-VN").format(price);
   };
@@ -166,7 +182,8 @@ function CartPage() {
               </Typography>
               <div className={cx("content__top--cart-number")}>
                 <Typography sx={{ fontWeight: 900, fontSize: "24px" }}>
-                  {cartItems.reduce((sum, item) => sum + item.quantity, 0)}
+                  {cartItems.length > 0 &&
+                    cartItems.reduce((sum, item) => sum + item.quantity, 0)}
                 </Typography>
               </div>
             </div>
@@ -264,12 +281,13 @@ function CartPage() {
               <div className={cx("content__Total")}>
                 <Typography>Total</Typography>
                 <Typography>
-                  {formatPrice(
-                    cartItems.reduce(
-                      (sum, item) => (sum += item.price * item.quantity),
-                      0
-                    )
-                  )}{" "}
+                  {cartItems.length > 0 &&
+                    formatPrice(
+                      cartItems.reduce(
+                        (sum, item) => (sum += item.price * item.quantity),
+                        0
+                      )
+                    )}{" "}
                   VND
                 </Typography>
               </div>
@@ -311,6 +329,37 @@ function CartPage() {
           <Button
             variant="contained"
             onClick={handleCloseDialog}
+            color="primary"
+          >
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={openErrorDialog}
+        keepMounted
+        aria-labelledby="alert-dialog-slide-title"
+        aria-describedby="alert-dialog-slide-description"
+        sx={{
+          "& .MuiDialog-paper": { width: "440px", paddingBottom: "10px" },
+        }}
+      >
+        <DialogTitle
+          id="alert-dialog-slide-title"
+          sx={{
+            textAlign: "center",
+            fontSize: "1.6rem",
+            fontWeight: "500",
+            lineHeight: "1.5",
+          }}
+        >
+          {message}
+        </DialogTitle>
+        <DialogActions sx={{ justifyContent: "center" }}>
+          <Button
+            variant="contained"
+            onClick={handleCloseErrorDialog}
             color="primary"
           >
             OK
