@@ -44,21 +44,25 @@ function CartPage() {
     }
     try {
       const response = await cartService.getAllCartItems(token);
-      if (response.statusCode !== 200) {
-        setCartItems([]);
-        setMessage("Some products are updated, please check again!");
-        setOpenErrorDialog(true);
-      } else {
+      if (response.statusCode === 200) {
         const numberItemInCart = Number(response.data);
         if (numberItemInCart === 0) {
           console.log("value when delete: ", response.data);
           setCartItems([]);
-          setMessage("Some product updated. Please check again");
+          setMessage("Your cart is empty!");
           setOpenErrorDialog(true);
         } else {
           setCartItems(response.data);
           localStorage.setItem("cartItems", JSON.stringify(response.data));
         }
+      } else if (response.statusCode === 404) {
+        setCartItems([]);
+        setMessage("Your cart is empty!");
+        setOpenErrorDialog(true);
+      } else {
+        setCartItems([]);
+        setMessage("Some products are updated, please check again!");
+        setOpenErrorDialog(true);
       }
     } catch (error) {
       setCartItems([]);
@@ -147,8 +151,9 @@ function CartPage() {
   };
 
   const handleCloseErrorDialog = () => {
-      navigate("/accessories");
-      setOpenErrorDialog(false);
+    fetchCartItems();
+    navigate("/accessories");
+    setOpenErrorDialog(false);
   };
 
   const formatPrice = (price) => {
