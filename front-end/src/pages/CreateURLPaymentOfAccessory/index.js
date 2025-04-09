@@ -50,15 +50,24 @@ function CreateURLPaymentOfAccessory() {
     try {
       const response = await cartService.getAllCartItems(token);
       if (response.statusCode !== 200) {
+        setCartItems([]);
         setMessage("Some products are bought out of stock. Please check again");
         setOpenErrorDialog(true);
       } else {
-        console.log(response.data);
-        localStorage.setItem("cartItems", JSON.stringify(response.data));
-        setCartItems(response.data);
+        const numberItemInCart = Number(response.data);
+        if (numberItemInCart === 0) {
+          setMessage("Some product updated. Please check again");
+          setOpenErrorDialog(true);
+        } else {
+          console.log(response.data);
+          localStorage.setItem("cartItems", JSON.stringify(response.data));
+          setCartItems(response.data);
+        }
       }
     } catch (error) {
       setCartItems([]);
+      setMessage("Some product updated. Please check again");
+      setOpenErrorDialog(true);
     }
   };
 
@@ -110,9 +119,16 @@ function CreateURLPaymentOfAccessory() {
 
       // get the number of items in the cart after checking
       const numberOfItems = await checkNumberOfItems();
-      
+      console.log("nuber of item check: ", numberOfItems);
+      console.log("current total: ", currentTotalItem);
+
       if (numberOfItems === -1) {
         setMessage("Having error when checking number of items in cart");
+        setOpenErrorDialog(true);
+      } else if (numberOfItems === 0) {
+        // check if the number of items in the cart is 0
+        // if yes, that means the cart is empty
+        setMessage("Some products are updated. Please check again");
         setOpenErrorDialog(true);
       } else if (numberOfItems < currentTotalItem) {
         // check if the number of items in the cart is less than the current total item
@@ -134,10 +150,19 @@ function CreateURLPaymentOfAccessory() {
       if (response.statusCode !== 200) {
         return -1;
       } else {
-        //sum the quantity of all items in the cart
-        const numberOfItems = response.data.reduce((sum, item) => sum + item.quantity, 0);
-        //the number of items in the cart 
-        return numberOfItems;
+        const numberItemInCart = Number(response.data);
+        if (numberItemInCart === 0) {
+          console.log("value when delete: ", response.data);
+          return 0;
+        } else {
+          //sum the quantity of all items in the cart
+          const numberOfItems = response.data.reduce(
+            (sum, item) => sum + item.quantity,
+            0
+          );
+          //the number of items in the cart
+          return numberOfItems;
+        }
       }
     } catch (error) {
       return -1;
@@ -350,12 +375,13 @@ function CreateURLPaymentOfAccessory() {
             <div className={cx("content__Total")}>
               <Typography>Total</Typography>
               <Typography>
-                {formatPrice(
-                  cartItems.reduce(
-                    (sum, item) => (sum += item.price * item.quantity),
-                    0
-                  )
-                )}{" "}
+                {cartItems.length > 0 &&
+                  formatPrice(
+                    cartItems.reduce(
+                      (sum, item) => (sum += item.price * item.quantity),
+                      0
+                    )
+                  )}{" "}
                 VND
               </Typography>
             </div>

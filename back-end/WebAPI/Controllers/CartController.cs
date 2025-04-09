@@ -58,24 +58,48 @@ namespace WebAPI.Controllers
                 }
                 foreach (var cartItem in carts)
                 {
-                    var accessory = await AccessoriesDAO.GetInstance().GetAccessoryById(cartItem.ProductId);
-                    if (accessory.Quantity <= 0)
+                    var accessory = await AccessoriesDAO.GetInstance().UserGetAccessoryById(cartItem.ProductId);
+
+                    if (accessory != null)
                     {
-                        await CartDAO.GetInstance().DeleteCartItem(cartItem);
+                        if (accessory.Quantity <= 0)
+                        {
+                            carts.Remove(cartItem);
+                            // Delete cart item if accessory is out of stock or deleted
+                            await CartDAO.GetInstance().DeleteCartItem(cartItem);
+                        }
+                        else if (cartItem.Quantity > accessory.Quantity && accessory.Quantity > 0)
+                        {
+                            // Update cart item quantity if accessory is in stock but not enough quantity
+                            cartItem.Quantity = accessory.Quantity;
+                            await CartDAO.GetInstance().UpdateCartItem(cartItem);
+                        }
+                        else if (cartItem.Quantity <= 0)
+                        {
+                            carts.Remove(cartItem);
+                            await CartDAO.GetInstance().DeleteCartItem(cartItem);
+                        }
+                        else if (cartItem.Quantity > accessory.Quantity)
+                        {
+                            cartItem.Quantity = accessory.Quantity;
+                            await CartDAO.GetInstance().UpdateCartItem(cartItem);
+                        }
                     }
-                    else if (cartItem.Quantity > accessory.Quantity)
+                    else
                     {
-                        cartItem.Quantity = accessory.Quantity;
-                        await CartDAO.GetInstance().UpdateCartItem(cartItem);
+                        // Delete cart item if accessory is out of stock or deleted
+                        await CartDAO.GetInstance().DeleteCartItem(cartItem);
+                        return Ok(ResponseHelper.Response(200, "Product updated. Please check again", true, 0));
                     }
                 }
+                
                 var cartDTOs = AutoMapper.ToCartItemDTOList(carts);
                 return Ok(ResponseHelper.Response(200, "Get all cart item successfully", true, cartDTOs));
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Get all cart item failed: " + ex.Message);
-                return BadRequest(ResponseHelper.Response(404, "Internal server error. Please contact support.", false, null));
+                return BadRequest(ResponseHelper.Response(400, "Internal server error. Please contact support.", false, null));
             }
         }
 
