@@ -47,5 +47,23 @@ Ensure you have the following installed on your system:
 5. Run the backend server:
    ```bash
    dotnet run --launch-profile https
-
+   ```
+   
    The backend server will start at https://localhost:7005 by default.
+
+### Frontend Setup
+
+1. Navigate to the frontend directory:
+   ```bash
+   cd front-end
+
+2. Install dependencies:
+   ```bash
+   npm install --legacy-peer-deps
+
+3. Start the development server:
+   ```bash
+   npm start
+   ```
+
+   The frontend application will open in your default browser at http://localhost:3000.
