@@ -37,3 +37,15 @@ Ensure you have the following installed on your system:
     ```bash
     dotnet restore
 
+3. Update the database connection string in 
+    appsettings.json and 
+    appsettings.Development.json to match your SQL Server configuration.
+
+4. Apply database migrations:
+   ```bash
+   dotnet ef database update
+5. Run the backend server:
+   ```bash
+   dotnet run --launch-profile https
+
+   The backend server will start at https://localhost:7005 by default.
