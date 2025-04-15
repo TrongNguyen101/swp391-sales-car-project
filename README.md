@@ -39,7 +39,9 @@ Ensure you have the following installed on your system:
 
 3. Update the database connection string in file appsettings.json:
    ```bash
-  "DefaultConnection": "Data Source=localhost;Initial Catalog=YourDatabaseName;User ID=YourUsername;Password=YourPassword;Encrypt=True;TrustServerCertificate=True;"
+   "ConnectionStrings": {
+    "DefaultConnection": "Data Source=localhost;Initial Catalog=YourDatabaseName;User ID=YourUsername;Password=YourPassword;Encrypt=True;TrustServerCertificate=True;"
+  }
   ```
   Replace the placeholders (YourDatabaseName, YourUsername, YourPassword) with your actual SQL Server database name, username, and password.
 
