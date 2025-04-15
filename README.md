@@ -37,9 +37,11 @@ Ensure you have the following installed on your system:
     ```bash
     dotnet restore
 
-3. Update the database connection string in 
-    appsettings.json and 
-    appsettings.Development.json to match your SQL Server configuration.
+3. Update the database connection string in file appsettings.json:
+   ```bash
+  "DefaultConnection": "Data Source=localhost;Initial Catalog=YourDatabaseName;User ID=YourUsername;Password=YourPassword;Encrypt=True;TrustServerCertificate=True;"
+  ```
+  Replace the placeholders (YourDatabaseName, YourUsername, YourPassword) with your actual SQL Server database name, username, and password.
 
 4. Apply database migrations:
    ```bash
