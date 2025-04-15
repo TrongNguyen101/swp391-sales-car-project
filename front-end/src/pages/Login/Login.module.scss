@@ -1,0 +1,235 @@
+// .container class styles the main container of the login page
+// - display: flex;               // Uses flexbox layout to align items
+// - justify-content: center;     // Centers items horizontally
+// - align-items: center;         // Centers items vertically
+// - height: 100vh;               // Sets the height to 100% of the viewport height
+// - background-color: #f5f5f5;   // Sets a light grey background color
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f5f5f5;
+}
+
+// .content
+// Styles for the content container in the login page.
+// - background-color: Sets the background color to white.
+// - padding: Adds padding of 2rem around the content.
+// - border-radius: Rounds the corners with an 8px radius.
+// - box-shadow: Applies a subtle shadow for a lifted effect.
+// - width: Sets the width to 100% of the parent container.
+// - max-width: Limits the maximum width to 400px.
+.content {
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+}
+
+// Styles for the login form
+// .form: The main container for the login form elements
+// - display: Sets the layout to flexbox
+// - flex-direction: Arranges the flex items in a column
+// - gap: Adds a 1rem space between each flex item
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+// .title
+// Styles for the title element in the Login page.
+// - font-size: Sets the font size to 1.5rem.
+// - font-weight: Sets the font weight to 500 (medium).
+// - margin-bottom: Adds a margin of 1rem to the bottom.
+// - text-align: Centers the text horizontally.
+.title {
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+// Styles for the form group container
+// - display: flex; -> Uses flexbox layout for the container
+// - flex-direction: column; -> Arranges child elements in a vertical column
+// - gap: 0.5rem; -> Adds a 0.5rem space between child elements
+// - user-select: none; -> Prevents text selection within the container
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  user-select: none;
+}
+
+// Styles for input elements
+//
+// .input class:
+// - padding: Adds padding inside the input element.
+// - font-size: Sets the font size of the input text.
+// - border: Defines a solid border with a light gray color.
+// - border-radius: Rounds the corners of the input element.
+// - outline: Removes the default outline on focus.
+// - transition: Smoothly transitions the border color over 0.3 seconds.
+//
+// &:focus:
+// - border-color: Changes the border color to the primary color when the input is focused.
+.input {
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+  transition: border-color 0.3s;
+
+  &:focus {
+    border-color: var(--primary-color);
+  }
+}
+
+// Styles for anchor tags
+// Removes the default text decoration from anchor tags
+// Adds an underline text decoration on hover with a transition effect
+a {
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+    transition: 0.7s;
+  }
+}
+
+// Styles for the VinFast logo container
+// - width: Sets the width to 100% of the parent container
+// - height: Sets the height to 100% of the parent container
+// - display: Uses flexbox layout for the container
+// - justify-content: Centers the content horizontally within the container
+// - user-select: Prevents the user from selecting the content
+.vinfast-logo {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  user-select: none;
+}
+
+// Styles for the logo image container
+// .logo-image class:
+// - width: Sets the width of the container to 90px
+// - height: Sets the height of the container to 90px
+// - cursor: Changes the cursor to a pointer when hovering over the container
+// img selector within .logo-image:
+// - width: Sets the width of the image to 100% of the container's width
+// - height: Sets the height of the image to 100% of the container's height
+.logo-image {
+  width: 90px;
+  height: 90px;
+  cursor: pointer;
+  img {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+// Styles for the forgot-password section
+//
+// .forgot-password
+//   - width: 100%
+//     Sets the width of the forgot-password section to 100% of its container.
+//
+//   - display: flex
+//     Uses flexbox layout for the forgot-password section.
+//
+//   - justify-content: flex-end
+//     Aligns the content to the end of the flex container.
+//
+//   - user-select: none
+//     Prevents the text from being selected.
+//
+//   .block-forgot-password:hover
+//     - color: var(--primary-color)
+//       Changes the text color to the primary color on hover.
+//
+//     - cursor: pointer
+//       Changes the cursor to a pointer on hover.
+//
+//     - transition: 0.7s
+//       Adds a transition effect with a duration of 0.7 seconds.
+.forgot-password {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  user-select: none;
+  .block-forgot-password:hover {
+    color: var(--primary-color);
+    cursor: pointer;
+    transition: 0.7s;
+  }
+}
+
+// Styles for the password field container
+// - display: sets the container to use flexbox layout
+// - flex-direction: arranges child elements in a column
+// - gap: sets the space between child elements to 0.5rem
+// - position: sets the container's position to relative
+// - user-select: prevents text selection within the container
+.field-password {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  position: relative;
+  user-select: none;
+}
+
+// Styles for the icon element
+// - width: Sets the width of the icon to 20px
+// - height: Sets the height of the icon to 44px
+// - position: Positions the icon absolutely within its containing element
+// - display: Sets the display property to flex for flexible box layout
+// - align-items: Aligns items in the center along the cross axis
+// - right: Positions the icon 10px from the right edge of its containing element
+.icon {
+  width: 20px;
+  height: 44px;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  right: 10px;
+}
+
+// .register class
+// This class is used to disable text selection for elements with the .register class.
+// The 'user-select: none;' property ensures that the text within the element cannot be selected by the user.
+.register {
+  user-select: none;
+  a {
+    text-decoration-color: var(--primary-color);
+    color: var(--primary-color);
+  }
+}
+
+.error-input {
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: 1px solid red;
+  border-radius: 4px;
+  outline: none;
+  transition: border-color 0.3s;
+
+  &:focus {
+    border-color: var(--primary-color);
+  }
+}
+
+.otp-inputs {
+  padding-bottom: 10px;
+  input {
+    outline-color: var(--primary-color);
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    margin: 5px;
+  }
+}

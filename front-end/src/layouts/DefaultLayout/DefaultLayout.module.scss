@@ -1,0 +1,17 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.content {
+  flex-grow: 1;
+  margin-top: 80px;
+  scrollbar-color: var(--primary-color);
+  display: flex;
+  flex-direction: column;
+}
+
+.footer {
+  padding: 30px 0;
+}

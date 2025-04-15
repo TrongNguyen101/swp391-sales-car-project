@@ -1,0 +1,14 @@
+.gallery {
+  flex: 1;
+  .gallery__main-image {
+    width: 100%;
+    height: 425px;
+    display: flex;
+    justify-content: center;
+  }
+  .gallery__thumbnails {
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+  }
+}

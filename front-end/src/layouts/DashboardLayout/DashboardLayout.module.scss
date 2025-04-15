@@ -1,0 +1,24 @@
+.warpper_dashboard {
+  width: 100%;
+}
+
+.container_dashboard {
+  display: flex;
+  // justify-content: left;
+}
+
+.container_dashboard--Sidebar {
+  position: fixed;
+  // width: 300px;
+  flex-shrink: 0;
+  min-height: 100vh;
+  background-color: #f9f9f9;
+  border: 1px solid #e0e0e0;
+}
+
+.container_dashboard--Content {
+  padding-left: 300px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}

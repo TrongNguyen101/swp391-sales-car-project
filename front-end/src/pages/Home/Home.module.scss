@@ -1,0 +1,564 @@
+
+// .container class styles the container element to be a flex container
+// with a column direction, centered alignment, and centered justification.
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+
+// Styles for the banner container on the Home page
+// .banner-container:
+//   - Sets the width to 100% of the parent element
+//   - Sets the height to 970px
+//   - Contains an img element with:
+//     - width set to 100% of the parent element
+//     - height set to 100% of the parent element
+.banner-container {
+  width: 100%;
+  height: 970px;
+  img {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+// Styles for the battery content section
+// - Displays content as a flex container
+// - Aligns items in a row direction
+// - Centers items both horizontally and vertically
+// - Adds a gap of 30px between items
+// - Adds a padding of 6rem to the top
+.batery-content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  padding-top: 6rem;
+}
+
+// Styles for the card content container
+// - display: flex; -> Enables flexbox layout for the container
+// - flex-direction: column; -> Arranges child elements in a column
+// - align-items: center; -> Centers child elements horizontally
+// - justify-content: center; -> Centers child elements vertically
+// - gap: 30px; -> Adds a 30px gap between child elements
+.card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+}
+
+// Styles for the battery card component
+// .batery-card-2:
+//   - width: Sets the width of the card to 690px.
+//   - height: Sets the height of the card to 404px.
+//   - position: Sets the position to relative for positioning child elements.
+//   - background-image: Sets the background image to "batery-card-2.png".
+//   - background-repeat: Prevents the background image from repeating.
+//   - background-attachment: Sets the background image to scroll with the page.
+//   - background-position: Centers the background image.
+//   - background-color: Sets the background color to transparent.
+//   - background-size: Scales the background image to cover the entire card.
+//   - overflow: Hides any content that overflows the card's boundaries.
+//
+// .batery-card-1:
+//   width: 690px;
+//     - Sets the width of the battery card to 690 pixels.
+//   height: 404px;
+//     - Sets the height of the battery card to 404 pixels.
+//   position: relative;
+//     - Positions the battery card relative to its normal position.
+//   background-image: url("../../../public/batery-card-1.png");
+//     - Sets the background image of the battery card.
+//   background-repeat: no-repeat;
+//     - Ensures the background image does not repeat.
+//   background-attachment: scroll;
+//     - The background image scrolls with the rest of the page.
+//   background-position: center center;
+//     - Centers the background image within the battery card.
+//   background-color: transparent;
+//     - Sets the background color to transparent.
+//   background-size: cover;
+//     - Scales the background image to cover the entire battery card.
+//   overflow: hidden;
+//     - Hides any content that overflows the battery card's boundaries.
+.batery-card-1 {
+  width: 690px;
+  height: 404px;
+  position: relative;
+  background-image: url("../../../public/batery-card-1.png");
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  background-position: center center;
+  background-color: transparent;
+  background-size: cover;
+  overflow: hidden;
+}
+
+.batery-card-2 {
+  width: 690px;
+  height: 404px;
+  position: relative;
+  background-image: url("../../../public/batery-card-2.png");
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  background-position: center center;
+  background-color: transparent;
+  background-size: cover;
+  overflow: hidden;
+}
+
+// Styles for the battery card content
+// - width: Sets the width to 100% of the parent container
+// - height: Sets the height to 179px
+// - background: Applies a linear gradient background
+// - position: Sets the position to absolute
+// - bottom, left, right: Positions the element at the bottom, left, and right of the parent container
+// - transform: Translates the element 65% along the Y-axis
+// - transition: Applies an ease-in-out transition effect with a duration of 0.5s
+// - color: Sets the text color to white
+// - padding: Adds 30px padding inside the element
+// - display: Sets the display to flex
+// - flex-direction: Arranges child elements in a column
+// - gap: Sets a 10px gap between child elements
+// - &:hover: Adds hover effect
+//   - cursor: Changes the cursor to pointer on hover
+//   - transform: Resets the transform property on hover
+.batery-card-content {
+  width: 100%;
+  height: 179px;
+  background: linear-gradient(359deg, #000 0.54%, rgba(0, 0, 0, 0) 98.5%);
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  transform: translateY(65%);
+  transition: ease-in-out 0.5s;
+  color: #fff;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  &:hover {
+    cursor: pointer;
+    transform: none;
+  }
+}
+
+// Styles for the .image-batery-2 class
+//
+// .image-batery-2:
+//   - width: Sets the width of the element to 690px.
+//   - height: Sets the height of the element to 404px.
+//   - position: Sets the positioning method to relative.
+//
+// img:
+//   - width: Sets the width of the img element to 100% of its parent.
+//   - height: Sets the height of the img element to 100% of its parent.
+.image-batery-2 {
+  width: 690px;
+  height: 404px;
+  position: relative;
+  img {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+// Styles for the battery device component
+// .batery-device {
+//   padding: 30px;          // Adds padding of 30px on all sides
+//   background: #f7f9f9;    // Sets the background color to a light grey
+// }
+.batery-device {
+  padding: 30px;
+  background: #f7f9f9;
+}
+
+// Styles for the device image container and its nested img element
+// .device-image: Container for the device image with specific width and height
+//   width: 630px - Sets the width of the container
+//   height: 612px - Sets the height of the container
+//   img: Styles for the img element inside the container
+//     width: 100% - Makes the image take the full width of the container
+//     height: 100% - Makes the image take the full height of the container
+.device-image {
+  width: 630px;
+  height: 612px;
+  img {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+// Styles for the device content section
+// - Uses flexbox to arrange child elements in a column
+// - Adds a gap of 20px between child elements
+// - Adds a bottom margin of 47px to the container
+.device-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 47px;
+}
+
+// Styles for the hover state of the .view-more element
+// When the .view-more element is hovered over, the following styles are applied to its child <span> elements:
+// - The text color of the <span> elements is set to the primary color defined by the CSS variable --primary-color
+// - The cursor changes to a pointer to indicate that the element is clickable
+.view-more:hover {
+  span {
+    color: var(--primary-color);
+    cursor: pointer;
+  }
+}
+
+// Styles for the block-service component
+
+// .block-service
+// Container for the service block with a background image, margin, width, height, and padding.
+// - background: Sets the background image with no-repeat, scrolls to the right center, and transparent background color.
+// - background-size: Covers the entire container.
+// - margin-top: Adds a top margin of 6rem.
+// - width: Sets the width to 100%.
+// - height: Sets the height to 700px.
+// - padding: Adds padding of 240px.
+
+// .block-service-container
+// Inner container that takes full height, displays flex, and aligns items to the center and justifies content to the start.
+// - height: Sets the height to 100%.
+// - display: Uses flexbox layout.
+// - align-items: Aligns items to the center.
+// - justify-content: Justifies content to the flex-start.
+
+// .block-service-content
+// Content area within the service block with specific width, height, and flex properties.
+// - width: Sets the width to 412px.
+// - height: Sets the height to 100%.
+// - display: Uses flexbox layout.
+// - flex-direction: Sets the direction of flex items to column.
+// - gap: Adds a gap of 10px between flex items.
+
+// .block-service-btn
+// Button container within the service block with specific width, height, and flex properties.
+// - width: Sets the width to 100%.
+// - height: Sets the height to 70px.
+// - display: Uses flexbox layout.
+// - align-items: Aligns items to the center.
+// - justify-content: Justifies content to space-between.
+.block-service {
+  background: url("../../../public/vinfast-service.png") no-repeat scroll right
+    center transparent;
+  background-size: cover;
+  margin-top: 6rem;
+  width: 100%;
+  height: 700px;
+  padding: 240px;
+  .block-service-container {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+  .block-service-content {
+    width: 412px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .block-service-btn {
+    width: 100%;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+
+// .block-green-tree: Main container with padding and flexbox centering
+// - padding-top: 6rem
+// - width: 100%
+// - display: flex
+// - justify-content: center
+
+// .block-green-tree-container: Inner container with fixed dimensions, background image, padding, and flexbox alignment
+// - width: 1440px
+// - height: 514px
+// - background: url(../../../public/vinfast-green-tree.png) no-repeat center center transparent
+// - background-size: cover
+// - padding: 119px
+// - display: flex
+// - justify-content: flex-end
+
+// .block-green-tree-content: Content container with fixed dimensions, flexbox column layout, and gap between items
+// - width: 390px
+// - height: 276px
+// - display: flex
+// - flex-direction: column
+// - gap: 10px
+
+// .block-green-tree-btn: Button container with full width, fixed height, and flexbox alignment
+// - width: 100%
+// - height: 70px
+// - display: flex
+// - align-items: center
+// - justify-content: space-between
+.block-green-tree {
+  padding-top: 6rem;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  .block-green-tree-container {
+    width: 1440px;
+    height: 514px;
+    background: url(../../../public/vinfast-green-tree.png) no-repeat scroll
+      center center transparent;
+    background-size: cover;
+    padding: 119px;
+    display: flex;
+    justify-content: flex-end;
+  }
+  .block-green-tree-content {
+    width: 390px;
+    height: 276px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .block-green-tree-btn {
+    width: 100%;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+
+// .block-community
+// This class styles the community block section with the following properties:
+// - padding-top: Adds a top padding of 6rem.
+// - width: Sets the width to 100%.
+// - display: Uses flexbox for layout.
+// - justify-content: Centers the content horizontally.
+
+// .block-community-container
+// This nested class styles the container within the community block with the following properties:
+// - width: Sets the width to 1440px.
+// - height: Sets the height to 354px.
+// - padding-left: Adds a left padding of 15px.
+// - padding-right: Adds a right padding of 15px.
+// - display: Uses flexbox for layout.
+// - flex-direction: Arranges children in a row.
+// - gap: Adds a 30px gap between flex items.
+.block-community {
+  padding-top: 6rem;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  .block-community-container {
+    width: 1440px;
+    height: 354px;
+    padding-left: 15px;
+    padding-right: 15px;
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+  }
+}
+
+// Styles for the first community card component
+// - width: Sets the width of the card to 690px
+// - height: Sets the height of the card to 354px
+// - position: Sets the positioning context to relative
+// - background-image: Sets the background image to 'vinfast-community-1.png' located in the public directory
+// - background-repeat: Prevents the background image from repeating
+// - background-attachment: Sets the background image to scroll with the page
+// - background-position: Centers the background image both horizontally and vertically
+// - background-color: Sets the background color to transparent
+// - background-size: Scales the background image to cover the entire card
+// - overflow: Hides any content that overflows the card's boundaries
+.community-card-1 {
+  width: 690px;
+  height: 354px;
+  position: relative;
+  background-image: url("../../../public/vinfast-community-1.png");
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  background-position: center center;
+  background-color: transparent;
+  background-size: cover;
+  overflow: hidden;
+}
+
+// Styles for the second community card component
+// .community-card-2:
+//   - width: 690px
+//   - height: 354px
+//   - position: relative
+//   - background-image: uses an image located at "../../../public/vinfast-community-2.png"
+//   - background-repeat: no-repeat to prevent the image from repeating
+//   - background-attachment: scroll to make the background image scroll with the page
+//   - background-position: center center to center the background image
+//   - background-color: transparent to ensure no background color is applied
+//   - background-size: cover to scale the background image to cover the entire element
+//   - overflow: hidden to clip the content that overflows the element's box
+.community-card-2 {
+  width: 690px;
+  height: 354px;
+  position: relative;
+  background-image: url("../../../public/vinfast-community-2.png");
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  background-position: center center;
+  background-color: transparent;
+  background-size: cover;
+  overflow: hidden;
+}
+
+// Styles for the community card content
+// - Sets the width to 100% and height to 115px
+// - Applies a linear gradient background
+// - Positions the element absolutely at the bottom, left, and right
+// - Translates the element 40% downwards on the Y-axis
+// - Adds a transition effect for ease-in-out over 0.5s
+// - Sets the text color to white
+// - Adds padding of 30px
+// - Uses flexbox to arrange children in a column with a gap of 10px
+// - On hover, changes the cursor to pointer and removes the Y-axis translation
+.community-card-content {
+  width: 100%;
+  height: 115px;
+  background: linear-gradient(359deg, #000 0.54%, rgba(0, 0, 0, 0) 98.5%);
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  transform: translateY(40%);
+  transition: ease-in-out 0.5s;
+  color: #fff;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  &:hover {
+    cursor: pointer;
+    transform: none;
+  }
+}
+
+
+// Styles for the subscription block section on the Home page
+// .block-subcribe: Main container for the subscription block
+//   - margin-top: Adds top margin to the block
+//   - width: Sets the width to 100%
+//   - height: Sets the height to 369px
+//   - background: Sets the background image with no-repeat, centered, and transparent
+//   - display: Uses flexbox for layout
+//   - justify-content: Centers content horizontally
+//   - align-items: Centers content vertically
+//   - background-size: Covers the entire container with the background image
+// .block-subcribe-container: Container inside the subscription block
+//   - width: Sets the width to 1440px
+//   - height: Sets the height to 177px
+//   - display: Uses flexbox for layout
+//   - justify-content: Centers content horizontally
+// .block-subcribe-content: Content container inside the subscription block
+//   - width: Sets the width to 690px
+//   - height: Sets the height to 100%
+//   - display: Uses flexbox for layout
+//   - flex-direction: Arranges children in a column
+//   - justify-content: Centers content vertically
+//   - align-items: Centers content horizontally
+//   - gap: Adds a 10px gap between children elements
+.block-subcribe {
+  margin-top: 6rem;
+  width: 100%;
+  height: 369px;
+  background: url(../../../public/vinfastauto.com_vn_vi.png) no-repeat scroll
+    center center transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-size: cover;
+  .block-subcribe-container {
+    width: 1440px;
+    height: 177px;
+    display: flex;
+    justify-content: center;
+  }
+  .block-subcribe-content {
+    width: 690px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+  }
+}
+
+// Styles for the subscription input block
+// .block-subcribe-input: Container for the subscription input field, takes full width of the parent
+// .block-subcribe-input input: Styles for the input field inside the subscription block
+// - width: 70% of the container width
+// - height: 48px
+// - font-weight: 300 (light)
+// - font-size: 0.8rem
+// - line-height: 1.5rem
+// - box-shadow: none (no shadow)
+// - background: #ffffff (white background)
+// - border: none (no border)
+// - padding: 1rem (padding inside the input field)
+// - border-radius: 0 (no rounded corners)
+// - outline: none (no outline on focus)
+.block-subcribe-input {
+  width: 100%;
+  input {
+    width: 70%;
+    height: 48px;
+    font-weight: 300;
+    font-size: 0.8rem;
+    line-height: 1.5rem;
+    box-shadow: none;
+    background: #ffffff;
+    border: none;
+    padding: 1rem;
+    border-radius: 0;
+    outline: none;
+  }
+}
+
+// Styles for the .block-subcribe-des-2 class
+// 
+// This class styles anchor tags (<a>) within it to have the following properties:
+// - Text color: white (#fff)
+// - No text decoration (no underline)
+// - Font size: 16px
+// - Font weight: 500
+//
+// Additionally, when the anchor tags are hovered over, the following styles are applied:
+// - Text color changes to the primary color (defined by the CSS variable --primary-color)
+// - Text decoration changes to underline
+// - The underline color is set to white (#fff)
+.block-subcribe-des-2 {
+  a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 500;
+    &:hover {
+      color: var(--primary-color);
+      text-decoration: underline;
+      text-decoration-color: #fff;
+    }
+  }
+}
