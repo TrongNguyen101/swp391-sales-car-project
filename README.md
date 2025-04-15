@@ -16,3 +16,24 @@ The Vinfast Sales Car and Accessories website is built using the following techn
 - **Package Management**: npm (Node Package Manager)
 
 This tech stack ensures a robust, scalable, and high-performance platform for our users.
+
+## Setup and Run Guidelines
+
+### Prerequisites
+
+Ensure you have the following installed on your system:
+- **Node.js** (v16 or later) and npm
+- **.NET SDK** (v6.0 or later)
+- **SQL Server** (local or remote instance)
+- **Git**
+
+### Backend Setup
+
+1. Navigate to the backend directory:
+    ```bash
+   cd back-end/WebAPI
+
+2. Restore NuGet packages:
+    ```bash
+    dotnet restore
+
