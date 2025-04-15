@@ -14,6 +14,7 @@ namespace WebAPI.Controllers
         {
             try
             {
+                // Get all accessories from the database
                 var accessories = await AccessoriesDAO.GetInstance().UserGetAllAccessories();
                 if (!accessories.Any())
                 {
